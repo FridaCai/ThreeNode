@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("jQuery"), require("_"), require("Backbone"), require("Blob"), require("FileSaver"), require("Three"));
+		module.exports = factory(require("_"), require("Backbone"), require("jQuery"), require("Blob"), require("FileSaver"), require("Three"));
 	else if(typeof define === 'function' && define.amd)
-		define(["jQuery", "_", "Backbone", "Blob", "FileSaver", "Three"], factory);
+		define(["_", "Backbone", "jQuery", "Blob", "FileSaver", "Three"], factory);
 	else if(typeof exports === 'object')
-		exports["NodeTypes.Three"] = factory(require("jQuery"), require("_"), require("Backbone"), require("Blob"), require("FileSaver"), require("Three"));
+		exports["NodeTypes.Three"] = factory(require("_"), require("Backbone"), require("jQuery"), require("Blob"), require("FileSaver"), require("Three"));
 	else
-		root["ThreeNodes"] = root["ThreeNodes"] || {}, root["ThreeNodes"]["NodeTypes.Three"] = factory(root["jQuery"], root["_"], root["Backbone"], root["Blob"], root["FileSaver"], root["Three"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_31__, __WEBPACK_EXTERNAL_MODULE_32__, __WEBPACK_EXTERNAL_MODULE_33__) {
+		root["ThreeNodes"] = root["ThreeNodes"] || {}, root["ThreeNodes"]["NodeTypes.Three"] = factory(root["_"], root["Backbone"], root["jQuery"], root["Blob"], root["FileSaver"], root["Three"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_39__, __WEBPACK_EXTERNAL_MODULE_78__, __WEBPACK_EXTERNAL_MODULE_79__, __WEBPACK_EXTERNAL_MODULE_82__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -52,63 +52,2769 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
-	__webpack_require__(23);
+	__webpack_require__(55);
 	
-	__webpack_require__(24);
+	__webpack_require__(56);
 	
-	__webpack_require__(25);
+	__webpack_require__(57);
 	
-	__webpack_require__(26);
+	__webpack_require__(59);
 	
-	__webpack_require__(27);
+	__webpack_require__(69);
 	
-	__webpack_require__(28);
+	__webpack_require__(81);
 	
-	__webpack_require__(29);
+	__webpack_require__(85);
 
 
-/***/ },
-/* 1 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
-
-/***/ },
+/***/ }),
+/* 1 */,
 /* 2 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_2__;
 
-/***/ },
+/***/ }),
 /* 3 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_3__;
 
-/***/ },
-/* 4 */,
+/***/ }),
+/* 4 */
+/***/ (function(module, exports) {
+
+	var Indexer;
+	
+	Indexer = (function() {
+	  function Indexer() {
+	    this.uid = 0;
+	  }
+	
+	  Indexer.prototype.getUID = function(increment) {
+	    if (increment == null) {
+	      increment = true;
+	    }
+	    if (increment) {
+	      return this.uid += 1;
+	    } else {
+	      return this.uid;
+	    }
+	  };
+	
+	  Indexer.prototype.reset = function() {
+	    return this.uid = 0;
+	  };
+	
+	  return Indexer;
+	
+	})();
+	
+	module.exports = Indexer;
+
+
+/***/ }),
 /* 5 */,
 /* 6 */,
 /* 7 */,
 /* 8 */,
-/* 9 */,
+/* 9 */
+/***/ (function(module, exports) {
+
+	var Utils;
+	
+	Utils = (function() {
+	  function Utils() {}
+	
+	  Utils.flatArraysAreEquals = function(arr1, arr2) {
+	    var i, j, k, len;
+	    if (arr1.length !== arr2.length) {
+	      return false;
+	    }
+	    for (i = j = 0, len = arr1.length; j < len; i = ++j) {
+	      k = arr1[i];
+	      if (arr1[i] !== arr2[i]) {
+	        return false;
+	      }
+	    }
+	    return true;
+	  };
+	
+	  return Utils;
+	
+	})();
+	
+	module.exports = Utils;
+
+
+/***/ }),
 /* 10 */,
-/* 11 */,
-/* 12 */,
-/* 13 */,
-/* 14 */,
-/* 15 */,
-/* 16 */,
-/* 17 */,
-/* 18 */,
-/* 19 */,
-/* 20 */,
-/* 21 */,
-/* 22 */,
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, Fields, Node, Utils, _,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	Utils = __webpack_require__(9);
+	
+	Fields = __webpack_require__(12);
+	
+	
+	/* Node model */
+	
+	Node = (function(superClass) {
+	  extend(Node, superClass);
+	
+	  function Node() {
+	    this.createAnimContainer = bind(this.createAnimContainer, this);
+	    this.enablePropertyAnim = bind(this.enablePropertyAnim, this);
+	    this.disablePropertyAnim = bind(this.disablePropertyAnim, this);
+	    this.removeConnection = bind(this.removeConnection, this);
+	    this.addOutConnection = bind(this.addOutConnection, this);
+	    this.applyFieldsToVal = bind(this.applyFieldsToVal, this);
+	    this.toJSON = bind(this.toJSON, this);
+	    this.getAnimationData = bind(this.getAnimationData, this);
+	    this.hasPropertyTrackAnim = bind(this.hasPropertyTrackAnim, this);
+	    this.getDownstreamNodes = bind(this.getDownstreamNodes, this);
+	    this.getUpstreamNodes = bind(this.getUpstreamNodes, this);
+	    this.hasOutConnection = bind(this.hasOutConnection, this);
+	    this.getFields = bind(this.getFields, this);
+	    this.inputValueHasChanged = bind(this.inputValueHasChanged, this);
+	    this.createCacheObject = bind(this.createCacheObject, this);
+	    this.addCountInput = bind(this.addCountInput, this);
+	    this.createConnection = bind(this.createConnection, this);
+	    this.loadAnimation = bind(this.loadAnimation, this);
+	    this.remove = bind(this.remove, this);
+	    this.onFieldsCreated = bind(this.onFieldsCreated, this);
+	    this.typename = bind(this.typename, this);
+	    this.initialize = bind(this.initialize, this);
+	    return Node.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Node.node_name = '';
+	
+	  Node.group_name = '';
+	
+	  Node.prototype.defaults = {
+	    nid: -1,
+	    gid: -1,
+	    x: 0,
+	    y: 0,
+	    width: null,
+	    height: null,
+	    name: ""
+	  };
+	
+	  Node.prototype.initialize = function(options) {
+	    Node.__super__.initialize.apply(this, arguments);
+	    this.auto_evaluate = false;
+	    this.delays_output = false;
+	    this.dirty = true;
+	    this.is_animated = false;
+	    this.out_connections = [];
+	    this.apptimeline = options.timeline;
+	    this.settings = options.settings;
+	    this.indexer = options.indexer;
+	    this.options = options;
+	    this.parent = options.parent;
+	    if (this.get('name') === '') {
+	      this.set('name', this.typename());
+	    }
+	    if (this.get('nid') === -1) {
+	      this.set('nid', this.indexer.getUID());
+	    } else {
+	      this.indexer.uid = this.get('nid');
+	    }
+	    this.fields = new Fields(false, {
+	      node: this,
+	      indexer: this.indexer
+	    });
+	    this.onFieldsCreated();
+	    this.fields.load(this.options.fields);
+	    this.anim = this.createAnimContainer();
+	    if (this.options.anim !== false) {
+	      this.loadAnimation();
+	    }
+	    return this;
+	  };
+	
+	  Node.prototype.typename = function() {
+	    return String(this.constructor.name);
+	  };
+	
+	  Node.prototype.onFieldsCreated = function() {};
+	
+	  Node.prototype.remove = function() {
+	    if (this.anim) {
+	      this.anim.destroy();
+	    }
+	    if (this.fields) {
+	      this.fields.destroy();
+	    }
+	    delete this.fields;
+	    delete this.apptimeline;
+	    delete this.anim;
+	    delete this.options;
+	    delete this.settings;
+	    delete this.indexer;
+	    delete this.fully_inited;
+	    return this.destroy();
+	  };
+	
+	  Node.prototype.loadAnimation = function() {
+	    var anims, i, len, propKey, propLabel, ref, track;
+	    ref = this.options.anim;
+	    for (propLabel in ref) {
+	      anims = ref[propLabel];
+	      track = this.anim.getPropertyTrack(propLabel);
+	      for (i = 0, len = anims.length; i < len; i++) {
+	        propKey = anims[i];
+	        track.keys.push({
+	          time: propKey.time,
+	          value: propKey.value,
+	          easing: Timeline.stringToEasingFunction(propKey.easing),
+	          track: track
+	        });
+	      }
+	      this.anim.timeline.rebuildTrackAnimsFromKeys(track);
+	    }
+	    return true;
+	  };
+	
+	  Node.prototype.createConnection = function(field1, field2) {
+	    return this.trigger("createConnection", field1, field2);
+	  };
+	
+	  Node.prototype.addCountInput = function() {
+	    return this.fields.addFields({
+	      inputs: {
+	        "count": 1
+	      }
+	    });
+	  };
+	
+	  Node.prototype.createCacheObject = function(values) {
+	    var field, i, len, res, v;
+	    res = {};
+	    for (i = 0, len = values.length; i < len; i++) {
+	      v = values[i];
+	      field = this.fields.getField(v);
+	      res[v] = !field ? false : field.attributes["value"];
+	    }
+	    return res;
+	  };
+	
+	  Node.prototype.inputValueHasChanged = function(values, cache) {
+	    var field, i, len, v, v2;
+	    if (cache == null) {
+	      cache = this.material_cache;
+	    }
+	    for (i = 0, len = values.length; i < len; i++) {
+	      v = values[i];
+	      field = this.fields.getField(v);
+	      if (!field) {
+	        return false;
+	      } else {
+	        v2 = field.attributes["value"];
+	        if (v2 !== cache[v]) {
+	          return true;
+	        }
+	      }
+	    }
+	    return false;
+	  };
+	
+	  Node.prototype.getFields = function() {
+	    return {};
+	  };
+	
+	  Node.prototype.hasOutConnection = function() {
+	    return this.out_connections.length !== 0;
+	  };
+	
+	  Node.prototype.getUpstreamNodes = function() {
+	    return this.fields.getUpstreamNodes();
+	  };
+	
+	  Node.prototype.getDownstreamNodes = function() {
+	    return this.fields.getDownstreamNodes();
+	  };
+	
+	  Node.prototype.hasPropertyTrackAnim = function() {
+	    var i, len, propTrack, ref;
+	    ref = this.anim.objectTrack.propertyTracks;
+	    for (i = 0, len = ref.length; i < len; i++) {
+	      propTrack = ref[i];
+	      if (propTrack.anims.length > 0) {
+	        return true;
+	      }
+	    }
+	    return false;
+	  };
+	
+	  Node.prototype.getAnimationData = function() {
+	    var anim, i, j, k, len, len1, propTrack, ref, ref1, res;
+	    if (!this.anim || !this.anim.objectTrack || !this.anim.objectTrack.propertyTracks || this.hasPropertyTrackAnim() === false) {
+	      return false;
+	    }
+	    if (this.anim !== false) {
+	      res = {};
+	      ref = this.anim.objectTrack.propertyTracks;
+	      for (i = 0, len = ref.length; i < len; i++) {
+	        propTrack = ref[i];
+	        res[propTrack.propertyName] = [];
+	        ref1 = propTrack.keys;
+	        for (j = 0, len1 = ref1.length; j < len1; j++) {
+	          anim = ref1[j];
+	          k = {
+	            time: anim.time,
+	            value: anim.value,
+	            easing: Timeline.easingFunctionToString(anim.easing)
+	          };
+	          res[propTrack.propertyName].push(k);
+	        }
+	      }
+	    }
+	    return res;
+	  };
+	
+	  Node.prototype.toJSON = function() {
+	    var res;
+	    res = {
+	      nid: this.get('nid'),
+	      name: this.get('name'),
+	      type: this.typename(),
+	      anim: this.getAnimationData(),
+	      x: this.get('x'),
+	      y: this.get('y'),
+	      width: this.get('width'),
+	      height: this.get('height'),
+	      fields: this.fields.toJSON()
+	    };
+	    return res;
+	  };
+	
+	  Node.prototype.applyFieldsToVal = function(afields, target, exceptions, index) {
+	    var f, field_name, nf, results;
+	    if (exceptions == null) {
+	      exceptions = [];
+	    }
+	    results = [];
+	    for (f in afields) {
+	      nf = afields[f];
+	      field_name = nf.get("name");
+	      if (exceptions.indexOf(field_name) === -1) {
+	        results.push(target[field_name] = this.fields.getField(field_name).getValue(index));
+	      } else {
+	        results.push(void 0);
+	      }
+	    }
+	    return results;
+	  };
+	
+	  Node.prototype.addOutConnection = function(c, field) {
+	    if (this.out_connections.indexOf(c) === -1) {
+	      this.out_connections.push(c);
+	    }
+	    return c;
+	  };
+	
+	  Node.prototype.removeConnection = function(c) {
+	    var c_index;
+	    c_index = this.out_connections.indexOf(c);
+	    if (c_index !== -1) {
+	      this.out_connections.splice(c_index, 1);
+	    }
+	    return c;
+	  };
+	
+	  Node.prototype.disablePropertyAnim = function(field) {
+	    if (this.anim && field.get("is_output") === false) {
+	      return this.anim.disableProperty(field.get("name"));
+	    }
+	  };
+	
+	  Node.prototype.enablePropertyAnim = function(field) {
+	    if (field.get("is_output") === true || !this.anim) {
+	      return false;
+	    }
+	    if (field.isAnimationProperty()) {
+	      return this.anim.enableProperty(field.get("name"));
+	    }
+	  };
+	
+	  Node.prototype.createAnimContainer = function() {
+	    var f, field, res;
+	    res = anim("nid-" + this.get("nid"), this.fields.inputs);
+	    for (f in this.fields.inputs) {
+	      field = this.fields.inputs[f];
+	      if (field.isAnimationProperty() === false) {
+	        this.disablePropertyAnim(field);
+	      }
+	    }
+	    return res;
+	  };
+	
+	  return Node;
+	
+	})(Backbone.Model);
+	
+	module.exports = Node;
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, Fields, _,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	__webpack_require__(13);
+	
+	
+	/* Fields Collection */
+	
+	Fields = (function(superClass) {
+	  extend(Fields, superClass);
+	
+	  function Fields() {
+	    this.renderSidebar = bind(this.renderSidebar, this);
+	    this.addFields = bind(this.addFields, this);
+	    this.addField = bind(this.addField, this);
+	    this.removeConnections = bind(this.removeConnections, this);
+	    this.renderConnections = bind(this.renderConnections, this);
+	    this.setFieldInputUnchanged = bind(this.setFieldInputUnchanged, this);
+	    this.hasUnconnectedFields = bind(this.hasUnconnectedFields, this);
+	    this.hasUnconnectedOutputs = bind(this.hasUnconnectedOutputs, this);
+	    this.hasUnconnectedInputs = bind(this.hasUnconnectedInputs, this);
+	    this.getDownstreamNodes = bind(this.getDownstreamNodes, this);
+	    this.getUpstreamNodes = bind(this.getUpstreamNodes, this);
+	    this.getMaxInputSliceCount = bind(this.getMaxInputSliceCount, this);
+	    this.setField = bind(this.setField, this);
+	    this.getField = bind(this.getField, this);
+	    this.toJSON = bind(this.toJSON, this);
+	    this.load = bind(this.load, this);
+	    this.destroy = bind(this.destroy, this);
+	    this.initialize = bind(this.initialize, this);
+	    return Fields.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Fields.prototype.initialize = function(models, options) {
+	    Fields.__super__.initialize.apply(this, arguments);
+	    this.node = options.node;
+	    this.indexer = options.indexer;
+	    this.inputs = {};
+	    this.outputs = {};
+	    this.special_elements = {
+	      left: [],
+	      center: [],
+	      right: []
+	    };
+	    return this.addFields(this.node.getFields());
+	  };
+	
+	  Fields.prototype.destroy = function() {
+	    this.removeConnections();
+	    while (this.models.length > 0) {
+	      this.models[0].remove();
+	    }
+	    delete this.node;
+	    delete this.inputs;
+	    delete this.outputs;
+	    delete this.indexer;
+	    return delete this.special_elements;
+	  };
+	
+	  Fields.prototype.load = function(data) {
+	    var f, j, len, node_field, ref;
+	    if (!data || !data["in"]) {
+	      return false;
+	    }
+	    ref = data["in"];
+	    for (j = 0, len = ref.length; j < len; j++) {
+	      f = ref[j];
+	      if (!f.nid) {
+	        node_field = this.inputs[f.name];
+	      } else {
+	        node_field = this.inputs[f.name + "-" + f.nid];
+	      }
+	      if (node_field) {
+	        node_field.load(f.val);
+	      }
+	    }
+	    return true;
+	  };
+	
+	  Fields.prototype.toJSON = function() {
+	    var data;
+	    data = {
+	      "in": jQuery.map(this.inputs, function(f, i) {
+	        return f.toJSON();
+	      }),
+	      out: jQuery.map(this.outputs, function(f, i) {
+	        return f.toJSON();
+	      })
+	    };
+	    return data;
+	  };
+	
+	  Fields.prototype.getField = function(key, is_out) {
+	    var target;
+	    if (is_out == null) {
+	      is_out = false;
+	    }
+	    target = is_out === true ? "outputs" : "inputs";
+	    return this[target][key];
+	  };
+	
+	  Fields.prototype.setField = function(key, value) {
+	    if (this.outputs[key]) {
+	      return this.outputs[key].setValue(value);
+	    }
+	  };
+	
+	  Fields.prototype.getMaxInputSliceCount = function() {
+	    var f, fname, ref, result, val;
+	    result = 1;
+	    ref = this.inputs;
+	    for (fname in ref) {
+	      f = ref[fname];
+	      val = f.attributes.value;
+	      if (val && $.type(val) === "array") {
+	        if (val.length > result) {
+	          result = val.length;
+	        }
+	      }
+	    }
+	    return result - 1;
+	  };
+	
+	  Fields.prototype.getUpstreamNodes = function() {
+	    var c, f, fname, j, len, ref, ref1, res;
+	    res = [];
+	    ref = this.inputs;
+	    for (fname in ref) {
+	      f = ref[fname];
+	      ref1 = f.connections;
+	      for (j = 0, len = ref1.length; j < len; j++) {
+	        c = ref1[j];
+	        res[res.length] = c.from_field.node;
+	      }
+	    }
+	    return res;
+	  };
+	
+	  Fields.prototype.getDownstreamNodes = function() {
+	    var c, f, fname, j, k, len, len1, ref, ref1, res;
+	    res = [];
+	    ref = this.outputs;
+	    for (f = j = 0, len = ref.length; j < len; f = ++j) {
+	      fname = ref[f];
+	      f = this.inputs[fname];
+	      ref1 = f.connections;
+	      for (k = 0, len1 = ref1.length; k < len1; k++) {
+	        c = ref1[k];
+	        res[res.length] = c.to_field.node;
+	      }
+	    }
+	    return res;
+	  };
+	
+	  Fields.prototype.hasUnconnectedInputs = function() {
+	    var f, fname, ref;
+	    ref = this.inputs;
+	    for (fname in ref) {
+	      f = ref[fname];
+	      if (f.connections.length === 0) {
+	        return true;
+	      }
+	    }
+	    return false;
+	  };
+	
+	  Fields.prototype.hasUnconnectedOutputs = function() {
+	    var f, fname, ref;
+	    ref = this.outputs;
+	    for (fname in ref) {
+	      f = ref[fname];
+	      if (f.connections.length === 0) {
+	        return true;
+	      }
+	    }
+	    return false;
+	  };
+	
+	  Fields.prototype.hasUnconnectedFields = function() {
+	    return hasUnconnectedInputs() || hasUnconnectedOutputs();
+	  };
+	
+	  Fields.prototype.setFieldInputUnchanged = function() {
+	    var f, fname, j, len, ref, results;
+	    ref = this.inputs;
+	    results = [];
+	    for (j = 0, len = ref.length; j < len; j++) {
+	      fname = ref[j];
+	      f = this.inputs[fname];
+	      results.push(f.changed = false);
+	    }
+	    return results;
+	  };
+	
+	  Fields.prototype.renderConnections = function() {
+	    return this.invoke("renderConnections");
+	  };
+	
+	  Fields.prototype.removeConnections = function() {
+	    return this.invoke("removeConnections");
+	  };
+	
+	  Fields.prototype.addField = function(name, value, direction) {
+	    var f, field, field_index, field_is_out, target;
+	    if (direction == null) {
+	      direction = "inputs";
+	    }
+	    f = false;
+	    field_is_out = direction !== "inputs";
+	    if ($.type(value) !== "object") {
+	      value = this.getFieldValueObject(value);
+	    }
+	    if (value.propagateDirty == null) {
+	      value.propagateDirty = true;
+	    }
+	    field = new ThreeNodes.Core.fields.models[value.type]({
+	      name: name,
+	      value: value.val,
+	      possibilities: value.values,
+	      node: this.node,
+	      is_output: field_is_out,
+	      "default": value["default"],
+	      subfield: value.subfield,
+	      indexer: this.indexer,
+	      propagateDirty: value.propagateDirty
+	    });
+	    target = field.get("is_output") === false ? "inputs" : "outputs";
+	    field_index = field.get("name");
+	    if (field.subfield) {
+	      field_index += "-" + field.subfield.node.get("nid");
+	    }
+	    this[target][field_index] = field;
+	    this.add(field);
+	    return field;
+	  };
+	
+	  Fields.prototype.addFields = function(fields_array) {
+	    var dir, fname, value;
+	    for (dir in fields_array) {
+	      for (fname in fields_array[dir]) {
+	        value = fields_array[dir][fname];
+	        this.addField(fname, value, dir);
+	      }
+	    }
+	    return this;
+	  };
+	
+	  Fields.prototype.renderSidebar = function() {
+	    this.trigger("renderSidebar");
+	    return this;
+	  };
+	
+	  Fields.prototype.getFieldValueObject = function(default_value) {
+	    var ftype, res;
+	    ftype = (function() {
+	      switch ($.type(default_value)) {
+	        case "number":
+	          return "Float";
+	        case "boolean":
+	          return "Bool";
+	        default:
+	          return "String";
+	      }
+	    })();
+	    res = {
+	      type: ftype,
+	      val: default_value
+	    };
+	    return res;
+	  };
+	
+	  return Fields;
+	
+	})(Backbone.Collection);
+	
+	module.exports = Fields;
+
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Any, Array, Backbone, Bool, BoolField, Camera, Color, Euler, EulerField, Float, FloatField, Fog, Geometry, Indexer, Material, Mesh, NodeField, Object3D, Quaternion, QuaternionField, Scene, String, StringField, Texture, Vector2, Vector2Field, Vector3, Vector3Field, Vector4, Vector4Field, _, namespace,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	Indexer = __webpack_require__(4);
+	
+	namespace = __webpack_require__(14).namespace;
+	
+	BoolField = __webpack_require__(15);
+	
+	StringField = __webpack_require__(21);
+	
+	FloatField = __webpack_require__(22);
+	
+	Vector2Field = __webpack_require__(23);
+	
+	Vector3Field = __webpack_require__(24);
+	
+	Vector4Field = __webpack_require__(25);
+	
+	QuaternionField = __webpack_require__(26);
+	
+	EulerField = __webpack_require__(27);
+	
+	
+	/* Field model */
+	
+	NodeField = (function(superClass) {
+	  extend(NodeField, superClass);
+	
+	  function NodeField() {
+	    this.onValueChanged = bind(this.onValueChanged, this);
+	    this.removeConnections = bind(this.removeConnections, this);
+	    this.unregisterConnection = bind(this.unregisterConnection, this);
+	    this.addConnection = bind(this.addConnection, this);
+	    this.computeValue = bind(this.computeValue, this);
+	    this.renderConnections = bind(this.renderConnections, this);
+	    this.toJSON = bind(this.toJSON, this);
+	    this.isAnimationProperty = bind(this.isAnimationProperty, this);
+	    this.getSliceCount = bind(this.getSliceCount, this);
+	    this.isConnected = bind(this.isConnected, this);
+	    this.isChanged = bind(this.isChanged, this);
+	    this.getValue = bind(this.getValue, this);
+	    this.setValue = bind(this.setValue, this);
+	    this.remove = bind(this.remove, this);
+	    this.initialize = bind(this.initialize, this);
+	    this.load = bind(this.load, this);
+	    this.set = bind(this.set, this);
+	    this._validate = bind(this._validate, this);
+	    this.sync = bind(this.sync, this);
+	    return NodeField.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  NodeField.VIEW = false;
+	
+	  NodeField.STATIC_INDEXER = new Indexer();
+	
+	  NodeField.prototype.defaults = function() {
+	    return {
+	      fid: -1,
+	      name: "fieldname",
+	      machine_name: "fieldname-nid",
+	      is_output: false,
+	      value: 0,
+	      "default": null
+	    };
+	  };
+	
+	  NodeField.prototype.sync = function() {};
+	
+	  NodeField.prototype._validate = function(attrs, options) {
+	    return true;
+	  };
+	
+	  NodeField.prototype.set = function(key, value, options) {
+	    if (options == null) {
+	      options = {};
+	    }
+	    if (key === "value") {
+	      this.attributes[key] = value;
+	      return this;
+	    }
+	    return NodeField.__super__.set.apply(this, arguments);
+	  };
+	
+	  NodeField.prototype.load = function(data) {
+	    var property;
+	    if (!data && data !== false) {
+	      return;
+	    }
+	    if ($.type(data) !== "object") {
+	      this.setValue(data);
+	    } else {
+	      for (property in data) {
+	        this.attributes.value[property] = data[property];
+	      }
+	    }
+	    return this;
+	  };
+	
+	  NodeField.prototype.initialize = function(options) {
+	    var indexer, self;
+	    self = this;
+	    this.node = options.node;
+	    this.subfield = options.subfield;
+	    this.propagateDirty = options.propagateDirty != null ? options.propagateDirty : true;
+	    indexer = options.indexer || ThreeNodes.NodeField.STATIC_INDEXER;
+	    this.changed = true;
+	    this.connections = [];
+	    this.on_value_update_hooks = {};
+	    this.set("machine_name", this.get("name"));
+	    if (this.subfield && this.subfield.node) {
+	      this.set("machine_name", this.get("name") + "-" + this.subfield.node.get("nid"));
+	    }
+	    if (this.get("fid") === -1) {
+	      return this.set("fid", indexer.getUID());
+	    }
+	  };
+	
+	  NodeField.prototype.remove = function() {
+	    delete this.on_value_update_hooks;
+	    delete this.node;
+	    delete this.connections;
+	    delete this.button;
+	    delete this.subfield;
+	    return this.destroy();
+	  };
+	
+	  NodeField.prototype.isEqual = function(val, prev) {
+	    var i, j, len, prev1, same_array, val1;
+	    if (_.isArray(val) && _.isArray(prev)) {
+	      if (val.length !== prev.length) {
+	        return false;
+	      }
+	      same_array = true;
+	      for (i = j = 0, len = val.length; j < len; i = ++j) {
+	        val1 = val[i];
+	        prev1 = prev[i];
+	        if (this.isEqual(val1, prev1) === false) {
+	          same_array = false;
+	          break;
+	        }
+	      }
+	      if (same_array === false) {
+	        return false;
+	      } else {
+	        return true;
+	      }
+	    } else if (_.isObject(val) && _.isObject(prev)) {
+	      if ((val.uuid != null) && (prev.uuid != null) && val.uuid === prev.uuid) {
+	        return true;
+	      }
+	      return false;
+	    } else if (val === prev) {
+	      return true;
+	    }
+	    return false;
+	  };
+	
+	  NodeField.prototype.setValue = function(v) {
+	    var connection, default_val, hook, j, len, new_val, prev_val, propagate, ref, setNodeDirty, tmp_val;
+	    prev_val = this.attributes["value"];
+	    if (this.isEqual(v, prev_val)) {
+	      return false;
+	    }
+	    this.changed = true;
+	    propagate = this.propagateDirty;
+	    setNodeDirty = function(node) {
+	      node.dirty = true;
+	      if (propagate && node.parent) {
+	        return setNodeDirty(node.parent);
+	      }
+	    };
+	    if (this.node) {
+	      setNodeDirty(this.node);
+	    }
+	    new_val = this.onValueChanged(v);
+	    if ($.type(new_val) === "array") {
+	      tmp_val = _.filter(new_val, function(item) {
+	        return item !== null;
+	      });
+	      if (this.constructor === Array) {
+	        new_val = tmp_val;
+	      } else {
+	        if (tmp_val.length !== 0) {
+	          new_val = tmp_val;
+	        } else {
+	          new_val = null;
+	        }
+	      }
+	    }
+	    if (new_val === null) {
+	      default_val = this.attributes["default"];
+	      if (default_val !== null && default_val !== void 0) {
+	        prev_val = default_val;
+	      }
+	      new_val = prev_val;
+	    }
+	    this.attributes["value"] = new_val;
+	    this.trigger("value_updated", new_val);
+	    for (hook in this.on_value_update_hooks) {
+	      this.on_value_update_hooks[hook](new_val);
+	    }
+	    if (this.attributes["is_output"] === true) {
+	      ref = this.connections;
+	      for (j = 0, len = ref.length; j < len; j++) {
+	        connection = ref[j];
+	        connection.to_field.setValue(new_val);
+	      }
+	    }
+	    return true;
+	  };
+	
+	  NodeField.prototype.getValue = function(index) {
+	    var val;
+	    if (index == null) {
+	      index = 0;
+	    }
+	    val = this.attributes["value"];
+	    if ($.type(val) !== "array") {
+	      return val;
+	    } else {
+	      return val[index % val.length];
+	    }
+	  };
+	
+	  NodeField.prototype.isChanged = function() {
+	    var res;
+	    res = this.changed;
+	    this.changed = false;
+	    return res;
+	  };
+	
+	  NodeField.prototype.isConnected = function() {
+	    return this.connections.length > 0;
+	  };
+	
+	  NodeField.prototype.getSliceCount = function() {
+	    var val;
+	    val = this.attributes["value"];
+	    if (jQuery.type(val) !== "array") {
+	      return 1;
+	    }
+	    return val.length;
+	  };
+	
+	  NodeField.prototype.isAnimationProperty = function() {
+	    if (this.constructor === Float || this.constructor === Bool) {
+	      return true;
+	    }
+	    return false;
+	  };
+	
+	  NodeField.prototype.toJSON = function() {
+	    var res, val, val_type;
+	    res = {
+	      name: this.get("name")
+	    };
+	    if (this.subfield) {
+	      res.nid = this.subfield.node.get("nid");
+	    }
+	    val = this.get("value");
+	    val_type = jQuery.type(val);
+	    if (val_type !== "object" && val_type !== "array") {
+	      res.val = val;
+	    }
+	    if (val_type === "object") {
+	      if (val.constructor === THREE.Vector2 || val.constructor === THREE.Vector3 || val.constructor === THREE.Vector4 || val.constructor === THREE.Color) {
+	        res.val = val;
+	      }
+	    }
+	    return res;
+	  };
+	
+	  NodeField.prototype.renderConnections = function() {
+	    var connection, j, len, ref;
+	    ref = this.connections;
+	    for (j = 0, len = ref.length; j < len; j++) {
+	      connection = ref[j];
+	      connection.render();
+	    }
+	    return true;
+	  };
+	
+	  NodeField.prototype.computeValue = function(val) {
+	    return val;
+	  };
+	
+	  NodeField.prototype.addConnection = function(c) {
+	    if (this.connections.indexOf(c) === -1) {
+	      this.connections.push(c);
+	      if (this.get("is_output") === true) {
+	        this.node.addOutConnection(c, this);
+	      }
+	      this.node.disablePropertyAnim(this);
+	    }
+	    return c;
+	  };
+	
+	  NodeField.prototype.unregisterConnection = function(c) {
+	    var ind;
+	    this.node.removeConnection(c);
+	    ind = this.connections.indexOf(c);
+	    if (ind !== -1) {
+	      this.connections.splice(ind, 1);
+	    }
+	    if (this.connections.length === 0) {
+	      return this.node.enablePropertyAnim(this);
+	    }
+	  };
+	
+	  NodeField.prototype.removeConnections = function() {
+	    while (this.connections.length > 0) {
+	      this.connections[0].remove();
+	    }
+	    return this;
+	  };
+	
+	  NodeField.prototype.onValueChanged = function(val) {
+	    var self;
+	    self = this;
+	    if ($.type(val) === "array") {
+	      return _.map(val, function(n) {
+	        return self.computeValue(n);
+	      });
+	    }
+	    return this.computeValue(val);
+	  };
+	
+	  return NodeField;
+	
+	})(Backbone.Model);
+	
+	Any = (function(superClass) {
+	  extend(Any, superClass);
+	
+	  function Any() {
+	    this.onValueChanged = bind(this.onValueChanged, this);
+	    this.computeValue = bind(this.computeValue, this);
+	    return Any.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Any.prototype.computeValue = function(val) {
+	    return val;
+	  };
+	
+	  Any.prototype.onValueChanged = function(val) {
+	    return val;
+	  };
+	
+	  return Any;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('Any', Any);
+	
+	Array = (function(superClass) {
+	  extend(Array, superClass);
+	
+	  function Array() {
+	    this.getValue = bind(this.getValue, this);
+	    this.onValueChanged = bind(this.onValueChanged, this);
+	    this.removeConnections = bind(this.removeConnections, this);
+	    this.computeValue = bind(this.computeValue, this);
+	    return Array.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Array.prototype.computeValue = function(val) {
+	    if (!val || val === false) {
+	      return [];
+	    }
+	    if ($.type(val) === "array") {
+	      return val;
+	    } else {
+	      return [val];
+	    }
+	  };
+	
+	  Array.prototype.removeConnections = function() {
+	    Array.__super__.removeConnections.apply(this, arguments);
+	    if (this.get("is_output") === false) {
+	      return this.setValue([]);
+	    }
+	  };
+	
+	  Array.prototype.onValueChanged = function(val) {
+	    return this.computeValue(val);
+	  };
+	
+	  Array.prototype.getValue = function(index) {
+	    if (index == null) {
+	      index = 0;
+	    }
+	    return this.get("value");
+	  };
+	
+	  return Array;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('Array', Array);
+	
+	Bool = (function(superClass) {
+	  extend(Bool, superClass);
+	
+	  function Bool() {
+	    this.computeValue = bind(this.computeValue, this);
+	    return Bool.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Bool.VIEW = BoolField;
+	
+	  Bool.prototype.computeValue = function(val) {
+	    switch ($.type(val)) {
+	      case "boolean":
+	        return val;
+	      case "number":
+	        return val !== 0;
+	      case "string":
+	        return val === "1";
+	    }
+	    return null;
+	  };
+	
+	  return Bool;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('Bool', Bool);
+	
+	String = (function(superClass) {
+	  extend(String, superClass);
+	
+	  function String() {
+	    this.computeValue = bind(this.computeValue, this);
+	    return String.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  String.VIEW = StringField;
+	
+	  String.prototype.computeValue = function(val) {
+	    switch ($.type(val)) {
+	      case "array":
+	        return val;
+	      case "number":
+	        return val.toString;
+	      case "string":
+	        return val;
+	    }
+	    return null;
+	  };
+	
+	  return String;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('String', String);
+	
+	Float = (function(superClass) {
+	  extend(Float, superClass);
+	
+	  function Float() {
+	    this.computeValue = bind(this.computeValue, this);
+	    return Float.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Float.VIEW = FloatField;
+	
+	  Float.prototype.computeValue = function(val) {
+	    switch ($.type(val)) {
+	      case "number":
+	      case "string":
+	        return parseFloat(val);
+	      case "object":
+	        if (val.constructor === THREE.Vector2 || val.constructor === THREE.Vector3) {
+	          return val;
+	        }
+	        break;
+	      case "boolean":
+	        if (val === true) {
+	          return 1;
+	        } else {
+	          return 0;
+	        }
+	    }
+	    return null;
+	  };
+	
+	  return Float;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('Float', Float);
+	
+	Vector2 = (function(superClass) {
+	  extend(Vector2, superClass);
+	
+	  function Vector2() {
+	    this.computeValue = bind(this.computeValue, this);
+	    return Vector2.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Vector2.VIEW = Vector2Field;
+	
+	  Vector2.prototype.computeValue = function(val) {
+	    if ($.type(val) === "object") {
+	      if (val.constructor === THREE.Vector2) {
+	        return val;
+	      }
+	    }
+	    return null;
+	  };
+	
+	  return Vector2;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('Vector2', Vector2);
+	
+	Vector3 = (function(superClass) {
+	  extend(Vector3, superClass);
+	
+	  function Vector3() {
+	    this.computeValue = bind(this.computeValue, this);
+	    return Vector3.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Vector3.VIEW = Vector3Field;
+	
+	  Vector3.prototype.computeValue = function(val) {
+	    if ($.type(val) === "object") {
+	      if (val.constructor === THREE.Vector3) {
+	        return val;
+	      }
+	    }
+	    return null;
+	  };
+	
+	  return Vector3;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('Vector3', Vector3);
+	
+	Vector4 = (function(superClass) {
+	  extend(Vector4, superClass);
+	
+	  function Vector4() {
+	    this.computeValue = bind(this.computeValue, this);
+	    return Vector4.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Vector4.VIEW = Vector4Field;
+	
+	  Vector4.prototype.computeValue = function(val) {
+	    if ($.type(val) === "object") {
+	      if (val.constructor === THREE.Vector4) {
+	        return val;
+	      }
+	    }
+	    return null;
+	  };
+	
+	  return Vector4;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('Vector4', Vector4);
+	
+	Quaternion = (function(superClass) {
+	  extend(Quaternion, superClass);
+	
+	  function Quaternion() {
+	    this.computeValue = bind(this.computeValue, this);
+	    return Quaternion.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Quaternion.VIEW = QuaternionField;
+	
+	  Quaternion.prototype.computeValue = function(val) {
+	    if ($.type(val) === "object") {
+	      if (val.constructor === THREE.Quaternion) {
+	        return val;
+	      }
+	    }
+	    return null;
+	  };
+	
+	  return Quaternion;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('Quaternion', Quaternion);
+	
+	Euler = (function(superClass) {
+	  extend(Euler, superClass);
+	
+	  function Euler() {
+	    this.computeValue = bind(this.computeValue, this);
+	    return Euler.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Euler.VIEW = EulerField;
+	
+	  Euler.prototype.computeValue = function(val) {
+	    if ($.type(val) === "object") {
+	      if (val.constructor === THREE.Euler) {
+	        return val;
+	      }
+	    }
+	    return null;
+	  };
+	
+	  return Euler;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('Euler', Euler);
+	
+	Color = (function(superClass) {
+	  extend(Color, superClass);
+	
+	  function Color() {
+	    this.computeValue = bind(this.computeValue, this);
+	    return Color.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Color.VIEW = false;
+	
+	  Color.prototype.computeValue = function(val) {
+	    switch ($.type(val)) {
+	      case "number":
+	        return new THREE.Color().setRGB(val, val, val);
+	      case "object":
+	        switch (val.constructor) {
+	          case THREE.Color:
+	            return val;
+	          case THREE.Vector3:
+	            return new THREE.Color().setRGB(val.x, val.y, val.z);
+	        }
+	        break;
+	      case "boolean":
+	        if (val) {
+	          return new THREE.Color(0xffffff);
+	        } else {
+	          return new THREE.Color(0x000000);
+	        }
+	    }
+	    return null;
+	  };
+	
+	  return Color;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('Color', Color);
+	
+	Object3D = (function(superClass) {
+	  extend(Object3D, superClass);
+	
+	  function Object3D() {
+	    this.computeValue = bind(this.computeValue, this);
+	    return Object3D.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Object3D.prototype.computeValue = function(val) {
+	    if ($.type(val) === "object") {
+	      if (val.constructor === THREE.Object3D || val instanceof THREE.Object3D) {
+	        return val;
+	      }
+	    }
+	    return null;
+	  };
+	
+	  return Object3D;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('Object3D', Object3D);
+	
+	Scene = (function(superClass) {
+	  extend(Scene, superClass);
+	
+	  function Scene() {
+	    this.computeValue = bind(this.computeValue, this);
+	    return Scene.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Scene.prototype.computeValue = function(val) {
+	    if ($.type(val) === "object") {
+	      if (val instanceof THREE.Scene) {
+	        return val;
+	      }
+	    }
+	    return null;
+	  };
+	
+	  return Scene;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('Scene', Scene);
+	
+	Camera = (function(superClass) {
+	  extend(Camera, superClass);
+	
+	  function Camera() {
+	    this.computeValue = bind(this.computeValue, this);
+	    return Camera.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Camera.prototype.computeValue = function(val) {
+	    if ($.type(val) === "object") {
+	      if (val instanceof THREE.Camera || val instanceof THREE.PerspectiveCamera || val instanceof THREE.OrthographicCamera) {
+	        return val;
+	      }
+	    }
+	    return null;
+	  };
+	
+	  return Camera;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('Camera', Camera);
+	
+	Mesh = (function(superClass) {
+	  extend(Mesh, superClass);
+	
+	  function Mesh() {
+	    this.computeValue = bind(this.computeValue, this);
+	    return Mesh.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Mesh.prototype.computeValue = function(val) {
+	    if ($.type(val) === "object") {
+	      if (val.constructor === THREE.Mesh || val instanceof THREE.Mesh) {
+	        return val;
+	      }
+	    }
+	    return null;
+	  };
+	
+	  return Mesh;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('Mesh', Mesh);
+	
+	Geometry = (function(superClass) {
+	  extend(Geometry, superClass);
+	
+	  function Geometry() {
+	    this.computeValue = bind(this.computeValue, this);
+	    return Geometry.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Geometry.prototype.computeValue = function(val) {
+	    if ($.type(val) === "object") {
+	      if (val.constructor === THREE.Geometry || val instanceof THREE.Geometry) {
+	        return val;
+	      }
+	    }
+	    return null;
+	  };
+	
+	  return Geometry;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('Geometry', Geometry);
+	
+	Material = (function(superClass) {
+	  extend(Material, superClass);
+	
+	  function Material() {
+	    this.computeValue = bind(this.computeValue, this);
+	    return Material.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Material.prototype.computeValue = function(val) {
+	    if ($.type(val) === "object") {
+	      if (val.constructor === THREE.Material || val instanceof THREE.Material) {
+	        return val;
+	      }
+	    }
+	    return null;
+	  };
+	
+	  return Material;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('Material', Material);
+	
+	Texture = (function(superClass) {
+	  extend(Texture, superClass);
+	
+	  function Texture() {
+	    this.computeValue = bind(this.computeValue, this);
+	    return Texture.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Texture.prototype.computeValue = function(val) {
+	    if ($.type(val) === "object") {
+	      if (val.constructor === THREE.Texture || val instanceof THREE.Texture) {
+	        return val;
+	      }
+	    }
+	    return null;
+	  };
+	
+	  return Texture;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('Texture', Texture);
+	
+	Fog = (function(superClass) {
+	  extend(Fog, superClass);
+	
+	  function Fog() {
+	    this.computeValue = bind(this.computeValue, this);
+	    return Fog.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Fog.prototype.computeValue = function(val) {
+	    if ($.type(val) === "object") {
+	      if (val.constructor === THREE.Fog || val.constructor === THREE.FogExp2) {
+	        return val;
+	      }
+	    }
+	    return null;
+	  };
+	
+	  return Fog;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('Fog', Fog);
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports) {
+
+	/*
+	 * namespace.coffee v1.0.0
+	 * Copyright (c) 2011 CodeCatalyst, LLC.
+	 * Open source under the MIT License.
+	 */
+	(function() {
+	  var namespace;
+	  namespace = function(name, values) {
+	    var key, subpackage, target, value, _i, _len, _ref, _results;
+	    target = typeof exports !== "undefined" && exports !== null ? exports : window;
+	    //target = window;
+	    if (name.length > 0) {
+	      _ref = name.split('.');
+	      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+	        subpackage = _ref[_i];
+	        target = target[subpackage] || (target[subpackage] = {});
+	      }
+	    }
+	    _results = [];
+	    for (key in values) {
+	      value = values[key];
+	      _results.push(target[key] = value);
+	    }
+	    return _results;
+	  };
+	  namespace("", {
+	    namespace: namespace
+	  });
+	}).call(this);
+
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, BaseField, BoolField, _, namespace,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	namespace = __webpack_require__(14).namespace;
+	
+	BaseField = __webpack_require__(16);
+	
+	
+	/* SidebarField View */
+	
+	BoolField = (function(superClass) {
+	  extend(BoolField, superClass);
+	
+	  function BoolField() {
+	    this.render = bind(this.render, this);
+	    this.on_value_updated = bind(this.on_value_updated, this);
+	    return BoolField.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  BoolField.prototype.on_value_updated = function(new_val) {
+	    if (this.model.getValue() === true) {
+	      return this.$checkbox.attr('checked', 'checked');
+	    } else {
+	      return this.$checkbox.removeAttr('checked');
+	    }
+	  };
+	
+	  BoolField.prototype.render = function() {
+	    var $container, $target, id;
+	    console.log("check..");
+	    $target = this.createSidebarContainer();
+	    id = "side-field-checkbox-" + (this.model.get('fid'));
+	    $container = $("<div><input type='checkbox' id='" + id + "'/></div>").appendTo($target);
+	    this.$checkbox = $("input", $container);
+	    if (this.model.getValue() === true) {
+	      this.$checkbox.attr('checked', 'checked');
+	    }
+	    this.$checkbox.change((function(_this) {
+	      return function(e) {
+	        if (_this.$checkbox.is(':checked')) {
+	          return _this.model.setValue(true);
+	        } else {
+	          return _this.model.setValue(false);
+	        }
+	      };
+	    })(this));
+	    return this;
+	  };
+	
+	  return BoolField;
+	
+	})(BaseField);
+	
+	module.exports = BoolField;
+
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, BaseField, SidebarTextfield, _, _view_field_sidebar_container,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	_view_field_sidebar_container = __webpack_require__(17);
+	
+	SidebarTextfield = __webpack_require__(18);
+	
+	
+	/* BaseField View */
+	
+	BaseField = (function(superClass) {
+	  extend(BaseField, superClass);
+	
+	  function BaseField() {
+	    this.createSidebarFieldTitle = bind(this.createSidebarFieldTitle, this);
+	    this.createSubvalTextinput = bind(this.createSubvalTextinput, this);
+	    this.createTextfield = bind(this.createTextfield, this);
+	    this.createSidebarContainer = bind(this.createSidebarContainer, this);
+	    this.render = bind(this.render, this);
+	    this.on_value_updated = bind(this.on_value_updated, this);
+	    return BaseField.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  BaseField.prototype.initialize = function(options) {
+	    BaseField.__super__.initialize.apply(this, arguments);
+	    this.model.on("value_updated", this.on_value_updated);
+	    return this.render();
+	  };
+	
+	  BaseField.prototype.on_value_updated = function(new_val) {
+	    return this;
+	  };
+	
+	  BaseField.prototype.render = function() {
+	    return this;
+	  };
+	
+	  BaseField.prototype.createSidebarContainer = function(name) {
+	    var options;
+	    if (name == null) {
+	      name = this.model.get("name");
+	    }
+	    options = {
+	      fid: this.model.get("fid"),
+	      model: this,
+	      name: name
+	    };
+	    this.container = $(_.template(_view_field_sidebar_container, options));
+	    this.$el.append(this.container);
+	    return this.container;
+	  };
+	
+	  BaseField.prototype.createTextfield = function($target, type, link_to_val) {
+	    var textField;
+	    if (type == null) {
+	      type = "float";
+	    }
+	    if (link_to_val == null) {
+	      link_to_val = true;
+	    }
+	    textField = new SidebarTextfield({
+	      model: this.model,
+	      el: $target,
+	      type: type,
+	      link_to_val: link_to_val
+	    });
+	    return textField;
+	  };
+	
+	  BaseField.prototype.createSubvalTextinput = function(subval, type) {
+	    var $target, textfield;
+	    if (type == null) {
+	      type = "float";
+	    }
+	    $target = this.createSidebarContainer(subval);
+	    textfield = this.createTextfield($target, type, false);
+	    textfield.linkTextfieldToSubval(subval, type);
+	    return false;
+	  };
+	
+	  BaseField.prototype.createSidebarFieldTitle = function(name) {
+	    if (name == null) {
+	      name = this.model.get("name");
+	    }
+	    this.$el.append("<h3>" + name + "</h3>");
+	    return this.$el;
+	  };
+	
+	  return BaseField;
+	
+	})(Backbone.View);
+	
+	module.exports = BaseField;
+
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports) {
+
+	module.exports = "<div data-fid=\"<%= fid %>\" class='field-wrapper'>\n  <h3><%= name %></h3>\n</div>\n";
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, DraggableNumber, SidebarTextfield, _, _view_field_textfield,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	_view_field_textfield = __webpack_require__(19);
+	
+	DraggableNumber = __webpack_require__(20);
+	
+	
+	/* SidebarTextfield View */
+	
+	SidebarTextfield = (function(superClass) {
+	  extend(SidebarTextfield, superClass);
+	
+	  function SidebarTextfield() {
+	    this.addTextfieldSlider = bind(this.addTextfieldSlider, this);
+	    this.linkTextfieldToSubval = bind(this.linkTextfieldToSubval, this);
+	    this.linkTextfieldToVal = bind(this.linkTextfieldToVal, this);
+	    this.render = bind(this.render, this);
+	    return SidebarTextfield.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  SidebarTextfield.prototype.initialize = function(options) {
+	    SidebarTextfield.__super__.initialize.apply(this, arguments);
+	    this.slider = false;
+	    return this.render();
+	  };
+	
+	  SidebarTextfield.prototype.render = function() {
+	    this.container = $(_.template(_view_field_textfield, this.options));
+	    this.$el.append(this.container);
+	    this.$input = $("input", this.container);
+	    return this;
+	  };
+	
+	  SidebarTextfield.prototype.linkTextfieldToVal = function(type) {
+	    var on_value_changed;
+	    if (type == null) {
+	      type = "float";
+	    }
+	    this.$input.val(this.model.getValue());
+	    if (this.options.type === "float" && this.slider === false) {
+	      this.slider = this.addTextfieldSlider();
+	    }
+	    on_value_changed = (function(_this) {
+	      return function(v) {
+	        if (_this.slider) {
+	          return _this.slider.set(v);
+	        }
+	      };
+	    })(this);
+	    this.model.on("value_updated", on_value_changed);
+	    this.$input.val(this.model.getValue());
+	    if (this.slider) {
+	      this.slider._options.changeCallback = (function(_this) {
+	        return function(new_val) {
+	          return _this.model.setValue(new_val);
+	        };
+	      })(this);
+	    }
+	    this.$input.keypress((function(_this) {
+	      return function(e) {
+	        if (e.which === 13) {
+	          if (type === "float") {
+	            _this.model.setValue(parseFloat(_this.$input.val()));
+	          } else {
+	            _this.model.setValue(_this.$input.val());
+	          }
+	          return _this.$input.blur();
+	        }
+	      };
+	    })(this));
+	    return this;
+	  };
+	
+	  SidebarTextfield.prototype.linkTextfieldToSubval = function(subval, type) {
+	    var updateVal;
+	    if (type == null) {
+	      type = "float";
+	    }
+	    this.$input.val(this.model.getValue()[subval]);
+	    if (this.options.type === "float") {
+	      this.slider = this.addTextfieldSlider();
+	    }
+	    this.model.on_value_update_hooks["update_sidebar_textfield_" + subval] = (function(_this) {
+	      return function(v) {
+	        return _this.$input.val(v[subval]);
+	      };
+	    })(this);
+	    updateVal = (function(_this) {
+	      return function() {
+	        var dval;
+	        dval = _this.$input.val();
+	        if (type === "float") {
+	          dval = parseFloat(dval);
+	        }
+	        if ($.type(_this.model.attributes.value) === "array") {
+	          return _this.model.attributes.value[0][subval] = dval;
+	        } else {
+	          return _this.model.attributes.value[subval] = dval;
+	        }
+	      };
+	    })(this);
+	    this.slider._options.changeCallback = (function(_this) {
+	      return function(new_val) {
+	        return updateVal();
+	      };
+	    })(this);
+	    this.$input.change((function(_this) {
+	      return function(e) {
+	        return updateVal();
+	      };
+	    })(this));
+	    this.$input.keypress((function(_this) {
+	      return function(e) {
+	        if (e.which === 13) {
+	          updateVal();
+	          return _this.$input.blur();
+	        }
+	      };
+	    })(this));
+	    return this;
+	  };
+	
+	  SidebarTextfield.prototype.addTextfieldSlider = function() {
+	    var slider;
+	    slider = new DraggableNumber(this.$input.get(0));
+	    return slider;
+	  };
+	
+	  return SidebarTextfield;
+	
+	})(Backbone.View);
+	
+	module.exports = SidebarTextfield;
+
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports) {
+
+	module.exports = "<div class='input-container'>\n  <input type='text' class='field-<%= type %>' />\n</div>\n";
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	/**!
+	 * draggable-number.js
+	 * Minimal numeric input widget
+	 *
+	 * @license Licensed under the MIT (http://www.opensource.org/licenses/mit-license.php) license.
+	 * @author David Mignot - http://idflood.com
+	 * @version 0.3.0
+	 **/
+	(function(root, factory) {
+	    if(true) {
+	        module.exports = factory();
+	    }
+	    else if(typeof define === 'function' && define.amd) {
+	        define([], factory);
+	    }
+	    else {
+	        root['DraggableNumber'] = factory();
+	    }
+	}(this, function() {
+	// Utility function to replace .bind(this) since it is not available in all browsers.
+	var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+	
+	/**
+	 * Define the DraggableNumber element.
+	 * @constructor
+	 * @param {DomElement} input - The input which will be converted to a draggableNumber.
+	 */
+	DraggableNumber = function (input, options) {
+	  this._options = options !== undefined ? options : {};
+	
+	  this._input = input;
+	  this._span = document.createElement("span");
+	  this._isDragging = false;
+	  this._lastMousePosition = {x: 0, y: 0};
+	  this._value = 0;
+	
+	  // Minimum mouse movement before a drag start.
+	  this._dragThreshold = this._setOption('dragThreshold', 10);
+	
+	  // Min/max value.
+	  this._min = this._setOption('min', -Infinity);
+	  this._max = this._setOption('max', Infinity);
+	
+	  // Store the original display style for the input and span.
+	  this._inputDisplayStyle = "";
+	  this._spanDisplayStyle = "";
+	
+	  this._init();
+	};
+	
+	/**
+	 * Constant used when there is no key modifier.
+	 * @constant
+	 * type {Number}
+	 */
+	DraggableNumber.MODIFIER_NONE = 0;
+	
+	/**
+	 * Constant used when there is a shift key modifier.
+	 * @constant
+	 * type {Number}
+	 */
+	DraggableNumber.MODIFIER_LARGE = 1;
+	
+	/**
+	 * Constant used when there is a control key modifier.
+	 * @constant
+	 * type {Number}
+	 */
+	DraggableNumber.MODIFIER_SMALL = 2;
+	
+	DraggableNumber.prototype = {
+	  constructor: DraggableNumber,
+	
+	  /**
+	   * Initialize the DraggableNumber.
+	   * @private
+	   */
+	  _init: function () {
+	    // Get the inital _value from the input.
+	    this._value = parseFloat(this._input.value, 10);
+	
+	    // Add a span containing the _value. Clicking on the span will show the
+	    // input. Dragging the span will change the _value.
+	    this._addSpan();
+	
+	    // Save the original display style of the input and span.
+	    this._inputDisplayStyle = this._input.style.display;
+	    this._spanDisplayStyle = this._span.style.display;
+	
+	    // Hide the input.
+	    this._input.style.display = 'none';
+	
+	    // Bind 'this' on event callbacks.
+	    this._onMouseUp = __bind(this._onMouseUp, this);
+	    this._onMouseMove = __bind(this._onMouseMove, this);
+	    this._onMouseDown = __bind(this._onMouseDown, this);
+	    this._onInputBlur = __bind(this._onInputBlur, this);
+	    this._onInputKeyDown = __bind(this._onInputKeyDown, this);
+	    this._onInputChange = __bind(this._onInputChange, this);
+	
+	    // Add mousedown event handler.
+	    this._span.addEventListener('mousedown', this._onMouseDown, false);
+	
+	    // Add key events on the input.
+	    this._input.addEventListener('blur', this._onInputBlur, false);
+	    this._input.addEventListener('keypress', this._onInputKeyDown, false);
+	
+	    // Directly assign the function instead of using addeventlistener.
+	    // To programatically change the _value of the draggableNumber you
+	    // could then do:
+	    // input._value = new_number;
+	    // input.onchange();
+	    this._input.onchange = this._onInputChange;
+	  },
+	
+	  /**
+	   * Set the DraggableNumber value.
+	   * @public
+	   * @param {Number} new_value - The new value.
+	   */
+	  set: function (new_value) {
+	    new_value = this._constraintValue(new_value);
+	    this._value = new_value;
+	    this._input.value = this._value;
+	    this._span.innerHTML = this._value;
+	  },
+	
+	  /**
+	   * Get the DraggableNumber value.
+	   * @public
+	   * @returns {Number}
+	   */
+	  get: function () {
+	    return this._value;
+	  },
+	
+	  /**
+	   * Set the minimum value.
+	   * @public
+	   * @param {Number} min - The minimum value.
+	   */
+	  setMin: function (min) {
+	    this._min = min;
+	    // Set the value with current value to automatically constrain it if needed.
+	    this.set(this._value);
+	  },
+	
+	  /**
+	   * Set the maximum value.
+	   * @public
+	   * @param {Number} min - The minimum value.
+	   */
+	  setMax: function (max) {
+	    this._max = max;
+	    // Set the value with current value to automatically constrain it if needed.
+	    this.set(this._value);
+	  },
+	
+	  /**
+	   * Remove the DraggableNumber.
+	   * @public
+	   */
+	  destroy: function () {
+	    // Remove event listeners.
+	    this._span.removeEventListener('mousedown', this._onMouseDown, false);
+	    this._input.removeEventListener('blur', this._onInputBlur, false);
+	    this._input.removeEventListener('keypress', this._onInputKeyDown, false);
+	    document.removeEventListener('mouseup', this._onMouseUp, false);
+	    document.removeEventListener('mousemove', this._onMouseMove, false);
+	
+	    // Remove the span element.
+	    if (this._span.parentNode) {
+	      this._span.parentNode.removeChild(this._span);
+	    }
+	
+	    // Delete variables.
+	    delete this._input;
+	    delete this._span;
+	    delete this._inputDisplayStyle;
+	    delete this._spanDisplayStyle;
+	  },
+	
+	  /**
+	   * Set an option value based on the option parameter and the data attribute.
+	   * @private
+	   * @param {String} name - The option name.
+	   * @param {Number} defaultValue - The default value.
+	   * @returns {Number}
+	   */
+	  _setOption: function (name, defaultValue) {
+	    // Return the option if it is defined.
+	    if (this._options[name] !== undefined) {
+	      return this._options[name];
+	    }
+	    // Return the data attribute if it is defined.
+	    if (this._input.hasAttribute("data-" + name)) {
+	      return parseFloat(this._input.getAttribute("data-" + name), 10);
+	    }
+	    // If there is no option and no attribute, return the default value.
+	    return defaultValue;
+	  },
+	
+	  /**
+	   * Prevent selection on the whole document.
+	   * @private
+	   * @param {Boolean} prevent - Should we prevent or not the selection.
+	   */
+	  _preventSelection: function (prevent) {
+	    var value = 'none';
+	    if (prevent === false) {
+	      value = 'all';
+	    }
+	
+	    document.body.style['-moz-user-select'] = value;
+	    document.body.style['-webkit-user-select'] = value;
+	    document.body.style['-ms-user-select'] = value;
+	    document.body.style['user-select'] = value;
+	  },
+	
+	  /**
+	   * Add a span element before the input.
+	   * @private
+	   */
+	  _addSpan: function () {
+	    var inputParent = this._input.parentNode;
+	    inputParent.insertBefore(this._span, this._input);
+	    this._span.innerHTML = this.get();
+	
+	    // Add resize cursor.
+	    this._span.style.cursor = "col-resize";
+	  },
+	
+	  /**
+	   * Display the input and hide the span element.
+	   * @private
+	   */
+	  _showInput: function () {
+	    this._input.style.display = this._inputDisplayStyle;
+	    this._span.style.display = 'none';
+	    this._input.focus();
+	  },
+	
+	  /**
+	   * Show the span element and hide the input.
+	   * @private
+	   */
+	  _showSpan: function () {
+	    this._input.style.display = 'none';
+	    this._span.style.display = this._spanDisplayStyle;
+	  },
+	
+	  /**
+	   * Called on input blur, set the new value and display span.
+	   * @private
+	   * @param {Object} e - Event.
+	   */
+	  _onInputBlur: function (e) {
+	    this._onInputChange();
+	    this._showSpan();
+	  },
+	
+	  /**
+	   * Called on input onchange event, set the value based on the input value.
+	   * @private
+	   */
+	  _onInputChange: function () {
+	    this.set(parseFloat(this._input.value, 10));
+	  },
+	
+	  /**
+	   * Called on input key down, blur on enter.
+	   * @private
+	   * @param {Object} e - Key event.
+	   */
+	  _onInputKeyDown: function (e) {
+	    var keyEnter = 13;
+	    if (e.charCode == keyEnter) {
+	      this._input.blur();
+	    }
+	  },
+	
+	  /**
+	   * Called on span mouse down, prevent selection and initalize logic for mouse drag.
+	   * @private
+	   * @param {Object} e - Mouse event.
+	   */
+	  _onMouseDown: function (e) {
+	    this._preventSelection(true);
+	    this._isDragging = false;
+	    this._lastMousePosition = {x: e.clientX, y: e.clientY};
+	
+	    document.addEventListener('mouseup', this._onMouseUp, false);
+	    document.addEventListener('mousemove', this._onMouseMove, false);
+	  },
+	
+	  /**
+	   * Called on span mouse up, show input if no drag.
+	   * @private
+	   * @param {Object} e - Mouse event.
+	   */
+	  _onMouseUp: function (e) {
+	    this._preventSelection(false);
+	    // If we didn't drag the span then we display the input.
+	    if (this._isDragging === false) {
+	      this._showInput();
+	    }
+	    this._isDragging = false;
+	
+	    document.removeEventListener('mouseup', this._onMouseUp, false);
+	    document.removeEventListener('mousemove', this._onMouseMove, false);
+	  },
+	
+	  /**
+	   * Check if difference bettween 2 positions is above minimum threshold.
+	   * @private
+	   * @param {Object} newMousePosition - the new mouse position.
+	   * @param {Object} lastMousePosition - the last mouse position.
+	   * @returns {Boolean}
+	   */
+	  _hasMovedEnough: function (newMousePosition, lastMousePosition) {
+	    if (Math.abs(newMousePosition.x - lastMousePosition.x) >= this._dragThreshold ||
+	      Math.abs(newMousePosition.y - lastMousePosition.y) >= this._dragThreshold) {
+	      return true;
+	    }
+	    return false;
+	  },
+	
+	  _onMouseMove: function (e) {
+	    // Get the new mouse position.
+	    var newMousePosition = {x: e.clientX, y: e.clientY};
+	
+	    if (this._hasMovedEnough(newMousePosition, this._lastMousePosition)) {
+	      this._isDragging = true;
+	    }
+	
+	    // If we are not dragging don't do anything.
+	    if (this._isDragging === false) {
+	      return;
+	    }
+	
+	    // Get the increment modifier. Small increment * 0.1, large increment * 10.
+	    var modifier = DraggableNumber.MODIFIER_NONE;
+	    if (e.shiftKey) {
+	      modifier = DraggableNumber.MODIFIER_LARGE;
+	    }
+	    else if (e.ctrlKey) {
+	      modifier = DraggableNumber.MODIFIER_SMALL;
+	    }
+	
+	    // Calculate the delta with previous mouse position.
+	    var delta = this._getLargestDelta(newMousePosition, this._lastMousePosition);
+	
+	    // Get the number offset.
+	    var offset = this._getNumberOffset(delta, modifier);
+	
+	    // Update the input number.
+	    var new_value = this.get() + offset;
+	    this.set(new_value);
+	
+	    // Call onchange callback if it exists.
+	    if ("changeCallback" in this._options) {
+	      this._options.changeCallback(new_value);
+	    }
+	
+	    // Save current mouse position.
+	    this._lastMousePosition = newMousePosition;
+	  },
+	
+	  /**
+	   * Return the number offset based on a delta and a modifier.
+	   * @private
+	   * @param {Number} delta - a positive or negative number.
+	   * @param {Number} modifier - the modifier type.
+	   * @returns {Number}
+	   */
+	  _getNumberOffset: function (delta, modifier) {
+	    var increment = 1;
+	    if (modifier == DraggableNumber.MODIFIER_SMALL) {
+	      increment *= 0.1;
+	    }
+	    else if (modifier == DraggableNumber.MODIFIER_LARGE) {
+	      increment *= 10;
+	    }
+	    // Negative increment if delta is negative.
+	    if (delta < 0) {
+	      increment *= -1;
+	    }
+	    return increment;
+	  },
+	
+	  /**
+	   * Return the largest difference between two positions, either x or y.
+	   * @private
+	   * @param {Object} newMousePosition - the new mouse position.
+	   * @param {Object} lastMousePosition - the last mouse position.
+	   * @returns {Number}
+	   */
+	  _getLargestDelta: function (newPosition, oldPosition) {
+	    var result = 0;
+	    var delta = {
+	      x: newPosition.x - oldPosition.x,
+	      y: newPosition.y - oldPosition.y,
+	    };
+	
+	    if (Math.abs(delta.x) > Math.abs(delta.y)) {
+	      return delta.x;
+	    }
+	    else {
+	      // Inverse the position.y since mouse move to up should increase the _value.
+	      return delta.y * -1;
+	    }
+	  },
+	
+	  /**
+	   * Constrain a value between min and max.
+	   * @private
+	   * @param {Number} value - The value to constrain.
+	   * @returns {Number}
+	   */
+	  _constraintValue: function (value) {
+	    value = Math.min(value, this._max);
+	    value = Math.max(value, this._min);
+	    return value;
+	  }
+	};
+	
+	    return DraggableNumber;
+	}));
+	
+
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, BaseField, StringField, _, namespace,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	namespace = __webpack_require__(14).namespace;
+	
+	BaseField = __webpack_require__(16);
+	
+	
+	/* StringField View */
+	
+	StringField = (function(superClass) {
+	  extend(StringField, superClass);
+	
+	  function StringField() {
+	    this.create_sidebar_input = bind(this.create_sidebar_input, this);
+	    this.create_sidebar_select = bind(this.create_sidebar_select, this);
+	    this.render = bind(this.render, this);
+	    return StringField.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  StringField.prototype.render = function() {
+	    var $target;
+	    $target = this.createSidebarContainer();
+	    if (this.model.attributes.possibilities) {
+	      this.create_sidebar_select($target);
+	    } else {
+	      this.create_sidebar_input($target);
+	    }
+	    return true;
+	  };
+	
+	  StringField.prototype.create_sidebar_select = function($target) {
+	    var dval, f, input, self;
+	    self = this;
+	    input = "<div><select>";
+	    for (f in this.model.get("possibilities")) {
+	      dval = this.model.get("possibilities")[f];
+	      if (dval === this.val) {
+	        input += "<option value='" + dval + "' selected='selected'>" + f + "</option>";
+	      } else {
+	        input += "<option value='" + dval + "'>" + f + "</option>";
+	      }
+	    }
+	    input += "</select></div>";
+	    $target.append(input);
+	    $("select", $target).change((function(_this) {
+	      return function(e) {
+	        return _this.model.setValue($("select", $target).val());
+	      };
+	    })(this));
+	    return true;
+	  };
+	
+	  StringField.prototype.create_sidebar_input = function($target) {
+	    this.textfield = this.createTextfield($target, "string");
+	    return this.textfield.linkTextfieldToVal("string");
+	  };
+	
+	  return StringField;
+	
+	})(BaseField);
+	
+	module.exports = StringField;
+
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, BaseField, FloatField, _, namespace,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	namespace = __webpack_require__(14).namespace;
+	
+	BaseField = __webpack_require__(16);
+	
+	
+	/* FloatField View */
+	
+	FloatField = (function(superClass) {
+	  extend(FloatField, superClass);
+	
+	  function FloatField() {
+	    this.create_sidebar_input = bind(this.create_sidebar_input, this);
+	    this.create_sidebar_select = bind(this.create_sidebar_select, this);
+	    this.render = bind(this.render, this);
+	    return FloatField.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  FloatField.prototype.initialize = function(options) {
+	    return FloatField.__super__.initialize.apply(this, arguments);
+	  };
+	
+	  FloatField.prototype.render = function() {
+	    var $target;
+	    $target = this.createSidebarContainer();
+	    if (this.model.attributes.possibilities) {
+	      this.create_sidebar_select($target);
+	    } else {
+	      this.create_sidebar_input($target);
+	    }
+	    return true;
+	  };
+	
+	  FloatField.prototype.create_sidebar_select = function($target) {
+	    var dval, f, input, self;
+	    self = this;
+	    input = "<div><select>";
+	    for (f in this.model.get("possibilities")) {
+	      dval = this.model.get("possibilities")[f];
+	      if (dval === this.val) {
+	        input += "<option value='" + dval + "' selected='selected'>" + f + "</option>";
+	      } else {
+	        input += "<option value='" + dval + "'>" + f + "</option>";
+	      }
+	    }
+	    input += "</select></div>";
+	    $target.append(input);
+	    $("select", $target).change((function(_this) {
+	      return function(e) {
+	        return _this.model.setValue($("select", $target).val());
+	      };
+	    })(this));
+	    return true;
+	  };
+	
+	  FloatField.prototype.create_sidebar_input = function($target) {
+	    this.textfield = this.createTextfield($target);
+	    return this.textfield.linkTextfieldToVal();
+	  };
+	
+	  return FloatField;
+	
+	})(BaseField);
+	
+	module.exports = FloatField;
+
+
+/***/ }),
 /* 23 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, BaseField, Vector2Field, _, namespace,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	namespace = __webpack_require__(14).namespace;
+	
+	BaseField = __webpack_require__(16);
+	
+	
+	/* Vector2Field View */
+	
+	Vector2Field = (function(superClass) {
+	  extend(Vector2Field, superClass);
+	
+	  function Vector2Field() {
+	    this.render = bind(this.render, this);
+	    return Vector2Field.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Vector2Field.prototype.render = function() {
+	    this.createSidebarFieldTitle();
+	    this.createSubvalTextinput("x");
+	    this.createSubvalTextinput("y");
+	    return this;
+	  };
+	
+	  return Vector2Field;
+	
+	})(BaseField);
+	
+	module.exports = Vector2Field;
+
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, BaseField, Vector3Field, _, namespace,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	namespace = __webpack_require__(14).namespace;
+	
+	BaseField = __webpack_require__(16);
+	
+	
+	/* Vector3Field View */
+	
+	Vector3Field = (function(superClass) {
+	  extend(Vector3Field, superClass);
+	
+	  function Vector3Field() {
+	    this.render = bind(this.render, this);
+	    return Vector3Field.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Vector3Field.prototype.render = function() {
+	    this.createSidebarFieldTitle();
+	    this.createSubvalTextinput("x");
+	    this.createSubvalTextinput("y");
+	    this.createSubvalTextinput("z");
+	    return this;
+	  };
+	
+	  return Vector3Field;
+	
+	})(BaseField);
+	
+	module.exports = Vector3Field;
+
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, BaseField, Vector4Field, _, namespace,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	namespace = __webpack_require__(14).namespace;
+	
+	BaseField = __webpack_require__(16);
+	
+	
+	/* Vector4Field View */
+	
+	Vector4Field = (function(superClass) {
+	  extend(Vector4Field, superClass);
+	
+	  function Vector4Field() {
+	    this.render = bind(this.render, this);
+	    return Vector4Field.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Vector4Field.prototype.render = function() {
+	    this.createSidebarFieldTitle();
+	    this.createSubvalTextinput("x");
+	    this.createSubvalTextinput("y");
+	    this.createSubvalTextinput("z");
+	    this.createSubvalTextinput("w");
+	    return this;
+	  };
+	
+	  return Vector4Field;
+	
+	})(BaseField);
+	
+	module.exports = Vector4Field;
+
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, BaseField, QuaternionField, _, namespace,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	namespace = __webpack_require__(14).namespace;
+	
+	BaseField = __webpack_require__(16);
+	
+	
+	/* Vector3Field View */
+	
+	QuaternionField = (function(superClass) {
+	  extend(QuaternionField, superClass);
+	
+	  function QuaternionField() {
+	    this.render = bind(this.render, this);
+	    return QuaternionField.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  QuaternionField.prototype.render = function() {
+	    this.createSidebarFieldTitle();
+	    this.createSubvalTextinput("x");
+	    this.createSubvalTextinput("y");
+	    this.createSubvalTextinput("z");
+	    this.createSubvalTextinput("w");
+	    return this;
+	  };
+	
+	  return QuaternionField;
+	
+	})(BaseField);
+	
+	module.exports = QuaternionField;
+
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, BaseField, EulerField, _, namespace,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	namespace = __webpack_require__(14).namespace;
+	
+	BaseField = __webpack_require__(16);
+	
+	
+	/* Euler3Field View */
+	
+	EulerField = (function(superClass) {
+	  extend(EulerField, superClass);
+	
+	  function EulerField() {
+	    this.render = bind(this.render, this);
+	    return EulerField.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  EulerField.prototype.render = function() {
+	    this.createSidebarFieldTitle();
+	    this.createSubvalTextinput("x");
+	    this.createSubvalTextinput("y");
+	    this.createSubvalTextinput("z");
+	    this.createSubvalTextinput("order", "string");
+	    return this;
+	  };
+	
+	  return EulerField;
+	
+	})(BaseField);
+	
+	module.exports = EulerField;
+
+
+/***/ }),
+/* 28 */,
+/* 29 */,
+/* 30 */,
+/* 31 */,
+/* 32 */,
+/* 33 */,
+/* 34 */,
+/* 35 */,
+/* 36 */,
+/* 37 */,
+/* 38 */,
+/* 39 */
+/***/ (function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_39__;
+
+/***/ }),
+/* 40 */,
+/* 41 */,
+/* 42 */,
+/* 43 */,
+/* 44 */,
+/* 45 */,
+/* 46 */,
+/* 47 */,
+/* 48 */,
+/* 49 */,
+/* 50 */,
+/* 51 */,
+/* 52 */,
+/* 53 */,
+/* 54 */,
+/* 55 */
+/***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, CubeGeometry, CylinderGeometry, Node, OctahedronGeometry, PlaneGeometry, SphereGeometry, TextGeometry, TorusGeometry, TorusKnotGeometry, Utils, _,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
@@ -119,9 +2825,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	Utils = __webpack_require__(34);
+	Utils = __webpack_require__(9);
 	
-	Node = __webpack_require__(35);
+	Node = __webpack_require__(11);
 	
 	PlaneGeometry = (function(superClass) {
 	  extend(PlaneGeometry, superClass);
@@ -717,9 +3423,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	ThreeNodes.Core.addNodeType('TextGeometry', TextGeometry);
 
 
-/***/ },
-/* 24 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 56 */
+/***/ (function(module, exports, __webpack_require__) {
 
 	var AmbientLight, Backbone, DirectionalLight, Node, PointLight, SpotLight, _,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
@@ -730,7 +3436,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	Node = __webpack_require__(35);
+	Node = __webpack_require__(11);
 	
 	PointLight = (function(superClass) {
 	  extend(PointLight, superClass);
@@ -998,9 +3704,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	ThreeNodes.Core.addNodeType('AmbientLight', AmbientLight);
 
 
-/***/ },
-/* 25 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 57 */
+/***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, LineBasicMaterial, MeshBasicMaterial, MeshLambertMaterial, MeshPhongMaterial, Node, NodeMaterialBase, _,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
@@ -1011,9 +3717,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	Node = __webpack_require__(35);
+	Node = __webpack_require__(11);
 	
-	NodeMaterialBase = __webpack_require__(40);
+	NodeMaterialBase = __webpack_require__(58);
 	
 	MeshBasicMaterial = (function(superClass) {
 	  extend(MeshBasicMaterial, superClass);
@@ -1255,9 +3961,131 @@ return /******/ (function(modules) { // webpackBootstrap
 	ThreeNodes.Core.addNodeType('MeshPhongMaterial', MeshPhongMaterial);
 
 
-/***/ },
-/* 26 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 58 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Node, NodeMaterialBase,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	Node = __webpack_require__(11);
+	
+	NodeMaterialBase = (function(superClass) {
+	  extend(NodeMaterialBase, superClass);
+	
+	  function NodeMaterialBase() {
+	    this.compute = bind(this.compute, this);
+	    this.remove = bind(this.remove, this);
+	    this.rebuildShader = bind(this.rebuildShader, this);
+	    this.getFields = bind(this.getFields, this);
+	    this.initialize = bind(this.initialize, this);
+	    return NodeMaterialBase.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  NodeMaterialBase.prototype.initialize = function(options) {
+	    NodeMaterialBase.__super__.initialize.apply(this, arguments);
+	    this.ob = false;
+	    this.auto_evaluate = false;
+	    this.material_class = false;
+	    this.last_slice_count = -1;
+	    return this.is_material = true;
+	  };
+	
+	  NodeMaterialBase.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = NodeMaterialBase.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "opacity": 1,
+	        "transparent": false,
+	        "side": {
+	          type: "Float",
+	          val: THREE.FrontSide,
+	          values: {
+	            "Front": THREE.FrontSide,
+	            "Back": THREE.BackSide,
+	            "Both": THREE.DoubleSide
+	          }
+	        },
+	        "depthTest": true,
+	        "alphaTest": 0,
+	        "polygonOffset": false,
+	        "polygonOffsetFactor": 0,
+	        "polygonOffsetUnits": 0,
+	        "blending": {
+	          type: "Float",
+	          val: THREE.NormalBlending,
+	          values: {
+	            "Normal": THREE.NormalBlending,
+	            "Additive": THREE.AdditiveBlending,
+	            "Subtractive": THREE.SubtractiveBlending,
+	            "Multiply": THREE.MultiplyBlending,
+	            "AdditiveAlpha": THREE.AdditiveAlphaBlending
+	          }
+	        }
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  NodeMaterialBase.prototype.rebuildShader = function() {
+	    var j, len, ref, sub_material;
+	    if (!this.ob) {
+	      return this;
+	    }
+	    if ($.type(this.ob) === "array") {
+	      ref = this.ob;
+	      for (j = 0, len = ref.length; j < len; j++) {
+	        sub_material = ref[j];
+	        console.log("rebuilding submaterial");
+	        sub_material.needsUpdate = true;
+	      }
+	    } else {
+	      this.ob.needsUpdate = true;
+	    }
+	    return this;
+	  };
+	
+	  NodeMaterialBase.prototype.remove = function() {
+	    delete this.ob;
+	    delete this.material_cache;
+	    delete this.material_class;
+	    return NodeMaterialBase.__super__.remove.apply(this, arguments);
+	  };
+	
+	  NodeMaterialBase.prototype.compute = function() {
+	    var i, j, k, needs_rebuild, numItems, ref, ref1;
+	    needs_rebuild = false;
+	    numItems = this.fields.getMaxInputSliceCount();
+	    if (this.inputValueHasChanged(this.vars_rebuild_shader_on_change) || this.last_slice_count !== numItems) {
+	      needs_rebuild = true;
+	    }
+	    if (needs_rebuild === true) {
+	      this.ob = [];
+	      for (i = j = 0, ref = numItems; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
+	        this.ob[i] = new this.material_class();
+	      }
+	    }
+	    for (i = k = 0, ref1 = numItems; 0 <= ref1 ? k <= ref1 : k >= ref1; i = 0 <= ref1 ? ++k : --k) {
+	      this.applyFieldsToVal(this.fields.inputs, this.ob[i], [], i);
+	    }
+	    this.material_cache = this.createCacheObject(this.vars_rebuild_shader_on_change);
+	    this.last_slice_count = numItems;
+	    return this.fields.setField("out", this.ob);
+	  };
+	
+	  return NodeMaterialBase;
+	
+	})(Node);
+	
+	module.exports = NodeMaterialBase;
+
+
+/***/ }),
+/* 59 */
+/***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, BleachPass, BloomPass, DotScreenPass, FilmPass, HorizontalBlurPass, Node, Utils, VerticalBlurPass, VignettePass, _,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
@@ -1268,9 +4096,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	Utils = __webpack_require__(34);
+	Utils = __webpack_require__(9);
 	
-	Node = __webpack_require__(35);
+	Node = __webpack_require__(11);
+	
+	__webpack_require__(60);
 	
 	__webpack_require__(61);
 	
@@ -1280,15 +4110,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	__webpack_require__(64);
 	
-	__webpack_require__(67);
-	
 	__webpack_require__(65);
-	
-	__webpack_require__(68);
 	
 	__webpack_require__(66);
 	
-	__webpack_require__(69);
+	__webpack_require__(67);
+	
+	__webpack_require__(68);
 	
 	BloomPass = (function(superClass) {
 	  extend(BloomPass, superClass);
@@ -1730,28 +4558,753 @@ return /******/ (function(modules) { // webpackBootstrap
 	ThreeNodes.Core.addNodeType('BleachPass', BleachPass);
 
 
-/***/ },
-/* 27 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 60 */
+/***/ (function(module, exports) {
+
+	/**
+	 * @author alteredq / http://alteredqualia.com/
+	 *
+	 * Vignette shader
+	 * based on PaintEffect postprocess from ro.me
+	 * http://code.google.com/p/3-dreams-of-black/source/browse/deploy/js/effects/PaintEffect.js
+	 */
+	
+	THREE.VignetteShader = {
+	
+		uniforms: {
+	
+			"tDiffuse": { type: "t", value: null },
+			"offset":   { type: "f", value: 1.0 },
+			"darkness": { type: "f", value: 1.0 }
+	
+		},
+	
+		vertexShader: [
+	
+			"varying vec2 vUv;",
+	
+			"void main() {",
+	
+				"vUv = uv;",
+				"gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
+	
+			"}"
+	
+		].join("\n"),
+	
+		fragmentShader: [
+	
+			"uniform float offset;",
+			"uniform float darkness;",
+	
+			"uniform sampler2D tDiffuse;",
+	
+			"varying vec2 vUv;",
+	
+			"void main() {",
+	
+				// Eskil's vignette
+	
+				"vec4 texel = texture2D( tDiffuse, vUv );",
+				"vec2 uv = ( vUv - vec2( 0.5 ) ) * vec2( offset );",
+				"gl_FragColor = vec4( mix( texel.rgb, vec3( 1.0 - darkness ), dot( uv, uv ) ), texel.a );",
+	
+				/*
+				// alternative version from glfx.js
+				// this one makes more "dusty" look (as opposed to "burned")
+	
+				"vec4 color = texture2D( tDiffuse, vUv );",
+				"float dist = distance( vUv, vec2( 0.5 ) );",
+				"color.rgb *= smoothstep( 0.8, offset * 0.799, dist *( darkness + offset ) );",
+				"gl_FragColor = color;",
+				*/
+	
+			"}"
+	
+		].join("\n")
+	
+	};
+
+
+/***/ }),
+/* 61 */
+/***/ (function(module, exports) {
+
+	/**
+	 * @author zz85 / http://www.lab4games.net/zz85/blog
+	 *
+	 * Two pass Gaussian blur filter (horizontal and vertical blur shaders)
+	 * - described in http://www.gamerendering.com/2008/10/11/gaussian-blur-filter-shader/
+	 *   and used in http://www.cake23.de/traveling-wavefronts-lit-up.html
+	 *
+	 * - 9 samples per pass
+	 * - standard deviation 2.7
+	 * - "h" and "v" parameters should be set to "1 / width" and "1 / height"
+	 */
+	
+	THREE.HorizontalBlurShader = {
+	
+		uniforms: {
+	
+			"tDiffuse": { type: "t", value: null },
+			"h":        { type: "f", value: 1.0 / 512.0 }
+	
+		},
+	
+		vertexShader: [
+	
+			"varying vec2 vUv;",
+	
+			"void main() {",
+	
+				"vUv = uv;",
+				"gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
+	
+			"}"
+	
+		].join("\n"),
+	
+		fragmentShader: [
+	
+			"uniform sampler2D tDiffuse;",
+			"uniform float h;",
+	
+			"varying vec2 vUv;",
+	
+			"void main() {",
+	
+				"vec4 sum = vec4( 0.0 );",
+	
+				"sum += texture2D( tDiffuse, vec2( vUv.x - 4.0 * h, vUv.y ) ) * 0.051;",
+				"sum += texture2D( tDiffuse, vec2( vUv.x - 3.0 * h, vUv.y ) ) * 0.0918;",
+				"sum += texture2D( tDiffuse, vec2( vUv.x - 2.0 * h, vUv.y ) ) * 0.12245;",
+				"sum += texture2D( tDiffuse, vec2( vUv.x - 1.0 * h, vUv.y ) ) * 0.1531;",
+				"sum += texture2D( tDiffuse, vec2( vUv.x, vUv.y ) ) * 0.1633;",
+				"sum += texture2D( tDiffuse, vec2( vUv.x + 1.0 * h, vUv.y ) ) * 0.1531;",
+				"sum += texture2D( tDiffuse, vec2( vUv.x + 2.0 * h, vUv.y ) ) * 0.12245;",
+				"sum += texture2D( tDiffuse, vec2( vUv.x + 3.0 * h, vUv.y ) ) * 0.0918;",
+				"sum += texture2D( tDiffuse, vec2( vUv.x + 4.0 * h, vUv.y ) ) * 0.051;",
+	
+				"gl_FragColor = sum;",
+	
+			"}"
+	
+		].join("\n")
+	
+	};
+
+
+/***/ }),
+/* 62 */
+/***/ (function(module, exports) {
+
+	/**
+	 * @author zz85 / http://www.lab4games.net/zz85/blog
+	 *
+	 * Two pass Gaussian blur filter (horizontal and vertical blur shaders)
+	 * - described in http://www.gamerendering.com/2008/10/11/gaussian-blur-filter-shader/
+	 *   and used in http://www.cake23.de/traveling-wavefronts-lit-up.html
+	 *
+	 * - 9 samples per pass
+	 * - standard deviation 2.7
+	 * - "h" and "v" parameters should be set to "1 / width" and "1 / height"
+	 */
+	
+	THREE.VerticalBlurShader = {
+	
+		uniforms: {
+	
+			"tDiffuse": { type: "t", value: null },
+			"v":        { type: "f", value: 1.0 / 512.0 }
+	
+		},
+	
+		vertexShader: [
+	
+			"varying vec2 vUv;",
+	
+			"void main() {",
+	
+				"vUv = uv;",
+				"gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
+	
+			"}"
+	
+		].join("\n"),
+	
+		fragmentShader: [
+	
+			"uniform sampler2D tDiffuse;",
+			"uniform float v;",
+	
+			"varying vec2 vUv;",
+	
+			"void main() {",
+	
+				"vec4 sum = vec4( 0.0 );",
+	
+				"sum += texture2D( tDiffuse, vec2( vUv.x, vUv.y - 4.0 * v ) ) * 0.051;",
+				"sum += texture2D( tDiffuse, vec2( vUv.x, vUv.y - 3.0 * v ) ) * 0.0918;",
+				"sum += texture2D( tDiffuse, vec2( vUv.x, vUv.y - 2.0 * v ) ) * 0.12245;",
+				"sum += texture2D( tDiffuse, vec2( vUv.x, vUv.y - 1.0 * v ) ) * 0.1531;",
+				"sum += texture2D( tDiffuse, vec2( vUv.x, vUv.y ) ) * 0.1633;",
+				"sum += texture2D( tDiffuse, vec2( vUv.x, vUv.y + 1.0 * v ) ) * 0.1531;",
+				"sum += texture2D( tDiffuse, vec2( vUv.x, vUv.y + 2.0 * v ) ) * 0.12245;",
+				"sum += texture2D( tDiffuse, vec2( vUv.x, vUv.y + 3.0 * v ) ) * 0.0918;",
+				"sum += texture2D( tDiffuse, vec2( vUv.x, vUv.y + 4.0 * v ) ) * 0.051;",
+	
+				"gl_FragColor = sum;",
+	
+			"}"
+	
+		].join("\n")
+	
+	};
+
+
+/***/ }),
+/* 63 */
+/***/ (function(module, exports) {
+
+	/**
+	 * @author alteredq / http://alteredqualia.com/
+	 *
+	 * Bleach bypass shader [http://en.wikipedia.org/wiki/Bleach_bypass]
+	 * - based on Nvidia example
+	 * http://developer.download.nvidia.com/shaderlibrary/webpages/shader_library.html#post_bleach_bypass
+	 */
+	
+	THREE.BleachBypassShader = {
+	
+		uniforms: {
+	
+			"tDiffuse": { type: "t", value: null },
+			"opacity":  { type: "f", value: 1.0 }
+	
+		},
+	
+		vertexShader: [
+	
+			"varying vec2 vUv;",
+	
+			"void main() {",
+	
+				"vUv = uv;",
+				"gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
+	
+			"}"
+	
+		].join("\n"),
+	
+		fragmentShader: [
+	
+			"uniform float opacity;",
+	
+			"uniform sampler2D tDiffuse;",
+	
+			"varying vec2 vUv;",
+	
+			"void main() {",
+	
+				"vec4 base = texture2D( tDiffuse, vUv );",
+	
+				"vec3 lumCoeff = vec3( 0.25, 0.65, 0.1 );",
+				"float lum = dot( lumCoeff, base.rgb );",
+				"vec3 blend = vec3( lum );",
+	
+				"float L = min( 1.0, max( 0.0, 10.0 * ( lum - 0.45 ) ) );",
+	
+				"vec3 result1 = 2.0 * base.rgb * blend;",
+				"vec3 result2 = 1.0 - 2.0 * ( 1.0 - blend ) * ( 1.0 - base.rgb );",
+	
+				"vec3 newColor = mix( result1, result2, L );",
+	
+				"float A2 = opacity * base.a;",
+				"vec3 mixRGB = A2 * newColor.rgb;",
+				"mixRGB += ( ( 1.0 - A2 ) * base.rgb );",
+	
+				"gl_FragColor = vec4( mixRGB, base.a );",
+	
+			"}"
+	
+		].join("\n")
+	
+	};
+
+
+/***/ }),
+/* 64 */
+/***/ (function(module, exports) {
+
+	/**
+	 * @author alteredq / http://alteredqualia.com/
+	 */
+	
+	THREE.DotScreenPass = function ( center, angle, scale ) {
+	
+		if ( THREE.DotScreenShader === undefined )
+			console.error( "THREE.DotScreenPass relies on THREE.DotScreenShader" );
+	
+		var shader = THREE.DotScreenShader;
+	
+		this.uniforms = THREE.UniformsUtils.clone( shader.uniforms );
+	
+		if ( center !== undefined ) this.uniforms[ "center" ].value.copy( center );
+		if ( angle !== undefined ) this.uniforms[ "angle"].value = angle;
+		if ( scale !== undefined ) this.uniforms[ "scale"].value = scale;
+	
+		this.material = new THREE.ShaderMaterial( {
+	
+			uniforms: this.uniforms,
+			vertexShader: shader.vertexShader,
+			fragmentShader: shader.fragmentShader
+	
+		} );
+	
+		this.enabled = true;
+		this.renderToScreen = false;
+		this.needsSwap = true;
+	
+	};
+	
+	THREE.DotScreenPass.prototype = {
+	
+		render: function ( renderer, writeBuffer, readBuffer, delta ) {
+	
+			this.uniforms[ "tDiffuse" ].value = readBuffer;
+			this.uniforms[ "tSize" ].value.set( readBuffer.width, readBuffer.height );
+	
+			THREE.EffectComposer.quad.material = this.material;
+	
+			if ( this.renderToScreen ) {
+	
+				renderer.render( THREE.EffectComposer.scene, THREE.EffectComposer.camera );
+	
+			} else {
+	
+				renderer.render( THREE.EffectComposer.scene, THREE.EffectComposer.camera, writeBuffer, false );
+	
+			}
+	
+		}
+	
+	};
+
+
+/***/ }),
+/* 65 */
+/***/ (function(module, exports) {
+
+	/**
+	 * @author alteredq / http://alteredqualia.com/
+	 *
+	 * Convolution shader
+	 * ported from o3d sample to WebGL / GLSL
+	 * http://o3d.googlecode.com/svn/trunk/samples/convolution.html
+	 */
+	
+	THREE.ConvolutionShader = {
+	
+		defines: {
+	
+			"KERNEL_SIZE_FLOAT": "25.0",
+			"KERNEL_SIZE_INT": "25",
+	
+		},
+	
+		uniforms: {
+	
+			"tDiffuse":        { type: "t", value: null },
+			"uImageIncrement": { type: "v2", value: new THREE.Vector2( 0.001953125, 0.0 ) },
+			"cKernel":         { type: "fv1", value: [] }
+	
+		},
+	
+		vertexShader: [
+	
+			"uniform vec2 uImageIncrement;",
+	
+			"varying vec2 vUv;",
+	
+			"void main() {",
+	
+				"vUv = uv - ( ( KERNEL_SIZE_FLOAT - 1.0 ) / 2.0 ) * uImageIncrement;",
+				"gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
+	
+			"}"
+	
+		].join("\n"),
+	
+		fragmentShader: [
+	
+			"uniform float cKernel[ KERNEL_SIZE_INT ];",
+	
+			"uniform sampler2D tDiffuse;",
+			"uniform vec2 uImageIncrement;",
+	
+			"varying vec2 vUv;",
+	
+			"void main() {",
+	
+				"vec2 imageCoord = vUv;",
+				"vec4 sum = vec4( 0.0, 0.0, 0.0, 0.0 );",
+	
+				"for( int i = 0; i < KERNEL_SIZE_INT; i ++ ) {",
+	
+					"sum += texture2D( tDiffuse, imageCoord ) * cKernel[ i ];",
+					"imageCoord += uImageIncrement;",
+	
+				"}",
+	
+				"gl_FragColor = sum;",
+	
+			"}"
+	
+	
+		].join("\n"),
+	
+		buildKernel: function ( sigma ) {
+	
+			// We lop off the sqrt(2 * pi) * sigma term, since we're going to normalize anyway.
+	
+			function gauss( x, sigma ) {
+	
+				return Math.exp( - ( x * x ) / ( 2.0 * sigma * sigma ) );
+	
+			}
+	
+			var i, values, sum, halfWidth, kMaxKernelSize = 25, kernelSize = 2 * Math.ceil( sigma * 3.0 ) + 1;
+	
+			if ( kernelSize > kMaxKernelSize ) kernelSize = kMaxKernelSize;
+			halfWidth = ( kernelSize - 1 ) * 0.5;
+	
+			values = new Array( kernelSize );
+			sum = 0.0;
+			for ( i = 0; i < kernelSize; ++i ) {
+	
+				values[ i ] = gauss( i - halfWidth, sigma );
+				sum += values[ i ];
+	
+			}
+	
+			// normalize the kernel
+	
+			for ( i = 0; i < kernelSize; ++i ) values[ i ] /= sum;
+	
+			return values;
+	
+		}
+	
+	};
+
+
+/***/ }),
+/* 66 */
+/***/ (function(module, exports) {
+
+	/**
+	 * @author alteredq / http://alteredqualia.com/
+	 */
+	
+	THREE.BloomPass = function ( strength, kernelSize, sigma, resolution ) {
+	
+		strength = ( strength !== undefined ) ? strength : 1;
+		kernelSize = ( kernelSize !== undefined ) ? kernelSize : 25;
+		sigma = ( sigma !== undefined ) ? sigma : 4.0;
+		resolution = ( resolution !== undefined ) ? resolution : 256;
+	
+		// render targets
+	
+		var pars = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat };
+	
+		this.renderTargetX = new THREE.WebGLRenderTarget( resolution, resolution, pars );
+		this.renderTargetY = new THREE.WebGLRenderTarget( resolution, resolution, pars );
+	
+		// copy material
+	
+		if ( THREE.CopyShader === undefined )
+			console.error( "THREE.BloomPass relies on THREE.CopyShader" );
+	
+		var copyShader = THREE.CopyShader;
+	
+		this.copyUniforms = THREE.UniformsUtils.clone( copyShader.uniforms );
+	
+		this.copyUniforms[ "opacity" ].value = strength;
+	
+		this.materialCopy = new THREE.ShaderMaterial( {
+	
+			uniforms: this.copyUniforms,
+			vertexShader: copyShader.vertexShader,
+			fragmentShader: copyShader.fragmentShader,
+			blending: THREE.AdditiveBlending,
+			transparent: true
+	
+		} );
+	
+		// convolution material
+	
+		if ( THREE.ConvolutionShader === undefined )
+			console.error( "THREE.BloomPass relies on THREE.ConvolutionShader" );
+	
+		var convolutionShader = THREE.ConvolutionShader;
+	
+		this.convolutionUniforms = THREE.UniformsUtils.clone( convolutionShader.uniforms );
+	
+		this.convolutionUniforms[ "uImageIncrement" ].value = THREE.BloomPass.blurx;
+		this.convolutionUniforms[ "cKernel" ].value = THREE.ConvolutionShader.buildKernel( sigma );
+	
+		this.materialConvolution = new THREE.ShaderMaterial( {
+	
+			uniforms: this.convolutionUniforms,
+			vertexShader:  convolutionShader.vertexShader,
+			fragmentShader: convolutionShader.fragmentShader,
+			defines: {
+				"KERNEL_SIZE_FLOAT": kernelSize.toFixed( 1 ),
+				"KERNEL_SIZE_INT": kernelSize.toFixed( 0 )
+			}
+	
+		} );
+	
+		this.enabled = true;
+		this.needsSwap = false;
+		this.clear = false;
+	
+	};
+	
+	THREE.BloomPass.prototype = {
+	
+		render: function ( renderer, writeBuffer, readBuffer, delta, maskActive ) {
+	
+			if ( maskActive ) renderer.context.disable( renderer.context.STENCIL_TEST );
+	
+			// Render quad with blured scene into texture (convolution pass 1)
+	
+			THREE.EffectComposer.quad.material = this.materialConvolution;
+	
+			this.convolutionUniforms[ "tDiffuse" ].value = readBuffer;
+			this.convolutionUniforms[ "uImageIncrement" ].value = THREE.BloomPass.blurX;
+	
+			renderer.render( THREE.EffectComposer.scene, THREE.EffectComposer.camera, this.renderTargetX, true );
+	
+	
+			// Render quad with blured scene into texture (convolution pass 2)
+	
+			this.convolutionUniforms[ "tDiffuse" ].value = this.renderTargetX;
+			this.convolutionUniforms[ "uImageIncrement" ].value = THREE.BloomPass.blurY;
+	
+			renderer.render( THREE.EffectComposer.scene, THREE.EffectComposer.camera, this.renderTargetY, true );
+	
+			// Render original scene with superimposed blur to texture
+	
+			THREE.EffectComposer.quad.material = this.materialCopy;
+	
+			this.copyUniforms[ "tDiffuse" ].value = this.renderTargetY;
+	
+			if ( maskActive ) renderer.context.enable( renderer.context.STENCIL_TEST );
+	
+			renderer.render( THREE.EffectComposer.scene, THREE.EffectComposer.camera, readBuffer, this.clear );
+	
+		}
+	
+	};
+	
+	THREE.BloomPass.blurX = new THREE.Vector2( 0.001953125, 0.0 );
+	THREE.BloomPass.blurY = new THREE.Vector2( 0.0, 0.001953125 );
+
+
+/***/ }),
+/* 67 */
+/***/ (function(module, exports) {
+
+	/**
+	 * @author alteredq / http://alteredqualia.com/
+	 *
+	 * Film grain & scanlines shader
+	 *
+	 * - ported from HLSL to WebGL / GLSL
+	 * http://www.truevision3d.com/forums/showcase/staticnoise_colorblackwhite_scanline_shaders-t18698.0.html
+	 *
+	 * Screen Space Static Postprocessor
+	 *
+	 * Produces an analogue noise overlay similar to a film grain / TV static
+	 *
+	 * Original implementation and noise algorithm
+	 * Pat 'Hawthorne' Shearon
+	 *
+	 * Optimized scanlines + noise version with intensity scaling
+	 * Georg 'Leviathan' Steinrohder
+	 *
+	 * This version is provided under a Creative Commons Attribution 3.0 License
+	 * http://creativecommons.org/licenses/by/3.0/
+	 */
+	
+	THREE.FilmShader = {
+	
+		uniforms: {
+	
+			"tDiffuse":   { type: "t", value: null },
+			"time":       { type: "f", value: 0.0 },
+			"nIntensity": { type: "f", value: 0.5 },
+			"sIntensity": { type: "f", value: 0.05 },
+			"sCount":     { type: "f", value: 4096 },
+			"grayscale":  { type: "i", value: 1 }
+	
+		},
+	
+		vertexShader: [
+	
+			"varying vec2 vUv;",
+	
+			"void main() {",
+	
+				"vUv = uv;",
+				"gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
+	
+			"}"
+	
+		].join("\n"),
+	
+		fragmentShader: [
+	
+			// control parameter
+			"uniform float time;",
+	
+			"uniform bool grayscale;",
+	
+			// noise effect intensity value (0 = no effect, 1 = full effect)
+			"uniform float nIntensity;",
+	
+			// scanlines effect intensity value (0 = no effect, 1 = full effect)
+			"uniform float sIntensity;",
+	
+			// scanlines effect count value (0 = no effect, 4096 = full effect)
+			"uniform float sCount;",
+	
+			"uniform sampler2D tDiffuse;",
+	
+			"varying vec2 vUv;",
+	
+			"void main() {",
+	
+				// sample the source
+				"vec4 cTextureScreen = texture2D( tDiffuse, vUv );",
+	
+				// make some noise
+				"float x = vUv.x * vUv.y * time *  1000.0;",
+				"x = mod( x, 13.0 ) * mod( x, 123.0 );",
+				"float dx = mod( x, 0.01 );",
+	
+				// add noise
+				"vec3 cResult = cTextureScreen.rgb + cTextureScreen.rgb * clamp( 0.1 + dx * 100.0, 0.0, 1.0 );",
+	
+				// get us a sine and cosine
+				"vec2 sc = vec2( sin( vUv.y * sCount ), cos( vUv.y * sCount ) );",
+	
+				// add scanlines
+				"cResult += cTextureScreen.rgb * vec3( sc.x, sc.y, sc.x ) * sIntensity;",
+	
+				// interpolate between source and result by intensity
+				"cResult = cTextureScreen.rgb + clamp( nIntensity, 0.0,1.0 ) * ( cResult - cTextureScreen.rgb );",
+	
+				// convert to grayscale if desired
+				"if( grayscale ) {",
+	
+					"cResult = vec3( cResult.r * 0.3 + cResult.g * 0.59 + cResult.b * 0.11 );",
+	
+				"}",
+	
+				"gl_FragColor =  vec4( cResult, cTextureScreen.a );",
+	
+			"}"
+	
+		].join("\n")
+	
+	};
+
+
+/***/ }),
+/* 68 */
+/***/ (function(module, exports) {
+
+	/**
+	 * @author alteredq / http://alteredqualia.com/
+	 */
+	
+	THREE.FilmPass = function ( noiseIntensity, scanlinesIntensity, scanlinesCount, grayscale ) {
+	
+		if ( THREE.FilmShader === undefined )
+			console.error( "THREE.FilmPass relies on THREE.FilmShader" );
+	
+		var shader = THREE.FilmShader;
+	
+		this.uniforms = THREE.UniformsUtils.clone( shader.uniforms );
+	
+		this.material = new THREE.ShaderMaterial( {
+	
+			uniforms: this.uniforms,
+			vertexShader: shader.vertexShader,
+			fragmentShader: shader.fragmentShader
+	
+		} );
+	
+		if ( grayscale !== undefined )	this.uniforms.grayscale.value = grayscale;
+		if ( noiseIntensity !== undefined ) this.uniforms.nIntensity.value = noiseIntensity;
+		if ( scanlinesIntensity !== undefined ) this.uniforms.sIntensity.value = scanlinesIntensity;
+		if ( scanlinesCount !== undefined ) this.uniforms.sCount.value = scanlinesCount;
+	
+		this.enabled = true;
+		this.renderToScreen = false;
+		this.needsSwap = true;
+	
+	};
+	
+	THREE.FilmPass.prototype = {
+	
+		render: function ( renderer, writeBuffer, readBuffer, delta ) {
+	
+			this.uniforms[ "tDiffuse" ].value = readBuffer;
+			this.uniforms[ "time" ].value += delta;
+	
+			THREE.EffectComposer.quad.material = this.material;
+	
+			if ( this.renderToScreen ) {
+	
+				renderer.render( THREE.EffectComposer.scene, THREE.EffectComposer.camera );
+	
+			} else {
+	
+				renderer.render( THREE.EffectComposer.scene, THREE.EffectComposer.camera, writeBuffer, false );
+	
+			}
+	
+		}
+	
+	};
+
+
+/***/ }),
+/* 69 */
+/***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Camera, ColladaLoader, Fog, FogExp2, Node, Object3D, Object3DwithMeshAndMaterial, Scene, Texture, ThreeLine, ThreeMesh, WebGLRenderer, WebglBase, _, jQuery,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	jQuery = __webpack_require__(1);
+	jQuery = __webpack_require__(39);
 	
 	_ = __webpack_require__(2);
 	
 	Backbone = __webpack_require__(3);
 	
-	Node = __webpack_require__(35);
+	Node = __webpack_require__(11);
 	
 	__webpack_require__(70);
 	
-	Object3D = __webpack_require__(41);
+	Object3D = __webpack_require__(71);
 	
-	WebglBase = __webpack_require__(42);
+	WebglBase = __webpack_require__(72);
 	
 	Scene = (function(superClass) {
 	  extend(Scene, superClass);
@@ -2624,5041 +6177,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	ThreeNodes.Core.addNodeType('WebGLRenderer', WebGLRenderer);
 
 
-/***/ },
-/* 28 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Backbone, CsgIntersect, CsgSubtract, CsgUnion, Node, NodeCSG, Utils, _,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	Utils = __webpack_require__(34);
-	
-	Node = __webpack_require__(35);
-	
-	__webpack_require__(33);
-	
-	__webpack_require__(52);
-	
-	__webpack_require__(53);
-	
-	NodeCSG = (function(superClass) {
-	  extend(NodeCSG, superClass);
-	
-	  function NodeCSG() {
-	    this.compute = bind(this.compute, this);
-	    this.remove = bind(this.remove, this);
-	    this.get_cache_array = bind(this.get_cache_array, this);
-	    this.comput_csg_geometry = bind(this.comput_csg_geometry, this);
-	    this.getFields = bind(this.getFields, this);
-	    NodeCSG.__super__.constructor.apply(this, arguments);
-	    this.auto_evaluate = true;
-	    this.ob = false;
-	    this.cached = [];
-	  }
-	
-	  NodeCSG.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = NodeCSG.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "a": {
-	          type: "Any",
-	          val: false
-	        },
-	        "position_a": {
-	          type: "Vector3",
-	          val: new THREE.Vector3()
-	        },
-	        "rotation_a": {
-	          type: "Vector3",
-	          val: new THREE.Vector3()
-	        },
-	        "b": {
-	          type: "Any",
-	          val: false
-	        },
-	        "position_b": {
-	          type: "Vector3",
-	          val: new THREE.Vector3()
-	        },
-	        "rotation_b": {
-	          type: "Vector3",
-	          val: new THREE.Vector3()
-	        }
-	      },
-	      outputs: {
-	        "geometry": {
-	          type: "Any",
-	          val: this.ob
-	        }
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  NodeCSG.prototype.comput_csg_geometry = function(a, b) {
-	    return a.union(b);
-	  };
-	
-	  NodeCSG.prototype.get_cache_array = function() {
-	    var a, b, pos_a, pos_b, rot_a, rot_b;
-	    a = this.fields.getField("a").getValue();
-	    pos_a = this.fields.getField("position_a").getValue();
-	    rot_a = this.fields.getField("rotation_a").getValue();
-	    b = this.fields.getField("b").getValue();
-	    pos_b = this.fields.getField("position_b").getValue();
-	    rot_b = this.fields.getField("rotation_b").getValue();
-	    if (!a || !b) {
-	      return [];
-	    }
-	    return [a.id, b.id, pos_a.x, pos_a.y, pos_a.z, rot_a.x, rot_a.y, rot_a.z, pos_b.x, pos_b.y, pos_b.z, rot_b.x, rot_b.y, rot_b.z];
-	  };
-	
-	  NodeCSG.prototype.remove = function() {
-	    delete this.ob;
-	    delete this.cached;
-	    return NodeCSG.__super__.remove.apply(this, arguments);
-	  };
-	
-	  NodeCSG.prototype.compute = function() {
-	    var a, b, csg_a, csg_b, csg_geom, new_cache, pos_a, pos_b, rot_a, rot_b;
-	    a = this.fields.getField("a").getValue();
-	    pos_a = this.fields.getField("position_a").getValue();
-	    rot_a = this.fields.getField("rotation_a").getValue();
-	    b = this.fields.getField("b").getValue();
-	    pos_b = this.fields.getField("position_b").getValue();
-	    rot_b = this.fields.getField("rotation_b").getValue();
-	    new_cache = this.get_cache_array();
-	    if ((a && b) && (Utils.flatArraysAreEquals(new_cache, this.cached) === false)) {
-	      console.log("csg operation");
-	      csg_a = THREE.CSG.toCSG(a, pos_a, rot_a);
-	      csg_b = THREE.CSG.toCSG(b, pos_b, rot_b);
-	      csg_geom = this.comput_csg_geometry(csg_a, csg_b);
-	      this.ob = THREE.CSG.fromCSG(csg_geom);
-	      this.cached = new_cache;
-	    }
-	    return this.fields.setField("geometry", this.ob);
-	  };
-	
-	  return NodeCSG;
-	
-	})(Node);
-	
-	CsgUnion = (function(superClass) {
-	  extend(CsgUnion, superClass);
-	
-	  function CsgUnion() {
-	    return CsgUnion.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  CsgUnion.node_name = 'Union';
-	
-	  CsgUnion.group_name = 'Constructive-Geometry';
-	
-	  return CsgUnion;
-	
-	})(NodeCSG);
-	
-	ThreeNodes.Core.addNodeType('CsgUnion', CsgUnion);
-	
-	CsgSubtract = (function(superClass) {
-	  extend(CsgSubtract, superClass);
-	
-	  function CsgSubtract() {
-	    this.comput_csg_geometry = bind(this.comput_csg_geometry, this);
-	    return CsgSubtract.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  CsgSubtract.node_name = 'Subtract';
-	
-	  CsgSubtract.group_name = 'Constructive-Geometry';
-	
-	  CsgSubtract.prototype.comput_csg_geometry = function(a, b) {
-	    return a.subtract(b);
-	  };
-	
-	  return CsgSubtract;
-	
-	})(NodeCSG);
-	
-	ThreeNodes.Core.addNodeType('CsgSubtract', CsgSubtract);
-	
-	CsgIntersect = (function(superClass) {
-	  extend(CsgIntersect, superClass);
-	
-	  function CsgIntersect() {
-	    this.comput_csg_geometry = bind(this.comput_csg_geometry, this);
-	    return CsgIntersect.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  CsgIntersect.node_name = 'Intersect';
-	
-	  CsgIntersect.group_name = 'Constructive-Geometry';
-	
-	  CsgIntersect.prototype.comput_csg_geometry = function(a, b) {
-	    return a.intersect(b);
-	  };
-	
-	  return CsgIntersect;
-	
-	})(NodeCSG);
-	
-	ThreeNodes.Core.addNodeType('CsgIntersect', CsgIntersect);
-
-
-/***/ },
-/* 29 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Backbone, Node, NodeMaterialBase, Object3D, ParticleBasicMaterial, ParticlePool, ParticleSystem, RandomCloudGeometry, SparksAccelerate, SparksAccelerateFactor, SparksAccelerateVelocity, SparksAge, SparksCubeZone, SparksEmitter, SparksLifetime, SparksLineZone, SparksMove, SparksPointZone, SparksPosition, SparksRandomDrift, SparksSteadyCounter, Utils, _,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	Utils = __webpack_require__(34);
-	
-	Node = __webpack_require__(35);
-	
-	Object3D = __webpack_require__(41);
-	
-	NodeMaterialBase = __webpack_require__(40);
-	
-	__webpack_require__(27);
-	
-	__webpack_require__(25);
-	
-	__webpack_require__(54);
-	
-	__webpack_require__(55);
-	
-	ParticleSystem = (function(superClass) {
-	  extend(ParticleSystem, superClass);
-	
-	  function ParticleSystem() {
-	    this.compute = bind(this.compute, this);
-	    this.rebuild_geometry = bind(this.rebuild_geometry, this);
-	    this.remove = bind(this.remove, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.initialize = bind(this.initialize, this);
-	    return ParticleSystem.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  ParticleSystem.node_name = 'ParticleSystem';
-	
-	  ParticleSystem.group_name = 'Particle';
-	
-	  ParticleSystem.prototype.initialize = function() {
-	    ParticleSystem.__super__.initialize.apply(this, arguments);
-	    this.ob = new THREE.ParticleSystem(new THREE.CubeGeometry(200, 200, 200), new THREE.ParticleBasicMaterial());
-	    this.ob.dynamic = true;
-	    this.geometry_cache = false;
-	    this.material_cache = false;
-	    return this.compute();
-	  };
-	
-	  ParticleSystem.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = ParticleSystem.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "geometry": {
-	          type: "Any",
-	          val: new THREE.CubeGeometry(200, 200, 200)
-	        },
-	        "material": {
-	          type: "Any",
-	          val: new THREE.ParticleBasicMaterial()
-	        },
-	        "sortParticles": false
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  ParticleSystem.prototype.remove = function() {
-	    ParticleSystem.__super__.remove.apply(this, arguments);
-	    delete this.geometry_cache;
-	    return delete this.material_cache;
-	  };
-	
-	  ParticleSystem.prototype.rebuild_geometry = function() {
-	    var field, geom;
-	    field = this.fields.getField('geometry');
-	    if (field.connections.length > 0) {
-	      geom = field.connections[0].from_field.node;
-	      geom.cached = [];
-	      return geom.compute();
-	    } else {
-	      return this.fields.getField('geometry').setValue(new THREE.CubeGeometry(200, 200, 200));
-	    }
-	  };
-	
-	  ParticleSystem.prototype.compute = function() {
-	    var needs_rebuild;
-	    needs_rebuild = false;
-	    if (this.material_cache !== this.fields.getField('material').getValue().id) {
-	      this.rebuild_geometry();
-	    }
-	    if (this.geometry_cache !== this.fields.getField('geometry').getValue().id || this.material_cache !== this.fields.getField('material').getValue().id || needs_rebuild) {
-	      this.ob = new THREE.ParticleSystem(this.fields.getField('geometry').getValue(), this.fields.getField('material').getValue());
-	      this.geometry_cache = this.fields.getField('geometry').getValue().id;
-	      this.material_cache = this.fields.getField('material').getValue().id;
-	    }
-	    this.applyFieldsToVal(this.fields.inputs, this.ob, ['children', 'geometry', 'material']);
-	    if (needs_rebuild === true) {
-	      this.trigger("RebuildAllShaders");
-	    }
-	    return this.fields.setField("out", this.ob);
-	  };
-	
-	  return ParticleSystem;
-	
-	})(Object3D);
-	
-	ThreeNodes.Core.addNodeType('ParticleSystem', ParticleSystem);
-	
-	ParticleBasicMaterial = (function(superClass) {
-	  extend(ParticleBasicMaterial, superClass);
-	
-	  function ParticleBasicMaterial() {
-	    this.getFields = bind(this.getFields, this);
-	    this.initialize = bind(this.initialize, this);
-	    return ParticleBasicMaterial.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  ParticleBasicMaterial.node_name = 'ParticleBasicMaterial';
-	
-	  ParticleBasicMaterial.group_name = 'Materials';
-	
-	  ParticleBasicMaterial.prototype.initialize = function(options) {
-	    ParticleBasicMaterial.__super__.initialize.apply(this, arguments);
-	    this.ob = [];
-	    this.material_class = THREE.ParticleBasicMaterial;
-	    this.vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"];
-	    return this.material_cache = this.createCacheObject(this.vars_rebuild_shader_on_change);
-	  };
-	
-	  ParticleBasicMaterial.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = ParticleBasicMaterial.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "color": {
-	          type: "Color",
-	          val: new THREE.Color(0xff0000)
-	        },
-	        "map": {
-	          type: "Any",
-	          val: false
-	        },
-	        "size": 1,
-	        "sizeAttenuation": true,
-	        "vertexColors": false
-	      },
-	      outputs: {
-	        "out": {
-	          type: "Any",
-	          val: this.ob
-	        }
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  return ParticleBasicMaterial;
-	
-	})(NodeMaterialBase);
-	
-	ThreeNodes.Core.addNodeType('ParticleBasicMaterial', ParticleBasicMaterial);
-	
-	SparksEmitter = (function(superClass) {
-	  extend(SparksEmitter, superClass);
-	
-	  function SparksEmitter() {
-	    this.remove = bind(this.remove, this);
-	    this.compute = bind(this.compute, this);
-	    this.setTargetParticle = bind(this.setTargetParticle, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.initialize = bind(this.initialize, this);
-	    return SparksEmitter.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  SparksEmitter.node_name = 'Emitter';
-	
-	  SparksEmitter.group_name = 'Particle.sparks';
-	
-	  SparksEmitter.prototype.initialize = function(options) {
-	    SparksEmitter.__super__.initialize.apply(this, arguments);
-	    this.auto_evaluate = true;
-	    this.geom = new THREE.Geometry();
-	    this.target_initializer = new SPARKS.Target(null, this.setTargetParticle);
-	    this.pool = this.fields.getField("pool").getValue();
-	    return this.ob = new SPARKS.Emitter(this.fields.getField("counter").getValue());
-	  };
-	
-	  SparksEmitter.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = SparksEmitter.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "counter": {
-	          type: "Any",
-	          val: new SPARKS.SteadyCounter(50)
-	        },
-	        "pool": {
-	          type: "Any",
-	          val: false
-	        },
-	        "initializers": {
-	          type: "Array",
-	          val: []
-	        },
-	        "actions": {
-	          type: "Array",
-	          val: []
-	        }
-	      },
-	      outputs: {
-	        "out": {
-	          type: "Any",
-	          val: this.ob
-	        }
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  SparksEmitter.prototype.setTargetParticle = function(p) {
-	    if (this.pool && this.pool.pool) {
-	      return this.pool.pool.get();
-	    }
-	  };
-	
-	  SparksEmitter.prototype.compute = function() {
-	    var initializers;
-	    if (this.fields.getField("pool").getValue() !== false) {
-	      if (this.pool !== this.fields.getField("pool").getValue()) {
-	        this.ob.removeCallback("created");
-	        this.ob.removeCallback("dead");
-	        this.ob.stop();
-	        this.ob = new SPARKS.Emitter(this.fields.getField("counter").getValue());
-	        this.geom = new THREE.Geometry();
-	        this.pool = this.fields.getField("pool").getValue();
-	        this.pool.init_pool(this.geom);
-	        this.ob.addCallback("created", this.pool.on_particle_created);
-	        this.ob.addCallback("dead", this.pool.on_particle_dead);
-	        console.log("pool particle setup...");
-	      }
-	    }
-	    initializers = this.fields.getField("initializers").getValue().slice(0);
-	    initializers.push(this.target_initializer);
-	    this.ob._initializers = initializers;
-	    this.ob._actions = this.fields.getField("actions").getValue();
-	    this.ob._counter = this.fields.getField("counter").getValue();
-	    if (this.pool !== false && this.ob.isRunning() === false) {
-	      this.ob.start();
-	    }
-	    return this.fields.setField("out", this.geom);
-	  };
-	
-	  SparksEmitter.prototype.remove = function() {
-	    SparksEmitter.__super__.remove.apply(this, arguments);
-	    if (this.ob) {
-	      this.ob.removeCallback("created");
-	      this.ob.removeCallback("dead");
-	      this.ob.stop();
-	    }
-	    delete this.ob;
-	    delete this.target_initializer;
-	    delete this.geom;
-	    return delete this.pool;
-	  };
-	
-	  return SparksEmitter;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('SparksEmitter', SparksEmitter);
-	
-	SparksAge = (function(superClass) {
-	  extend(SparksAge, superClass);
-	
-	  function SparksAge() {
-	    this.compute = bind(this.compute, this);
-	    this.remove = bind(this.remove, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.initialize = bind(this.initialize, this);
-	    return SparksAge.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  SparksAge.node_name = 'Age';
-	
-	  SparksAge.group_name = 'Particle.sparks.actions';
-	
-	  SparksAge.prototype.initialize = function(options) {
-	    SparksAge.__super__.initialize.apply(this, arguments);
-	    this.auto_evaluate = true;
-	    return this.ob = new SPARKS.Age(TWEEN.Easing.Linear.EaseNone);
-	  };
-	
-	  SparksAge.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = SparksAge.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "easing": {
-	          type: "Any",
-	          val: TWEEN.Easing.Linear.EaseNone
-	        }
-	      },
-	      outputs: {
-	        "action": {
-	          type: "Any",
-	          val: this.ob
-	        }
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  SparksAge.prototype.remove = function() {
-	    delete this.ob;
-	    return SparksAge.__super__.remove.apply(this, arguments);
-	  };
-	
-	  SparksAge.prototype.compute = function() {
-	    this.ob._easing = this.fields.getField("easing").get("value");
-	    return this.fields.setField("action", this.ob);
-	  };
-	
-	  return SparksAge;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('SparksAge', SparksAge);
-	
-	SparksMove = (function(superClass) {
-	  extend(SparksMove, superClass);
-	
-	  function SparksMove() {
-	    this.compute = bind(this.compute, this);
-	    this.remove = bind(this.remove, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.initialize = bind(this.initialize, this);
-	    return SparksMove.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  SparksMove.node_name = 'Move';
-	
-	  SparksMove.group_name = 'Particle.sparks.actions';
-	
-	  SparksMove.prototype.initialize = function(options) {
-	    SparksMove.__super__.initialize.apply(this, arguments);
-	    this.auto_evaluate = true;
-	    return this.ob = new SPARKS.Move();
-	  };
-	
-	  SparksMove.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = SparksMove.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      outputs: {
-	        "action": {
-	          type: "Any",
-	          val: this.ob
-	        }
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  SparksMove.prototype.remove = function() {
-	    delete this.ob;
-	    return SparksMove.__super__.remove.apply(this, arguments);
-	  };
-	
-	  SparksMove.prototype.compute = function() {
-	    return this.fields.setField("action", this.ob);
-	  };
-	
-	  return SparksMove;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('SparksMove', SparksMove);
-	
-	SparksAccelerate = (function(superClass) {
-	  extend(SparksAccelerate, superClass);
-	
-	  function SparksAccelerate() {
-	    this.compute = bind(this.compute, this);
-	    this.remove = bind(this.remove, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.initialize = bind(this.initialize, this);
-	    return SparksAccelerate.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  SparksAccelerate.node_name = 'Accelerate';
-	
-	  SparksAccelerate.group_name = 'Particle.sparks.actions';
-	
-	  SparksAccelerate.prototype.initialize = function(options) {
-	    SparksAccelerate.__super__.initialize.apply(this, arguments);
-	    this.auto_evaluate = true;
-	    return this.ob = new SPARKS.Accelerate(new THREE.Vector3(0, 1, 0));
-	  };
-	
-	  SparksAccelerate.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = SparksAccelerate.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "vector": {
-	          type: "Vector3",
-	          val: new THREE.Vector3(0, 1, 0)
-	        }
-	      },
-	      outputs: {
-	        "action": {
-	          type: "Any",
-	          val: this.ob
-	        }
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  SparksAccelerate.prototype.remove = function() {
-	    delete this.ob;
-	    return SparksAccelerate.__super__.remove.apply(this, arguments);
-	  };
-	
-	  SparksAccelerate.prototype.compute = function() {
-	    this.ob.acceleration = this.fields.getField("vector").getValue();
-	    return this.fields.setField("action", this.ob);
-	  };
-	
-	  return SparksAccelerate;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('SparksAccelerate', SparksAccelerate);
-	
-	SparksAccelerateFactor = (function(superClass) {
-	  extend(SparksAccelerateFactor, superClass);
-	
-	  function SparksAccelerateFactor() {
-	    this.compute = bind(this.compute, this);
-	    this.remove = bind(this.remove, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.initialize = bind(this.initialize, this);
-	    return SparksAccelerateFactor.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  SparksAccelerateFactor.node_name = 'AccelerateFactor';
-	
-	  SparksAccelerateFactor.group_name = 'Particle.sparks.actions';
-	
-	  SparksAccelerateFactor.prototype.initialize = function(options) {
-	    SparksAccelerateFactor.__super__.initialize.apply(this, arguments);
-	    this.auto_evaluate = true;
-	    return this.ob = new SPARKS.AccelerateFactor(2.0);
-	  };
-	
-	  SparksAccelerateFactor.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = SparksAccelerateFactor.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "factor": 2.0
-	      },
-	      outputs: {
-	        "action": {
-	          type: "Any",
-	          val: this.ob
-	        }
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  SparksAccelerateFactor.prototype.remove = function() {
-	    delete this.ob;
-	    return SparksAccelerateFactor.__super__.remove.apply(this, arguments);
-	  };
-	
-	  SparksAccelerateFactor.prototype.compute = function() {
-	    this.ob.factor = this.fields.getField("factor").getValue();
-	    return this.fields.setField("action", this.ob);
-	  };
-	
-	  return SparksAccelerateFactor;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('SparksAccelerateFactor', SparksAccelerateFactor);
-	
-	SparksAccelerateVelocity = (function(superClass) {
-	  extend(SparksAccelerateVelocity, superClass);
-	
-	  function SparksAccelerateVelocity() {
-	    this.compute = bind(this.compute, this);
-	    this.remove = bind(this.remove, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.initialize = bind(this.initialize, this);
-	    return SparksAccelerateVelocity.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  SparksAccelerateVelocity.node_name = 'AccelerateVelocity';
-	
-	  SparksAccelerateVelocity.group_name = 'Particle.sparks.actions';
-	
-	  SparksAccelerateVelocity.prototype.initialize = function(options) {
-	    SparksAccelerateVelocity.__super__.initialize.apply(this, arguments);
-	    this.auto_evaluate = true;
-	    return this.ob = new SPARKS.AccelerateVelocity(2.0);
-	  };
-	
-	  SparksAccelerateVelocity.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = SparksAccelerateVelocity.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "factor": 2.0
-	      },
-	      outputs: {
-	        "action": {
-	          type: "Any",
-	          val: this.ob
-	        }
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  SparksAccelerateVelocity.prototype.remove = function() {
-	    delete this.ob;
-	    return SparksAccelerateVelocity.__super__.remove.apply(this, arguments);
-	  };
-	
-	  SparksAccelerateVelocity.prototype.compute = function() {
-	    this.ob.factor = this.fields.getField("factor").getValue();
-	    return this.fields.setField("action", this.ob);
-	  };
-	
-	  return SparksAccelerateVelocity;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('SparksAccelerateVelocity', SparksAccelerateVelocity);
-	
-	SparksRandomDrift = (function(superClass) {
-	  extend(SparksRandomDrift, superClass);
-	
-	  function SparksRandomDrift() {
-	    this.compute = bind(this.compute, this);
-	    this.remove = bind(this.remove, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.initialize = bind(this.initialize, this);
-	    return SparksRandomDrift.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  SparksRandomDrift.node_name = 'RandomDrift';
-	
-	  SparksRandomDrift.group_name = 'Particle.sparks.actions';
-	
-	  SparksRandomDrift.prototype.initialize = function(options) {
-	    SparksRandomDrift.__super__.initialize.apply(this, arguments);
-	    this.auto_evaluate = true;
-	    return this.ob = new SPARKS.RandomDrift(new THREE.Vector3(0, 1, 0));
-	  };
-	
-	  SparksRandomDrift.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = SparksRandomDrift.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "vector": {
-	          type: "Vector3",
-	          val: new THREE.Vector3(0, 1, 0)
-	        }
-	      },
-	      outputs: {
-	        "action": {
-	          type: "Any",
-	          val: this.ob
-	        }
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  SparksRandomDrift.prototype.remove = function() {
-	    delete this.ob;
-	    return SparksRandomDrift.__super__.remove.apply(this, arguments);
-	  };
-	
-	  SparksRandomDrift.prototype.compute = function() {
-	    this.ob.drift = this.fields.getField("vector").getValue();
-	    return this.fields.setField("action", this.ob);
-	  };
-	
-	  return SparksRandomDrift;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('SparksRandomDrift', SparksRandomDrift);
-	
-	SparksLifetime = (function(superClass) {
-	  extend(SparksLifetime, superClass);
-	
-	  function SparksLifetime() {
-	    this.compute = bind(this.compute, this);
-	    this.remove = bind(this.remove, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.initialize = bind(this.initialize, this);
-	    return SparksLifetime.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  SparksLifetime.node_name = 'Lifetime';
-	
-	  SparksLifetime.group_name = 'Particle.sparks.initializers';
-	
-	  SparksLifetime.prototype.initialize = function(options) {
-	    SparksLifetime.__super__.initialize.apply(this, arguments);
-	    this.auto_evaluate = true;
-	    return this.ob = new SPARKS.Lifetime(4, 7);
-	  };
-	
-	  SparksLifetime.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = SparksLifetime.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "min": 4,
-	        "max": 7
-	      },
-	      outputs: {
-	        "initializer": {
-	          type: "Any",
-	          val: this.ob
-	        }
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  SparksLifetime.prototype.remove = function() {
-	    delete this.ob;
-	    return SparksLifetime.__super__.remove.apply(this, arguments);
-	  };
-	
-	  SparksLifetime.prototype.compute = function() {
-	    this.ob._min = this.fields.getField("min").getValue();
-	    this.ob._min = this.fields.getField("max").getValue();
-	    return this.fields.setField("initializer", this.ob);
-	  };
-	
-	  return SparksLifetime;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('SparksLifetime', SparksLifetime);
-	
-	SparksPosition = (function(superClass) {
-	  extend(SparksPosition, superClass);
-	
-	  function SparksPosition() {
-	    this.compute = bind(this.compute, this);
-	    this.remove = bind(this.remove, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.initialize = bind(this.initialize, this);
-	    return SparksPosition.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  SparksPosition.node_name = 'Position';
-	
-	  SparksPosition.group_name = 'Particle.sparks.initializers';
-	
-	  SparksPosition.prototype.initialize = function(options) {
-	    SparksPosition.__super__.initialize.apply(this, arguments);
-	    this.auto_evaluate = true;
-	    return this.ob = new SPARKS.Position(new SPARKS.PointZone(new THREE.Vector3(0, 0, 0)));
-	  };
-	
-	  SparksPosition.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = SparksPosition.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "zone": {
-	          type: "Any",
-	          val: new SPARKS.PointZone(new THREE.Vector3(0, 0, 0))
-	        }
-	      },
-	      outputs: {
-	        "initializer": {
-	          type: "Any",
-	          val: this.ob
-	        }
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  SparksPosition.prototype.remove = function() {
-	    delete this.ob;
-	    return SparksPosition.__super__.remove.apply(this, arguments);
-	  };
-	
-	  SparksPosition.prototype.compute = function() {
-	    this.ob.zone = this.fields.getField("zone").getValue();
-	    return this.fields.setField("initializer", this.ob);
-	  };
-	
-	  return SparksPosition;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('SparksPosition', SparksPosition);
-	
-	SparksPointZone = (function(superClass) {
-	  extend(SparksPointZone, superClass);
-	
-	  function SparksPointZone() {
-	    this.compute = bind(this.compute, this);
-	    this.remove = bind(this.remove, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.initialize = bind(this.initialize, this);
-	    return SparksPointZone.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  SparksPointZone.node_name = 'PointZone';
-	
-	  SparksPointZone.group_name = 'Particle.sparks.zone';
-	
-	  SparksPointZone.prototype.initialize = function(options) {
-	    SparksPointZone.__super__.initialize.apply(this, arguments);
-	    this.auto_evaluate = true;
-	    return this.ob = new SPARKS.PointZone(new THREE.Vector3());
-	  };
-	
-	  SparksPointZone.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = SparksPointZone.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "pos": {
-	          type: "Vector3",
-	          val: new THREE.Vector3()
-	        }
-	      },
-	      outputs: {
-	        "zone": {
-	          type: "Any",
-	          val: this.ob
-	        }
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  SparksPointZone.prototype.remove = function() {
-	    delete this.ob;
-	    return SparksPointZone.__super__.remove.apply(this, arguments);
-	  };
-	
-	  SparksPointZone.prototype.compute = function() {
-	    this.ob.pos = this.fields.getField("pos").getValue();
-	    return this.fields.setField("zone", this.ob);
-	  };
-	
-	  return SparksPointZone;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('SparksPointZone', SparksPointZone);
-	
-	SparksLineZone = (function(superClass) {
-	  extend(SparksLineZone, superClass);
-	
-	  function SparksLineZone() {
-	    this.compute = bind(this.compute, this);
-	    this.remove = bind(this.remove, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.initialize = bind(this.initialize, this);
-	    return SparksLineZone.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  SparksLineZone.node_name = 'LineZone';
-	
-	  SparksLineZone.group_name = 'Particle.sparks.zone';
-	
-	  SparksLineZone.prototype.initialize = function(options) {
-	    SparksLineZone.__super__.initialize.apply(this, arguments);
-	    this.auto_evaluate = true;
-	    return this.ob = new SPARKS.LineZone(new THREE.Vector3(), new THREE.Vector3(100, 0, 0));
-	  };
-	
-	  SparksLineZone.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = SparksLineZone.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "start": {
-	          type: "Vector3",
-	          val: new THREE.Vector3()
-	        },
-	        "end": {
-	          type: "Vector3",
-	          val: new THREE.Vector3(100, 0, 0)
-	        }
-	      },
-	      outputs: {
-	        "zone": {
-	          type: "Any",
-	          val: this.ob
-	        }
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  SparksLineZone.prototype.remove = function() {
-	    delete this.ob;
-	    return SparksLineZone.__super__.remove.apply(this, arguments);
-	  };
-	
-	  SparksLineZone.prototype.compute = function() {
-	    if (this.ob.start !== this.fields.get("start").getValue() || this.ob.end !== this.fields.get("end").getValue()) {
-	      this.ob.start = this.fields.getField("start").getValue();
-	      this.ob.end = this.fields.getField("end").getValue();
-	      this.ob._length = this.ob.end.clone().subSelf(this.ob.start);
-	    }
-	    return this.fields.setField("zone", this.ob);
-	  };
-	
-	  return SparksLineZone;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('SparksLineZone', SparksLineZone);
-	
-	SparksCubeZone = (function(superClass) {
-	  extend(SparksCubeZone, superClass);
-	
-	  function SparksCubeZone() {
-	    this.compute = bind(this.compute, this);
-	    this.remove = bind(this.remove, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.initialize = bind(this.initialize, this);
-	    return SparksCubeZone.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  SparksCubeZone.node_name = 'CubeZone';
-	
-	  SparksCubeZone.group_name = 'Particle.sparks.zone';
-	
-	  SparksCubeZone.prototype.initialize = function(options) {
-	    SparksCubeZone.__super__.initialize.apply(this, arguments);
-	    this.auto_evaluate = true;
-	    return this.ob = new SPARKS.CubeZone(new THREE.Vector3(), 0, 0, 0);
-	  };
-	
-	  SparksCubeZone.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = SparksCubeZone.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "position": {
-	          type: "Vector3",
-	          val: new THREE.Vector3()
-	        },
-	        "x": 0,
-	        "y": 0,
-	        "z": 0
-	      },
-	      outputs: {
-	        "zone": {
-	          type: "Any",
-	          val: this.ob
-	        }
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  SparksCubeZone.prototype.remove = function() {
-	    delete this.ob;
-	    return SparksCubeZone.__super__.remove.apply(this, arguments);
-	  };
-	
-	  SparksCubeZone.prototype.compute = function() {
-	    this.ob.position = this.fields.getField("position").getValue();
-	    this.ob.x = this.fields.getField("x").getValue();
-	    this.ob.y = this.fields.getField("y").getValue();
-	    this.ob.z = this.fields.getField("z").getValue();
-	    return this.fields.setField("zone", this.ob);
-	  };
-	
-	  return SparksCubeZone;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('SparksCubeZone', SparksCubeZone);
-	
-	SparksSteadyCounter = (function(superClass) {
-	  extend(SparksSteadyCounter, superClass);
-	
-	  function SparksSteadyCounter() {
-	    this.compute = bind(this.compute, this);
-	    this.remove = bind(this.remove, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.initialize = bind(this.initialize, this);
-	    return SparksSteadyCounter.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  SparksSteadyCounter.node_name = 'SteadyCounter';
-	
-	  SparksSteadyCounter.group_name = 'Particle.sparks';
-	
-	  SparksSteadyCounter.prototype.initialize = function(options) {
-	    SparksSteadyCounter.__super__.initialize.apply(this, arguments);
-	    this.auto_evaluate = true;
-	    return this.ob = new SPARKS.SteadyCounter(100);
-	  };
-	
-	  SparksSteadyCounter.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = SparksSteadyCounter.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "rate": 100
-	      },
-	      outputs: {
-	        "counter": {
-	          type: "Any",
-	          val: this.ob
-	        }
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  SparksSteadyCounter.prototype.remove = function() {
-	    delete this.ob;
-	    return SparksSteadyCounter.__super__.remove.apply(this, arguments);
-	  };
-	
-	  SparksSteadyCounter.prototype.compute = function() {
-	    this.ob.pos = this.fields.getField("rate").getValue();
-	    return this.fields.setField("counter", this.ob);
-	  };
-	
-	  return SparksSteadyCounter;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('SparksSteadyCounter', SparksSteadyCounter);
-	
-	ParticlePool = (function(superClass) {
-	  extend(ParticlePool, superClass);
-	
-	  function ParticlePool() {
-	    this.compute = bind(this.compute, this);
-	    this.on_particle_dead = bind(this.on_particle_dead, this);
-	    this.on_particle_updated = bind(this.on_particle_updated, this);
-	    this.on_particle_created = bind(this.on_particle_created, this);
-	    this.init_pool = bind(this.init_pool, this);
-	    this.remove = bind(this.remove, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.initialize = bind(this.initialize, this);
-	    return ParticlePool.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  ParticlePool.node_name = 'ParticlePool';
-	
-	  ParticlePool.group_name = 'Particle.sparks';
-	
-	  ParticlePool.prototype.initialize = function(options) {
-	    ParticlePool.__super__.initialize.apply(this, arguments);
-	    this.auto_evaluate = true;
-	    return this.geom = false;
-	  };
-	
-	  ParticlePool.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = ParticlePool.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "maxParticles": 10000
-	      },
-	      outputs: {
-	        "pool": {
-	          type: "Any",
-	          val: this
-	        }
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  ParticlePool.prototype.remove = function() {
-	    delete this.pool;
-	    delete this.geom;
-	    return ParticlePool.__super__.remove.apply(this, arguments);
-	  };
-	
-	  ParticlePool.prototype.init_pool = function(geom) {
-	    var i, j, new_pos, pos, ref, results;
-	    this.geom = geom;
-	    this.pool = {
-	      pools: [],
-	      get: function() {
-	        if (this.pools.length > 0) {
-	          return this.pools.pop();
-	        }
-	        return null;
-	      },
-	      add: function(v) {
-	        return this.pools.push(v);
-	      }
-	    };
-	    new_pos = function() {
-	      return new THREE.Vector3(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY);
-	    };
-	    results = [];
-	    for (i = j = 0, ref = this.fields.getField("maxParticles").getValue() - 1; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
-	      pos = new_pos();
-	      geom.vertices.push(pos);
-	      results.push(this.pool.add(pos));
-	    }
-	    return results;
-	  };
-	
-	  ParticlePool.prototype.on_particle_created = function(particle) {
-	    var target;
-	    if (this.geom === false) {
-	      return false;
-	    }
-	    target = particle.target;
-	    if (target) {
-	      return particle.target.position = particle.position;
-	    }
-	  };
-	
-	  ParticlePool.prototype.on_particle_updated = function(particle) {
-	    return true;
-	  };
-	
-	  ParticlePool.prototype.on_particle_dead = function(particle) {
-	    var target;
-	    if (this.geom === false) {
-	      return false;
-	    }
-	    target = particle.target;
-	    if (target) {
-	      particle.target.position.set(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY);
-	      return this.pool.add(particle.target);
-	    }
-	  };
-	
-	  ParticlePool.prototype.compute = function() {
-	    if (this.geom !== false) {
-	      this.geom.verticesNeedUpdate = true;
-	    }
-	    return this.fields.setField("pool", this);
-	  };
-	
-	  return ParticlePool;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('ParticlePool', ParticlePool);
-	
-	RandomCloudGeometry = (function(superClass) {
-	  extend(RandomCloudGeometry, superClass);
-	
-	  function RandomCloudGeometry() {
-	    this.compute = bind(this.compute, this);
-	    this.generate = bind(this.generate, this);
-	    this.move_particles = bind(this.move_particles, this);
-	    this.limit_position = bind(this.limit_position, this);
-	    this.get_cache_array = bind(this.get_cache_array, this);
-	    this.remove = bind(this.remove, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.initialize = bind(this.initialize, this);
-	    return RandomCloudGeometry.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  RandomCloudGeometry.node_name = 'RandomCloudGeometry';
-	
-	  RandomCloudGeometry.group_name = 'Particle';
-	
-	  RandomCloudGeometry.prototype.initialize = function(options) {
-	    RandomCloudGeometry.__super__.initialize.apply(this, arguments);
-	    this.auto_evaluate = true;
-	    this.ob = new THREE.Geometry();
-	    this.cache = this.get_cache_array();
-	    return this.generate();
-	  };
-	
-	  RandomCloudGeometry.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = RandomCloudGeometry.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "nbrParticles": 20000,
-	        "radius": 2000,
-	        "rndVelocity": {
-	          type: "Vector3",
-	          val: new THREE.Vector3(1, 1, 1)
-	        },
-	        "linearVelocity": {
-	          type: "Vector3",
-	          val: new THREE.Vector3(1, 1, 1)
-	        }
-	      },
-	      outputs: {
-	        "out": {
-	          type: "Any",
-	          val: this.ob
-	        }
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  RandomCloudGeometry.prototype.remove = function() {
-	    delete this.ob;
-	    delete this.cache;
-	    return RandomCloudGeometry.__super__.remove.apply(this, arguments);
-	  };
-	
-	  RandomCloudGeometry.prototype.get_cache_array = function() {
-	    return [this.fields.getField("radius").getValue(), this.fields.getField("nbrParticles").getValue(), this.fields.getField("linearVelocity").getValue()];
-	  };
-	
-	  RandomCloudGeometry.prototype.limit_position = function(pos) {
-	    var margin, radius;
-	    radius = this.fields.getField("radius").getValue();
-	    margin = 5;
-	    if (pos < radius * -1) {
-	      pos = radius - margin;
-	    } else if (pos > radius) {
-	      pos = radius * -1 + margin;
-	    }
-	    return pos;
-	  };
-	
-	  RandomCloudGeometry.prototype.move_particles = function() {
-	    var key, p, ref, rndVelocity;
-	    rndVelocity = this.fields.getField("rndVelocity").getValue();
-	    ref = this.ob.vertices;
-	    for (key in ref) {
-	      p = ref[key];
-	      p.x += Math.random() * rndVelocity.x - rndVelocity.x * 0.5 + p.velocity.x;
-	      p.y += Math.random() * rndVelocity.y - rndVelocity.y * 0.5 + p.velocity.y;
-	      p.z += Math.random() * rndVelocity.z - rndVelocity.z * 0.5 + p.velocity.z;
-	      p.x = this.limit_position(p.x);
-	      p.y = this.limit_position(p.y);
-	      p.z = this.limit_position(p.z);
-	    }
-	    this.ob.verticesNeedUpdate = true;
-	    return true;
-	  };
-	
-	  RandomCloudGeometry.prototype.generate = function() {
-	    var i, j, linearVelocity, rad, ref, total, v;
-	    this.ob = new THREE.Geometry();
-	    rad = this.fields.getField("radius").getValue();
-	    total = this.fields.getField("nbrParticles").getValue();
-	    linearVelocity = this.fields.getField("linearVelocity").getValue();
-	    for (i = j = 0, ref = total; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
-	      v = new THREE.Vector3(Math.random() * rad * 2 - rad, Math.random() * rad * 2 - rad, Math.random() * rad * 2 - rad);
-	      v.velocity = new THREE.Vector3(Math.random() * linearVelocity.x - linearVelocity.x * 0.5, Math.random() * linearVelocity.y - linearVelocity.y * 0.5, Math.random() * linearVelocity.z - linearVelocity.z * 0.5);
-	      this.ob.vertices.push(v);
-	    }
-	    return true;
-	  };
-	
-	  RandomCloudGeometry.prototype.compute = function() {
-	    var new_cache;
-	    new_cache = this.get_cache_array();
-	    if (Utils.flatArraysAreEquals(new_cache, this.cache) === false) {
-	      this.generate();
-	    }
-	    this.move_particles();
-	    this.cache = new_cache;
-	    return this.fields.setField("out", this.ob);
-	  };
-	
-	  return RandomCloudGeometry;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('RandomCloudGeometry', RandomCloudGeometry);
-
-
-/***/ },
-/* 30 */,
-/* 31 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_31__;
-
-/***/ },
-/* 32 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_32__;
-
-/***/ },
-/* 33 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_33__;
-
-/***/ },
-/* 34 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Utils;
-	
-	Utils = (function() {
-	  function Utils() {}
-	
-	  Utils.flatArraysAreEquals = function(arr1, arr2) {
-	    var i, j, k, len;
-	    if (arr1.length !== arr2.length) {
-	      return false;
-	    }
-	    for (i = j = 0, len = arr1.length; j < len; i = ++j) {
-	      k = arr1[i];
-	      if (arr1[i] !== arr2[i]) {
-	        return false;
-	      }
-	    }
-	    return true;
-	  };
-	
-	  return Utils;
-	
-	})();
-	
-	module.exports = Utils;
-
-
-/***/ },
-/* 35 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Backbone, Fields, Node, Utils, _,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	Utils = __webpack_require__(34);
-	
-	Fields = __webpack_require__(78);
-	
-	
-	/* Node model */
-	
-	Node = (function(superClass) {
-	  extend(Node, superClass);
-	
-	  function Node() {
-	    this.createAnimContainer = bind(this.createAnimContainer, this);
-	    this.enablePropertyAnim = bind(this.enablePropertyAnim, this);
-	    this.disablePropertyAnim = bind(this.disablePropertyAnim, this);
-	    this.removeConnection = bind(this.removeConnection, this);
-	    this.addOutConnection = bind(this.addOutConnection, this);
-	    this.applyFieldsToVal = bind(this.applyFieldsToVal, this);
-	    this.toJSON = bind(this.toJSON, this);
-	    this.getAnimationData = bind(this.getAnimationData, this);
-	    this.hasPropertyTrackAnim = bind(this.hasPropertyTrackAnim, this);
-	    this.getDownstreamNodes = bind(this.getDownstreamNodes, this);
-	    this.getUpstreamNodes = bind(this.getUpstreamNodes, this);
-	    this.hasOutConnection = bind(this.hasOutConnection, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.inputValueHasChanged = bind(this.inputValueHasChanged, this);
-	    this.createCacheObject = bind(this.createCacheObject, this);
-	    this.addCountInput = bind(this.addCountInput, this);
-	    this.createConnection = bind(this.createConnection, this);
-	    this.loadAnimation = bind(this.loadAnimation, this);
-	    this.remove = bind(this.remove, this);
-	    this.onFieldsCreated = bind(this.onFieldsCreated, this);
-	    this.typename = bind(this.typename, this);
-	    this.initialize = bind(this.initialize, this);
-	    return Node.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Node.node_name = '';
-	
-	  Node.group_name = '';
-	
-	  Node.prototype.defaults = {
-	    nid: -1,
-	    gid: -1,
-	    x: 0,
-	    y: 0,
-	    width: null,
-	    height: null,
-	    name: ""
-	  };
-	
-	  Node.prototype.initialize = function(options) {
-	    Node.__super__.initialize.apply(this, arguments);
-	    this.auto_evaluate = false;
-	    this.delays_output = false;
-	    this.dirty = true;
-	    this.is_animated = false;
-	    this.out_connections = [];
-	    this.apptimeline = options.timeline;
-	    this.settings = options.settings;
-	    this.indexer = options.indexer;
-	    this.options = options;
-	    this.parent = options.parent;
-	    if (this.get('name') === '') {
-	      this.set('name', this.typename());
-	    }
-	    if (this.get('nid') === -1) {
-	      this.set('nid', this.indexer.getUID());
-	    } else {
-	      this.indexer.uid = this.get('nid');
-	    }
-	    this.fields = new Fields(false, {
-	      node: this,
-	      indexer: this.indexer
-	    });
-	    this.onFieldsCreated();
-	    this.fields.load(this.options.fields);
-	    this.anim = this.createAnimContainer();
-	    if (this.options.anim !== false) {
-	      this.loadAnimation();
-	    }
-	    return this;
-	  };
-	
-	  Node.prototype.typename = function() {
-	    return String(this.constructor.name);
-	  };
-	
-	  Node.prototype.onFieldsCreated = function() {};
-	
-	  Node.prototype.remove = function() {
-	    if (this.anim) {
-	      this.anim.destroy();
-	    }
-	    if (this.fields) {
-	      this.fields.destroy();
-	    }
-	    delete this.fields;
-	    delete this.apptimeline;
-	    delete this.anim;
-	    delete this.options;
-	    delete this.settings;
-	    delete this.indexer;
-	    delete this.fully_inited;
-	    return this.destroy();
-	  };
-	
-	  Node.prototype.loadAnimation = function() {
-	    var anims, i, len, propKey, propLabel, ref, track;
-	    ref = this.options.anim;
-	    for (propLabel in ref) {
-	      anims = ref[propLabel];
-	      track = this.anim.getPropertyTrack(propLabel);
-	      for (i = 0, len = anims.length; i < len; i++) {
-	        propKey = anims[i];
-	        track.keys.push({
-	          time: propKey.time,
-	          value: propKey.value,
-	          easing: Timeline.stringToEasingFunction(propKey.easing),
-	          track: track
-	        });
-	      }
-	      this.anim.timeline.rebuildTrackAnimsFromKeys(track);
-	    }
-	    return true;
-	  };
-	
-	  Node.prototype.createConnection = function(field1, field2) {
-	    return this.trigger("createConnection", field1, field2);
-	  };
-	
-	  Node.prototype.addCountInput = function() {
-	    return this.fields.addFields({
-	      inputs: {
-	        "count": 1
-	      }
-	    });
-	  };
-	
-	  Node.prototype.createCacheObject = function(values) {
-	    var field, i, len, res, v;
-	    res = {};
-	    for (i = 0, len = values.length; i < len; i++) {
-	      v = values[i];
-	      field = this.fields.getField(v);
-	      res[v] = !field ? false : field.attributes["value"];
-	    }
-	    return res;
-	  };
-	
-	  Node.prototype.inputValueHasChanged = function(values, cache) {
-	    var field, i, len, v, v2;
-	    if (cache == null) {
-	      cache = this.material_cache;
-	    }
-	    for (i = 0, len = values.length; i < len; i++) {
-	      v = values[i];
-	      field = this.fields.getField(v);
-	      if (!field) {
-	        return false;
-	      } else {
-	        v2 = field.attributes["value"];
-	        if (v2 !== cache[v]) {
-	          return true;
-	        }
-	      }
-	    }
-	    return false;
-	  };
-	
-	  Node.prototype.getFields = function() {
-	    return {};
-	  };
-	
-	  Node.prototype.hasOutConnection = function() {
-	    return this.out_connections.length !== 0;
-	  };
-	
-	  Node.prototype.getUpstreamNodes = function() {
-	    return this.fields.getUpstreamNodes();
-	  };
-	
-	  Node.prototype.getDownstreamNodes = function() {
-	    return this.fields.getDownstreamNodes();
-	  };
-	
-	  Node.prototype.hasPropertyTrackAnim = function() {
-	    var i, len, propTrack, ref;
-	    ref = this.anim.objectTrack.propertyTracks;
-	    for (i = 0, len = ref.length; i < len; i++) {
-	      propTrack = ref[i];
-	      if (propTrack.anims.length > 0) {
-	        return true;
-	      }
-	    }
-	    return false;
-	  };
-	
-	  Node.prototype.getAnimationData = function() {
-	    var anim, i, j, k, len, len1, propTrack, ref, ref1, res;
-	    if (!this.anim || !this.anim.objectTrack || !this.anim.objectTrack.propertyTracks || this.hasPropertyTrackAnim() === false) {
-	      return false;
-	    }
-	    if (this.anim !== false) {
-	      res = {};
-	      ref = this.anim.objectTrack.propertyTracks;
-	      for (i = 0, len = ref.length; i < len; i++) {
-	        propTrack = ref[i];
-	        res[propTrack.propertyName] = [];
-	        ref1 = propTrack.keys;
-	        for (j = 0, len1 = ref1.length; j < len1; j++) {
-	          anim = ref1[j];
-	          k = {
-	            time: anim.time,
-	            value: anim.value,
-	            easing: Timeline.easingFunctionToString(anim.easing)
-	          };
-	          res[propTrack.propertyName].push(k);
-	        }
-	      }
-	    }
-	    return res;
-	  };
-	
-	  Node.prototype.toJSON = function() {
-	    var res;
-	    res = {
-	      nid: this.get('nid'),
-	      name: this.get('name'),
-	      type: this.typename(),
-	      anim: this.getAnimationData(),
-	      x: this.get('x'),
-	      y: this.get('y'),
-	      width: this.get('width'),
-	      height: this.get('height'),
-	      fields: this.fields.toJSON()
-	    };
-	    return res;
-	  };
-	
-	  Node.prototype.applyFieldsToVal = function(afields, target, exceptions, index) {
-	    var f, field_name, nf, results;
-	    if (exceptions == null) {
-	      exceptions = [];
-	    }
-	    results = [];
-	    for (f in afields) {
-	      nf = afields[f];
-	      field_name = nf.get("name");
-	      if (exceptions.indexOf(field_name) === -1) {
-	        results.push(target[field_name] = this.fields.getField(field_name).getValue(index));
-	      } else {
-	        results.push(void 0);
-	      }
-	    }
-	    return results;
-	  };
-	
-	  Node.prototype.addOutConnection = function(c, field) {
-	    if (this.out_connections.indexOf(c) === -1) {
-	      this.out_connections.push(c);
-	    }
-	    return c;
-	  };
-	
-	  Node.prototype.removeConnection = function(c) {
-	    var c_index;
-	    c_index = this.out_connections.indexOf(c);
-	    if (c_index !== -1) {
-	      this.out_connections.splice(c_index, 1);
-	    }
-	    return c;
-	  };
-	
-	  Node.prototype.disablePropertyAnim = function(field) {
-	    if (this.anim && field.get("is_output") === false) {
-	      return this.anim.disableProperty(field.get("name"));
-	    }
-	  };
-	
-	  Node.prototype.enablePropertyAnim = function(field) {
-	    if (field.get("is_output") === true || !this.anim) {
-	      return false;
-	    }
-	    if (field.isAnimationProperty()) {
-	      return this.anim.enableProperty(field.get("name"));
-	    }
-	  };
-	
-	  Node.prototype.createAnimContainer = function() {
-	    var f, field, res;
-	    res = anim("nid-" + this.get("nid"), this.fields.inputs);
-	    for (f in this.fields.inputs) {
-	      field = this.fields.inputs[f];
-	      if (field.isAnimationProperty() === false) {
-	        this.disablePropertyAnim(field);
-	      }
-	    }
-	    return res;
-	  };
-	
-	  return Node;
-	
-	})(Backbone.Model);
-	
-	module.exports = Node;
-
-
-/***/ },
-/* 36 */,
-/* 37 */,
-/* 38 */,
-/* 39 */,
-/* 40 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Node, NodeMaterialBase,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	Node = __webpack_require__(35);
-	
-	NodeMaterialBase = (function(superClass) {
-	  extend(NodeMaterialBase, superClass);
-	
-	  function NodeMaterialBase() {
-	    this.compute = bind(this.compute, this);
-	    this.remove = bind(this.remove, this);
-	    this.rebuildShader = bind(this.rebuildShader, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.initialize = bind(this.initialize, this);
-	    return NodeMaterialBase.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  NodeMaterialBase.prototype.initialize = function(options) {
-	    NodeMaterialBase.__super__.initialize.apply(this, arguments);
-	    this.ob = false;
-	    this.auto_evaluate = false;
-	    this.material_class = false;
-	    this.last_slice_count = -1;
-	    return this.is_material = true;
-	  };
-	
-	  NodeMaterialBase.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = NodeMaterialBase.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "opacity": 1,
-	        "transparent": false,
-	        "side": {
-	          type: "Float",
-	          val: THREE.FrontSide,
-	          values: {
-	            "Front": THREE.FrontSide,
-	            "Back": THREE.BackSide,
-	            "Both": THREE.DoubleSide
-	          }
-	        },
-	        "depthTest": true,
-	        "alphaTest": 0,
-	        "polygonOffset": false,
-	        "polygonOffsetFactor": 0,
-	        "polygonOffsetUnits": 0,
-	        "blending": {
-	          type: "Float",
-	          val: THREE.NormalBlending,
-	          values: {
-	            "Normal": THREE.NormalBlending,
-	            "Additive": THREE.AdditiveBlending,
-	            "Subtractive": THREE.SubtractiveBlending,
-	            "Multiply": THREE.MultiplyBlending,
-	            "AdditiveAlpha": THREE.AdditiveAlphaBlending
-	          }
-	        }
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  NodeMaterialBase.prototype.rebuildShader = function() {
-	    var j, len, ref, sub_material;
-	    if (!this.ob) {
-	      return this;
-	    }
-	    if ($.type(this.ob) === "array") {
-	      ref = this.ob;
-	      for (j = 0, len = ref.length; j < len; j++) {
-	        sub_material = ref[j];
-	        console.log("rebuilding submaterial");
-	        sub_material.needsUpdate = true;
-	      }
-	    } else {
-	      this.ob.needsUpdate = true;
-	    }
-	    return this;
-	  };
-	
-	  NodeMaterialBase.prototype.remove = function() {
-	    delete this.ob;
-	    delete this.material_cache;
-	    delete this.material_class;
-	    return NodeMaterialBase.__super__.remove.apply(this, arguments);
-	  };
-	
-	  NodeMaterialBase.prototype.compute = function() {
-	    var i, j, k, needs_rebuild, numItems, ref, ref1;
-	    needs_rebuild = false;
-	    numItems = this.fields.getMaxInputSliceCount();
-	    if (this.inputValueHasChanged(this.vars_rebuild_shader_on_change) || this.last_slice_count !== numItems) {
-	      needs_rebuild = true;
-	    }
-	    if (needs_rebuild === true) {
-	      this.ob = [];
-	      for (i = j = 0, ref = numItems; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
-	        this.ob[i] = new this.material_class();
-	      }
-	    }
-	    for (i = k = 0, ref1 = numItems; 0 <= ref1 ? k <= ref1 : k >= ref1; i = 0 <= ref1 ? ++k : --k) {
-	      this.applyFieldsToVal(this.fields.inputs, this.ob[i], [], i);
-	    }
-	    this.material_cache = this.createCacheObject(this.vars_rebuild_shader_on_change);
-	    this.last_slice_count = numItems;
-	    return this.fields.setField("out", this.ob);
-	  };
-	
-	  return NodeMaterialBase;
-	
-	})(Node);
-	
-	module.exports = NodeMaterialBase;
-
-
-/***/ },
-/* 41 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Node, Object3D,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	Node = __webpack_require__(35);
-	
-	Object3D = (function(superClass) {
-	  extend(Object3D, superClass);
-	
-	  function Object3D() {
-	    this.compute = bind(this.compute, this);
-	    this.applyRotation = bind(this.applyRotation, this);
-	    this.apply_children = bind(this.apply_children, this);
-	    this.get_children_array = bind(this.get_children_array, this);
-	    this.remove = bind(this.remove, this);
-	    this.deleteObjectAttributes = bind(this.deleteObjectAttributes, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.initialize = bind(this.initialize, this);
-	    return Object3D.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Object3D.node_name = 'Object3D';
-	
-	  Object3D.group_name = 'Three';
-	
-	  Object3D.prototype.initialize = function(options) {
-	    Object3D.__super__.initialize.apply(this, arguments);
-	    this.auto_evaluate = false;
-	    this.ob = new THREE.Object3D();
-	    this.vars_shadow_options = ["castShadow", "receiveShadow"];
-	    this.shadow_cache = this.createCacheObject(this.vars_shadow_options);
-	    return this.vars_shadow_options = ["castShadow", "receiveShadow"];
-	  };
-	
-	  Object3D.prototype.getFields = function() {
-	    var fields;
-	    fields = {
-	      inputs: {
-	        "children": {
-	          type: "Object3D",
-	          val: [],
-	          "default": [],
-	          propagateDirty: false
-	        },
-	        "position": {
-	          type: "Vector3",
-	          val: new THREE.Vector3(),
-	          propagateDirty: false
-	        },
-	        "rotation": {
-	          type: "Any",
-	          val: new THREE.Euler(),
-	          propagateDirty: false
-	        },
-	        "scale": {
-	          type: "Vector3",
-	          val: new THREE.Vector3(1, 1, 1),
-	          propagateDirty: false
-	        },
-	        "visible": true,
-	        "castShadow": false,
-	        "receiveShadow": false
-	      },
-	      outputs: {
-	        "out": {
-	          type: "Any",
-	          val: this.ob
-	        }
-	      }
-	    };
-	    return fields;
-	  };
-	
-	  Object3D.prototype.deleteObjectAttributes = function(ob) {
-	    if (ob) {
-	      delete ob.up;
-	      delete ob.position;
-	      delete ob.rotation;
-	      delete ob.scale;
-	      delete ob.matrix;
-	      delete ob.matrixWorld;
-	      delete ob.matrixRotationWorld;
-	      delete ob.quaternion;
-	      return delete ob._vector;
-	    }
-	  };
-	
-	  Object3D.prototype.remove = function() {
-	    Object3D.__super__.remove.apply(this, arguments);
-	    this.deleteObjectAttributes(this.ob);
-	    delete this.ob;
-	    return delete this.shadow_cache;
-	  };
-	
-	  Object3D.prototype.get_children_array = function() {
-	    var childs;
-	    childs = this.fields.getField("children").get("value");
-	    if (childs && $.type(childs) !== "array") {
-	      return [childs];
-	    }
-	    return childs;
-	  };
-	
-	  Object3D.prototype.apply_children = function() {
-	    var child, children, childs_in, i, item, j, len, results;
-	    children = this.fields.getField("children");
-	    if (!children) {
-	      return false;
-	    }
-	    if (!children.changed) {
-	      return;
-	    }
-	    if (this.fields.getField("children").connections.length === 0 && this.ob.children.length !== 0) {
-	      while (this.ob.children.length > 0) {
-	        this.ob.remove(this.ob.children[0]);
-	      }
-	      return true;
-	    }
-	    childs_in = this.get_children_array();
-	    i = this.ob.children.length;
-	    while (i--) {
-	      child = this.ob.children[i];
-	      item = _.find(childs_in, function(item) {
-	        return item.uuid === child.uuid;
-	      });
-	      if (!item) {
-	        console.log("object remove child");
-	        this.ob.remove(child);
-	      }
-	    }
-	    results = [];
-	    for (j = 0, len = childs_in.length; j < len; j++) {
-	      child = childs_in[j];
-	      item = _.find(this.ob.children, function(item) {
-	        return item.uuid === child.uuid;
-	      });
-	      if (!item) {
-	        if (child instanceof THREE.Light === true) {
-	          this.ob.add(child);
-	          results.push(this.trigger("RebuildAllShaders"));
-	        } else {
-	          console.log("scene add child");
-	          results.push(this.ob.add(child));
-	        }
-	      } else {
-	        results.push(void 0);
-	      }
-	    }
-	    return results;
-	  };
-	
-	  Object3D.prototype.applyRotation = function(target, rotation) {
-	    if (rotation instanceof THREE.Euler) {
-	      return target.setRotationFromEuler(rotation);
-	    } else if (rotation instanceof THREE.Quaternion) {
-	      return target.quaternion = rotation;
-	    } else if (rotation instanceof THREE.Vector3) {
-	      return target.rotation.set(rotation.x, rotation.y, rotation.z, "XYZ");
-	    }
-	  };
-	
-	  Object3D.prototype.compute = function() {
-	    var rotation;
-	    this.applyFieldsToVal(this.fields.inputs, this.ob, ['children', 'rotation']);
-	    rotation = this.fields.getField('rotation').getValue();
-	    this.applyRotation(this.ob, rotation);
-	    this.apply_children();
-	    return this.fields.setField("out", this.ob);
-	  };
-	
-	  return Object3D;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('Object3D', Object3D);
-	
-	module.exports = Object3D;
-
-
-/***/ },
-/* 42 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Backbone, WebglBase, _,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	__webpack_require__(79);
-	
-	__webpack_require__(80);
-	
-	__webpack_require__(81);
-	
-	__webpack_require__(82);
-	
-	__webpack_require__(83);
-	
-	__webpack_require__(31);
-	
-	__webpack_require__(32);
-	
-	__webpack_require__(84);
-	
-	WebglBase = (function() {
-	  WebglBase.instance = false;
-	
-	  function WebglBase() {
-	    this.exportImage = bind(this.exportImage, this);
-	    console.log("webgl init...");
-	    WebglBase.instance = this;
-	    this.current_scene = new THREE.Scene();
-	    this.current_camera = new THREE.PerspectiveCamera(75, 800 / 600, 1, 10000);
-	    this.current_renderer = false;
-	    if (window.WebGLRenderingContext) {
-	      this.current_renderer = new THREE.WebGLRenderer({
-	        clearColor: 0x000000,
-	        preserveDrawingBuffer: true
-	      });
-	    }
-	    this.current_renderer.autoClear = false;
-	    this.effectScreen = new THREE.ShaderPass(THREE.CopyShader);
-	    this.effectScreen.renderToScreen = true;
-	    this.renderModel = new THREE.RenderPass(this.current_scene, this.current_camera);
-	    this.composer = new THREE.EffectComposer(this.current_renderer);
-	    WebglBase.current_renderer = this.current_renderer;
-	    WebglBase.current_scene = this.current_scene;
-	    WebglBase.current_camera = this.current_camera;
-	    WebglBase.composer = this.composer;
-	    WebglBase.renderModel = this.renderModel;
-	    WebglBase.effectScreen = this.effectScreen;
-	  }
-	
-	  WebglBase.prototype.exportImage = function(fname) {
-	    var canvas, on_write;
-	    canvas = this.current_renderer.domElement;
-	    on_write = function(blob) {
-	      return saveAs(blob, fname);
-	    };
-	    return canvas.toBlob(on_write, "image/png");
-	  };
-	
-	  return WebglBase;
-	
-	})();
-	
-	module.exports = WebglBase;
-
-
-/***/ },
-/* 43 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Indexer;
-	
-	Indexer = (function() {
-	  function Indexer() {
-	    this.uid = 0;
-	  }
-	
-	  Indexer.prototype.getUID = function(increment) {
-	    if (increment == null) {
-	      increment = true;
-	    }
-	    if (increment) {
-	      return this.uid += 1;
-	    } else {
-	      return this.uid;
-	    }
-	  };
-	
-	  Indexer.prototype.reset = function() {
-	    return this.uid = 0;
-	  };
-	
-	  return Indexer;
-	
-	})();
-	
-	module.exports = Indexer;
-
-
-/***/ },
-/* 44 */,
-/* 45 */,
-/* 46 */,
-/* 47 */,
-/* 48 */,
-/* 49 */,
-/* 50 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	 * namespace.coffee v1.0.0
-	 * Copyright (c) 2011 CodeCatalyst, LLC.
-	 * Open source under the MIT License.
-	 */
-	(function() {
-	  var namespace;
-	  namespace = function(name, values) {
-	    var key, subpackage, target, value, _i, _len, _ref, _results;
-	    target = typeof exports !== "undefined" && exports !== null ? exports : window;
-	    //target = window;
-	    if (name.length > 0) {
-	      _ref = name.split('.');
-	      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	        subpackage = _ref[_i];
-	        target = target[subpackage] || (target[subpackage] = {});
-	      }
-	    }
-	    _results = [];
-	    for (key in values) {
-	      value = values[key];
-	      _results.push(target[key] = value);
-	    }
-	    return _results;
-	  };
-	  namespace("", {
-	    namespace: namespace
-	  });
-	}).call(this);
-
-
-/***/ },
-/* 51 */,
-/* 52 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// Constructive Solid Geometry (CSG) is a modeling technique that uses Boolean
-	// operations like union and intersection to combine 3D solids. This library
-	// implements CSG operations on meshes elegantly and concisely using BSP trees,
-	// and is meant to serve as an easily understandable implementation of the
-	// algorithm. All edge cases involving overlapping coplanar polygons in both
-	// solids are correctly handled.
-	// 
-	// Example usage:
-	// 
-	//     var cube = CSG.cube();
-	//     var sphere = CSG.sphere({ radius: 1.3 });
-	//     var polygons = cube.subtract(sphere).toPolygons();
-	// 
-	// ## Implementation Details
-	// 
-	// All CSG operations are implemented in terms of two functions, `clipTo()` and
-	// `invert()`, which remove parts of a BSP tree inside another BSP tree and swap
-	// solid and empty space, respectively. To find the union of `a` and `b`, we
-	// want to remove everything in `a` inside `b` and everything in `b` inside `a`,
-	// then combine polygons from `a` and `b` into one solid:
-	// 
-	//     a.clipTo(b);
-	//     b.clipTo(a);
-	//     a.build(b.allPolygons());
-	// 
-	// The only tricky part is handling overlapping coplanar polygons in both trees.
-	// The code above keeps both copies, but we need to keep them in one tree and
-	// remove them in the other tree. To remove them from `b` we can clip the
-	// inverse of `b` against `a`. The code for union now looks like this:
-	// 
-	//     a.clipTo(b);
-	//     b.clipTo(a);
-	//     b.invert();
-	//     b.clipTo(a);
-	//     b.invert();
-	//     a.build(b.allPolygons());
-	// 
-	// Subtraction and intersection naturally follow from set operations. If
-	// union is `A | B`, subtraction is `A - B = ~(~A | B)` and intersection is
-	// `A & B = ~(~A | ~B)` where `~` is the complement operator.
-	// 
-	// ## License
-	// 
-	// Copyright (c) 2011 Evan Wallace (http://madebyevan.com/), under the MIT license.
-	
-	// # class CSG
-	
-	// Holds a binary space partition tree representing a 3D solid. Two solids can
-	// be combined using the `union()`, `subtract()`, and `intersect()` methods.
-	
-	CSG = function() {
-	  this.polygons = [];
-	};
-	
-	// Construct a CSG solid from a list of `CSG.Polygon` instances.
-	CSG.fromPolygons = function(polygons) {
-	  var csg = new CSG();
-	  csg.polygons = polygons;
-	  return csg;
-	};
-	
-	CSG.prototype = {
-	  clone: function() {
-	    var csg = new CSG();
-	    csg.polygons = this.polygons.map(function(p) { return p.clone(); });
-	    return csg;
-	  },
-	
-	  toPolygons: function() {
-	    return this.polygons;
-	  },
-	
-	  // Return a new CSG solid representing space in either this solid or in the
-	  // solid `csg`. Neither this solid nor the solid `csg` are modified.
-	  // 
-	  //     A.union(B)
-	  // 
-	  //     +-------+            +-------+
-	  //     |       |            |       |
-	  //     |   A   |            |       |
-	  //     |    +--+----+   =   |       +----+
-	  //     +----+--+    |       +----+       |
-	  //          |   B   |            |       |
-	  //          |       |            |       |
-	  //          +-------+            +-------+
-	  // 
-	  union: function(csg) {
-	    var a = new CSG.Node(this.clone().polygons);
-	    var b = new CSG.Node(csg.clone().polygons);
-	    a.clipTo(b);
-	    b.clipTo(a);
-	    b.invert();
-	    b.clipTo(a);
-	    b.invert();
-	    a.build(b.allPolygons());
-	    return CSG.fromPolygons(a.allPolygons());
-	  },
-	
-	  // Return a new CSG solid representing space in this solid but not in the
-	  // solid `csg`. Neither this solid nor the solid `csg` are modified.
-	  // 
-	  //     A.subtract(B)
-	  // 
-	  //     +-------+            +-------+
-	  //     |       |            |       |
-	  //     |   A   |            |       |
-	  //     |    +--+----+   =   |    +--+
-	  //     +----+--+    |       +----+
-	  //          |   B   |
-	  //          |       |
-	  //          +-------+
-	  // 
-	  subtract: function(csg) {
-	    var a = new CSG.Node(this.clone().polygons);
-	    var b = new CSG.Node(csg.clone().polygons);
-	    a.invert();
-	    a.clipTo(b);
-	    b.clipTo(a);
-	    b.invert();
-	    b.clipTo(a);
-	    b.invert();
-	    a.build(b.allPolygons());
-	    a.invert();
-	    return CSG.fromPolygons(a.allPolygons());
-	  },
-	
-	  // Return a new CSG solid representing space both this solid and in the
-	  // solid `csg`. Neither this solid nor the solid `csg` are modified.
-	  // 
-	  //     A.intersect(B)
-	  // 
-	  //     +-------+
-	  //     |       |
-	  //     |   A   |
-	  //     |    +--+----+   =   +--+
-	  //     +----+--+    |       +--+
-	  //          |   B   |
-	  //          |       |
-	  //          +-------+
-	  // 
-	  intersect: function(csg) {
-	    var a = new CSG.Node(this.clone().polygons);
-	    var b = new CSG.Node(csg.clone().polygons);
-	    a.invert();
-	    b.clipTo(a);
-	    b.invert();
-	    a.clipTo(b);
-	    b.clipTo(a);
-	    a.build(b.allPolygons());
-	    a.invert();
-	    return CSG.fromPolygons(a.allPolygons());
-	  },
-	
-	  // Return a new CSG solid with solid and empty space switched. This solid is
-	  // not modified.
-	  inverse: function() {
-	    var csg = this.clone();
-	    csg.polygons.map(function(p) { p.flip(); });
-	    return csg;
-	  }
-	};
-	
-	// Construct an axis-aligned solid cuboid. Optional parameters are `center` and
-	// `radius`, which default to `[0, 0, 0]` and `[1, 1, 1]`. The radius can be
-	// specified using a single number or a list of three numbers, one for each axis.
-	// 
-	// Example code:
-	// 
-	//     var cube = CSG.cube({
-	//       center: [0, 0, 0],
-	//       radius: 1
-	//     });
-	CSG.cube = function(options) {
-	  options = options || {};
-	  var c = new CSG.Vector(options.center || [0, 0, 0]);
-	  var r = !options.radius ? [1, 1, 1] : options.radius.length ?
-	           options.radius : [options.radius, options.radius, options.radius];
-	  return CSG.fromPolygons([
-	    [[0, 4, 6, 2], [-1, 0, 0]],
-	    [[1, 3, 7, 5], [+1, 0, 0]],
-	    [[0, 1, 5, 4], [0, -1, 0]],
-	    [[2, 6, 7, 3], [0, +1, 0]],
-	    [[0, 2, 3, 1], [0, 0, -1]],
-	    [[4, 5, 7, 6], [0, 0, +1]]
-	  ].map(function(info) {
-	    return new CSG.Polygon(info[0].map(function(i) {
-	      var pos = new CSG.Vector(
-	        c.x + r[0] * (2 * !!(i & 1) - 1),
-	        c.y + r[1] * (2 * !!(i & 2) - 1),
-	        c.z + r[2] * (2 * !!(i & 4) - 1)
-	      );
-	      return new CSG.Vertex(pos, new CSG.Vector(info[1]));
-	    }));
-	  }));
-	};
-	
-	// Construct a solid sphere. Optional parameters are `center`, `radius`,
-	// `slices`, and `stacks`, which default to `[0, 0, 0]`, `1`, `16`, and `8`.
-	// The `slices` and `stacks` parameters control the tessellation along the
-	// longitude and latitude directions.
-	// 
-	// Example usage:
-	// 
-	//     var sphere = CSG.sphere({
-	//       center: [0, 0, 0],
-	//       radius: 1,
-	//       slices: 16,
-	//       stacks: 8
-	//     });
-	CSG.sphere = function(options) {
-	  options = options || {};
-	  var c = new CSG.Vector(options.center || [0, 0, 0]);
-	  var r = options.radius || 1;
-	  var slices = options.slices || 16;
-	  var stacks = options.stacks || 8;
-	  var polygons = [], vertices;
-	  function vertex(theta, phi) {
-	    theta *= Math.PI * 2;
-	    phi *= Math.PI;
-	    var dir = new CSG.Vector(
-	      Math.cos(theta) * Math.sin(phi),
-	      Math.cos(phi),
-	      Math.sin(theta) * Math.sin(phi)
-	    );
-	    vertices.push(new CSG.Vertex(c.plus(dir.times(r)), dir));
-	  }
-	  for (var i = 0; i < slices; i++) {
-	    for (var j = 0; j < stacks; j++) {
-	      vertices = [];
-	      vertex(i / slices, j / stacks);
-	      if (j > 0) vertex((i + 1) / slices, j / stacks);
-	      if (j < stacks - 1) vertex((i + 1) / slices, (j + 1) / stacks);
-	      vertex(i / slices, (j + 1) / stacks);
-	      polygons.push(new CSG.Polygon(vertices));
-	    }
-	  }
-	  return CSG.fromPolygons(polygons);
-	};
-	
-	// Construct a solid cylinder. Optional parameters are `start`, `end`,
-	// `radius`, and `slices`, which default to `[0, -1, 0]`, `[0, 1, 0]`, `1`, and
-	// `16`. The `slices` parameter controls the tessellation.
-	// 
-	// Example usage:
-	// 
-	//     var cylinder = CSG.cylinder({
-	//       start: [0, -1, 0],
-	//       end: [0, 1, 0],
-	//       radius: 1,
-	//       slices: 16
-	//     });
-	CSG.cylinder = function(options) {
-	  options = options || {};
-	  var s = new CSG.Vector(options.start || [0, -1, 0]);
-	  var e = new CSG.Vector(options.end || [0, 1, 0]);
-	  var ray = e.minus(s);
-	  var r = options.radius || 1;
-	  var slices = options.slices || 16;
-	  var axisZ = ray.unit(), isY = (Math.abs(axisZ.y) > 0.5);
-	  var axisX = new CSG.Vector(isY, !isY, 0).cross(axisZ).unit();
-	  var axisY = axisX.cross(axisZ).unit();
-	  var start = new CSG.Vertex(s, axisZ.negated());
-	  var end = new CSG.Vertex(e, axisZ.unit());
-	  var polygons = [];
-	  function point(stack, slice, normalBlend) {
-	    var angle = slice * Math.PI * 2;
-	    var out = axisX.times(Math.cos(angle)).plus(axisY.times(Math.sin(angle)));
-	    var pos = s.plus(ray.times(stack)).plus(out.times(r));
-	    var normal = out.times(1 - Math.abs(normalBlend)).plus(axisZ.times(normalBlend));
-	    return new CSG.Vertex(pos, normal);
-	  }
-	  for (var i = 0; i < slices; i++) {
-	    var t0 = i / slices, t1 = (i + 1) / slices;
-	    polygons.push(new CSG.Polygon([start, point(0, t0, -1), point(0, t1, -1)]));
-	    polygons.push(new CSG.Polygon([point(0, t1, 0), point(0, t0, 0), point(1, t0, 0), point(1, t1, 0)]));
-	    polygons.push(new CSG.Polygon([end, point(1, t1, 1), point(1, t0, 1)]));
-	  }
-	  return CSG.fromPolygons(polygons);
-	};
-	
-	// # class Vector
-	
-	// Represents a 3D vector.
-	// 
-	// Example usage:
-	// 
-	//     new CSG.Vector(1, 2, 3);
-	//     new CSG.Vector([1, 2, 3]);
-	//     new CSG.Vector({ x: 1, y: 2, z: 3 });
-	
-	CSG.Vector = function(x, y, z) {
-	  if (arguments.length == 3) {
-	    this.x = x;
-	    this.y = y;
-	    this.z = z;
-	  } else if ('x' in x) {
-	    this.x = x.x;
-	    this.y = x.y;
-	    this.z = x.z;
-	  } else {
-	    this.x = x[0];
-	    this.y = x[1];
-	    this.z = x[2];
-	  }
-	};
-	
-	CSG.Vector.prototype = {
-	  clone: function() {
-	    return new CSG.Vector(this.x, this.y, this.z);
-	  },
-	
-	  negated: function() {
-	    return new CSG.Vector(-this.x, -this.y, -this.z);
-	  },
-	
-	  plus: function(a) {
-	    return new CSG.Vector(this.x + a.x, this.y + a.y, this.z + a.z);
-	  },
-	
-	  minus: function(a) {
-	    return new CSG.Vector(this.x - a.x, this.y - a.y, this.z - a.z);
-	  },
-	
-	  times: function(a) {
-	    return new CSG.Vector(this.x * a, this.y * a, this.z * a);
-	  },
-	
-	  dividedBy: function(a) {
-	    return new CSG.Vector(this.x / a, this.y / a, this.z / a);
-	  },
-	
-	  dot: function(a) {
-	    return this.x * a.x + this.y * a.y + this.z * a.z;
-	  },
-	
-	  lerp: function(a, t) {
-	    return this.plus(a.minus(this).times(t));
-	  },
-	
-	  length: function() {
-	    return Math.sqrt(this.dot(this));
-	  },
-	
-	  unit: function() {
-	    return this.dividedBy(this.length());
-	  },
-	
-	  cross: function(a) {
-	    return new CSG.Vector(
-	      this.y * a.z - this.z * a.y,
-	      this.z * a.x - this.x * a.z,
-	      this.x * a.y - this.y * a.x
-	    );
-	  }
-	};
-	
-	// # class Vertex
-	
-	// Represents a vertex of a polygon. Use your own vertex class instead of this
-	// one to provide additional features like texture coordinates and vertex
-	// colors. Custom vertex classes need to provide a `pos` property and `clone()`,
-	// `flip()`, and `interpolate()` methods that behave analogous to the ones
-	// defined by `CSG.Vertex`. This class provides `normal` so convenience
-	// functions like `CSG.sphere()` can return a smooth vertex normal, but `normal`
-	// is not used anywhere else.
-	
-	CSG.Vertex = function(pos, normal) {
-	  this.pos = new CSG.Vector(pos);
-	  this.normal = new CSG.Vector(normal);
-	};
-	
-	CSG.Vertex.prototype = {
-	  clone: function() {
-	    return new CSG.Vertex(this.pos.clone(), this.normal.clone());
-	  },
-	
-	  // Invert all orientation-specific data (e.g. vertex normal). Called when the
-	  // orientation of a polygon is flipped.
-	  flip: function() {
-	    this.normal = this.normal.negated();
-	  },
-	
-	  // Create a new vertex between this vertex and `other` by linearly
-	  // interpolating all properties using a parameter of `t`. Subclasses should
-	  // override this to interpolate additional properties.
-	  interpolate: function(other, t) {
-	    return new CSG.Vertex(
-	      this.pos.lerp(other.pos, t),
-	      this.normal.lerp(other.normal, t)
-	    );
-	  }
-	};
-	
-	// # class Plane
-	
-	// Represents a plane in 3D space.
-	
-	CSG.Plane = function(normal, w) {
-	  this.normal = normal;
-	  this.w = w;
-	};
-	
-	// `CSG.Plane.EPSILON` is the tolerance used by `splitPolygon()` to decide if a
-	// point is on the plane.
-	CSG.Plane.EPSILON = 1e-5;
-	
-	CSG.Plane.fromPoints = function(a, b, c) {
-	  var n = b.minus(a).cross(c.minus(a)).unit();
-	  return new CSG.Plane(n, n.dot(a));
-	};
-	
-	CSG.Plane.prototype = {
-	  clone: function() {
-	    return new CSG.Plane(this.normal.clone(), this.w);
-	  },
-	
-	  flip: function() {
-	    this.normal = this.normal.negated();
-	    this.w = -this.w;
-	  },
-	
-	  // Split `polygon` by this plane if needed, then put the polygon or polygon
-	  // fragments in the appropriate lists. Coplanar polygons go into either
-	  // `coplanarFront` or `coplanarBack` depending on their orientation with
-	  // respect to this plane. Polygons in front or in back of this plane go into
-	  // either `front` or `back`.
-	  splitPolygon: function(polygon, coplanarFront, coplanarBack, front, back) {
-	    var COPLANAR = 0;
-	    var FRONT = 1;
-	    var BACK = 2;
-	    var SPANNING = 3;
-	
-	    // Classify each point as well as the entire polygon into one of the above
-	    // four classes.
-	    var polygonType = 0;
-	    var types = [];
-	    for (var i = 0; i < polygon.vertices.length; i++) {
-	      var t = this.normal.dot(polygon.vertices[i].pos) - this.w;
-	      var type = (t < -CSG.Plane.EPSILON) ? BACK : (t > CSG.Plane.EPSILON) ? FRONT : COPLANAR;
-	      polygonType |= type;
-	      types.push(type);
-	    }
-	
-	    // Put the polygon in the correct list, splitting it when necessary.
-	    switch (polygonType) {
-	      case COPLANAR:
-	        (this.normal.dot(polygon.plane.normal) > 0 ? coplanarFront : coplanarBack).push(polygon);
-	        break;
-	      case FRONT:
-	        front.push(polygon);
-	        break;
-	      case BACK:
-	        back.push(polygon);
-	        break;
-	      case SPANNING:
-	        var f = [], b = [];
-	        for (var i = 0; i < polygon.vertices.length; i++) {
-	          var j = (i + 1) % polygon.vertices.length;
-	          var ti = types[i], tj = types[j];
-	          var vi = polygon.vertices[i], vj = polygon.vertices[j];
-	          if (ti != BACK) f.push(vi);
-	          if (ti != FRONT) b.push(ti != BACK ? vi.clone() : vi);
-	          if ((ti | tj) == SPANNING) {
-	            var t = (this.w - this.normal.dot(vi.pos)) / this.normal.dot(vj.pos.minus(vi.pos));
-	            var v = vi.interpolate(vj, t);
-	            f.push(v);
-	            b.push(v.clone());
-	          }
-	        }
-	        if (f.length >= 3) front.push(new CSG.Polygon(f, polygon.shared));
-	        if (b.length >= 3) back.push(new CSG.Polygon(b, polygon.shared));
-	        break;
-	    }
-	  }
-	};
-	
-	// # class Polygon
-	
-	// Represents a convex polygon. The vertices used to initialize a polygon must
-	// be coplanar and form a convex loop. They do not have to be `CSG.Vertex`
-	// instances but they must behave similarly (duck typing can be used for
-	// customization).
-	// 
-	// Each convex polygon has a `shared` property, which is shared between all
-	// polygons that are clones of each other or were split from the same polygon.
-	// This can be used to define per-polygon properties (such as surface color).
-	
-	CSG.Polygon = function(vertices, shared) {
-	  this.vertices = vertices;
-	  this.shared = shared;
-	  this.plane = CSG.Plane.fromPoints(vertices[0].pos, vertices[1].pos, vertices[2].pos);
-	};
-	
-	CSG.Polygon.prototype = {
-	  clone: function() {
-	    var vertices = this.vertices.map(function(v) { return v.clone(); });
-	    return new CSG.Polygon(vertices, this.shared);
-	  },
-	
-	  flip: function() {
-	    this.vertices.reverse().map(function(v) { v.flip(); });
-	    this.plane.flip();
-	  }
-	};
-	
-	// # class Node
-	
-	// Holds a node in a BSP tree. A BSP tree is built from a collection of polygons
-	// by picking a polygon to split along. That polygon (and all other coplanar
-	// polygons) are added directly to that node and the other polygons are added to
-	// the front and/or back subtrees. This is not a leafy BSP tree since there is
-	// no distinction between internal and leaf nodes.
-	
-	CSG.Node = function(polygons) {
-	  this.plane = null;
-	  this.front = null;
-	  this.back = null;
-	  this.polygons = [];
-	  if (polygons) this.build(polygons);
-	};
-	
-	CSG.Node.prototype = {
-	  clone: function() {
-	    var node = new CSG.Node();
-	    node.plane = this.plane && this.plane.clone();
-	    node.front = this.front && this.front.clone();
-	    node.back = this.back && this.back.clone();
-	    node.polygons = this.polygons.map(function(p) { return p.clone(); });
-	    return node;
-	  },
-	
-	  // Convert solid space to empty space and empty space to solid space.
-	  invert: function() {
-	    for (var i = 0; i < this.polygons.length; i++) {
-	      this.polygons[i].flip();
-	    }
-	    this.plane.flip();
-	    if (this.front) this.front.invert();
-	    if (this.back) this.back.invert();
-	    var temp = this.front;
-	    this.front = this.back;
-	    this.back = temp;
-	  },
-	
-	  // Recursively remove all polygons in `polygons` that are inside this BSP
-	  // tree.
-	  clipPolygons: function(polygons) {
-	    if (!this.plane) return polygons.slice();
-	    var front = [], back = [];
-	    for (var i = 0; i < polygons.length; i++) {
-	      this.plane.splitPolygon(polygons[i], front, back, front, back);
-	    }
-	    if (this.front) front = this.front.clipPolygons(front);
-	    if (this.back) back = this.back.clipPolygons(back);
-	    else back = [];
-	    return front.concat(back);
-	  },
-	
-	  // Remove all polygons in this BSP tree that are inside the other BSP tree
-	  // `bsp`.
-	  clipTo: function(bsp) {
-	    this.polygons = bsp.clipPolygons(this.polygons);
-	    if (this.front) this.front.clipTo(bsp);
-	    if (this.back) this.back.clipTo(bsp);
-	  },
-	
-	  // Return a list of all polygons in this BSP tree.
-	  allPolygons: function() {
-	    var polygons = this.polygons.slice();
-	    if (this.front) polygons = polygons.concat(this.front.allPolygons());
-	    if (this.back) polygons = polygons.concat(this.back.allPolygons());
-	    return polygons;
-	  },
-	
-	  // Build a BSP tree out of `polygons`. When called on an existing tree, the
-	  // new polygons are filtered down to the bottom of the tree and become new
-	  // nodes there. Each set of polygons is partitioned using the first polygon
-	  // (no heuristic is used to pick a good split).
-	  build: function(polygons) {
-	    if (!polygons.length) return;
-	    if (!this.plane) this.plane = polygons[0].plane.clone();
-	    var front = [], back = [];
-	    for (var i = 0; i < polygons.length; i++) {
-	      this.plane.splitPolygon(polygons[i], this.polygons, this.polygons, front, back);
-	    }
-	    if (front.length) {
-	      if (!this.front) this.front = new CSG.Node();
-	      this.front.build(front);
-	    }
-	    if (back.length) {
-	      if (!this.back) this.back = new CSG.Node();
-	      this.back.build(back);
-	    }
-	  }
-	};
-
-
-/***/ },
-/* 53 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	window.ThreeBSP = (function() {
-		
-		var ThreeBSP,
-			EPSILON = 1e-5,
-			COPLANAR = 0,
-			FRONT = 1,
-			BACK = 2,
-			SPANNING = 3;
-		
-		ThreeBSP = function( geometry ) {
-			// Convert THREE.Geometry to ThreeBSP
-			var i, _length_i,
-				face, vertex, faceVertexUvs,
-				polygon,
-				polygons = [],
-				tree;
-		
-			if ( geometry instanceof THREE.Geometry ) {
-				this.matrix = new THREE.Matrix4;
-			} else if ( geometry instanceof THREE.Mesh ) {
-				// #todo: add hierarchy support
-				geometry.updateMatrix();
-				this.matrix = geometry.matrix.clone();
-				geometry = geometry.geometry;
-			} else if ( geometry instanceof ThreeBSP.Node ) {
-				this.tree = geometry;
-				this.matrix = new THREE.Matrix4;
-				return this;
-			} else {
-				throw 'ThreeBSP: Given geometry is unsupported';
-			}
-		
-			for ( i = 0, _length_i = geometry.faces.length; i < _length_i; i++ ) {
-				face = geometry.faces[i];
-				faceVertexUvs = geometry.faceVertexUvs[0][i];
-				polygon = new ThreeBSP.Polygon;
-				
-				if ( face instanceof THREE.Face3 ) {
-					vertex = geometry.vertices[ face.a ];
-					vertex = new ThreeBSP.Vertex( vertex.x, vertex.y, vertex.z, face.vertexNormals[0], new THREE.Vector2( faceVertexUvs[0].x, faceVertexUvs[0].y ) );
-					vertex.applyMatrix4(this.matrix);
-					polygon.vertices.push( vertex );
-					
-					vertex = geometry.vertices[ face.b ];
-					vertex = new ThreeBSP.Vertex( vertex.x, vertex.y, vertex.z, face.vertexNormals[1], new THREE.Vector2( faceVertexUvs[1].x, faceVertexUvs[1].y ) );
-					vertex.applyMatrix4(this.matrix);
-					polygon.vertices.push( vertex );
-					
-					vertex = geometry.vertices[ face.c ];
-					vertex = new ThreeBSP.Vertex( vertex.x, vertex.y, vertex.z, face.vertexNormals[2], new THREE.Vector2( faceVertexUvs[2].x, faceVertexUvs[2].y ) );
-					vertex.applyMatrix4(this.matrix);
-					polygon.vertices.push( vertex );
-				} else if ( typeof THREE.Face4 ) {
-					vertex = geometry.vertices[ face.a ];
-					vertex = new ThreeBSP.Vertex( vertex.x, vertex.y, vertex.z, face.vertexNormals[0], new THREE.Vector2( faceVertexUvs[0].x, faceVertexUvs[0].y ) );
-					vertex.applyMatrix4(this.matrix);
-					polygon.vertices.push( vertex );
-					
-					vertex = geometry.vertices[ face.b ];
-					vertex = new ThreeBSP.Vertex( vertex.x, vertex.y, vertex.z, face.vertexNormals[1], new THREE.Vector2( faceVertexUvs[1].x, faceVertexUvs[1].y ) );
-					vertex.applyMatrix4(this.matrix);
-					polygon.vertices.push( vertex );
-					
-					vertex = geometry.vertices[ face.c ];
-					vertex = new ThreeBSP.Vertex( vertex.x, vertex.y, vertex.z, face.vertexNormals[2], new THREE.Vector2( faceVertexUvs[2].x, faceVertexUvs[2].y ) );
-					vertex.applyMatrix4(this.matrix);
-					polygon.vertices.push( vertex );
-					
-					vertex = geometry.vertices[ face.d ];
-					vertex = new ThreeBSP.Vertex( vertex.x, vertex.y, vertex.z, face.vertexNormals[3], new THREE.Vector2( faceVertexUvs[3].x, faceVertexUvs[3].y ) );
-					vertex.applyMatrix4(this.matrix);
-					polygon.vertices.push( vertex );
-				} else {
-					throw 'Invalid face type at index ' + i;
-				}
-				
-				polygon.calculateProperties();
-				polygons.push( polygon );
-			};
-		
-			this.tree = new ThreeBSP.Node( polygons );
-		};
-		ThreeBSP.prototype.subtract = function( other_tree ) {
-			var a = this.tree.clone(),
-				b = other_tree.tree.clone();
-			
-			a.invert();
-			a.clipTo( b );
-			b.clipTo( a );
-			b.invert();
-			b.clipTo( a );
-			b.invert();
-			a.build( b.allPolygons() );
-			a.invert();
-			a = new ThreeBSP( a );
-			a.matrix = this.matrix;
-			return a;
-		};
-		ThreeBSP.prototype.union = function( other_tree ) {
-			var a = this.tree.clone(),
-				b = other_tree.tree.clone();
-			
-			a.clipTo( b );
-			b.clipTo( a );
-			b.invert();
-			b.clipTo( a );
-			b.invert();
-			a.build( b.allPolygons() );
-			a = new ThreeBSP( a );
-			a.matrix = this.matrix;
-			return a;
-		};
-		ThreeBSP.prototype.intersect = function( other_tree ) {
-			var a = this.tree.clone(),
-				b = other_tree.tree.clone();
-			
-			a.invert();
-			b.clipTo( a );
-			b.invert();
-			a.clipTo( b );
-			b.clipTo( a );
-			a.build( b.allPolygons() );
-			a.invert();
-			a = new ThreeBSP( a );
-			a.matrix = this.matrix;
-			return a;
-		};
-		ThreeBSP.prototype.toGeometry = function() {
-			var i, j,
-				matrix = new THREE.Matrix4().getInverse( this.matrix ),
-				geometry = new THREE.Geometry(),
-				polygons = this.tree.allPolygons(),
-				polygon_count = polygons.length,
-				polygon, polygon_vertice_count,
-				vertice_dict = {},
-				vertex_idx_a, vertex_idx_b, vertex_idx_c,
-				vertex, face,
-				verticeUvs;
-		
-			for ( i = 0; i < polygon_count; i++ ) {
-				polygon = polygons[i];
-				polygon_vertice_count = polygon.vertices.length;
-				
-				for ( j = 2; j < polygon_vertice_count; j++ ) {
-					verticeUvs = [];
-					
-					vertex = polygon.vertices[0];
-					verticeUvs.push( new THREE.Vector2( vertex.uv.x, vertex.uv.y ) );
-					vertex = new THREE.Vector3( vertex.x, vertex.y, vertex.z );
-					vertex.applyMatrix4(matrix);
-					
-					if ( typeof vertice_dict[ vertex.x + ',' + vertex.y + ',' + vertex.z ] !== 'undefined' ) {
-						vertex_idx_a = vertice_dict[ vertex.x + ',' + vertex.y + ',' + vertex.z ];
-					} else {
-						geometry.vertices.push( vertex );
-						vertex_idx_a = vertice_dict[ vertex.x + ',' + vertex.y + ',' + vertex.z ] = geometry.vertices.length - 1;
-					}
-					
-					vertex = polygon.vertices[j-1];
-					verticeUvs.push( new THREE.Vector2( vertex.uv.x, vertex.uv.y ) );
-					vertex = new THREE.Vector3( vertex.x, vertex.y, vertex.z );
-					vertex.applyMatrix4(matrix);
-					if ( typeof vertice_dict[ vertex.x + ',' + vertex.y + ',' + vertex.z ] !== 'undefined' ) {
-						vertex_idx_b = vertice_dict[ vertex.x + ',' + vertex.y + ',' + vertex.z ];
-					} else {
-						geometry.vertices.push( vertex );
-						vertex_idx_b = vertice_dict[ vertex.x + ',' + vertex.y + ',' + vertex.z ] = geometry.vertices.length - 1;
-					}
-					
-					vertex = polygon.vertices[j];
-					verticeUvs.push( new THREE.Vector2( vertex.uv.x, vertex.uv.y ) );
-					vertex = new THREE.Vector3( vertex.x, vertex.y, vertex.z );
-					vertex.applyMatrix4(matrix);
-					if ( typeof vertice_dict[ vertex.x + ',' + vertex.y + ',' + vertex.z ] !== 'undefined' ) {
-						vertex_idx_c = vertice_dict[ vertex.x + ',' + vertex.y + ',' + vertex.z ];
-					} else {
-						geometry.vertices.push( vertex );
-						vertex_idx_c = vertice_dict[ vertex.x + ',' + vertex.y + ',' + vertex.z ] = geometry.vertices.length - 1;
-					}
-					
-					face = new THREE.Face3(
-						vertex_idx_a,
-						vertex_idx_b,
-						vertex_idx_c,
-						new THREE.Vector3( polygon.normal.x, polygon.normal.y, polygon.normal.z )
-					);
-					
-					geometry.faces.push( face );
-					geometry.faceVertexUvs[0].push( verticeUvs );
-				}
-				
-			}
-			return geometry;
-		};
-		ThreeBSP.prototype.toMesh = function( material ) {
-			var geometry = this.toGeometry(),
-				mesh = new THREE.Mesh( geometry, material );
-			
-			mesh.position.getPositionFromMatrix( this.matrix );
-			mesh.rotation.setFromRotationMatrix( this.matrix );
-			
-			return mesh;
-		};
-		
-		
-		ThreeBSP.Polygon = function( vertices, normal, w ) {
-			if ( !( vertices instanceof Array ) ) {
-				vertices = [];
-			}
-			
-			this.vertices = vertices;
-			if ( vertices.length > 0 ) {
-				this.calculateProperties();
-			} else {
-				this.normal = this.w = undefined;
-			}
-		};
-		ThreeBSP.Polygon.prototype.calculateProperties = function() {
-			var a = this.vertices[0],
-				b = this.vertices[1],
-				c = this.vertices[2];
-				
-			this.normal = b.clone().subtract( a ).cross(
-				c.clone().subtract( a )
-			).normalize();
-			
-			this.w = this.normal.clone().dot( a );
-			
-			return this;
-		};
-		ThreeBSP.Polygon.prototype.clone = function() {
-			var i, vertice_count,
-				polygon = new ThreeBSP.Polygon;
-			
-			for ( i = 0, vertice_count = this.vertices.length; i < vertice_count; i++ ) {
-				polygon.vertices.push( this.vertices[i].clone() );
-			};
-			polygon.calculateProperties();
-			
-			return polygon;
-		};
-		
-		ThreeBSP.Polygon.prototype.flip = function() {
-			var i, vertices = [];
-			
-			this.normal.multiplyScalar( -1 );
-			this.w *= -1;
-			
-			for ( i = this.vertices.length - 1; i >= 0; i-- ) {
-				vertices.push( this.vertices[i] );
-			};
-			this.vertices = vertices;
-			
-			return this;
-		};
-		ThreeBSP.Polygon.prototype.classifyVertex = function( vertex ) {  
-			var side_value = this.normal.dot( vertex ) - this.w;
-			
-			if ( side_value < -EPSILON ) {
-				return BACK;
-			} else if ( side_value > EPSILON ) {
-				return FRONT;
-			} else {
-				return COPLANAR;
-			}
-		};
-		ThreeBSP.Polygon.prototype.classifySide = function( polygon ) {
-			var i, vertex, classification,
-				num_positive = 0,
-				num_negative = 0,
-				vertice_count = polygon.vertices.length;
-			
-			for ( i = 0; i < vertice_count; i++ ) {
-				vertex = polygon.vertices[i];
-				classification = this.classifyVertex( vertex );
-				if ( classification === FRONT ) {
-					num_positive++;
-				} else if ( classification === BACK ) {
-					num_negative++;
-				}
-			}
-			
-			if ( num_positive > 0 && num_negative === 0 ) {
-				return FRONT;
-			} else if ( num_positive === 0 && num_negative > 0 ) {
-				return BACK;
-			} else if ( num_positive === 0 && num_negative === 0 ) {
-				return COPLANAR;
-			} else {
-				return SPANNING;
-			}
-		};
-		ThreeBSP.Polygon.prototype.splitPolygon = function( polygon, coplanar_front, coplanar_back, front, back ) {
-			var classification = this.classifySide( polygon );
-			
-			if ( classification === COPLANAR ) {
-				
-				( this.normal.dot( polygon.normal ) > 0 ? coplanar_front : coplanar_back ).push( polygon );
-				
-			} else if ( classification === FRONT ) {
-				
-				front.push( polygon );
-				
-			} else if ( classification === BACK ) {
-				
-				back.push( polygon );
-				
-			} else {
-				
-				var vertice_count,
-					i, j, ti, tj, vi, vj,
-					t, v,
-					f = [],
-					b = [];
-				
-				for ( i = 0, vertice_count = polygon.vertices.length; i < vertice_count; i++ ) {
-					
-					j = (i + 1) % vertice_count;
-					vi = polygon.vertices[i];
-					vj = polygon.vertices[j];
-					ti = this.classifyVertex( vi );
-					tj = this.classifyVertex( vj );
-					
-					if ( ti != BACK ) f.push( vi );
-					if ( ti != FRONT ) b.push( vi );
-					if ( (ti | tj) === SPANNING ) {
-						t = ( this.w - this.normal.dot( vi ) ) / this.normal.dot( vj.clone().subtract( vi ) );
-						v = vi.interpolate( vj, t );
-						f.push( v );
-						b.push( v );
-					}
-				}
-				
-				
-				if ( f.length >= 3 ) front.push( new ThreeBSP.Polygon( f ).calculateProperties() );
-				if ( b.length >= 3 ) back.push( new ThreeBSP.Polygon( b ).calculateProperties() );
-			}
-		};
-		
-		ThreeBSP.Vertex = function( x, y, z, normal, uv ) {
-			this.x = x;
-			this.y = y;
-			this.z = z;
-			this.normal = normal || new THREE.Vector3;
-			this.uv = uv || new THREE.Vector2;
-		};
-		ThreeBSP.Vertex.prototype.clone = function() {
-			return new ThreeBSP.Vertex( this.x, this.y, this.z, this.normal.clone(), this.uv.clone() );
-		};
-		ThreeBSP.Vertex.prototype.add = function( vertex ) {
-			this.x += vertex.x;
-			this.y += vertex.y;
-			this.z += vertex.z;
-			return this;
-		};
-		ThreeBSP.Vertex.prototype.subtract = function( vertex ) {
-			this.x -= vertex.x;
-			this.y -= vertex.y;
-			this.z -= vertex.z;
-			return this;
-		};
-		ThreeBSP.Vertex.prototype.multiplyScalar = function( scalar ) {
-			this.x *= scalar;
-			this.y *= scalar;
-			this.z *= scalar;
-			return this;
-		};
-		ThreeBSP.Vertex.prototype.cross = function( vertex ) {
-			var x = this.x,
-				y = this.y,
-				z = this.z;
-	
-			this.x = y * vertex.z - z * vertex.y;
-			this.y = z * vertex.x - x * vertex.z;
-			this.z = x * vertex.y - y * vertex.x;
-			
-			return this;
-		};
-		ThreeBSP.Vertex.prototype.normalize = function() {
-			var length = Math.sqrt( this.x * this.x + this.y * this.y + this.z * this.z );
-			
-			this.x /= length;
-			this.y /= length;
-			this.z /= length;
-			
-			return this;
-		};
-		ThreeBSP.Vertex.prototype.dot = function( vertex ) {
-			return this.x * vertex.x + this.y * vertex.y + this.z * vertex.z;
-		};
-		ThreeBSP.Vertex.prototype.lerp = function( a, t ) {
-			this.add(
-				a.clone().subtract( this ).multiplyScalar( t )
-			);
-			
-			this.normal.add(
-				a.normal.clone().sub( this.normal ).multiplyScalar( t )
-			);
-			
-			this.uv.add(
-				a.uv.clone().sub( this.uv ).multiplyScalar( t )
-			);
-			
-			return this;
-		};
-		ThreeBSP.Vertex.prototype.interpolate = function( other, t ) {
-			return this.clone().lerp( other, t );
-		};
-		ThreeBSP.Vertex.prototype.applyMatrix4 = function ( m ) {
-	
-			// input: THREE.Matrix4 affine matrix
-	
-			var x = this.x, y = this.y, z = this.z;
-	
-			var e = m.elements;
-	
-			this.x = e[0] * x + e[4] * y + e[8]  * z + e[12];
-			this.y = e[1] * x + e[5] * y + e[9]  * z + e[13];
-			this.z = e[2] * x + e[6] * y + e[10] * z + e[14];
-	
-			return this;
-	
-		}
-		
-		
-		ThreeBSP.Node = function( polygons ) {
-			var i, polygon_count,
-				front = [],
-				back = [];
-	
-			this.polygons = [];
-			this.front = this.back = undefined;
-			
-			if ( !(polygons instanceof Array) || polygons.length === 0 ) return;
-	
-			this.divider = polygons[0].clone();
-			
-			for ( i = 0, polygon_count = polygons.length; i < polygon_count; i++ ) {
-				this.divider.splitPolygon( polygons[i], this.polygons, this.polygons, front, back );
-			}   
-			
-			if ( front.length > 0 ) {
-				this.front = new ThreeBSP.Node( front );
-			}
-			
-			if ( back.length > 0 ) {
-				this.back = new ThreeBSP.Node( back );
-			}
-		};
-		ThreeBSP.Node.isConvex = function( polygons ) {
-			var i, j;
-			for ( i = 0; i < polygons.length; i++ ) {
-				for ( j = 0; j < polygons.length; j++ ) {
-					if ( i !== j && polygons[i].classifySide( polygons[j] ) !== BACK ) {
-						return false;
-					}
-				}
-			}
-			return true;
-		};
-		ThreeBSP.Node.prototype.build = function( polygons ) {
-			var i, polygon_count,
-				front = [],
-				back = [];
-			
-			if ( !this.divider ) {
-				this.divider = polygons[0].clone();
-			}
-	
-			for ( i = 0, polygon_count = polygons.length; i < polygon_count; i++ ) {
-				this.divider.splitPolygon( polygons[i], this.polygons, this.polygons, front, back );
-			}   
-			
-			if ( front.length > 0 ) {
-				if ( !this.front ) this.front = new ThreeBSP.Node();
-				this.front.build( front );
-			}
-			
-			if ( back.length > 0 ) {
-				if ( !this.back ) this.back = new ThreeBSP.Node();
-				this.back.build( back );
-			}
-		};
-		ThreeBSP.Node.prototype.allPolygons = function() {
-			var polygons = this.polygons.slice();
-			if ( this.front ) polygons = polygons.concat( this.front.allPolygons() );
-			if ( this.back ) polygons = polygons.concat( this.back.allPolygons() );
-			return polygons;
-		};
-		ThreeBSP.Node.prototype.clone = function() {
-			var node = new ThreeBSP.Node();
-			
-			node.divider = this.divider.clone();
-			node.polygons = this.polygons.map( function( polygon ) { return polygon.clone(); } );
-			node.front = this.front && this.front.clone();
-			node.back = this.back && this.back.clone();
-			
-			return node;
-		};
-		ThreeBSP.Node.prototype.invert = function() {
-			var i, polygon_count, temp;
-			
-			for ( i = 0, polygon_count = this.polygons.length; i < polygon_count; i++ ) {
-				this.polygons[i].flip();
-			}
-			
-			this.divider.flip();
-			if ( this.front ) this.front.invert();
-			if ( this.back ) this.back.invert();
-			
-			temp = this.front;
-			this.front = this.back;
-			this.back = temp;
-			
-			return this;
-		};
-		ThreeBSP.Node.prototype.clipPolygons = function( polygons ) {
-			var i, polygon_count,
-				front, back;
-	
-			if ( !this.divider ) return polygons.slice();
-			
-			front = [], back = [];
-			
-			for ( i = 0, polygon_count = polygons.length; i < polygon_count; i++ ) {
-				this.divider.splitPolygon( polygons[i], front, back, front, back );
-			}
-	
-			if ( this.front ) front = this.front.clipPolygons( front );
-			if ( this.back ) back = this.back.clipPolygons( back );
-			else back = [];
-	
-			return front.concat( back );
-		};
-		
-		ThreeBSP.Node.prototype.clipTo = function( node ) {
-			this.polygons = node.clipPolygons( this.polygons );
-			if ( this.front ) this.front.clipTo( node );
-			if ( this.back ) this.back.clipTo( node );
-		};
-		
-		
-		return ThreeBSP;
-	})();
-
-/***/ },
-/* 54 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// tween.js r5 - http://github.com/sole/tween.js
-	var TWEEN=TWEEN||function(){var a,e,c=60,b=false,h=[],i;return{setFPS:function(f){c=f||60},start:function(f){arguments.length!=0&&this.setFPS(f);e=setInterval(this.update,1E3/c)},stop:function(){clearInterval(e)},setAutostart:function(f){(b=f)&&!e&&this.start()},add:function(f){h.push(f);b&&!e&&this.start()},getAll:function(){return h},removeAll:function(){h=[]},remove:function(f){a=h.indexOf(f);a!==-1&&h.splice(a,1)},update:function(f){a=0;i=h.length;for(f=f||Date.now();a<i;)if(h[a].update(f))a++;
-	else{h.splice(a,1);i--}i==0&&b==true&&this.stop()}}}();
-	TWEEN.Tween=function(a){var e={},c={},b={},h=1E3,i=0,f=null,n=TWEEN.Easing.Linear.EaseNone,k=null,l=null,m=null;this.to=function(d,g){if(g!==null)h=g;for(var j in d)if(a[j]!==null)b[j]=d[j];return this};this.start=function(d){TWEEN.add(this);f=d?d+i:Date.now()+i;for(var g in b)if(a[g]!==null){e[g]=a[g];c[g]=b[g]-a[g]}return this};this.stop=function(){TWEEN.remove(this);return this};this.delay=function(d){i=d;return this};this.easing=function(d){n=d;return this};this.chain=function(d){k=d};this.onUpdate=
-	function(d){l=d;return this};this.onComplete=function(d){m=d;return this};this.update=function(d){var g,j;if(d<f)return true;d=(d-f)/h;d=d>1?1:d;j=n(d);for(g in c)a[g]=e[g]+c[g]*j;l!==null&&l.call(a,j);if(d==1){m!==null&&m.call(a);k!==null&&k.start();return false}return true}};TWEEN.Easing={Linear:{},Quadratic:{},Cubic:{},Quartic:{},Quintic:{},Sinusoidal:{},Exponential:{},Circular:{},Elastic:{},Back:{},Bounce:{}};TWEEN.Easing.Linear.EaseNone=function(a){return a};
-	TWEEN.Easing.Quadratic.EaseIn=function(a){return a*a};TWEEN.Easing.Quadratic.EaseOut=function(a){return-a*(a-2)};TWEEN.Easing.Quadratic.EaseInOut=function(a){if((a*=2)<1)return 0.5*a*a;return-0.5*(--a*(a-2)-1)};TWEEN.Easing.Cubic.EaseIn=function(a){return a*a*a};TWEEN.Easing.Cubic.EaseOut=function(a){return--a*a*a+1};TWEEN.Easing.Cubic.EaseInOut=function(a){if((a*=2)<1)return 0.5*a*a*a;return 0.5*((a-=2)*a*a+2)};TWEEN.Easing.Quartic.EaseIn=function(a){return a*a*a*a};
-	TWEEN.Easing.Quartic.EaseOut=function(a){return-(--a*a*a*a-1)};TWEEN.Easing.Quartic.EaseInOut=function(a){if((a*=2)<1)return 0.5*a*a*a*a;return-0.5*((a-=2)*a*a*a-2)};TWEEN.Easing.Quintic.EaseIn=function(a){return a*a*a*a*a};TWEEN.Easing.Quintic.EaseOut=function(a){return(a-=1)*a*a*a*a+1};TWEEN.Easing.Quintic.EaseInOut=function(a){if((a*=2)<1)return 0.5*a*a*a*a*a;return 0.5*((a-=2)*a*a*a*a+2)};TWEEN.Easing.Sinusoidal.EaseIn=function(a){return-Math.cos(a*Math.PI/2)+1};
-	TWEEN.Easing.Sinusoidal.EaseOut=function(a){return Math.sin(a*Math.PI/2)};TWEEN.Easing.Sinusoidal.EaseInOut=function(a){return-0.5*(Math.cos(Math.PI*a)-1)};TWEEN.Easing.Exponential.EaseIn=function(a){return a==0?0:Math.pow(2,10*(a-1))};TWEEN.Easing.Exponential.EaseOut=function(a){return a==1?1:-Math.pow(2,-10*a)+1};TWEEN.Easing.Exponential.EaseInOut=function(a){if(a==0)return 0;if(a==1)return 1;if((a*=2)<1)return 0.5*Math.pow(2,10*(a-1));return 0.5*(-Math.pow(2,-10*(a-1))+2)};
-	TWEEN.Easing.Circular.EaseIn=function(a){return-(Math.sqrt(1-a*a)-1)};TWEEN.Easing.Circular.EaseOut=function(a){return Math.sqrt(1- --a*a)};TWEEN.Easing.Circular.EaseInOut=function(a){if((a/=0.5)<1)return-0.5*(Math.sqrt(1-a*a)-1);return 0.5*(Math.sqrt(1-(a-=2)*a)+1)};TWEEN.Easing.Elastic.EaseIn=function(a){var e,c=0.1,b=0.4;if(a==0)return 0;if(a==1)return 1;b||(b=0.3);if(!c||c<1){c=1;e=b/4}else e=b/(2*Math.PI)*Math.asin(1/c);return-(c*Math.pow(2,10*(a-=1))*Math.sin((a-e)*2*Math.PI/b))};
-	TWEEN.Easing.Elastic.EaseOut=function(a){var e,c=0.1,b=0.4;if(a==0)return 0;if(a==1)return 1;b||(b=0.3);if(!c||c<1){c=1;e=b/4}else e=b/(2*Math.PI)*Math.asin(1/c);return c*Math.pow(2,-10*a)*Math.sin((a-e)*2*Math.PI/b)+1};
-	TWEEN.Easing.Elastic.EaseInOut=function(a){var e,c=0.1,b=0.4;if(a==0)return 0;if(a==1)return 1;b||(b=0.3);if(!c||c<1){c=1;e=b/4}else e=b/(2*Math.PI)*Math.asin(1/c);if((a*=2)<1)return-0.5*c*Math.pow(2,10*(a-=1))*Math.sin((a-e)*2*Math.PI/b);return c*Math.pow(2,-10*(a-=1))*Math.sin((a-e)*2*Math.PI/b)*0.5+1};TWEEN.Easing.Back.EaseIn=function(a){return a*a*(2.70158*a-1.70158)};TWEEN.Easing.Back.EaseOut=function(a){return(a-=1)*a*(2.70158*a+1.70158)+1};
-	TWEEN.Easing.Back.EaseInOut=function(a){if((a*=2)<1)return 0.5*a*a*(3.5949095*a-2.5949095);return 0.5*((a-=2)*a*(3.5949095*a+2.5949095)+2)};TWEEN.Easing.Bounce.EaseIn=function(a){return 1-TWEEN.Easing.Bounce.EaseOut(1-a)};TWEEN.Easing.Bounce.EaseOut=function(a){return(a/=1)<1/2.75?7.5625*a*a:a<2/2.75?7.5625*(a-=1.5/2.75)*a+0.75:a<2.5/2.75?7.5625*(a-=2.25/2.75)*a+0.9375:7.5625*(a-=2.625/2.75)*a+0.984375};
-	TWEEN.Easing.Bounce.EaseInOut=function(a){if(a<0.5)return TWEEN.Easing.Bounce.EaseIn(a*2)*0.5;return TWEEN.Easing.Bounce.EaseOut(a*2-1)*0.5+0.5};
-
-
-/***/ },
-/* 55 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	 * @author zz85 (http://github.com/zz85 http://www.lab4games.net/zz85/blog)
-	 *
-	 * a simple to use javascript 3d particles system inspired by FliNT and Stardust
-	 * created with TWEEN.js and THREE.js
-	 *
-	 * for feature requests or bugs, please visit https://github.com/zz85/sparks.js
-	 *
-	 * licensed under the MIT license 
-	 */
-	
-	var SPARKS = {};
-	
-	/********************************
-	* Emitter Class
-	*
-	*   Creates and Manages Particles
-	*********************************/
-	
-	
-	SPARKS.Engine = {
-		// Combined Singleton Engine;
-		_TIMESTEP: 15,
-		_timer: null,
-		_lastTime: null,
-		_timerStep: 10,
-		_velocityVerlet: false,
-		_emitters: [],
-		_isRunning: false,
-		
-		add: function(emitter) {
-			this._emitters.push(emitter);
-		},
-		// run its built in timer / stepping
-		start: function() {
-			this._lastTime = Date.now();
-			this._timer = setTimeout(this.step, this._timerStep, this);
-			
-			for (var i=0,il=this._emitters.length;i<il;i++) {
-				this._emitters[i]._isRunning = true;
-			}
-			
-			this._isRunning = true;
-		},
-		
-		stop: function() {
-			this._isRunning = false;
-			for (var i=0,il=this._emitters.length;i<il;i++) {
-				this._emitters[i]._isRunning = false;
-			}
-			clearTimeout(this._timer);
-		},
-		
-		isRunning: function() {
-			return this._isRunning;
-		},
-		
-		// Step gets called upon by the engine
-		// but attempts to call update() on a regular basics
-		step: function(me) {
-			
-			var time = Date.now();
-			var elapsed = time - me._lastTime;
-		   	
-			if (!this._velocityVerlet) {
-				// if elapsed is way higher than time step, (usually after switching tabs, or excution cached in ff)
-				// we will drop cycles. perhaps set to a limit of 10 or something?
-				var maxBlock = me._TIMESTEP * 20;
-				
-				if (elapsed >= maxBlock) {
-					//console.log('warning: sparks.js is fast fowarding engine, skipping steps', elapsed / emitter._TIMESTEP);
-					//emitter.update( (elapsed - maxBlock) / 1000);
-					elapsed = maxBlock;
-				}
-			
-				while(elapsed >= me._TIMESTEP) {
-					me.update(me._TIMESTEP / 1000);
-					elapsed -= me._TIMESTEP;
-				}
-				me._lastTime = time - elapsed;
-				
-			} else {
-				me.update(elapsed/1000);
-				me._lastTime = time;
-			}
-			
-			
-			setTimeout(me.step, me._timerStep, me);
-			
-		},
-		
-		update: function(time) {
-			for (var i=0,il=this._emitters.length;i<il;i++) {
-				this._emitters[i].update(time);
-			}
-		}
-		
-	};
-	
-	SPARKS.Emitter = function (counter) {
-	    
-	    this._counter = counter ? counter : new SPARKS.SteadyCounter(10); // provides number of particles to produce
-	    
-	    this._particles = [];
-	    
-	    
-	    this._initializers = []; // use for creation of particles
-	    this._actions = [];     // uses action to update particles
-	    this._activities = [];  //  not supported yet
-	        
-	    this._handlers = [];
-	    
-	    this.callbacks = {};
-	};
-	
-	
-	SPARKS.Emitter.prototype = {
-		
-		_TIMESTEP: 15,
-		_timer: null,
-		_lastTime: null,
-		_timerStep: 10,
-		_velocityVerlet: false,
-		_isRunning: false,
-		
-		// run its built in timer / stepping
-		start: function() {
-			this._lastTime = Date.now();
-			this._timer = setTimeout(this.step, this._timerStep, this);
-			this._isRunning = true;
-		},
-		
-		stop: function() {
-			this._isRunning = false;
-			clearTimeout(this._timer);
-		},
-		
-		isRunning: function() {
-			return this._isRunning;
-		},
-		
-		// Step gets called upon by the engine
-		// but attempts to call update() on a regular basics
-		// This method is also described in http://gameclosure.com/2011/04/11/deterministic-delta-tee-in-js-games/
-		step: function(emitter) {
-			
-			var time = Date.now();
-			var elapsed = time - emitter._lastTime;
-		   	
-			if (!this._velocityVerlet) {
-				// if elapsed is way higher than time step, (usually after switching tabs, or excution cached in ff)
-				// we will drop cycles. perhaps set to a limit of 10 or something?
-				var maxBlock = emitter._TIMESTEP * 20;
-				
-				if (elapsed >= maxBlock) {
-					//console.log('warning: sparks.js is fast fowarding engine, skipping steps', elapsed / emitter._TIMESTEP);
-					//emitter.update( (elapsed - maxBlock) / 1000);
-					elapsed = maxBlock;
-				}
-			
-				while(elapsed >= emitter._TIMESTEP) {
-					emitter.update(emitter._TIMESTEP / 1000);
-					elapsed -= emitter._TIMESTEP;
-				}
-				emitter._lastTime = time - elapsed;
-				
-			} else {
-				emitter.update(elapsed/1000);
-				emitter._lastTime = time;
-			}
-			
-			
-			
-			if (emitter._isRunning)
-			setTimeout(emitter.step, emitter._timerStep, emitter);
-			
-		},
-	
-	
-		// Update particle engine in seconds, not milliseconds
-	    update: function(time) {
-			
-	        var len = this._counter.updateEmitter( this, time );
-	        
-	        // Create particles
-	        for( i = 0; i < len; i++ ) {
-	            this.createParticle();
-	        }
-	        
-	        // Update activities
-	        len = this._activities.length;
-	        for ( i = 0; i < len; i++ )
-	        {
-	            this._activities[i].update( this, time );
-	        }
-	        
-	        
-	        len = this._actions.length;
-	        var action;
-	        var len2 = this._particles.length;
-	        
-	        for( j = 0; j < len; j++ )
-	        {
-	            action = this._actions[j];
-	            for ( i = 0; i < len2; ++i )
-	            {
-	                particle = this._particles[i];
-	                action.update( this, particle, time );
-	            }
-	        }
-	        
-	        
-	        // remove dead particles
-	        for ( i = len2; i--; )
-	        {
-	            particle = this._particles[i];
-	            if ( particle.isDead )
-	            {
-	                //particle = 
-					this._particles.splice( i, 1 );
-	                this.dispatchEvent("dead", particle);
-					SPARKS.VectorPool.release(particle.position); //
-					SPARKS.VectorPool.release(particle.velocity);
-	                
-	            } else {
-	                this.dispatchEvent("updated", particle);
-	            }
-	        }
-	        
-			this.dispatchEvent("loopUpdated");
-			
-	    },
-	    
-	    createParticle: function() {
-	        var particle = new SPARKS.Particle();
-	        // In future, use a Particle Factory
-	        var len = this._initializers.length, i;
-	
-	        for ( i = 0; i < len; i++ ) {
-	            this._initializers[i].initialize( this, particle );
-	        }
-	        
-	        this._particles.push( particle );
-	        
-	        this.dispatchEvent("created", particle); // ParticleCreated
-	        
-	        return particle;
-	    },
-	    
-	    addInitializer: function (initializer) {
-	        this._initializers.push(initializer);
-	    },
-	    
-	    addAction: function (action) {
-	        this._actions.push(action);
-	    },
-	
-	    removeInitializer: function (initializer) {
-			var index = this._initializers.indexOf(initializer);
-			if (index > -1) {
-				this._initializers.splice( index, 1 );
-			}
-	    },
-	
-	    removeAction: function (action) {
-			var index = this._actions.indexOf(action);
-			if (index > -1) {
-				this._actions.splice( index, 1 );
-			}
-			//console.log('removeAction', index, this._actions);
-	    },
-	    
-	    addCallback: function(name, callback) {
-	        this.callbacks[name] = callback;
-	    },
-	    
-	    removeCallback: function(name) {
-	        delete this.callbacks[name];
-	    },
-	    
-	    dispatchEvent: function(name, args) {
-	        var callback = this.callbacks[name];
-	        if (callback) {
-	            callback(args);
-	        }
-	    
-	    }
-	    
-	
-	};
-	
-	
-	/*
-	 * Constant Names for
-	 * Events called by emitter.dispatchEvent()
-	 * 
-	 */
-	SPARKS.EVENT_PARTICLE_CREATED = "created"
-	SPARKS.EVENT_PARTICLE_UPDATED = "updated"
-	SPARKS.EVENT_PARTICLE_DEAD = "dead";
-	SPARKS.EVENT_LOOP_UPDATED = "loopUpdated";
-	
-	
-	
-	/*
-	 * Steady Counter attempts to produces a particle rate steadily
-	 *
-	 */
-	
-	// Number of particles per seconds
-	SPARKS.SteadyCounter = function(rate) {
-	    this.rate = rate;
-	    
-		// we use a shortfall counter to make up for slow emitters 
-		this.leftover = 0;
-		
-	};
-	
-	SPARKS.SteadyCounter.prototype.updateEmitter = function(emitter, time) {
-	
-		var targetRelease = time * this.rate + this.leftover;
-		var actualRelease = Math.floor(targetRelease);
-		
-		this.leftover = targetRelease - actualRelease;
-		
-		return actualRelease;
-	};
-	
-	
-	/*
-	 * Shot Counter produces specified particles 
-	 * on a single impluse or burst
-	 */
-	
-	SPARKS.ShotCounter = function(particles) {
-		this.particles = particles;
-		this.used = false;
-	};
-	
-	SPARKS.ShotCounter.prototype.updateEmitter = function(emitter, time) {
-	
-		if (this.used) {
-			return 0;
-		} else {
-			this.used = true;
-		}
-		
-		return this.particles;
-	};
-	
-	
-	/********************************
-	* Particle Class
-	*
-	*   Represents a single particle
-	*********************************/
-	SPARKS.Particle = function() {
-	
-	    /**
-	     * The lifetime of the particle, in seconds.
-	     */
-	    this.lifetime = 0;
-	    
-	    /**
-	     * The age of the particle, in seconds.
-	     */
-	    this.age = 0;
-	    
-	    /**
-	     * The energy of the particle.
-	     */
-	    this.energy = 1;
-	    
-	    /**
-	     * Whether the particle is dead and should be removed from the stage.
-	     */
-	    this.isDead = false;
-	    
-	    this.target = null; // tag
-	    
-	    /**
-	     * For 3D
-	     */
-	     
-	     this.position = SPARKS.VectorPool.get().set(0,0,0); //new THREE.Vector3( 0, 0, 0 );
-	     this.velocity = SPARKS.VectorPool.get().set(0,0,0); //new THREE.Vector3( 0, 0, 0 );
-		this._oldvelocity = SPARKS.VectorPool.get().set(0,0,0);
-	     // rotation vec3
-	     // angVelocity vec3
-	     // faceAxis vec3
-	    
-	};
-	
-	
-	/********************************
-	* Action Classes
-	*
-	*   An abstract class which have
-	*   update function
-	*********************************/
-	SPARKS.Action = function() {
-	    this._priority = 0;
-	};
-	
-	
-	SPARKS.Age = function(easing) {
-	    this._easing = (easing == null) ? TWEEN.Easing.Linear.EaseNone : easing;
-	};
-	
-	SPARKS.Age.prototype.update = function (emitter, particle, time) {
-	    particle.age += time;
-	    if( particle.age >= particle.lifetime )
-	    {
-	        particle.energy = 0;
-	        particle.isDead = true;
-	    }
-	    else
-	    {
-	        var t = this._easing(particle.age / particle.lifetime);
-	        particle.energy = -1 * t + 1;
-	    }
-	};
-	
-	/*
-	// Mark particle as dead when particle's < 0
-	
-	SPARKS.Death = function(easing) {
-	    this._easing = (easing == null) ? TWEEN.Linear.EaseNone : easing;
-	};
-	
-	SPARKS.Death.prototype.update = function (emitter, particle, time) {
-	    if (particle.life <= 0) {
-	        particle.isDead = true;
-	    }
-	};
-	*/
-				
-	
-	SPARKS.Move = function() {
-	    
-	};
-	
-	SPARKS.Move.prototype.update = function(emitter, particle, time) {
-	    // attempt verlet velocity updating.
-	    var p = particle.position;
-		var v = particle.velocity;
-	    var old = particle._oldvelocity;
-		
-		if (this._velocityVerlet) {	
-			p.x += (v.x + old.x) * 0.5 * time;
-			p.y += (v.y + old.y) * 0.5 * time;
-			p.z += (v.z + old.z) * 0.5 * time;
-		} else {
-			p.x += v.x * time;
-			p.y += v.y * time;
-			p.z += v.z * time;
-		}
-	
-	    //  OldVel = Vel;
-	    // Vel = Vel + Accel * dt;
-	    // Pos = Pos + (vel + Vel + Accel * dt) * 0.5 * dt;
-		
-	
-	
-	};
-	
-	/* Marks particles found in specified zone dead */
-	SPARKS.DeathZone = function(zone) {
-	    this.zone = zone;
-	};
-	
-	SPARKS.DeathZone.prototype.update = function(emitter, particle, time) {
-	    
-	    if (this.zone.contains(particle.position)) {
-			particle.isDead = true;
-		}
-	
-	};
-	
-	/*
-	 * SPARKS.ActionZone applies an action when particle is found in zone
-	 */
-	SPARKS.ActionZone = function(action, zone) {
-		this.action = action;
-	    this.zone = zone;
-	};
-	
-	SPARKS.ActionZone.prototype.update = function(emitter, particle, time) {
-	
-	    if (this.zone.contains(particle.position)) {
-			this.action.update( emitter, particle, time );
-		}
-	
-	};
-	
-	/*
-	 * Accelerate action affects velocity in specified 3d direction 
-	 */
-	SPARKS.Accelerate = function(x,y,z) {
-		
-		if (x instanceof THREE.Vector3) {
-			this.acceleration = x;
-			return;
-		}
-	
-	    this.acceleration = new THREE.Vector3(x,y,z);
-	    
-	};
-	
-	SPARKS.Accelerate.prototype.update = function(emitter, particle, time) {
-	    var acc = this.acceleration;
-	    
-	    var v = particle.velocity;
-	    
-		particle._oldvelocity.set(v.x, v.y, v.z);
-		
-	    v.x += acc.x * time;
-	    v.y += acc.y * time;
-	    v.z += acc.z * time; 
-	
-	};
-	
-	/*
-	 * Accelerate Factor accelerate based on a factor of particle's velocity.
-	 */
-	SPARKS.AccelerateFactor = function(factor) {
-	    this.factor = factor;
-	};
-	
-	SPARKS.AccelerateFactor.prototype.update = function(emitter, particle, time) {
-	    var factor = this.factor;
-	    
-	    var v = particle.velocity;
-		var len = v.length();
-		var adjFactor;
-	    if (len>0) {
-	
-			adjFactor = factor * time / len;
-			adjFactor += 1;
-			
-			v.multiplyScalar(adjFactor);
-	
-		}
-	
-	};
-	
-	/*
-	AccelerateNormal
-	 * AccelerateVelocity affects velocity based on its velocity direction
-	 */
-	SPARKS.AccelerateVelocity = function(factor) {
-	
-		this.factor = factor;
-	
-	};
-	
-	SPARKS.AccelerateVelocity.prototype.update = function(emitter, particle, time) {
-	    var factor = this.factor;
-	
-	    var v = particle.velocity;
-	
-	
-	    v.z += - v.x * factor;
-	    v.y += v.z * factor;
-	    v.x +=  v.y * factor;
-	
-	};
-	
-	
-	/* Set the max ammount of x,y,z drift movements in a second */
-	SPARKS.RandomDrift = function(x,y,z) {
-		if (x instanceof THREE.Vector3) {
-			this.drift = x;
-			return;
-		}
-	
-	    this.drift = new THREE.Vector3(x,y,z);
-	}
-	
-	
-	SPARKS.RandomDrift.prototype.update = function(emitter, particle, time) {
-	    var drift = this.drift;
-	    
-	    var v = particle.velocity;
-	    
-	    v.x += ( Math.random() - 0.5 ) * drift.x * time;
-	    v.y += ( Math.random() - 0.5 ) * drift.y * time;
-	    v.z += ( Math.random() - 0.5 ) * drift.z * time;
-	
-	};
-	
-	/********************************
-	* Zone Classes
-	*
-	*   An abstract classes which have
-	*   getLocation() function
-	*********************************/
-	SPARKS.Zone = function() {
-	};
-	
-	// TODO, contains() for Zone
-	
-	SPARKS.PointZone = function(pos) {
-	    this.pos = pos;
-	};
-	
-	SPARKS.PointZone.prototype.getLocation = function() {
-	    return this.pos;
-	};
-	
-	SPARKS.PointZone = function(pos) {
-	    this.pos = pos;
-	};
-	
-	SPARKS.PointZone.prototype.getLocation = function() {
-	    return this.pos;
-	};
-	
-	SPARKS.LineZone = function(start, end) {
-	    this.start = start;
-		this.end = end;
-		this._length = end.clone().sub( start );
-	};
-	
-	SPARKS.LineZone.prototype.getLocation = function() {
-	    var len = this._length.clone();
-	
-		len.multiplyScalar( Math.random() );
-		return len.add( this.start );
-		
-	};
-	
-	// Basically a RectangleZone
-	SPARKS.ParallelogramZone = function(corner, side1, side2) {
-	    this.corner = corner;
-		this.side1 = side1;
-		this.side2 = side2;
-	};
-	
-	SPARKS.ParallelogramZone.prototype.getLocation = function() {
-	    
-		var d1 = this.side1.clone().multiplyScalar( Math.random() );
-		var d2 = this.side2.clone().multiplyScalar( Math.random() );
-		d1.add(d2);
-		return d1.add( this.corner );
-		
-	};
-	
-	SPARKS.CubeZone = function(position, x, y, z) {
-	    this.position = position;
-		this.x = x;
-		this.y = y;
-		this.z = z;
-	};
-	
-	SPARKS.CubeZone.prototype.getLocation = function() {
-	    //TODO use pool?
-	
-		var location = this.position.clone();
-		location.x += Math.random() * this.x;
-		location.y += Math.random() * this.y;
-		location.z += Math.random() * this.z;
-		
-		return location;
-		
-	};
-	
-	
-	SPARKS.CubeZone.prototype.contains = function(position) {
-	
-		var startX = this.position.x;
-		var startY = this.position.y;
-		var startZ = this.position.z;
-		var x = this.x; // width
-		var y = this.y; // depth
-		var z = this.z; // height
-		
-		if (x<0) {
-			startX += x;
-			x = Math.abs(x);
-		}
-		
-		if (y<0) {
-			startY += y;
-			y = Math.abs(y);
-		}
-		
-		if (z<0) {
-			startZ += z;
-			z = Math.abs(z);
-		}
-		
-		var diffX = position.x - startX;
-		var diffY = position.y - startY;
-		var diffZ = position.z - startZ;
-		
-		if ( (diffX > 0) && (diffX < x) && 
-				(diffY > 0) && (diffY < y) && 
-				(diffZ > 0) && (diffZ < z) ) {
-			return true;
-		}
-		
-		return false;
-		
-	};
-	
-	
-	
-	/**
-	 * The constructor creates a DiscZone 3D zone.
-	 * 
-	 * @param centre The point at the center of the disc.
-	 * @param normal A vector normal to the disc.
-	 * @param outerRadius The outer radius of the disc.
-	 * @param innerRadius The inner radius of the disc. This defines the hole 
-	 * in the center of the disc. If set to zero, there is no hole. 
-	 */
-	
-	/*
-	// BUGGY!!
-	SPARKS.DiscZone = function(center, radiusNormal, outerRadius, innerRadius) {
-	    this.center = center;
-		this.radiusNormal = radiusNormal;
-		this.outerRadius = (outerRadius==undefined) ? 0 : outerRadius;
-		this.innerRadius = (innerRadius==undefined) ? 0 : innerRadius;
-		
-	};
-	
-	SPARKS.DiscZone.prototype.getLocation = function() {
-	    var rand = Math.random();
-		var _innerRadius = this.innerRadius;
-		var _outerRadius = this.outerRadius;
-		var center = this.center;
-		var _normal = this.radiusNormal;
-		
-		_distToOrigin = _normal.dot( center );
-		
-		var radius = _innerRadius + (1 - rand * rand ) * ( _outerRadius - _innerRadius );
-		var angle = Math.random() * SPARKS.Utils.TWOPI;
-		
-		var _distToOrigin = _normal.dot( center );
-		var axes = SPARKS.Utils.getPerpendiculars( _normal.clone() );
-		var _planeAxis1 = axes[0];
-		var _planeAxis2 = axes[1];
-		
-		var p = _planeAxis1.clone();
-		p.multiplyScalar( radius * Math.cos( angle ) );
-		var p2 = _planeAxis2.clone();
-		p2.multiplyScalar( radius * Math.sin( angle ) );
-		p.add( p2 );
-		return _center.add( p );
-		
-	};
-	*/
-	
-	SPARKS.SphereCapZone = function(x, y, z, minr, maxr, angle) {
-	    this.x = x;
-	    this.y = y;
-	    this.z = z;
-	    this.minr = minr;
-	    this.maxr = maxr;
-	    this.angle = angle;
-	};
-	
-	SPARKS.SphereCapZone.prototype.getLocation = function() {
-	    var theta = Math.PI *2  * SPARKS.Utils.random();
-	    var r = SPARKS.Utils.random();
-	    
-	    //new THREE.Vector3
-	    var v =  SPARKS.VectorPool.get().set(r * Math.cos(theta), -1 / Math.tan(this.angle * SPARKS.Utils.DEGREE_TO_RADIAN), r * Math.sin(theta));
-	    
-	    //v.length = StardustMath.interpolate(0, _minRadius, 1, _maxRadius, Math.random());
-	            
-	    var i = this.minr - ((this.minr-this.maxr) *  Math.random() );
-	    v.multiplyScalar(i);
-	
-		v.__markedForReleased = true;
-	    
-	    return v;
-	};
-	
-	
-	/********************************
-	* Initializer Classes
-	*
-	*   Classes which initializes
-	*   particles. Implements initialize( emitter:Emitter, particle:Particle )
-	*********************************/
-	
-	// Specifies random life between max and min
-	SPARKS.Lifetime = function(min, max) {
-	    this._min = min;
-	    
-	    this._max = max ? max : min;
-	    
-	};
-	
-	SPARKS.Lifetime.prototype.initialize = function( emitter/*Emitter*/, particle/*Particle*/ ) {
-	    particle.lifetime = this._min + SPARKS.Utils.random() * ( this._max - this._min );
-	};
-	
-	
-	SPARKS.Position = function(zone) {
-	    this.zone = zone;
-	};
-	
-	SPARKS.Position.prototype.initialize = function( emitter/*Emitter*/, particle/*Particle*/ ) {
-	    var pos = this.zone.getLocation();
-	    particle.position.set(pos.x, pos.y, pos.z);
-	};
-	
-	SPARKS.Velocity = function(zone) {
-	    this.zone = zone;
-	};
-	
-	SPARKS.Velocity.prototype.initialize = function( emitter/*Emitter*/, particle/*Particle*/ ) {
-	    var pos = this.zone.getLocation();
-	    particle.velocity.set(pos.x, pos.y, pos.z);
-		if (pos.__markedForReleased) {
-			//console.log("release");
-			SPARKS.VectorPool.release(pos);
-			pos.__markedForReleased = false;
-		}
-	};
-	
-	SPARKS.Target = function(target, callback) {
-	    this.target = target;
-	    this.callback = callback;
-	};
-	
-	SPARKS.Target.prototype.initialize = function( emitter, particle ) {
-	
-	    if (this.callback) {
-	        particle.target = this.callback();
-	    } else {
-	        particle.target = this.target;
-	    }
-	
-	};
-	
-	/********************************
-	* VectorPool 
-	*
-	*  Reuse much of Vectors if possible
-	*********************************/
-	
-	SPARKS.VectorPool = {
-		__pools: [],
-	
-		// Get a new Vector
-		get: function() {
-			if (this.__pools.length>0) {
-				return this.__pools.pop();
-			}
-			
-			return this._addToPool();
-			
-		},
-		
-		// Release a vector back into the pool
-		release: function(v) {
-			this.__pools.push(v);
-		},
-		
-		// Create a bunch of vectors and add to the pool
-		_addToPool: function() {
-			//console.log("creating some pools");
-			
-			for (var i=0, size = 100; i < size; i++) {
-				this.__pools.push(new THREE.Vector3());
-			}
-			
-			return new THREE.Vector3();
-			
-		}
-		
-		
-		
-	};
-	
-	
-	/********************************
-	* Util Classes
-	*
-	*   Classes which initializes
-	*   particles. Implements initialize( emitter:Emitter, particle:Particle )
-	*********************************/
-	SPARKS.Utils = {
-	    random: function() {
-	        return Math.random();
-	    },
-	    DEGREE_TO_RADIAN: Math.PI / 180,
-		TWOPI: Math.PI * 2,
-	
-		getPerpendiculars: function(normal) {
-			var p1 = this.getPerpendicular( normal );
-			var p2 = normal.cross( p1 );
-			p2.normalize();
-			return [ p1, p2 ];
-		},
-		
-		getPerpendicular: function( v )
-		{
-			if( v.x == 0 )
-			{
-				return new THREE.Vector3D( 1, 0, 0 );
-			}
-			else
-			{
-				var temp = new THREE.Vector3( v.y, -v.x, 0 );
-				return temp.normalize();
-			}
-		}
-	
-	};
-
-/***/ },
-/* 56 */,
-/* 57 */,
-/* 58 */,
-/* 59 */,
-/* 60 */,
-/* 61 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * @author alteredq / http://alteredqualia.com/
-	 *
-	 * Vignette shader
-	 * based on PaintEffect postprocess from ro.me
-	 * http://code.google.com/p/3-dreams-of-black/source/browse/deploy/js/effects/PaintEffect.js
-	 */
-	
-	THREE.VignetteShader = {
-	
-		uniforms: {
-	
-			"tDiffuse": { type: "t", value: null },
-			"offset":   { type: "f", value: 1.0 },
-			"darkness": { type: "f", value: 1.0 }
-	
-		},
-	
-		vertexShader: [
-	
-			"varying vec2 vUv;",
-	
-			"void main() {",
-	
-				"vUv = uv;",
-				"gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
-	
-			"}"
-	
-		].join("\n"),
-	
-		fragmentShader: [
-	
-			"uniform float offset;",
-			"uniform float darkness;",
-	
-			"uniform sampler2D tDiffuse;",
-	
-			"varying vec2 vUv;",
-	
-			"void main() {",
-	
-				// Eskil's vignette
-	
-				"vec4 texel = texture2D( tDiffuse, vUv );",
-				"vec2 uv = ( vUv - vec2( 0.5 ) ) * vec2( offset );",
-				"gl_FragColor = vec4( mix( texel.rgb, vec3( 1.0 - darkness ), dot( uv, uv ) ), texel.a );",
-	
-				/*
-				// alternative version from glfx.js
-				// this one makes more "dusty" look (as opposed to "burned")
-	
-				"vec4 color = texture2D( tDiffuse, vUv );",
-				"float dist = distance( vUv, vec2( 0.5 ) );",
-				"color.rgb *= smoothstep( 0.8, offset * 0.799, dist *( darkness + offset ) );",
-				"gl_FragColor = color;",
-				*/
-	
-			"}"
-	
-		].join("\n")
-	
-	};
-
-
-/***/ },
-/* 62 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * @author zz85 / http://www.lab4games.net/zz85/blog
-	 *
-	 * Two pass Gaussian blur filter (horizontal and vertical blur shaders)
-	 * - described in http://www.gamerendering.com/2008/10/11/gaussian-blur-filter-shader/
-	 *   and used in http://www.cake23.de/traveling-wavefronts-lit-up.html
-	 *
-	 * - 9 samples per pass
-	 * - standard deviation 2.7
-	 * - "h" and "v" parameters should be set to "1 / width" and "1 / height"
-	 */
-	
-	THREE.HorizontalBlurShader = {
-	
-		uniforms: {
-	
-			"tDiffuse": { type: "t", value: null },
-			"h":        { type: "f", value: 1.0 / 512.0 }
-	
-		},
-	
-		vertexShader: [
-	
-			"varying vec2 vUv;",
-	
-			"void main() {",
-	
-				"vUv = uv;",
-				"gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
-	
-			"}"
-	
-		].join("\n"),
-	
-		fragmentShader: [
-	
-			"uniform sampler2D tDiffuse;",
-			"uniform float h;",
-	
-			"varying vec2 vUv;",
-	
-			"void main() {",
-	
-				"vec4 sum = vec4( 0.0 );",
-	
-				"sum += texture2D( tDiffuse, vec2( vUv.x - 4.0 * h, vUv.y ) ) * 0.051;",
-				"sum += texture2D( tDiffuse, vec2( vUv.x - 3.0 * h, vUv.y ) ) * 0.0918;",
-				"sum += texture2D( tDiffuse, vec2( vUv.x - 2.0 * h, vUv.y ) ) * 0.12245;",
-				"sum += texture2D( tDiffuse, vec2( vUv.x - 1.0 * h, vUv.y ) ) * 0.1531;",
-				"sum += texture2D( tDiffuse, vec2( vUv.x, vUv.y ) ) * 0.1633;",
-				"sum += texture2D( tDiffuse, vec2( vUv.x + 1.0 * h, vUv.y ) ) * 0.1531;",
-				"sum += texture2D( tDiffuse, vec2( vUv.x + 2.0 * h, vUv.y ) ) * 0.12245;",
-				"sum += texture2D( tDiffuse, vec2( vUv.x + 3.0 * h, vUv.y ) ) * 0.0918;",
-				"sum += texture2D( tDiffuse, vec2( vUv.x + 4.0 * h, vUv.y ) ) * 0.051;",
-	
-				"gl_FragColor = sum;",
-	
-			"}"
-	
-		].join("\n")
-	
-	};
-
-
-/***/ },
-/* 63 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * @author zz85 / http://www.lab4games.net/zz85/blog
-	 *
-	 * Two pass Gaussian blur filter (horizontal and vertical blur shaders)
-	 * - described in http://www.gamerendering.com/2008/10/11/gaussian-blur-filter-shader/
-	 *   and used in http://www.cake23.de/traveling-wavefronts-lit-up.html
-	 *
-	 * - 9 samples per pass
-	 * - standard deviation 2.7
-	 * - "h" and "v" parameters should be set to "1 / width" and "1 / height"
-	 */
-	
-	THREE.VerticalBlurShader = {
-	
-		uniforms: {
-	
-			"tDiffuse": { type: "t", value: null },
-			"v":        { type: "f", value: 1.0 / 512.0 }
-	
-		},
-	
-		vertexShader: [
-	
-			"varying vec2 vUv;",
-	
-			"void main() {",
-	
-				"vUv = uv;",
-				"gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
-	
-			"}"
-	
-		].join("\n"),
-	
-		fragmentShader: [
-	
-			"uniform sampler2D tDiffuse;",
-			"uniform float v;",
-	
-			"varying vec2 vUv;",
-	
-			"void main() {",
-	
-				"vec4 sum = vec4( 0.0 );",
-	
-				"sum += texture2D( tDiffuse, vec2( vUv.x, vUv.y - 4.0 * v ) ) * 0.051;",
-				"sum += texture2D( tDiffuse, vec2( vUv.x, vUv.y - 3.0 * v ) ) * 0.0918;",
-				"sum += texture2D( tDiffuse, vec2( vUv.x, vUv.y - 2.0 * v ) ) * 0.12245;",
-				"sum += texture2D( tDiffuse, vec2( vUv.x, vUv.y - 1.0 * v ) ) * 0.1531;",
-				"sum += texture2D( tDiffuse, vec2( vUv.x, vUv.y ) ) * 0.1633;",
-				"sum += texture2D( tDiffuse, vec2( vUv.x, vUv.y + 1.0 * v ) ) * 0.1531;",
-				"sum += texture2D( tDiffuse, vec2( vUv.x, vUv.y + 2.0 * v ) ) * 0.12245;",
-				"sum += texture2D( tDiffuse, vec2( vUv.x, vUv.y + 3.0 * v ) ) * 0.0918;",
-				"sum += texture2D( tDiffuse, vec2( vUv.x, vUv.y + 4.0 * v ) ) * 0.051;",
-	
-				"gl_FragColor = sum;",
-	
-			"}"
-	
-		].join("\n")
-	
-	};
-
-
-/***/ },
-/* 64 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * @author alteredq / http://alteredqualia.com/
-	 *
-	 * Bleach bypass shader [http://en.wikipedia.org/wiki/Bleach_bypass]
-	 * - based on Nvidia example
-	 * http://developer.download.nvidia.com/shaderlibrary/webpages/shader_library.html#post_bleach_bypass
-	 */
-	
-	THREE.BleachBypassShader = {
-	
-		uniforms: {
-	
-			"tDiffuse": { type: "t", value: null },
-			"opacity":  { type: "f", value: 1.0 }
-	
-		},
-	
-		vertexShader: [
-	
-			"varying vec2 vUv;",
-	
-			"void main() {",
-	
-				"vUv = uv;",
-				"gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
-	
-			"}"
-	
-		].join("\n"),
-	
-		fragmentShader: [
-	
-			"uniform float opacity;",
-	
-			"uniform sampler2D tDiffuse;",
-	
-			"varying vec2 vUv;",
-	
-			"void main() {",
-	
-				"vec4 base = texture2D( tDiffuse, vUv );",
-	
-				"vec3 lumCoeff = vec3( 0.25, 0.65, 0.1 );",
-				"float lum = dot( lumCoeff, base.rgb );",
-				"vec3 blend = vec3( lum );",
-	
-				"float L = min( 1.0, max( 0.0, 10.0 * ( lum - 0.45 ) ) );",
-	
-				"vec3 result1 = 2.0 * base.rgb * blend;",
-				"vec3 result2 = 1.0 - 2.0 * ( 1.0 - blend ) * ( 1.0 - base.rgb );",
-	
-				"vec3 newColor = mix( result1, result2, L );",
-	
-				"float A2 = opacity * base.a;",
-				"vec3 mixRGB = A2 * newColor.rgb;",
-				"mixRGB += ( ( 1.0 - A2 ) * base.rgb );",
-	
-				"gl_FragColor = vec4( mixRGB, base.a );",
-	
-			"}"
-	
-		].join("\n")
-	
-	};
-
-
-/***/ },
-/* 65 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * @author alteredq / http://alteredqualia.com/
-	 *
-	 * Convolution shader
-	 * ported from o3d sample to WebGL / GLSL
-	 * http://o3d.googlecode.com/svn/trunk/samples/convolution.html
-	 */
-	
-	THREE.ConvolutionShader = {
-	
-		defines: {
-	
-			"KERNEL_SIZE_FLOAT": "25.0",
-			"KERNEL_SIZE_INT": "25",
-	
-		},
-	
-		uniforms: {
-	
-			"tDiffuse":        { type: "t", value: null },
-			"uImageIncrement": { type: "v2", value: new THREE.Vector2( 0.001953125, 0.0 ) },
-			"cKernel":         { type: "fv1", value: [] }
-	
-		},
-	
-		vertexShader: [
-	
-			"uniform vec2 uImageIncrement;",
-	
-			"varying vec2 vUv;",
-	
-			"void main() {",
-	
-				"vUv = uv - ( ( KERNEL_SIZE_FLOAT - 1.0 ) / 2.0 ) * uImageIncrement;",
-				"gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
-	
-			"}"
-	
-		].join("\n"),
-	
-		fragmentShader: [
-	
-			"uniform float cKernel[ KERNEL_SIZE_INT ];",
-	
-			"uniform sampler2D tDiffuse;",
-			"uniform vec2 uImageIncrement;",
-	
-			"varying vec2 vUv;",
-	
-			"void main() {",
-	
-				"vec2 imageCoord = vUv;",
-				"vec4 sum = vec4( 0.0, 0.0, 0.0, 0.0 );",
-	
-				"for( int i = 0; i < KERNEL_SIZE_INT; i ++ ) {",
-	
-					"sum += texture2D( tDiffuse, imageCoord ) * cKernel[ i ];",
-					"imageCoord += uImageIncrement;",
-	
-				"}",
-	
-				"gl_FragColor = sum;",
-	
-			"}"
-	
-	
-		].join("\n"),
-	
-		buildKernel: function ( sigma ) {
-	
-			// We lop off the sqrt(2 * pi) * sigma term, since we're going to normalize anyway.
-	
-			function gauss( x, sigma ) {
-	
-				return Math.exp( - ( x * x ) / ( 2.0 * sigma * sigma ) );
-	
-			}
-	
-			var i, values, sum, halfWidth, kMaxKernelSize = 25, kernelSize = 2 * Math.ceil( sigma * 3.0 ) + 1;
-	
-			if ( kernelSize > kMaxKernelSize ) kernelSize = kMaxKernelSize;
-			halfWidth = ( kernelSize - 1 ) * 0.5;
-	
-			values = new Array( kernelSize );
-			sum = 0.0;
-			for ( i = 0; i < kernelSize; ++i ) {
-	
-				values[ i ] = gauss( i - halfWidth, sigma );
-				sum += values[ i ];
-	
-			}
-	
-			// normalize the kernel
-	
-			for ( i = 0; i < kernelSize; ++i ) values[ i ] /= sum;
-	
-			return values;
-	
-		}
-	
-	};
-
-
-/***/ },
-/* 66 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * @author alteredq / http://alteredqualia.com/
-	 *
-	 * Film grain & scanlines shader
-	 *
-	 * - ported from HLSL to WebGL / GLSL
-	 * http://www.truevision3d.com/forums/showcase/staticnoise_colorblackwhite_scanline_shaders-t18698.0.html
-	 *
-	 * Screen Space Static Postprocessor
-	 *
-	 * Produces an analogue noise overlay similar to a film grain / TV static
-	 *
-	 * Original implementation and noise algorithm
-	 * Pat 'Hawthorne' Shearon
-	 *
-	 * Optimized scanlines + noise version with intensity scaling
-	 * Georg 'Leviathan' Steinrohder
-	 *
-	 * This version is provided under a Creative Commons Attribution 3.0 License
-	 * http://creativecommons.org/licenses/by/3.0/
-	 */
-	
-	THREE.FilmShader = {
-	
-		uniforms: {
-	
-			"tDiffuse":   { type: "t", value: null },
-			"time":       { type: "f", value: 0.0 },
-			"nIntensity": { type: "f", value: 0.5 },
-			"sIntensity": { type: "f", value: 0.05 },
-			"sCount":     { type: "f", value: 4096 },
-			"grayscale":  { type: "i", value: 1 }
-	
-		},
-	
-		vertexShader: [
-	
-			"varying vec2 vUv;",
-	
-			"void main() {",
-	
-				"vUv = uv;",
-				"gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
-	
-			"}"
-	
-		].join("\n"),
-	
-		fragmentShader: [
-	
-			// control parameter
-			"uniform float time;",
-	
-			"uniform bool grayscale;",
-	
-			// noise effect intensity value (0 = no effect, 1 = full effect)
-			"uniform float nIntensity;",
-	
-			// scanlines effect intensity value (0 = no effect, 1 = full effect)
-			"uniform float sIntensity;",
-	
-			// scanlines effect count value (0 = no effect, 4096 = full effect)
-			"uniform float sCount;",
-	
-			"uniform sampler2D tDiffuse;",
-	
-			"varying vec2 vUv;",
-	
-			"void main() {",
-	
-				// sample the source
-				"vec4 cTextureScreen = texture2D( tDiffuse, vUv );",
-	
-				// make some noise
-				"float x = vUv.x * vUv.y * time *  1000.0;",
-				"x = mod( x, 13.0 ) * mod( x, 123.0 );",
-				"float dx = mod( x, 0.01 );",
-	
-				// add noise
-				"vec3 cResult = cTextureScreen.rgb + cTextureScreen.rgb * clamp( 0.1 + dx * 100.0, 0.0, 1.0 );",
-	
-				// get us a sine and cosine
-				"vec2 sc = vec2( sin( vUv.y * sCount ), cos( vUv.y * sCount ) );",
-	
-				// add scanlines
-				"cResult += cTextureScreen.rgb * vec3( sc.x, sc.y, sc.x ) * sIntensity;",
-	
-				// interpolate between source and result by intensity
-				"cResult = cTextureScreen.rgb + clamp( nIntensity, 0.0,1.0 ) * ( cResult - cTextureScreen.rgb );",
-	
-				// convert to grayscale if desired
-				"if( grayscale ) {",
-	
-					"cResult = vec3( cResult.r * 0.3 + cResult.g * 0.59 + cResult.b * 0.11 );",
-	
-				"}",
-	
-				"gl_FragColor =  vec4( cResult, cTextureScreen.a );",
-	
-			"}"
-	
-		].join("\n")
-	
-	};
-
-
-/***/ },
-/* 67 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * @author alteredq / http://alteredqualia.com/
-	 */
-	
-	THREE.DotScreenPass = function ( center, angle, scale ) {
-	
-		if ( THREE.DotScreenShader === undefined )
-			console.error( "THREE.DotScreenPass relies on THREE.DotScreenShader" );
-	
-		var shader = THREE.DotScreenShader;
-	
-		this.uniforms = THREE.UniformsUtils.clone( shader.uniforms );
-	
-		if ( center !== undefined ) this.uniforms[ "center" ].value.copy( center );
-		if ( angle !== undefined ) this.uniforms[ "angle"].value = angle;
-		if ( scale !== undefined ) this.uniforms[ "scale"].value = scale;
-	
-		this.material = new THREE.ShaderMaterial( {
-	
-			uniforms: this.uniforms,
-			vertexShader: shader.vertexShader,
-			fragmentShader: shader.fragmentShader
-	
-		} );
-	
-		this.enabled = true;
-		this.renderToScreen = false;
-		this.needsSwap = true;
-	
-	};
-	
-	THREE.DotScreenPass.prototype = {
-	
-		render: function ( renderer, writeBuffer, readBuffer, delta ) {
-	
-			this.uniforms[ "tDiffuse" ].value = readBuffer;
-			this.uniforms[ "tSize" ].value.set( readBuffer.width, readBuffer.height );
-	
-			THREE.EffectComposer.quad.material = this.material;
-	
-			if ( this.renderToScreen ) {
-	
-				renderer.render( THREE.EffectComposer.scene, THREE.EffectComposer.camera );
-	
-			} else {
-	
-				renderer.render( THREE.EffectComposer.scene, THREE.EffectComposer.camera, writeBuffer, false );
-	
-			}
-	
-		}
-	
-	};
-
-
-/***/ },
-/* 68 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * @author alteredq / http://alteredqualia.com/
-	 */
-	
-	THREE.BloomPass = function ( strength, kernelSize, sigma, resolution ) {
-	
-		strength = ( strength !== undefined ) ? strength : 1;
-		kernelSize = ( kernelSize !== undefined ) ? kernelSize : 25;
-		sigma = ( sigma !== undefined ) ? sigma : 4.0;
-		resolution = ( resolution !== undefined ) ? resolution : 256;
-	
-		// render targets
-	
-		var pars = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat };
-	
-		this.renderTargetX = new THREE.WebGLRenderTarget( resolution, resolution, pars );
-		this.renderTargetY = new THREE.WebGLRenderTarget( resolution, resolution, pars );
-	
-		// copy material
-	
-		if ( THREE.CopyShader === undefined )
-			console.error( "THREE.BloomPass relies on THREE.CopyShader" );
-	
-		var copyShader = THREE.CopyShader;
-	
-		this.copyUniforms = THREE.UniformsUtils.clone( copyShader.uniforms );
-	
-		this.copyUniforms[ "opacity" ].value = strength;
-	
-		this.materialCopy = new THREE.ShaderMaterial( {
-	
-			uniforms: this.copyUniforms,
-			vertexShader: copyShader.vertexShader,
-			fragmentShader: copyShader.fragmentShader,
-			blending: THREE.AdditiveBlending,
-			transparent: true
-	
-		} );
-	
-		// convolution material
-	
-		if ( THREE.ConvolutionShader === undefined )
-			console.error( "THREE.BloomPass relies on THREE.ConvolutionShader" );
-	
-		var convolutionShader = THREE.ConvolutionShader;
-	
-		this.convolutionUniforms = THREE.UniformsUtils.clone( convolutionShader.uniforms );
-	
-		this.convolutionUniforms[ "uImageIncrement" ].value = THREE.BloomPass.blurx;
-		this.convolutionUniforms[ "cKernel" ].value = THREE.ConvolutionShader.buildKernel( sigma );
-	
-		this.materialConvolution = new THREE.ShaderMaterial( {
-	
-			uniforms: this.convolutionUniforms,
-			vertexShader:  convolutionShader.vertexShader,
-			fragmentShader: convolutionShader.fragmentShader,
-			defines: {
-				"KERNEL_SIZE_FLOAT": kernelSize.toFixed( 1 ),
-				"KERNEL_SIZE_INT": kernelSize.toFixed( 0 )
-			}
-	
-		} );
-	
-		this.enabled = true;
-		this.needsSwap = false;
-		this.clear = false;
-	
-	};
-	
-	THREE.BloomPass.prototype = {
-	
-		render: function ( renderer, writeBuffer, readBuffer, delta, maskActive ) {
-	
-			if ( maskActive ) renderer.context.disable( renderer.context.STENCIL_TEST );
-	
-			// Render quad with blured scene into texture (convolution pass 1)
-	
-			THREE.EffectComposer.quad.material = this.materialConvolution;
-	
-			this.convolutionUniforms[ "tDiffuse" ].value = readBuffer;
-			this.convolutionUniforms[ "uImageIncrement" ].value = THREE.BloomPass.blurX;
-	
-			renderer.render( THREE.EffectComposer.scene, THREE.EffectComposer.camera, this.renderTargetX, true );
-	
-	
-			// Render quad with blured scene into texture (convolution pass 2)
-	
-			this.convolutionUniforms[ "tDiffuse" ].value = this.renderTargetX;
-			this.convolutionUniforms[ "uImageIncrement" ].value = THREE.BloomPass.blurY;
-	
-			renderer.render( THREE.EffectComposer.scene, THREE.EffectComposer.camera, this.renderTargetY, true );
-	
-			// Render original scene with superimposed blur to texture
-	
-			THREE.EffectComposer.quad.material = this.materialCopy;
-	
-			this.copyUniforms[ "tDiffuse" ].value = this.renderTargetY;
-	
-			if ( maskActive ) renderer.context.enable( renderer.context.STENCIL_TEST );
-	
-			renderer.render( THREE.EffectComposer.scene, THREE.EffectComposer.camera, readBuffer, this.clear );
-	
-		}
-	
-	};
-	
-	THREE.BloomPass.blurX = new THREE.Vector2( 0.001953125, 0.0 );
-	THREE.BloomPass.blurY = new THREE.Vector2( 0.0, 0.001953125 );
-
-
-/***/ },
-/* 69 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * @author alteredq / http://alteredqualia.com/
-	 */
-	
-	THREE.FilmPass = function ( noiseIntensity, scanlinesIntensity, scanlinesCount, grayscale ) {
-	
-		if ( THREE.FilmShader === undefined )
-			console.error( "THREE.FilmPass relies on THREE.FilmShader" );
-	
-		var shader = THREE.FilmShader;
-	
-		this.uniforms = THREE.UniformsUtils.clone( shader.uniforms );
-	
-		this.material = new THREE.ShaderMaterial( {
-	
-			uniforms: this.uniforms,
-			vertexShader: shader.vertexShader,
-			fragmentShader: shader.fragmentShader
-	
-		} );
-	
-		if ( grayscale !== undefined )	this.uniforms.grayscale.value = grayscale;
-		if ( noiseIntensity !== undefined ) this.uniforms.nIntensity.value = noiseIntensity;
-		if ( scanlinesIntensity !== undefined ) this.uniforms.sIntensity.value = scanlinesIntensity;
-		if ( scanlinesCount !== undefined ) this.uniforms.sCount.value = scanlinesCount;
-	
-		this.enabled = true;
-		this.renderToScreen = false;
-		this.needsSwap = true;
-	
-	};
-	
-	THREE.FilmPass.prototype = {
-	
-		render: function ( renderer, writeBuffer, readBuffer, delta ) {
-	
-			this.uniforms[ "tDiffuse" ].value = readBuffer;
-			this.uniforms[ "time" ].value += delta;
-	
-			THREE.EffectComposer.quad.material = this.material;
-	
-			if ( this.renderToScreen ) {
-	
-				renderer.render( THREE.EffectComposer.scene, THREE.EffectComposer.camera );
-	
-			} else {
-	
-				renderer.render( THREE.EffectComposer.scene, THREE.EffectComposer.camera, writeBuffer, false );
-	
-			}
-	
-		}
-	
-	};
-
-
-/***/ },
+/***/ }),
 /* 70 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
 	/**
 	 * @author Tim Knip / http://www.floorplanner.com/ / tim at floorplanner.com
@@ -12574,304 +11095,265 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 
-/***/ },
-/* 71 */,
-/* 72 */,
-/* 73 */,
-/* 74 */,
-/* 75 */,
-/* 76 */,
-/* 77 */,
-/* 78 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 71 */
+/***/ (function(module, exports, __webpack_require__) {
 
-	var Backbone, Fields, _,
+	var Node, Object3D,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
+	
+	Node = __webpack_require__(11);
+	
+	Object3D = (function(superClass) {
+	  extend(Object3D, superClass);
+	
+	  function Object3D() {
+	    this.compute = bind(this.compute, this);
+	    this.applyRotation = bind(this.applyRotation, this);
+	    this.apply_children = bind(this.apply_children, this);
+	    this.get_children_array = bind(this.get_children_array, this);
+	    this.remove = bind(this.remove, this);
+	    this.deleteObjectAttributes = bind(this.deleteObjectAttributes, this);
+	    this.getFields = bind(this.getFields, this);
+	    this.initialize = bind(this.initialize, this);
+	    return Object3D.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Object3D.node_name = 'Object3D';
+	
+	  Object3D.group_name = 'Three';
+	
+	  Object3D.prototype.initialize = function(options) {
+	    Object3D.__super__.initialize.apply(this, arguments);
+	    this.auto_evaluate = false;
+	    this.ob = new THREE.Object3D();
+	    this.vars_shadow_options = ["castShadow", "receiveShadow"];
+	    this.shadow_cache = this.createCacheObject(this.vars_shadow_options);
+	    return this.vars_shadow_options = ["castShadow", "receiveShadow"];
+	  };
+	
+	  Object3D.prototype.getFields = function() {
+	    var fields;
+	    fields = {
+	      inputs: {
+	        "children": {
+	          type: "Object3D",
+	          val: [],
+	          "default": [],
+	          propagateDirty: false
+	        },
+	        "position": {
+	          type: "Vector3",
+	          val: new THREE.Vector3(),
+	          propagateDirty: false
+	        },
+	        "rotation": {
+	          type: "Any",
+	          val: new THREE.Euler(),
+	          propagateDirty: false
+	        },
+	        "scale": {
+	          type: "Vector3",
+	          val: new THREE.Vector3(1, 1, 1),
+	          propagateDirty: false
+	        },
+	        "visible": true,
+	        "castShadow": false,
+	        "receiveShadow": false
+	      },
+	      outputs: {
+	        "out": {
+	          type: "Any",
+	          val: this.ob
+	        }
+	      }
+	    };
+	    return fields;
+	  };
+	
+	  Object3D.prototype.deleteObjectAttributes = function(ob) {
+	    if (ob) {
+	      delete ob.up;
+	      delete ob.position;
+	      delete ob.rotation;
+	      delete ob.scale;
+	      delete ob.matrix;
+	      delete ob.matrixWorld;
+	      delete ob.matrixRotationWorld;
+	      delete ob.quaternion;
+	      return delete ob._vector;
+	    }
+	  };
+	
+	  Object3D.prototype.remove = function() {
+	    Object3D.__super__.remove.apply(this, arguments);
+	    this.deleteObjectAttributes(this.ob);
+	    delete this.ob;
+	    return delete this.shadow_cache;
+	  };
+	
+	  Object3D.prototype.get_children_array = function() {
+	    var childs;
+	    childs = this.fields.getField("children").get("value");
+	    if (childs && $.type(childs) !== "array") {
+	      return [childs];
+	    }
+	    return childs;
+	  };
+	
+	  Object3D.prototype.apply_children = function() {
+	    var child, children, childs_in, i, item, j, len, results;
+	    children = this.fields.getField("children");
+	    if (!children) {
+	      return false;
+	    }
+	    if (!children.changed) {
+	      return;
+	    }
+	    if (this.fields.getField("children").connections.length === 0 && this.ob.children.length !== 0) {
+	      while (this.ob.children.length > 0) {
+	        this.ob.remove(this.ob.children[0]);
+	      }
+	      return true;
+	    }
+	    childs_in = this.get_children_array();
+	    i = this.ob.children.length;
+	    while (i--) {
+	      child = this.ob.children[i];
+	      item = _.find(childs_in, function(item) {
+	        return item.uuid === child.uuid;
+	      });
+	      if (!item) {
+	        console.log("object remove child");
+	        this.ob.remove(child);
+	      }
+	    }
+	    results = [];
+	    for (j = 0, len = childs_in.length; j < len; j++) {
+	      child = childs_in[j];
+	      item = _.find(this.ob.children, function(item) {
+	        return item.uuid === child.uuid;
+	      });
+	      if (!item) {
+	        if (child instanceof THREE.Light === true) {
+	          this.ob.add(child);
+	          results.push(this.trigger("RebuildAllShaders"));
+	        } else {
+	          console.log("scene add child");
+	          results.push(this.ob.add(child));
+	        }
+	      } else {
+	        results.push(void 0);
+	      }
+	    }
+	    return results;
+	  };
+	
+	  Object3D.prototype.applyRotation = function(target, rotation) {
+	    if (rotation instanceof THREE.Euler) {
+	      return target.setRotationFromEuler(rotation);
+	    } else if (rotation instanceof THREE.Quaternion) {
+	      return target.quaternion = rotation;
+	    } else if (rotation instanceof THREE.Vector3) {
+	      return target.rotation.set(rotation.x, rotation.y, rotation.z, "XYZ");
+	    }
+	  };
+	
+	  Object3D.prototype.compute = function() {
+	    var rotation;
+	    this.applyFieldsToVal(this.fields.inputs, this.ob, ['children', 'rotation']);
+	    rotation = this.fields.getField('rotation').getValue();
+	    this.applyRotation(this.ob, rotation);
+	    this.apply_children();
+	    return this.fields.setField("out", this.ob);
+	  };
+	
+	  return Object3D;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('Object3D', Object3D);
+	
+	module.exports = Object3D;
+
+
+/***/ }),
+/* 72 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, WebglBase, _,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 	
 	_ = __webpack_require__(2);
 	
 	Backbone = __webpack_require__(3);
 	
-	__webpack_require__(95);
+	__webpack_require__(73);
 	
+	__webpack_require__(74);
 	
-	/* Fields Collection */
+	__webpack_require__(75);
 	
-	Fields = (function(superClass) {
-	  extend(Fields, superClass);
+	__webpack_require__(76);
 	
-	  function Fields() {
-	    this.renderSidebar = bind(this.renderSidebar, this);
-	    this.addFields = bind(this.addFields, this);
-	    this.addField = bind(this.addField, this);
-	    this.removeConnections = bind(this.removeConnections, this);
-	    this.renderConnections = bind(this.renderConnections, this);
-	    this.setFieldInputUnchanged = bind(this.setFieldInputUnchanged, this);
-	    this.hasUnconnectedFields = bind(this.hasUnconnectedFields, this);
-	    this.hasUnconnectedOutputs = bind(this.hasUnconnectedOutputs, this);
-	    this.hasUnconnectedInputs = bind(this.hasUnconnectedInputs, this);
-	    this.getDownstreamNodes = bind(this.getDownstreamNodes, this);
-	    this.getUpstreamNodes = bind(this.getUpstreamNodes, this);
-	    this.getMaxInputSliceCount = bind(this.getMaxInputSliceCount, this);
-	    this.setField = bind(this.setField, this);
-	    this.getField = bind(this.getField, this);
-	    this.toJSON = bind(this.toJSON, this);
-	    this.load = bind(this.load, this);
-	    this.destroy = bind(this.destroy, this);
-	    this.initialize = bind(this.initialize, this);
-	    return Fields.__super__.constructor.apply(this, arguments);
+	__webpack_require__(77);
+	
+	__webpack_require__(78);
+	
+	__webpack_require__(79);
+	
+	__webpack_require__(80);
+	
+	WebglBase = (function() {
+	  WebglBase.instance = false;
+	
+	  function WebglBase() {
+	    this.exportImage = bind(this.exportImage, this);
+	    console.log("webgl init...");
+	    WebglBase.instance = this;
+	    this.current_scene = new THREE.Scene();
+	    this.current_camera = new THREE.PerspectiveCamera(75, 800 / 600, 1, 10000);
+	    this.current_renderer = false;
+	    if (window.WebGLRenderingContext) {
+	      this.current_renderer = new THREE.WebGLRenderer({
+	        clearColor: 0x000000,
+	        preserveDrawingBuffer: true
+	      });
+	    }
+	    this.current_renderer.autoClear = false;
+	    this.effectScreen = new THREE.ShaderPass(THREE.CopyShader);
+	    this.effectScreen.renderToScreen = true;
+	    this.renderModel = new THREE.RenderPass(this.current_scene, this.current_camera);
+	    this.composer = new THREE.EffectComposer(this.current_renderer);
+	    WebglBase.current_renderer = this.current_renderer;
+	    WebglBase.current_scene = this.current_scene;
+	    WebglBase.current_camera = this.current_camera;
+	    WebglBase.composer = this.composer;
+	    WebglBase.renderModel = this.renderModel;
+	    WebglBase.effectScreen = this.effectScreen;
 	  }
 	
-	  Fields.prototype.initialize = function(models, options) {
-	    Fields.__super__.initialize.apply(this, arguments);
-	    this.node = options.node;
-	    this.indexer = options.indexer;
-	    this.inputs = {};
-	    this.outputs = {};
-	    this.special_elements = {
-	      left: [],
-	      center: [],
-	      right: []
+	  WebglBase.prototype.exportImage = function(fname) {
+	    var canvas, on_write;
+	    canvas = this.current_renderer.domElement;
+	    on_write = function(blob) {
+	      return saveAs(blob, fname);
 	    };
-	    return this.addFields(this.node.getFields());
+	    return canvas.toBlob(on_write, "image/png");
 	  };
 	
-	  Fields.prototype.destroy = function() {
-	    this.removeConnections();
-	    while (this.models.length > 0) {
-	      this.models[0].remove();
-	    }
-	    delete this.node;
-	    delete this.inputs;
-	    delete this.outputs;
-	    delete this.indexer;
-	    return delete this.special_elements;
-	  };
+	  return WebglBase;
 	
-	  Fields.prototype.load = function(data) {
-	    var f, j, len, node_field, ref;
-	    if (!data || !data["in"]) {
-	      return false;
-	    }
-	    ref = data["in"];
-	    for (j = 0, len = ref.length; j < len; j++) {
-	      f = ref[j];
-	      if (!f.nid) {
-	        node_field = this.inputs[f.name];
-	      } else {
-	        node_field = this.inputs[f.name + "-" + f.nid];
-	      }
-	      if (node_field) {
-	        node_field.load(f.val);
-	      }
-	    }
-	    return true;
-	  };
+	})();
 	
-	  Fields.prototype.toJSON = function() {
-	    var data;
-	    data = {
-	      "in": jQuery.map(this.inputs, function(f, i) {
-	        return f.toJSON();
-	      }),
-	      out: jQuery.map(this.outputs, function(f, i) {
-	        return f.toJSON();
-	      })
-	    };
-	    return data;
-	  };
-	
-	  Fields.prototype.getField = function(key, is_out) {
-	    var target;
-	    if (is_out == null) {
-	      is_out = false;
-	    }
-	    target = is_out === true ? "outputs" : "inputs";
-	    return this[target][key];
-	  };
-	
-	  Fields.prototype.setField = function(key, value) {
-	    if (this.outputs[key]) {
-	      return this.outputs[key].setValue(value);
-	    }
-	  };
-	
-	  Fields.prototype.getMaxInputSliceCount = function() {
-	    var f, fname, ref, result, val;
-	    result = 1;
-	    ref = this.inputs;
-	    for (fname in ref) {
-	      f = ref[fname];
-	      val = f.attributes.value;
-	      if (val && $.type(val) === "array") {
-	        if (val.length > result) {
-	          result = val.length;
-	        }
-	      }
-	    }
-	    return result - 1;
-	  };
-	
-	  Fields.prototype.getUpstreamNodes = function() {
-	    var c, f, fname, j, len, ref, ref1, res;
-	    res = [];
-	    ref = this.inputs;
-	    for (fname in ref) {
-	      f = ref[fname];
-	      ref1 = f.connections;
-	      for (j = 0, len = ref1.length; j < len; j++) {
-	        c = ref1[j];
-	        res[res.length] = c.from_field.node;
-	      }
-	    }
-	    return res;
-	  };
-	
-	  Fields.prototype.getDownstreamNodes = function() {
-	    var c, f, fname, j, k, len, len1, ref, ref1, res;
-	    res = [];
-	    ref = this.outputs;
-	    for (f = j = 0, len = ref.length; j < len; f = ++j) {
-	      fname = ref[f];
-	      f = this.inputs[fname];
-	      ref1 = f.connections;
-	      for (k = 0, len1 = ref1.length; k < len1; k++) {
-	        c = ref1[k];
-	        res[res.length] = c.to_field.node;
-	      }
-	    }
-	    return res;
-	  };
-	
-	  Fields.prototype.hasUnconnectedInputs = function() {
-	    var f, fname, ref;
-	    ref = this.inputs;
-	    for (fname in ref) {
-	      f = ref[fname];
-	      if (f.connections.length === 0) {
-	        return true;
-	      }
-	    }
-	    return false;
-	  };
-	
-	  Fields.prototype.hasUnconnectedOutputs = function() {
-	    var f, fname, ref;
-	    ref = this.outputs;
-	    for (fname in ref) {
-	      f = ref[fname];
-	      if (f.connections.length === 0) {
-	        return true;
-	      }
-	    }
-	    return false;
-	  };
-	
-	  Fields.prototype.hasUnconnectedFields = function() {
-	    return hasUnconnectedInputs() || hasUnconnectedOutputs();
-	  };
-	
-	  Fields.prototype.setFieldInputUnchanged = function() {
-	    var f, fname, j, len, ref, results;
-	    ref = this.inputs;
-	    results = [];
-	    for (j = 0, len = ref.length; j < len; j++) {
-	      fname = ref[j];
-	      f = this.inputs[fname];
-	      results.push(f.changed = false);
-	    }
-	    return results;
-	  };
-	
-	  Fields.prototype.renderConnections = function() {
-	    return this.invoke("renderConnections");
-	  };
-	
-	  Fields.prototype.removeConnections = function() {
-	    return this.invoke("removeConnections");
-	  };
-	
-	  Fields.prototype.addField = function(name, value, direction) {
-	    var f, field, field_index, field_is_out, target;
-	    if (direction == null) {
-	      direction = "inputs";
-	    }
-	    f = false;
-	    field_is_out = direction !== "inputs";
-	    if ($.type(value) !== "object") {
-	      value = this.getFieldValueObject(value);
-	    }
-	    if (value.propagateDirty == null) {
-	      value.propagateDirty = true;
-	    }
-	    field = new ThreeNodes.Core.fields.models[value.type]({
-	      name: name,
-	      value: value.val,
-	      possibilities: value.values,
-	      node: this.node,
-	      is_output: field_is_out,
-	      "default": value["default"],
-	      subfield: value.subfield,
-	      indexer: this.indexer,
-	      propagateDirty: value.propagateDirty
-	    });
-	    target = field.get("is_output") === false ? "inputs" : "outputs";
-	    field_index = field.get("name");
-	    if (field.subfield) {
-	      field_index += "-" + field.subfield.node.get("nid");
-	    }
-	    this[target][field_index] = field;
-	    this.add(field);
-	    return field;
-	  };
-	
-	  Fields.prototype.addFields = function(fields_array) {
-	    var dir, fname, value;
-	    for (dir in fields_array) {
-	      for (fname in fields_array[dir]) {
-	        value = fields_array[dir][fname];
-	        this.addField(fname, value, dir);
-	      }
-	    }
-	    return this;
-	  };
-	
-	  Fields.prototype.renderSidebar = function() {
-	    this.trigger("renderSidebar");
-	    return this;
-	  };
-	
-	  Fields.prototype.getFieldValueObject = function(default_value) {
-	    var ftype, res;
-	    ftype = (function() {
-	      switch ($.type(default_value)) {
-	        case "number":
-	          return "Float";
-	        case "boolean":
-	          return "Bool";
-	        default:
-	          return "String";
-	      }
-	    })();
-	    res = {
-	      type: ftype,
-	      val: default_value
-	    };
-	    return res;
-	  };
-	
-	  return Fields;
-	
-	})(Backbone.Collection);
-	
-	module.exports = Fields;
+	module.exports = WebglBase;
 
 
-/***/ },
-/* 79 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 73 */
+/***/ (function(module, exports) {
 
 	/**
 	 * @author alteredq / http://alteredqualia.com/
@@ -13019,9 +11501,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	THREE.EffectComposer.scene.add( THREE.EffectComposer.quad );
 
 
-/***/ },
-/* 80 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 74 */
+/***/ (function(module, exports) {
 
 	/**
 	 * @author alteredq / http://alteredqualia.com/
@@ -13111,9 +11593,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 
-/***/ },
-/* 81 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 75 */
+/***/ (function(module, exports) {
 
 	/**
 	 * @author alteredq / http://alteredqualia.com/
@@ -13168,9 +11650,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 
-/***/ },
-/* 82 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 76 */
+/***/ (function(module, exports) {
 
 	/**
 	 * @author alteredq / http://alteredqualia.com/
@@ -13225,9 +11707,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 
-/***/ },
-/* 83 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 77 */
+/***/ (function(module, exports) {
 
 	/**
 	 * @author alteredq / http://alteredqualia.com/
@@ -13277,9 +11759,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 
-/***/ },
-/* 84 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 78 */
+/***/ (function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_78__;
+
+/***/ }),
+/* 79 */
+/***/ (function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_79__;
+
+/***/ }),
+/* 80 */
+/***/ (function(module, exports) {
 
 	/* canvas-toBlob.js
 	 * A canvas.toBlob() implementation.
@@ -13390,21 +11884,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(self));
 
 
-/***/ },
-/* 85 */,
-/* 86 */,
-/* 87 */,
-/* 88 */,
-/* 89 */,
-/* 90 */,
-/* 91 */,
-/* 92 */,
-/* 93 */,
-/* 94 */,
-/* 95 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 81 */
+/***/ (function(module, exports, __webpack_require__) {
 
-	var Any, Array, Backbone, Bool, BoolField, Camera, Color, Euler, EulerField, Float, FloatField, Fog, Geometry, Indexer, Material, Mesh, NodeField, Object3D, Quaternion, QuaternionField, Scene, String, StringField, Texture, Vector2, Vector2Field, Vector3, Vector3Field, Vector4, Vector4Field, _, namespace,
+	var Backbone, CsgIntersect, CsgSubtract, CsgUnion, Node, NodeCSG, Utils, _,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
@@ -13413,1985 +11897,3477 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	Indexer = __webpack_require__(43);
+	Utils = __webpack_require__(9);
 	
-	namespace = __webpack_require__(50).namespace;
+	Node = __webpack_require__(11);
 	
-	BoolField = __webpack_require__(99);
+	__webpack_require__(82);
 	
-	StringField = __webpack_require__(100);
+	__webpack_require__(83);
 	
-	FloatField = __webpack_require__(101);
+	__webpack_require__(84);
 	
-	Vector2Field = __webpack_require__(102);
+	NodeCSG = (function(superClass) {
+	  extend(NodeCSG, superClass);
 	
-	Vector3Field = __webpack_require__(103);
-	
-	Vector4Field = __webpack_require__(104);
-	
-	QuaternionField = __webpack_require__(105);
-	
-	EulerField = __webpack_require__(106);
-	
-	
-	/* Field model */
-	
-	NodeField = (function(superClass) {
-	  extend(NodeField, superClass);
-	
-	  function NodeField() {
-	    this.onValueChanged = bind(this.onValueChanged, this);
-	    this.removeConnections = bind(this.removeConnections, this);
-	    this.unregisterConnection = bind(this.unregisterConnection, this);
-	    this.addConnection = bind(this.addConnection, this);
-	    this.computeValue = bind(this.computeValue, this);
-	    this.renderConnections = bind(this.renderConnections, this);
-	    this.toJSON = bind(this.toJSON, this);
-	    this.isAnimationProperty = bind(this.isAnimationProperty, this);
-	    this.getSliceCount = bind(this.getSliceCount, this);
-	    this.isConnected = bind(this.isConnected, this);
-	    this.isChanged = bind(this.isChanged, this);
-	    this.getValue = bind(this.getValue, this);
-	    this.setValue = bind(this.setValue, this);
+	  function NodeCSG() {
+	    this.compute = bind(this.compute, this);
 	    this.remove = bind(this.remove, this);
-	    this.initialize = bind(this.initialize, this);
-	    this.load = bind(this.load, this);
-	    this.set = bind(this.set, this);
-	    this._validate = bind(this._validate, this);
-	    this.sync = bind(this.sync, this);
-	    return NodeField.__super__.constructor.apply(this, arguments);
+	    this.get_cache_array = bind(this.get_cache_array, this);
+	    this.comput_csg_geometry = bind(this.comput_csg_geometry, this);
+	    this.getFields = bind(this.getFields, this);
+	    NodeCSG.__super__.constructor.apply(this, arguments);
+	    this.auto_evaluate = true;
+	    this.ob = false;
+	    this.cached = [];
 	  }
 	
-	  NodeField.VIEW = false;
-	
-	  NodeField.STATIC_INDEXER = new Indexer();
-	
-	  NodeField.prototype.defaults = function() {
-	    return {
-	      fid: -1,
-	      name: "fieldname",
-	      machine_name: "fieldname-nid",
-	      is_output: false,
-	      value: 0,
-	      "default": null
-	    };
-	  };
-	
-	  NodeField.prototype.sync = function() {};
-	
-	  NodeField.prototype._validate = function(attrs, options) {
-	    return true;
-	  };
-	
-	  NodeField.prototype.set = function(key, value, options) {
-	    if (options == null) {
-	      options = {};
-	    }
-	    if (key === "value") {
-	      this.attributes[key] = value;
-	      return this;
-	    }
-	    return NodeField.__super__.set.apply(this, arguments);
-	  };
-	
-	  NodeField.prototype.load = function(data) {
-	    var property;
-	    if (!data && data !== false) {
-	      return;
-	    }
-	    if ($.type(data) !== "object") {
-	      this.setValue(data);
-	    } else {
-	      for (property in data) {
-	        this.attributes.value[property] = data[property];
-	      }
-	    }
-	    return this;
-	  };
-	
-	  NodeField.prototype.initialize = function(options) {
-	    var indexer, self;
-	    self = this;
-	    this.node = options.node;
-	    this.subfield = options.subfield;
-	    this.propagateDirty = options.propagateDirty != null ? options.propagateDirty : true;
-	    indexer = options.indexer || ThreeNodes.NodeField.STATIC_INDEXER;
-	    this.changed = true;
-	    this.connections = [];
-	    this.on_value_update_hooks = {};
-	    this.set("machine_name", this.get("name"));
-	    if (this.subfield && this.subfield.node) {
-	      this.set("machine_name", this.get("name") + "-" + this.subfield.node.get("nid"));
-	    }
-	    if (this.get("fid") === -1) {
-	      return this.set("fid", indexer.getUID());
-	    }
-	  };
-	
-	  NodeField.prototype.remove = function() {
-	    delete this.on_value_update_hooks;
-	    delete this.node;
-	    delete this.connections;
-	    delete this.button;
-	    delete this.subfield;
-	    return this.destroy();
-	  };
-	
-	  NodeField.prototype.isEqual = function(val, prev) {
-	    var i, j, len, prev1, same_array, val1;
-	    if (_.isArray(val) && _.isArray(prev)) {
-	      if (val.length !== prev.length) {
-	        return false;
-	      }
-	      same_array = true;
-	      for (i = j = 0, len = val.length; j < len; i = ++j) {
-	        val1 = val[i];
-	        prev1 = prev[i];
-	        if (this.isEqual(val1, prev1) === false) {
-	          same_array = false;
-	          break;
+	  NodeCSG.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = NodeCSG.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "a": {
+	          type: "Any",
+	          val: false
+	        },
+	        "position_a": {
+	          type: "Vector3",
+	          val: new THREE.Vector3()
+	        },
+	        "rotation_a": {
+	          type: "Vector3",
+	          val: new THREE.Vector3()
+	        },
+	        "b": {
+	          type: "Any",
+	          val: false
+	        },
+	        "position_b": {
+	          type: "Vector3",
+	          val: new THREE.Vector3()
+	        },
+	        "rotation_b": {
+	          type: "Vector3",
+	          val: new THREE.Vector3()
+	        }
+	      },
+	      outputs: {
+	        "geometry": {
+	          type: "Any",
+	          val: this.ob
 	        }
 	      }
-	      if (same_array === false) {
-	        return false;
-	      } else {
-	        return true;
-	      }
-	    } else if (_.isObject(val) && _.isObject(prev)) {
-	      if ((val.uuid != null) && (prev.uuid != null) && val.uuid === prev.uuid) {
-	        return true;
-	      }
-	      return false;
-	    } else if (val === prev) {
-	      return true;
-	    }
-	    return false;
-	  };
-	
-	  NodeField.prototype.setValue = function(v) {
-	    var connection, default_val, hook, j, len, new_val, prev_val, propagate, ref, setNodeDirty, tmp_val;
-	    prev_val = this.attributes["value"];
-	    if (this.isEqual(v, prev_val)) {
-	      return false;
-	    }
-	    this.changed = true;
-	    propagate = this.propagateDirty;
-	    setNodeDirty = function(node) {
-	      node.dirty = true;
-	      if (propagate && node.parent) {
-	        return setNodeDirty(node.parent);
-	      }
 	    };
-	    if (this.node) {
-	      setNodeDirty(this.node);
-	    }
-	    new_val = this.onValueChanged(v);
-	    if ($.type(new_val) === "array") {
-	      tmp_val = _.filter(new_val, function(item) {
-	        return item !== null;
-	      });
-	      if (this.constructor === Array) {
-	        new_val = tmp_val;
-	      } else {
-	        if (tmp_val.length !== 0) {
-	          new_val = tmp_val;
-	        } else {
-	          new_val = null;
-	        }
-	      }
-	    }
-	    if (new_val === null) {
-	      default_val = this.attributes["default"];
-	      if (default_val !== null && default_val !== void 0) {
-	        prev_val = default_val;
-	      }
-	      new_val = prev_val;
-	    }
-	    this.attributes["value"] = new_val;
-	    this.trigger("value_updated", new_val);
-	    for (hook in this.on_value_update_hooks) {
-	      this.on_value_update_hooks[hook](new_val);
-	    }
-	    if (this.attributes["is_output"] === true) {
-	      ref = this.connections;
-	      for (j = 0, len = ref.length; j < len; j++) {
-	        connection = ref[j];
-	        connection.to_field.setValue(new_val);
-	      }
-	    }
-	    return true;
+	    return $.extend(true, base_fields, fields);
 	  };
 	
-	  NodeField.prototype.getValue = function(index) {
-	    var val;
-	    if (index == null) {
-	      index = 0;
-	    }
-	    val = this.attributes["value"];
-	    if ($.type(val) !== "array") {
-	      return val;
-	    } else {
-	      return val[index % val.length];
-	    }
+	  NodeCSG.prototype.comput_csg_geometry = function(a, b) {
+	    return a.union(b);
 	  };
 	
-	  NodeField.prototype.isChanged = function() {
-	    var res;
-	    res = this.changed;
-	    this.changed = false;
-	    return res;
-	  };
-	
-	  NodeField.prototype.isConnected = function() {
-	    return this.connections.length > 0;
-	  };
-	
-	  NodeField.prototype.getSliceCount = function() {
-	    var val;
-	    val = this.attributes["value"];
-	    if (jQuery.type(val) !== "array") {
-	      return 1;
-	    }
-	    return val.length;
-	  };
-	
-	  NodeField.prototype.isAnimationProperty = function() {
-	    if (this.constructor === Float || this.constructor === Bool) {
-	      return true;
-	    }
-	    return false;
-	  };
-	
-	  NodeField.prototype.toJSON = function() {
-	    var res, val, val_type;
-	    res = {
-	      name: this.get("name")
-	    };
-	    if (this.subfield) {
-	      res.nid = this.subfield.node.get("nid");
-	    }
-	    val = this.get("value");
-	    val_type = jQuery.type(val);
-	    if (val_type !== "object" && val_type !== "array") {
-	      res.val = val;
-	    }
-	    if (val_type === "object") {
-	      if (val.constructor === THREE.Vector2 || val.constructor === THREE.Vector3 || val.constructor === THREE.Vector4 || val.constructor === THREE.Color) {
-	        res.val = val;
-	      }
-	    }
-	    return res;
-	  };
-	
-	  NodeField.prototype.renderConnections = function() {
-	    var connection, j, len, ref;
-	    ref = this.connections;
-	    for (j = 0, len = ref.length; j < len; j++) {
-	      connection = ref[j];
-	      connection.render();
-	    }
-	    return true;
-	  };
-	
-	  NodeField.prototype.computeValue = function(val) {
-	    return val;
-	  };
-	
-	  NodeField.prototype.addConnection = function(c) {
-	    if (this.connections.indexOf(c) === -1) {
-	      this.connections.push(c);
-	      if (this.get("is_output") === true) {
-	        this.node.addOutConnection(c, this);
-	      }
-	      this.node.disablePropertyAnim(this);
-	    }
-	    return c;
-	  };
-	
-	  NodeField.prototype.unregisterConnection = function(c) {
-	    var ind;
-	    this.node.removeConnection(c);
-	    ind = this.connections.indexOf(c);
-	    if (ind !== -1) {
-	      this.connections.splice(ind, 1);
-	    }
-	    if (this.connections.length === 0) {
-	      return this.node.enablePropertyAnim(this);
-	    }
-	  };
-	
-	  NodeField.prototype.removeConnections = function() {
-	    while (this.connections.length > 0) {
-	      this.connections[0].remove();
-	    }
-	    return this;
-	  };
-	
-	  NodeField.prototype.onValueChanged = function(val) {
-	    var self;
-	    self = this;
-	    if ($.type(val) === "array") {
-	      return _.map(val, function(n) {
-	        return self.computeValue(n);
-	      });
-	    }
-	    return this.computeValue(val);
-	  };
-	
-	  return NodeField;
-	
-	})(Backbone.Model);
-	
-	Any = (function(superClass) {
-	  extend(Any, superClass);
-	
-	  function Any() {
-	    this.onValueChanged = bind(this.onValueChanged, this);
-	    this.computeValue = bind(this.computeValue, this);
-	    return Any.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Any.prototype.computeValue = function(val) {
-	    return val;
-	  };
-	
-	  Any.prototype.onValueChanged = function(val) {
-	    return val;
-	  };
-	
-	  return Any;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Any', Any);
-	
-	Array = (function(superClass) {
-	  extend(Array, superClass);
-	
-	  function Array() {
-	    this.getValue = bind(this.getValue, this);
-	    this.onValueChanged = bind(this.onValueChanged, this);
-	    this.removeConnections = bind(this.removeConnections, this);
-	    this.computeValue = bind(this.computeValue, this);
-	    return Array.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Array.prototype.computeValue = function(val) {
-	    if (!val || val === false) {
+	  NodeCSG.prototype.get_cache_array = function() {
+	    var a, b, pos_a, pos_b, rot_a, rot_b;
+	    a = this.fields.getField("a").getValue();
+	    pos_a = this.fields.getField("position_a").getValue();
+	    rot_a = this.fields.getField("rotation_a").getValue();
+	    b = this.fields.getField("b").getValue();
+	    pos_b = this.fields.getField("position_b").getValue();
+	    rot_b = this.fields.getField("rotation_b").getValue();
+	    if (!a || !b) {
 	      return [];
 	    }
-	    if ($.type(val) === "array") {
-	      return val;
-	    } else {
-	      return [val];
+	    return [a.id, b.id, pos_a.x, pos_a.y, pos_a.z, rot_a.x, rot_a.y, rot_a.z, pos_b.x, pos_b.y, pos_b.z, rot_b.x, rot_b.y, rot_b.z];
+	  };
+	
+	  NodeCSG.prototype.remove = function() {
+	    delete this.ob;
+	    delete this.cached;
+	    return NodeCSG.__super__.remove.apply(this, arguments);
+	  };
+	
+	  NodeCSG.prototype.compute = function() {
+	    var a, b, csg_a, csg_b, csg_geom, new_cache, pos_a, pos_b, rot_a, rot_b;
+	    a = this.fields.getField("a").getValue();
+	    pos_a = this.fields.getField("position_a").getValue();
+	    rot_a = this.fields.getField("rotation_a").getValue();
+	    b = this.fields.getField("b").getValue();
+	    pos_b = this.fields.getField("position_b").getValue();
+	    rot_b = this.fields.getField("rotation_b").getValue();
+	    new_cache = this.get_cache_array();
+	    if ((a && b) && (Utils.flatArraysAreEquals(new_cache, this.cached) === false)) {
+	      console.log("csg operation");
+	      csg_a = THREE.CSG.toCSG(a, pos_a, rot_a);
+	      csg_b = THREE.CSG.toCSG(b, pos_b, rot_b);
+	      csg_geom = this.comput_csg_geometry(csg_a, csg_b);
+	      this.ob = THREE.CSG.fromCSG(csg_geom);
+	      this.cached = new_cache;
 	    }
+	    return this.fields.setField("geometry", this.ob);
 	  };
 	
-	  Array.prototype.removeConnections = function() {
-	    Array.__super__.removeConnections.apply(this, arguments);
-	    if (this.get("is_output") === false) {
-	      return this.setValue([]);
-	    }
-	  };
+	  return NodeCSG;
 	
-	  Array.prototype.onValueChanged = function(val) {
-	    return this.computeValue(val);
-	  };
+	})(Node);
 	
-	  Array.prototype.getValue = function(index) {
-	    if (index == null) {
-	      index = 0;
-	    }
-	    return this.get("value");
-	  };
+	CsgUnion = (function(superClass) {
+	  extend(CsgUnion, superClass);
 	
-	  return Array;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Array', Array);
-	
-	Bool = (function(superClass) {
-	  extend(Bool, superClass);
-	
-	  function Bool() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Bool.__super__.constructor.apply(this, arguments);
+	  function CsgUnion() {
+	    return CsgUnion.__super__.constructor.apply(this, arguments);
 	  }
 	
-	  Bool.VIEW = BoolField;
+	  CsgUnion.node_name = 'Union';
 	
-	  Bool.prototype.computeValue = function(val) {
-	    switch ($.type(val)) {
-	      case "boolean":
-	        return val;
-	      case "number":
-	        return val !== 0;
-	      case "string":
-	        return val === "1";
-	    }
-	    return null;
-	  };
+	  CsgUnion.group_name = 'Constructive-Geometry';
 	
-	  return Bool;
+	  return CsgUnion;
 	
-	})(NodeField);
+	})(NodeCSG);
 	
-	ThreeNodes.Core.addFieldType('Bool', Bool);
+	ThreeNodes.Core.addNodeType('CsgUnion', CsgUnion);
 	
-	String = (function(superClass) {
-	  extend(String, superClass);
+	CsgSubtract = (function(superClass) {
+	  extend(CsgSubtract, superClass);
 	
-	  function String() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return String.__super__.constructor.apply(this, arguments);
+	  function CsgSubtract() {
+	    this.comput_csg_geometry = bind(this.comput_csg_geometry, this);
+	    return CsgSubtract.__super__.constructor.apply(this, arguments);
 	  }
 	
-	  String.VIEW = StringField;
+	  CsgSubtract.node_name = 'Subtract';
 	
-	  String.prototype.computeValue = function(val) {
-	    switch ($.type(val)) {
-	      case "array":
-	        return val;
-	      case "number":
-	        return val.toString;
-	      case "string":
-	        return val;
-	    }
-	    return null;
+	  CsgSubtract.group_name = 'Constructive-Geometry';
+	
+	  CsgSubtract.prototype.comput_csg_geometry = function(a, b) {
+	    return a.subtract(b);
 	  };
 	
-	  return String;
+	  return CsgSubtract;
 	
-	})(NodeField);
+	})(NodeCSG);
 	
-	ThreeNodes.Core.addFieldType('String', String);
+	ThreeNodes.Core.addNodeType('CsgSubtract', CsgSubtract);
 	
-	Float = (function(superClass) {
-	  extend(Float, superClass);
+	CsgIntersect = (function(superClass) {
+	  extend(CsgIntersect, superClass);
 	
-	  function Float() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Float.__super__.constructor.apply(this, arguments);
+	  function CsgIntersect() {
+	    this.comput_csg_geometry = bind(this.comput_csg_geometry, this);
+	    return CsgIntersect.__super__.constructor.apply(this, arguments);
 	  }
 	
-	  Float.VIEW = FloatField;
+	  CsgIntersect.node_name = 'Intersect';
 	
-	  Float.prototype.computeValue = function(val) {
-	    switch ($.type(val)) {
-	      case "number":
-	      case "string":
-	        return parseFloat(val);
-	      case "object":
-	        if (val.constructor === THREE.Vector2 || val.constructor === THREE.Vector3) {
-	          return val;
-	        }
+	  CsgIntersect.group_name = 'Constructive-Geometry';
+	
+	  CsgIntersect.prototype.comput_csg_geometry = function(a, b) {
+	    return a.intersect(b);
+	  };
+	
+	  return CsgIntersect;
+	
+	})(NodeCSG);
+	
+	ThreeNodes.Core.addNodeType('CsgIntersect', CsgIntersect);
+
+
+/***/ }),
+/* 82 */
+/***/ (function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_82__;
+
+/***/ }),
+/* 83 */
+/***/ (function(module, exports) {
+
+	// Constructive Solid Geometry (CSG) is a modeling technique that uses Boolean
+	// operations like union and intersection to combine 3D solids. This library
+	// implements CSG operations on meshes elegantly and concisely using BSP trees,
+	// and is meant to serve as an easily understandable implementation of the
+	// algorithm. All edge cases involving overlapping coplanar polygons in both
+	// solids are correctly handled.
+	// 
+	// Example usage:
+	// 
+	//     var cube = CSG.cube();
+	//     var sphere = CSG.sphere({ radius: 1.3 });
+	//     var polygons = cube.subtract(sphere).toPolygons();
+	// 
+	// ## Implementation Details
+	// 
+	// All CSG operations are implemented in terms of two functions, `clipTo()` and
+	// `invert()`, which remove parts of a BSP tree inside another BSP tree and swap
+	// solid and empty space, respectively. To find the union of `a` and `b`, we
+	// want to remove everything in `a` inside `b` and everything in `b` inside `a`,
+	// then combine polygons from `a` and `b` into one solid:
+	// 
+	//     a.clipTo(b);
+	//     b.clipTo(a);
+	//     a.build(b.allPolygons());
+	// 
+	// The only tricky part is handling overlapping coplanar polygons in both trees.
+	// The code above keeps both copies, but we need to keep them in one tree and
+	// remove them in the other tree. To remove them from `b` we can clip the
+	// inverse of `b` against `a`. The code for union now looks like this:
+	// 
+	//     a.clipTo(b);
+	//     b.clipTo(a);
+	//     b.invert();
+	//     b.clipTo(a);
+	//     b.invert();
+	//     a.build(b.allPolygons());
+	// 
+	// Subtraction and intersection naturally follow from set operations. If
+	// union is `A | B`, subtraction is `A - B = ~(~A | B)` and intersection is
+	// `A & B = ~(~A | ~B)` where `~` is the complement operator.
+	// 
+	// ## License
+	// 
+	// Copyright (c) 2011 Evan Wallace (http://madebyevan.com/), under the MIT license.
+	
+	// # class CSG
+	
+	// Holds a binary space partition tree representing a 3D solid. Two solids can
+	// be combined using the `union()`, `subtract()`, and `intersect()` methods.
+	
+	CSG = function() {
+	  this.polygons = [];
+	};
+	
+	// Construct a CSG solid from a list of `CSG.Polygon` instances.
+	CSG.fromPolygons = function(polygons) {
+	  var csg = new CSG();
+	  csg.polygons = polygons;
+	  return csg;
+	};
+	
+	CSG.prototype = {
+	  clone: function() {
+	    var csg = new CSG();
+	    csg.polygons = this.polygons.map(function(p) { return p.clone(); });
+	    return csg;
+	  },
+	
+	  toPolygons: function() {
+	    return this.polygons;
+	  },
+	
+	  // Return a new CSG solid representing space in either this solid or in the
+	  // solid `csg`. Neither this solid nor the solid `csg` are modified.
+	  // 
+	  //     A.union(B)
+	  // 
+	  //     +-------+            +-------+
+	  //     |       |            |       |
+	  //     |   A   |            |       |
+	  //     |    +--+----+   =   |       +----+
+	  //     +----+--+    |       +----+       |
+	  //          |   B   |            |       |
+	  //          |       |            |       |
+	  //          +-------+            +-------+
+	  // 
+	  union: function(csg) {
+	    var a = new CSG.Node(this.clone().polygons);
+	    var b = new CSG.Node(csg.clone().polygons);
+	    a.clipTo(b);
+	    b.clipTo(a);
+	    b.invert();
+	    b.clipTo(a);
+	    b.invert();
+	    a.build(b.allPolygons());
+	    return CSG.fromPolygons(a.allPolygons());
+	  },
+	
+	  // Return a new CSG solid representing space in this solid but not in the
+	  // solid `csg`. Neither this solid nor the solid `csg` are modified.
+	  // 
+	  //     A.subtract(B)
+	  // 
+	  //     +-------+            +-------+
+	  //     |       |            |       |
+	  //     |   A   |            |       |
+	  //     |    +--+----+   =   |    +--+
+	  //     +----+--+    |       +----+
+	  //          |   B   |
+	  //          |       |
+	  //          +-------+
+	  // 
+	  subtract: function(csg) {
+	    var a = new CSG.Node(this.clone().polygons);
+	    var b = new CSG.Node(csg.clone().polygons);
+	    a.invert();
+	    a.clipTo(b);
+	    b.clipTo(a);
+	    b.invert();
+	    b.clipTo(a);
+	    b.invert();
+	    a.build(b.allPolygons());
+	    a.invert();
+	    return CSG.fromPolygons(a.allPolygons());
+	  },
+	
+	  // Return a new CSG solid representing space both this solid and in the
+	  // solid `csg`. Neither this solid nor the solid `csg` are modified.
+	  // 
+	  //     A.intersect(B)
+	  // 
+	  //     +-------+
+	  //     |       |
+	  //     |   A   |
+	  //     |    +--+----+   =   +--+
+	  //     +----+--+    |       +--+
+	  //          |   B   |
+	  //          |       |
+	  //          +-------+
+	  // 
+	  intersect: function(csg) {
+	    var a = new CSG.Node(this.clone().polygons);
+	    var b = new CSG.Node(csg.clone().polygons);
+	    a.invert();
+	    b.clipTo(a);
+	    b.invert();
+	    a.clipTo(b);
+	    b.clipTo(a);
+	    a.build(b.allPolygons());
+	    a.invert();
+	    return CSG.fromPolygons(a.allPolygons());
+	  },
+	
+	  // Return a new CSG solid with solid and empty space switched. This solid is
+	  // not modified.
+	  inverse: function() {
+	    var csg = this.clone();
+	    csg.polygons.map(function(p) { p.flip(); });
+	    return csg;
+	  }
+	};
+	
+	// Construct an axis-aligned solid cuboid. Optional parameters are `center` and
+	// `radius`, which default to `[0, 0, 0]` and `[1, 1, 1]`. The radius can be
+	// specified using a single number or a list of three numbers, one for each axis.
+	// 
+	// Example code:
+	// 
+	//     var cube = CSG.cube({
+	//       center: [0, 0, 0],
+	//       radius: 1
+	//     });
+	CSG.cube = function(options) {
+	  options = options || {};
+	  var c = new CSG.Vector(options.center || [0, 0, 0]);
+	  var r = !options.radius ? [1, 1, 1] : options.radius.length ?
+	           options.radius : [options.radius, options.radius, options.radius];
+	  return CSG.fromPolygons([
+	    [[0, 4, 6, 2], [-1, 0, 0]],
+	    [[1, 3, 7, 5], [+1, 0, 0]],
+	    [[0, 1, 5, 4], [0, -1, 0]],
+	    [[2, 6, 7, 3], [0, +1, 0]],
+	    [[0, 2, 3, 1], [0, 0, -1]],
+	    [[4, 5, 7, 6], [0, 0, +1]]
+	  ].map(function(info) {
+	    return new CSG.Polygon(info[0].map(function(i) {
+	      var pos = new CSG.Vector(
+	        c.x + r[0] * (2 * !!(i & 1) - 1),
+	        c.y + r[1] * (2 * !!(i & 2) - 1),
+	        c.z + r[2] * (2 * !!(i & 4) - 1)
+	      );
+	      return new CSG.Vertex(pos, new CSG.Vector(info[1]));
+	    }));
+	  }));
+	};
+	
+	// Construct a solid sphere. Optional parameters are `center`, `radius`,
+	// `slices`, and `stacks`, which default to `[0, 0, 0]`, `1`, `16`, and `8`.
+	// The `slices` and `stacks` parameters control the tessellation along the
+	// longitude and latitude directions.
+	// 
+	// Example usage:
+	// 
+	//     var sphere = CSG.sphere({
+	//       center: [0, 0, 0],
+	//       radius: 1,
+	//       slices: 16,
+	//       stacks: 8
+	//     });
+	CSG.sphere = function(options) {
+	  options = options || {};
+	  var c = new CSG.Vector(options.center || [0, 0, 0]);
+	  var r = options.radius || 1;
+	  var slices = options.slices || 16;
+	  var stacks = options.stacks || 8;
+	  var polygons = [], vertices;
+	  function vertex(theta, phi) {
+	    theta *= Math.PI * 2;
+	    phi *= Math.PI;
+	    var dir = new CSG.Vector(
+	      Math.cos(theta) * Math.sin(phi),
+	      Math.cos(phi),
+	      Math.sin(theta) * Math.sin(phi)
+	    );
+	    vertices.push(new CSG.Vertex(c.plus(dir.times(r)), dir));
+	  }
+	  for (var i = 0; i < slices; i++) {
+	    for (var j = 0; j < stacks; j++) {
+	      vertices = [];
+	      vertex(i / slices, j / stacks);
+	      if (j > 0) vertex((i + 1) / slices, j / stacks);
+	      if (j < stacks - 1) vertex((i + 1) / slices, (j + 1) / stacks);
+	      vertex(i / slices, (j + 1) / stacks);
+	      polygons.push(new CSG.Polygon(vertices));
+	    }
+	  }
+	  return CSG.fromPolygons(polygons);
+	};
+	
+	// Construct a solid cylinder. Optional parameters are `start`, `end`,
+	// `radius`, and `slices`, which default to `[0, -1, 0]`, `[0, 1, 0]`, `1`, and
+	// `16`. The `slices` parameter controls the tessellation.
+	// 
+	// Example usage:
+	// 
+	//     var cylinder = CSG.cylinder({
+	//       start: [0, -1, 0],
+	//       end: [0, 1, 0],
+	//       radius: 1,
+	//       slices: 16
+	//     });
+	CSG.cylinder = function(options) {
+	  options = options || {};
+	  var s = new CSG.Vector(options.start || [0, -1, 0]);
+	  var e = new CSG.Vector(options.end || [0, 1, 0]);
+	  var ray = e.minus(s);
+	  var r = options.radius || 1;
+	  var slices = options.slices || 16;
+	  var axisZ = ray.unit(), isY = (Math.abs(axisZ.y) > 0.5);
+	  var axisX = new CSG.Vector(isY, !isY, 0).cross(axisZ).unit();
+	  var axisY = axisX.cross(axisZ).unit();
+	  var start = new CSG.Vertex(s, axisZ.negated());
+	  var end = new CSG.Vertex(e, axisZ.unit());
+	  var polygons = [];
+	  function point(stack, slice, normalBlend) {
+	    var angle = slice * Math.PI * 2;
+	    var out = axisX.times(Math.cos(angle)).plus(axisY.times(Math.sin(angle)));
+	    var pos = s.plus(ray.times(stack)).plus(out.times(r));
+	    var normal = out.times(1 - Math.abs(normalBlend)).plus(axisZ.times(normalBlend));
+	    return new CSG.Vertex(pos, normal);
+	  }
+	  for (var i = 0; i < slices; i++) {
+	    var t0 = i / slices, t1 = (i + 1) / slices;
+	    polygons.push(new CSG.Polygon([start, point(0, t0, -1), point(0, t1, -1)]));
+	    polygons.push(new CSG.Polygon([point(0, t1, 0), point(0, t0, 0), point(1, t0, 0), point(1, t1, 0)]));
+	    polygons.push(new CSG.Polygon([end, point(1, t1, 1), point(1, t0, 1)]));
+	  }
+	  return CSG.fromPolygons(polygons);
+	};
+	
+	// # class Vector
+	
+	// Represents a 3D vector.
+	// 
+	// Example usage:
+	// 
+	//     new CSG.Vector(1, 2, 3);
+	//     new CSG.Vector([1, 2, 3]);
+	//     new CSG.Vector({ x: 1, y: 2, z: 3 });
+	
+	CSG.Vector = function(x, y, z) {
+	  if (arguments.length == 3) {
+	    this.x = x;
+	    this.y = y;
+	    this.z = z;
+	  } else if ('x' in x) {
+	    this.x = x.x;
+	    this.y = x.y;
+	    this.z = x.z;
+	  } else {
+	    this.x = x[0];
+	    this.y = x[1];
+	    this.z = x[2];
+	  }
+	};
+	
+	CSG.Vector.prototype = {
+	  clone: function() {
+	    return new CSG.Vector(this.x, this.y, this.z);
+	  },
+	
+	  negated: function() {
+	    return new CSG.Vector(-this.x, -this.y, -this.z);
+	  },
+	
+	  plus: function(a) {
+	    return new CSG.Vector(this.x + a.x, this.y + a.y, this.z + a.z);
+	  },
+	
+	  minus: function(a) {
+	    return new CSG.Vector(this.x - a.x, this.y - a.y, this.z - a.z);
+	  },
+	
+	  times: function(a) {
+	    return new CSG.Vector(this.x * a, this.y * a, this.z * a);
+	  },
+	
+	  dividedBy: function(a) {
+	    return new CSG.Vector(this.x / a, this.y / a, this.z / a);
+	  },
+	
+	  dot: function(a) {
+	    return this.x * a.x + this.y * a.y + this.z * a.z;
+	  },
+	
+	  lerp: function(a, t) {
+	    return this.plus(a.minus(this).times(t));
+	  },
+	
+	  length: function() {
+	    return Math.sqrt(this.dot(this));
+	  },
+	
+	  unit: function() {
+	    return this.dividedBy(this.length());
+	  },
+	
+	  cross: function(a) {
+	    return new CSG.Vector(
+	      this.y * a.z - this.z * a.y,
+	      this.z * a.x - this.x * a.z,
+	      this.x * a.y - this.y * a.x
+	    );
+	  }
+	};
+	
+	// # class Vertex
+	
+	// Represents a vertex of a polygon. Use your own vertex class instead of this
+	// one to provide additional features like texture coordinates and vertex
+	// colors. Custom vertex classes need to provide a `pos` property and `clone()`,
+	// `flip()`, and `interpolate()` methods that behave analogous to the ones
+	// defined by `CSG.Vertex`. This class provides `normal` so convenience
+	// functions like `CSG.sphere()` can return a smooth vertex normal, but `normal`
+	// is not used anywhere else.
+	
+	CSG.Vertex = function(pos, normal) {
+	  this.pos = new CSG.Vector(pos);
+	  this.normal = new CSG.Vector(normal);
+	};
+	
+	CSG.Vertex.prototype = {
+	  clone: function() {
+	    return new CSG.Vertex(this.pos.clone(), this.normal.clone());
+	  },
+	
+	  // Invert all orientation-specific data (e.g. vertex normal). Called when the
+	  // orientation of a polygon is flipped.
+	  flip: function() {
+	    this.normal = this.normal.negated();
+	  },
+	
+	  // Create a new vertex between this vertex and `other` by linearly
+	  // interpolating all properties using a parameter of `t`. Subclasses should
+	  // override this to interpolate additional properties.
+	  interpolate: function(other, t) {
+	    return new CSG.Vertex(
+	      this.pos.lerp(other.pos, t),
+	      this.normal.lerp(other.normal, t)
+	    );
+	  }
+	};
+	
+	// # class Plane
+	
+	// Represents a plane in 3D space.
+	
+	CSG.Plane = function(normal, w) {
+	  this.normal = normal;
+	  this.w = w;
+	};
+	
+	// `CSG.Plane.EPSILON` is the tolerance used by `splitPolygon()` to decide if a
+	// point is on the plane.
+	CSG.Plane.EPSILON = 1e-5;
+	
+	CSG.Plane.fromPoints = function(a, b, c) {
+	  var n = b.minus(a).cross(c.minus(a)).unit();
+	  return new CSG.Plane(n, n.dot(a));
+	};
+	
+	CSG.Plane.prototype = {
+	  clone: function() {
+	    return new CSG.Plane(this.normal.clone(), this.w);
+	  },
+	
+	  flip: function() {
+	    this.normal = this.normal.negated();
+	    this.w = -this.w;
+	  },
+	
+	  // Split `polygon` by this plane if needed, then put the polygon or polygon
+	  // fragments in the appropriate lists. Coplanar polygons go into either
+	  // `coplanarFront` or `coplanarBack` depending on their orientation with
+	  // respect to this plane. Polygons in front or in back of this plane go into
+	  // either `front` or `back`.
+	  splitPolygon: function(polygon, coplanarFront, coplanarBack, front, back) {
+	    var COPLANAR = 0;
+	    var FRONT = 1;
+	    var BACK = 2;
+	    var SPANNING = 3;
+	
+	    // Classify each point as well as the entire polygon into one of the above
+	    // four classes.
+	    var polygonType = 0;
+	    var types = [];
+	    for (var i = 0; i < polygon.vertices.length; i++) {
+	      var t = this.normal.dot(polygon.vertices[i].pos) - this.w;
+	      var type = (t < -CSG.Plane.EPSILON) ? BACK : (t > CSG.Plane.EPSILON) ? FRONT : COPLANAR;
+	      polygonType |= type;
+	      types.push(type);
+	    }
+	
+	    // Put the polygon in the correct list, splitting it when necessary.
+	    switch (polygonType) {
+	      case COPLANAR:
+	        (this.normal.dot(polygon.plane.normal) > 0 ? coplanarFront : coplanarBack).push(polygon);
 	        break;
-	      case "boolean":
-	        if (val === true) {
-	          return 1;
-	        } else {
-	          return 0;
-	        }
-	    }
-	    return null;
-	  };
-	
-	  return Float;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Float', Float);
-	
-	Vector2 = (function(superClass) {
-	  extend(Vector2, superClass);
-	
-	  function Vector2() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Vector2.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Vector2.VIEW = Vector2Field;
-	
-	  Vector2.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val.constructor === THREE.Vector2) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Vector2;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Vector2', Vector2);
-	
-	Vector3 = (function(superClass) {
-	  extend(Vector3, superClass);
-	
-	  function Vector3() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Vector3.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Vector3.VIEW = Vector3Field;
-	
-	  Vector3.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val.constructor === THREE.Vector3) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Vector3;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Vector3', Vector3);
-	
-	Vector4 = (function(superClass) {
-	  extend(Vector4, superClass);
-	
-	  function Vector4() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Vector4.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Vector4.VIEW = Vector4Field;
-	
-	  Vector4.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val.constructor === THREE.Vector4) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Vector4;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Vector4', Vector4);
-	
-	Quaternion = (function(superClass) {
-	  extend(Quaternion, superClass);
-	
-	  function Quaternion() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Quaternion.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Quaternion.VIEW = QuaternionField;
-	
-	  Quaternion.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val.constructor === THREE.Quaternion) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Quaternion;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Quaternion', Quaternion);
-	
-	Euler = (function(superClass) {
-	  extend(Euler, superClass);
-	
-	  function Euler() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Euler.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Euler.VIEW = EulerField;
-	
-	  Euler.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val.constructor === THREE.Euler) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Euler;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Euler', Euler);
-	
-	Color = (function(superClass) {
-	  extend(Color, superClass);
-	
-	  function Color() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Color.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Color.VIEW = false;
-	
-	  Color.prototype.computeValue = function(val) {
-	    switch ($.type(val)) {
-	      case "number":
-	        return new THREE.Color().setRGB(val, val, val);
-	      case "object":
-	        switch (val.constructor) {
-	          case THREE.Color:
-	            return val;
-	          case THREE.Vector3:
-	            return new THREE.Color().setRGB(val.x, val.y, val.z);
-	        }
+	      case FRONT:
+	        front.push(polygon);
 	        break;
-	      case "boolean":
-	        if (val) {
-	          return new THREE.Color(0xffffff);
-	        } else {
-	          return new THREE.Color(0x000000);
-	        }
-	    }
-	    return null;
-	  };
-	
-	  return Color;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Color', Color);
-	
-	Object3D = (function(superClass) {
-	  extend(Object3D, superClass);
-	
-	  function Object3D() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Object3D.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Object3D.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val.constructor === THREE.Object3D || val instanceof THREE.Object3D) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Object3D;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Object3D', Object3D);
-	
-	Scene = (function(superClass) {
-	  extend(Scene, superClass);
-	
-	  function Scene() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Scene.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Scene.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val instanceof THREE.Scene) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Scene;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Scene', Scene);
-	
-	Camera = (function(superClass) {
-	  extend(Camera, superClass);
-	
-	  function Camera() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Camera.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Camera.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val instanceof THREE.Camera || val instanceof THREE.PerspectiveCamera || val instanceof THREE.OrthographicCamera) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Camera;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Camera', Camera);
-	
-	Mesh = (function(superClass) {
-	  extend(Mesh, superClass);
-	
-	  function Mesh() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Mesh.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Mesh.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val.constructor === THREE.Mesh || val instanceof THREE.Mesh) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Mesh;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Mesh', Mesh);
-	
-	Geometry = (function(superClass) {
-	  extend(Geometry, superClass);
-	
-	  function Geometry() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Geometry.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Geometry.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val.constructor === THREE.Geometry || val instanceof THREE.Geometry) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Geometry;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Geometry', Geometry);
-	
-	Material = (function(superClass) {
-	  extend(Material, superClass);
-	
-	  function Material() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Material.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Material.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val.constructor === THREE.Material || val instanceof THREE.Material) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Material;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Material', Material);
-	
-	Texture = (function(superClass) {
-	  extend(Texture, superClass);
-	
-	  function Texture() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Texture.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Texture.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val.constructor === THREE.Texture || val instanceof THREE.Texture) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Texture;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Texture', Texture);
-	
-	Fog = (function(superClass) {
-	  extend(Fog, superClass);
-	
-	  function Fog() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Fog.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Fog.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val.constructor === THREE.Fog || val.constructor === THREE.FogExp2) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Fog;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Fog', Fog);
-
-
-/***/ },
-/* 96 */,
-/* 97 */,
-/* 98 */,
-/* 99 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Backbone, BaseField, BoolField, _, namespace,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	namespace = __webpack_require__(50).namespace;
-	
-	BaseField = __webpack_require__(107);
-	
-	
-	/* SidebarField View */
-	
-	BoolField = (function(superClass) {
-	  extend(BoolField, superClass);
-	
-	  function BoolField() {
-	    this.render = bind(this.render, this);
-	    this.on_value_updated = bind(this.on_value_updated, this);
-	    return BoolField.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  BoolField.prototype.on_value_updated = function(new_val) {
-	    if (this.model.getValue() === true) {
-	      return this.$checkbox.attr('checked', 'checked');
-	    } else {
-	      return this.$checkbox.removeAttr('checked');
-	    }
-	  };
-	
-	  BoolField.prototype.render = function() {
-	    var $container, $target, id;
-	    console.log("check..");
-	    $target = this.createSidebarContainer();
-	    id = "side-field-checkbox-" + (this.model.get('fid'));
-	    $container = $("<div><input type='checkbox' id='" + id + "'/></div>").appendTo($target);
-	    this.$checkbox = $("input", $container);
-	    if (this.model.getValue() === true) {
-	      this.$checkbox.attr('checked', 'checked');
-	    }
-	    this.$checkbox.change((function(_this) {
-	      return function(e) {
-	        if (_this.$checkbox.is(':checked')) {
-	          return _this.model.setValue(true);
-	        } else {
-	          return _this.model.setValue(false);
-	        }
-	      };
-	    })(this));
-	    return this;
-	  };
-	
-	  return BoolField;
-	
-	})(BaseField);
-	
-	module.exports = BoolField;
-
-
-/***/ },
-/* 100 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Backbone, BaseField, StringField, _, namespace,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	namespace = __webpack_require__(50).namespace;
-	
-	BaseField = __webpack_require__(107);
-	
-	
-	/* StringField View */
-	
-	StringField = (function(superClass) {
-	  extend(StringField, superClass);
-	
-	  function StringField() {
-	    this.create_sidebar_input = bind(this.create_sidebar_input, this);
-	    this.create_sidebar_select = bind(this.create_sidebar_select, this);
-	    this.render = bind(this.render, this);
-	    return StringField.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  StringField.prototype.render = function() {
-	    var $target;
-	    $target = this.createSidebarContainer();
-	    if (this.model.attributes.possibilities) {
-	      this.create_sidebar_select($target);
-	    } else {
-	      this.create_sidebar_input($target);
-	    }
-	    return true;
-	  };
-	
-	  StringField.prototype.create_sidebar_select = function($target) {
-	    var dval, f, input, self;
-	    self = this;
-	    input = "<div><select>";
-	    for (f in this.model.get("possibilities")) {
-	      dval = this.model.get("possibilities")[f];
-	      if (dval === this.val) {
-	        input += "<option value='" + dval + "' selected='selected'>" + f + "</option>";
-	      } else {
-	        input += "<option value='" + dval + "'>" + f + "</option>";
-	      }
-	    }
-	    input += "</select></div>";
-	    $target.append(input);
-	    $("select", $target).change((function(_this) {
-	      return function(e) {
-	        return _this.model.setValue($("select", $target).val());
-	      };
-	    })(this));
-	    return true;
-	  };
-	
-	  StringField.prototype.create_sidebar_input = function($target) {
-	    this.textfield = this.createTextfield($target, "string");
-	    return this.textfield.linkTextfieldToVal("string");
-	  };
-	
-	  return StringField;
-	
-	})(BaseField);
-	
-	module.exports = StringField;
-
-
-/***/ },
-/* 101 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Backbone, BaseField, FloatField, _, namespace,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	namespace = __webpack_require__(50).namespace;
-	
-	BaseField = __webpack_require__(107);
-	
-	
-	/* FloatField View */
-	
-	FloatField = (function(superClass) {
-	  extend(FloatField, superClass);
-	
-	  function FloatField() {
-	    this.create_sidebar_input = bind(this.create_sidebar_input, this);
-	    this.create_sidebar_select = bind(this.create_sidebar_select, this);
-	    this.render = bind(this.render, this);
-	    return FloatField.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  FloatField.prototype.initialize = function(options) {
-	    return FloatField.__super__.initialize.apply(this, arguments);
-	  };
-	
-	  FloatField.prototype.render = function() {
-	    var $target;
-	    $target = this.createSidebarContainer();
-	    if (this.model.attributes.possibilities) {
-	      this.create_sidebar_select($target);
-	    } else {
-	      this.create_sidebar_input($target);
-	    }
-	    return true;
-	  };
-	
-	  FloatField.prototype.create_sidebar_select = function($target) {
-	    var dval, f, input, self;
-	    self = this;
-	    input = "<div><select>";
-	    for (f in this.model.get("possibilities")) {
-	      dval = this.model.get("possibilities")[f];
-	      if (dval === this.val) {
-	        input += "<option value='" + dval + "' selected='selected'>" + f + "</option>";
-	      } else {
-	        input += "<option value='" + dval + "'>" + f + "</option>";
-	      }
-	    }
-	    input += "</select></div>";
-	    $target.append(input);
-	    $("select", $target).change((function(_this) {
-	      return function(e) {
-	        return _this.model.setValue($("select", $target).val());
-	      };
-	    })(this));
-	    return true;
-	  };
-	
-	  FloatField.prototype.create_sidebar_input = function($target) {
-	    this.textfield = this.createTextfield($target);
-	    return this.textfield.linkTextfieldToVal();
-	  };
-	
-	  return FloatField;
-	
-	})(BaseField);
-	
-	module.exports = FloatField;
-
-
-/***/ },
-/* 102 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Backbone, BaseField, Vector2Field, _, namespace,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	namespace = __webpack_require__(50).namespace;
-	
-	BaseField = __webpack_require__(107);
-	
-	
-	/* Vector2Field View */
-	
-	Vector2Field = (function(superClass) {
-	  extend(Vector2Field, superClass);
-	
-	  function Vector2Field() {
-	    this.render = bind(this.render, this);
-	    return Vector2Field.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Vector2Field.prototype.render = function() {
-	    this.createSidebarFieldTitle();
-	    this.createSubvalTextinput("x");
-	    this.createSubvalTextinput("y");
-	    return this;
-	  };
-	
-	  return Vector2Field;
-	
-	})(BaseField);
-	
-	module.exports = Vector2Field;
-
-
-/***/ },
-/* 103 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Backbone, BaseField, Vector3Field, _, namespace,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	namespace = __webpack_require__(50).namespace;
-	
-	BaseField = __webpack_require__(107);
-	
-	
-	/* Vector3Field View */
-	
-	Vector3Field = (function(superClass) {
-	  extend(Vector3Field, superClass);
-	
-	  function Vector3Field() {
-	    this.render = bind(this.render, this);
-	    return Vector3Field.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Vector3Field.prototype.render = function() {
-	    this.createSidebarFieldTitle();
-	    this.createSubvalTextinput("x");
-	    this.createSubvalTextinput("y");
-	    this.createSubvalTextinput("z");
-	    return this;
-	  };
-	
-	  return Vector3Field;
-	
-	})(BaseField);
-	
-	module.exports = Vector3Field;
-
-
-/***/ },
-/* 104 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Backbone, BaseField, Vector4Field, _, namespace,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	namespace = __webpack_require__(50).namespace;
-	
-	BaseField = __webpack_require__(107);
-	
-	
-	/* Vector4Field View */
-	
-	Vector4Field = (function(superClass) {
-	  extend(Vector4Field, superClass);
-	
-	  function Vector4Field() {
-	    this.render = bind(this.render, this);
-	    return Vector4Field.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Vector4Field.prototype.render = function() {
-	    this.createSidebarFieldTitle();
-	    this.createSubvalTextinput("x");
-	    this.createSubvalTextinput("y");
-	    this.createSubvalTextinput("z");
-	    this.createSubvalTextinput("w");
-	    return this;
-	  };
-	
-	  return Vector4Field;
-	
-	})(BaseField);
-	
-	module.exports = Vector4Field;
-
-
-/***/ },
-/* 105 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Backbone, BaseField, QuaternionField, _, namespace,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	namespace = __webpack_require__(50).namespace;
-	
-	BaseField = __webpack_require__(107);
-	
-	
-	/* Vector3Field View */
-	
-	QuaternionField = (function(superClass) {
-	  extend(QuaternionField, superClass);
-	
-	  function QuaternionField() {
-	    this.render = bind(this.render, this);
-	    return QuaternionField.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  QuaternionField.prototype.render = function() {
-	    this.createSidebarFieldTitle();
-	    this.createSubvalTextinput("x");
-	    this.createSubvalTextinput("y");
-	    this.createSubvalTextinput("z");
-	    this.createSubvalTextinput("w");
-	    return this;
-	  };
-	
-	  return QuaternionField;
-	
-	})(BaseField);
-	
-	module.exports = QuaternionField;
-
-
-/***/ },
-/* 106 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Backbone, BaseField, EulerField, _, namespace,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	namespace = __webpack_require__(50).namespace;
-	
-	BaseField = __webpack_require__(107);
-	
-	
-	/* Euler3Field View */
-	
-	EulerField = (function(superClass) {
-	  extend(EulerField, superClass);
-	
-	  function EulerField() {
-	    this.render = bind(this.render, this);
-	    return EulerField.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  EulerField.prototype.render = function() {
-	    this.createSidebarFieldTitle();
-	    this.createSubvalTextinput("x");
-	    this.createSubvalTextinput("y");
-	    this.createSubvalTextinput("z");
-	    this.createSubvalTextinput("order", "string");
-	    return this;
-	  };
-	
-	  return EulerField;
-	
-	})(BaseField);
-	
-	module.exports = EulerField;
-
-
-/***/ },
-/* 107 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Backbone, BaseField, SidebarTextfield, _, _view_field_sidebar_container,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	_view_field_sidebar_container = __webpack_require__(108);
-	
-	SidebarTextfield = __webpack_require__(109);
-	
-	
-	/* BaseField View */
-	
-	BaseField = (function(superClass) {
-	  extend(BaseField, superClass);
-	
-	  function BaseField() {
-	    this.createSidebarFieldTitle = bind(this.createSidebarFieldTitle, this);
-	    this.createSubvalTextinput = bind(this.createSubvalTextinput, this);
-	    this.createTextfield = bind(this.createTextfield, this);
-	    this.createSidebarContainer = bind(this.createSidebarContainer, this);
-	    this.render = bind(this.render, this);
-	    this.on_value_updated = bind(this.on_value_updated, this);
-	    return BaseField.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  BaseField.prototype.initialize = function(options) {
-	    BaseField.__super__.initialize.apply(this, arguments);
-	    this.model.on("value_updated", this.on_value_updated);
-	    return this.render();
-	  };
-	
-	  BaseField.prototype.on_value_updated = function(new_val) {
-	    return this;
-	  };
-	
-	  BaseField.prototype.render = function() {
-	    return this;
-	  };
-	
-	  BaseField.prototype.createSidebarContainer = function(name) {
-	    var options;
-	    if (name == null) {
-	      name = this.model.get("name");
-	    }
-	    options = {
-	      fid: this.model.get("fid"),
-	      model: this,
-	      name: name
-	    };
-	    this.container = $(_.template(_view_field_sidebar_container, options));
-	    this.$el.append(this.container);
-	    return this.container;
-	  };
-	
-	  BaseField.prototype.createTextfield = function($target, type, link_to_val) {
-	    var textField;
-	    if (type == null) {
-	      type = "float";
-	    }
-	    if (link_to_val == null) {
-	      link_to_val = true;
-	    }
-	    textField = new SidebarTextfield({
-	      model: this.model,
-	      el: $target,
-	      type: type,
-	      link_to_val: link_to_val
-	    });
-	    return textField;
-	  };
-	
-	  BaseField.prototype.createSubvalTextinput = function(subval, type) {
-	    var $target, textfield;
-	    if (type == null) {
-	      type = "float";
-	    }
-	    $target = this.createSidebarContainer(subval);
-	    textfield = this.createTextfield($target, type, false);
-	    textfield.linkTextfieldToSubval(subval, type);
-	    return false;
-	  };
-	
-	  BaseField.prototype.createSidebarFieldTitle = function(name) {
-	    if (name == null) {
-	      name = this.model.get("name");
-	    }
-	    this.$el.append("<h3>" + name + "</h3>");
-	    return this.$el;
-	  };
-	
-	  return BaseField;
-	
-	})(Backbone.View);
-	
-	module.exports = BaseField;
-
-
-/***/ },
-/* 108 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = "<div data-fid=\"<%= fid %>\" class='field-wrapper'>\n  <h3><%= name %></h3>\n</div>\n";
-
-/***/ },
-/* 109 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Backbone, DraggableNumber, SidebarTextfield, _, _view_field_textfield,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	_view_field_textfield = __webpack_require__(110);
-	
-	DraggableNumber = __webpack_require__(111);
-	
-	
-	/* SidebarTextfield View */
-	
-	SidebarTextfield = (function(superClass) {
-	  extend(SidebarTextfield, superClass);
-	
-	  function SidebarTextfield() {
-	    this.addTextfieldSlider = bind(this.addTextfieldSlider, this);
-	    this.linkTextfieldToSubval = bind(this.linkTextfieldToSubval, this);
-	    this.linkTextfieldToVal = bind(this.linkTextfieldToVal, this);
-	    this.render = bind(this.render, this);
-	    return SidebarTextfield.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  SidebarTextfield.prototype.initialize = function(options) {
-	    SidebarTextfield.__super__.initialize.apply(this, arguments);
-	    this.slider = false;
-	    return this.render();
-	  };
-	
-	  SidebarTextfield.prototype.render = function() {
-	    this.container = $(_.template(_view_field_textfield, this.options));
-	    this.$el.append(this.container);
-	    this.$input = $("input", this.container);
-	    return this;
-	  };
-	
-	  SidebarTextfield.prototype.linkTextfieldToVal = function(type) {
-	    var on_value_changed;
-	    if (type == null) {
-	      type = "float";
-	    }
-	    this.$input.val(this.model.getValue());
-	    if (this.options.type === "float" && this.slider === false) {
-	      this.slider = this.addTextfieldSlider();
-	    }
-	    on_value_changed = (function(_this) {
-	      return function(v) {
-	        if (_this.slider) {
-	          return _this.slider.set(v);
-	        }
-	      };
-	    })(this);
-	    this.model.on("value_updated", on_value_changed);
-	    this.$input.val(this.model.getValue());
-	    if (this.slider) {
-	      this.slider._options.changeCallback = (function(_this) {
-	        return function(new_val) {
-	          return _this.model.setValue(new_val);
-	        };
-	      })(this);
-	    }
-	    this.$input.keypress((function(_this) {
-	      return function(e) {
-	        if (e.which === 13) {
-	          if (type === "float") {
-	            _this.model.setValue(parseFloat(_this.$input.val()));
-	          } else {
-	            _this.model.setValue(_this.$input.val());
+	      case BACK:
+	        back.push(polygon);
+	        break;
+	      case SPANNING:
+	        var f = [], b = [];
+	        for (var i = 0; i < polygon.vertices.length; i++) {
+	          var j = (i + 1) % polygon.vertices.length;
+	          var ti = types[i], tj = types[j];
+	          var vi = polygon.vertices[i], vj = polygon.vertices[j];
+	          if (ti != BACK) f.push(vi);
+	          if (ti != FRONT) b.push(ti != BACK ? vi.clone() : vi);
+	          if ((ti | tj) == SPANNING) {
+	            var t = (this.w - this.normal.dot(vi.pos)) / this.normal.dot(vj.pos.minus(vi.pos));
+	            var v = vi.interpolate(vj, t);
+	            f.push(v);
+	            b.push(v.clone());
 	          }
-	          return _this.$input.blur();
 	        }
-	      };
-	    })(this));
-	    return this;
-	  };
-	
-	  SidebarTextfield.prototype.linkTextfieldToSubval = function(subval, type) {
-	    var updateVal;
-	    if (type == null) {
-	      type = "float";
+	        if (f.length >= 3) front.push(new CSG.Polygon(f, polygon.shared));
+	        if (b.length >= 3) back.push(new CSG.Polygon(b, polygon.shared));
+	        break;
 	    }
-	    this.$input.val(this.model.getValue()[subval]);
-	    if (this.options.type === "float") {
-	      this.slider = this.addTextfieldSlider();
-	    }
-	    this.model.on_value_update_hooks["update_sidebar_textfield_" + subval] = (function(_this) {
-	      return function(v) {
-	        return _this.$input.val(v[subval]);
-	      };
-	    })(this);
-	    updateVal = (function(_this) {
-	      return function() {
-	        var dval;
-	        dval = _this.$input.val();
-	        if (type === "float") {
-	          dval = parseFloat(dval);
-	        }
-	        if ($.type(_this.model.attributes.value) === "array") {
-	          return _this.model.attributes.value[0][subval] = dval;
-	        } else {
-	          return _this.model.attributes.value[subval] = dval;
-	        }
-	      };
-	    })(this);
-	    this.slider._options.changeCallback = (function(_this) {
-	      return function(new_val) {
-	        return updateVal();
-	      };
-	    })(this);
-	    this.$input.change((function(_this) {
-	      return function(e) {
-	        return updateVal();
-	      };
-	    })(this));
-	    this.$input.keypress((function(_this) {
-	      return function(e) {
-	        if (e.which === 13) {
-	          updateVal();
-	          return _this.$input.blur();
-	        }
-	      };
-	    })(this));
-	    return this;
-	  };
-	
-	  SidebarTextfield.prototype.addTextfieldSlider = function() {
-	    var slider;
-	    slider = new DraggableNumber(this.$input.get(0));
-	    return slider;
-	  };
-	
-	  return SidebarTextfield;
-	
-	})(Backbone.View);
-	
-	module.exports = SidebarTextfield;
-
-
-/***/ },
-/* 110 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = "<div class='input-container'>\n  <input type='text' class='field-<%= type %>' />\n</div>\n";
-
-/***/ },
-/* 111 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**!
-	 * draggable-number.js
-	 * Minimal numeric input widget
-	 *
-	 * @license Licensed under the MIT (http://www.opensource.org/licenses/mit-license.php) license.
-	 * @author David Mignot - http://idflood.com
-	 * @version 0.3.0
-	 **/
-	(function(root, factory) {
-	    if(true) {
-	        module.exports = factory();
-	    }
-	    else if(typeof define === 'function' && define.amd) {
-	        define([], factory);
-	    }
-	    else {
-	        root['DraggableNumber'] = factory();
-	    }
-	}(this, function() {
-	// Utility function to replace .bind(this) since it is not available in all browsers.
-	var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-	
-	/**
-	 * Define the DraggableNumber element.
-	 * @constructor
-	 * @param {DomElement} input - The input which will be converted to a draggableNumber.
-	 */
-	DraggableNumber = function (input, options) {
-	  this._options = options !== undefined ? options : {};
-	
-	  this._input = input;
-	  this._span = document.createElement("span");
-	  this._isDragging = false;
-	  this._lastMousePosition = {x: 0, y: 0};
-	  this._value = 0;
-	
-	  // Minimum mouse movement before a drag start.
-	  this._dragThreshold = this._setOption('dragThreshold', 10);
-	
-	  // Min/max value.
-	  this._min = this._setOption('min', -Infinity);
-	  this._max = this._setOption('max', Infinity);
-	
-	  // Store the original display style for the input and span.
-	  this._inputDisplayStyle = "";
-	  this._spanDisplayStyle = "";
-	
-	  this._init();
-	};
-	
-	/**
-	 * Constant used when there is no key modifier.
-	 * @constant
-	 * type {Number}
-	 */
-	DraggableNumber.MODIFIER_NONE = 0;
-	
-	/**
-	 * Constant used when there is a shift key modifier.
-	 * @constant
-	 * type {Number}
-	 */
-	DraggableNumber.MODIFIER_LARGE = 1;
-	
-	/**
-	 * Constant used when there is a control key modifier.
-	 * @constant
-	 * type {Number}
-	 */
-	DraggableNumber.MODIFIER_SMALL = 2;
-	
-	DraggableNumber.prototype = {
-	  constructor: DraggableNumber,
-	
-	  /**
-	   * Initialize the DraggableNumber.
-	   * @private
-	   */
-	  _init: function () {
-	    // Get the inital _value from the input.
-	    this._value = parseFloat(this._input.value, 10);
-	
-	    // Add a span containing the _value. Clicking on the span will show the
-	    // input. Dragging the span will change the _value.
-	    this._addSpan();
-	
-	    // Save the original display style of the input and span.
-	    this._inputDisplayStyle = this._input.style.display;
-	    this._spanDisplayStyle = this._span.style.display;
-	
-	    // Hide the input.
-	    this._input.style.display = 'none';
-	
-	    // Bind 'this' on event callbacks.
-	    this._onMouseUp = __bind(this._onMouseUp, this);
-	    this._onMouseMove = __bind(this._onMouseMove, this);
-	    this._onMouseDown = __bind(this._onMouseDown, this);
-	    this._onInputBlur = __bind(this._onInputBlur, this);
-	    this._onInputKeyDown = __bind(this._onInputKeyDown, this);
-	    this._onInputChange = __bind(this._onInputChange, this);
-	
-	    // Add mousedown event handler.
-	    this._span.addEventListener('mousedown', this._onMouseDown, false);
-	
-	    // Add key events on the input.
-	    this._input.addEventListener('blur', this._onInputBlur, false);
-	    this._input.addEventListener('keypress', this._onInputKeyDown, false);
-	
-	    // Directly assign the function instead of using addeventlistener.
-	    // To programatically change the _value of the draggableNumber you
-	    // could then do:
-	    // input._value = new_number;
-	    // input.onchange();
-	    this._input.onchange = this._onInputChange;
-	  },
-	
-	  /**
-	   * Set the DraggableNumber value.
-	   * @public
-	   * @param {Number} new_value - The new value.
-	   */
-	  set: function (new_value) {
-	    new_value = this._constraintValue(new_value);
-	    this._value = new_value;
-	    this._input.value = this._value;
-	    this._span.innerHTML = this._value;
-	  },
-	
-	  /**
-	   * Get the DraggableNumber value.
-	   * @public
-	   * @returns {Number}
-	   */
-	  get: function () {
-	    return this._value;
-	  },
-	
-	  /**
-	   * Set the minimum value.
-	   * @public
-	   * @param {Number} min - The minimum value.
-	   */
-	  setMin: function (min) {
-	    this._min = min;
-	    // Set the value with current value to automatically constrain it if needed.
-	    this.set(this._value);
-	  },
-	
-	  /**
-	   * Set the maximum value.
-	   * @public
-	   * @param {Number} min - The minimum value.
-	   */
-	  setMax: function (max) {
-	    this._max = max;
-	    // Set the value with current value to automatically constrain it if needed.
-	    this.set(this._value);
-	  },
-	
-	  /**
-	   * Remove the DraggableNumber.
-	   * @public
-	   */
-	  destroy: function () {
-	    // Remove event listeners.
-	    this._span.removeEventListener('mousedown', this._onMouseDown, false);
-	    this._input.removeEventListener('blur', this._onInputBlur, false);
-	    this._input.removeEventListener('keypress', this._onInputKeyDown, false);
-	    document.removeEventListener('mouseup', this._onMouseUp, false);
-	    document.removeEventListener('mousemove', this._onMouseMove, false);
-	
-	    // Remove the span element.
-	    if (this._span.parentNode) {
-	      this._span.parentNode.removeChild(this._span);
-	    }
-	
-	    // Delete variables.
-	    delete this._input;
-	    delete this._span;
-	    delete this._inputDisplayStyle;
-	    delete this._spanDisplayStyle;
-	  },
-	
-	  /**
-	   * Set an option value based on the option parameter and the data attribute.
-	   * @private
-	   * @param {String} name - The option name.
-	   * @param {Number} defaultValue - The default value.
-	   * @returns {Number}
-	   */
-	  _setOption: function (name, defaultValue) {
-	    // Return the option if it is defined.
-	    if (this._options[name] !== undefined) {
-	      return this._options[name];
-	    }
-	    // Return the data attribute if it is defined.
-	    if (this._input.hasAttribute("data-" + name)) {
-	      return parseFloat(this._input.getAttribute("data-" + name), 10);
-	    }
-	    // If there is no option and no attribute, return the default value.
-	    return defaultValue;
-	  },
-	
-	  /**
-	   * Prevent selection on the whole document.
-	   * @private
-	   * @param {Boolean} prevent - Should we prevent or not the selection.
-	   */
-	  _preventSelection: function (prevent) {
-	    var value = 'none';
-	    if (prevent === false) {
-	      value = 'all';
-	    }
-	
-	    document.body.style['-moz-user-select'] = value;
-	    document.body.style['-webkit-user-select'] = value;
-	    document.body.style['-ms-user-select'] = value;
-	    document.body.style['user-select'] = value;
-	  },
-	
-	  /**
-	   * Add a span element before the input.
-	   * @private
-	   */
-	  _addSpan: function () {
-	    var inputParent = this._input.parentNode;
-	    inputParent.insertBefore(this._span, this._input);
-	    this._span.innerHTML = this.get();
-	
-	    // Add resize cursor.
-	    this._span.style.cursor = "col-resize";
-	  },
-	
-	  /**
-	   * Display the input and hide the span element.
-	   * @private
-	   */
-	  _showInput: function () {
-	    this._input.style.display = this._inputDisplayStyle;
-	    this._span.style.display = 'none';
-	    this._input.focus();
-	  },
-	
-	  /**
-	   * Show the span element and hide the input.
-	   * @private
-	   */
-	  _showSpan: function () {
-	    this._input.style.display = 'none';
-	    this._span.style.display = this._spanDisplayStyle;
-	  },
-	
-	  /**
-	   * Called on input blur, set the new value and display span.
-	   * @private
-	   * @param {Object} e - Event.
-	   */
-	  _onInputBlur: function (e) {
-	    this._onInputChange();
-	    this._showSpan();
-	  },
-	
-	  /**
-	   * Called on input onchange event, set the value based on the input value.
-	   * @private
-	   */
-	  _onInputChange: function () {
-	    this.set(parseFloat(this._input.value, 10));
-	  },
-	
-	  /**
-	   * Called on input key down, blur on enter.
-	   * @private
-	   * @param {Object} e - Key event.
-	   */
-	  _onInputKeyDown: function (e) {
-	    var keyEnter = 13;
-	    if (e.charCode == keyEnter) {
-	      this._input.blur();
-	    }
-	  },
-	
-	  /**
-	   * Called on span mouse down, prevent selection and initalize logic for mouse drag.
-	   * @private
-	   * @param {Object} e - Mouse event.
-	   */
-	  _onMouseDown: function (e) {
-	    this._preventSelection(true);
-	    this._isDragging = false;
-	    this._lastMousePosition = {x: e.clientX, y: e.clientY};
-	
-	    document.addEventListener('mouseup', this._onMouseUp, false);
-	    document.addEventListener('mousemove', this._onMouseMove, false);
-	  },
-	
-	  /**
-	   * Called on span mouse up, show input if no drag.
-	   * @private
-	   * @param {Object} e - Mouse event.
-	   */
-	  _onMouseUp: function (e) {
-	    this._preventSelection(false);
-	    // If we didn't drag the span then we display the input.
-	    if (this._isDragging === false) {
-	      this._showInput();
-	    }
-	    this._isDragging = false;
-	
-	    document.removeEventListener('mouseup', this._onMouseUp, false);
-	    document.removeEventListener('mousemove', this._onMouseMove, false);
-	  },
-	
-	  /**
-	   * Check if difference bettween 2 positions is above minimum threshold.
-	   * @private
-	   * @param {Object} newMousePosition - the new mouse position.
-	   * @param {Object} lastMousePosition - the last mouse position.
-	   * @returns {Boolean}
-	   */
-	  _hasMovedEnough: function (newMousePosition, lastMousePosition) {
-	    if (Math.abs(newMousePosition.x - lastMousePosition.x) >= this._dragThreshold ||
-	      Math.abs(newMousePosition.y - lastMousePosition.y) >= this._dragThreshold) {
-	      return true;
-	    }
-	    return false;
-	  },
-	
-	  _onMouseMove: function (e) {
-	    // Get the new mouse position.
-	    var newMousePosition = {x: e.clientX, y: e.clientY};
-	
-	    if (this._hasMovedEnough(newMousePosition, this._lastMousePosition)) {
-	      this._isDragging = true;
-	    }
-	
-	    // If we are not dragging don't do anything.
-	    if (this._isDragging === false) {
-	      return;
-	    }
-	
-	    // Get the increment modifier. Small increment * 0.1, large increment * 10.
-	    var modifier = DraggableNumber.MODIFIER_NONE;
-	    if (e.shiftKey) {
-	      modifier = DraggableNumber.MODIFIER_LARGE;
-	    }
-	    else if (e.ctrlKey) {
-	      modifier = DraggableNumber.MODIFIER_SMALL;
-	    }
-	
-	    // Calculate the delta with previous mouse position.
-	    var delta = this._getLargestDelta(newMousePosition, this._lastMousePosition);
-	
-	    // Get the number offset.
-	    var offset = this._getNumberOffset(delta, modifier);
-	
-	    // Update the input number.
-	    var new_value = this.get() + offset;
-	    this.set(new_value);
-	
-	    // Call onchange callback if it exists.
-	    if ("changeCallback" in this._options) {
-	      this._options.changeCallback(new_value);
-	    }
-	
-	    // Save current mouse position.
-	    this._lastMousePosition = newMousePosition;
-	  },
-	
-	  /**
-	   * Return the number offset based on a delta and a modifier.
-	   * @private
-	   * @param {Number} delta - a positive or negative number.
-	   * @param {Number} modifier - the modifier type.
-	   * @returns {Number}
-	   */
-	  _getNumberOffset: function (delta, modifier) {
-	    var increment = 1;
-	    if (modifier == DraggableNumber.MODIFIER_SMALL) {
-	      increment *= 0.1;
-	    }
-	    else if (modifier == DraggableNumber.MODIFIER_LARGE) {
-	      increment *= 10;
-	    }
-	    // Negative increment if delta is negative.
-	    if (delta < 0) {
-	      increment *= -1;
-	    }
-	    return increment;
-	  },
-	
-	  /**
-	   * Return the largest difference between two positions, either x or y.
-	   * @private
-	   * @param {Object} newMousePosition - the new mouse position.
-	   * @param {Object} lastMousePosition - the last mouse position.
-	   * @returns {Number}
-	   */
-	  _getLargestDelta: function (newPosition, oldPosition) {
-	    var result = 0;
-	    var delta = {
-	      x: newPosition.x - oldPosition.x,
-	      y: newPosition.y - oldPosition.y,
-	    };
-	
-	    if (Math.abs(delta.x) > Math.abs(delta.y)) {
-	      return delta.x;
-	    }
-	    else {
-	      // Inverse the position.y since mouse move to up should increase the _value.
-	      return delta.y * -1;
-	    }
-	  },
-	
-	  /**
-	   * Constrain a value between min and max.
-	   * @private
-	   * @param {Number} value - The value to constrain.
-	   * @returns {Number}
-	   */
-	  _constraintValue: function (value) {
-	    value = Math.min(value, this._max);
-	    value = Math.max(value, this._min);
-	    return value;
 	  }
 	};
 	
-	    return DraggableNumber;
-	}));
+	// # class Polygon
 	
+	// Represents a convex polygon. The vertices used to initialize a polygon must
+	// be coplanar and form a convex loop. They do not have to be `CSG.Vertex`
+	// instances but they must behave similarly (duck typing can be used for
+	// customization).
+	// 
+	// Each convex polygon has a `shared` property, which is shared between all
+	// polygons that are clones of each other or were split from the same polygon.
+	// This can be used to define per-polygon properties (such as surface color).
+	
+	CSG.Polygon = function(vertices, shared) {
+	  this.vertices = vertices;
+	  this.shared = shared;
+	  this.plane = CSG.Plane.fromPoints(vertices[0].pos, vertices[1].pos, vertices[2].pos);
+	};
+	
+	CSG.Polygon.prototype = {
+	  clone: function() {
+	    var vertices = this.vertices.map(function(v) { return v.clone(); });
+	    return new CSG.Polygon(vertices, this.shared);
+	  },
+	
+	  flip: function() {
+	    this.vertices.reverse().map(function(v) { v.flip(); });
+	    this.plane.flip();
+	  }
+	};
+	
+	// # class Node
+	
+	// Holds a node in a BSP tree. A BSP tree is built from a collection of polygons
+	// by picking a polygon to split along. That polygon (and all other coplanar
+	// polygons) are added directly to that node and the other polygons are added to
+	// the front and/or back subtrees. This is not a leafy BSP tree since there is
+	// no distinction between internal and leaf nodes.
+	
+	CSG.Node = function(polygons) {
+	  this.plane = null;
+	  this.front = null;
+	  this.back = null;
+	  this.polygons = [];
+	  if (polygons) this.build(polygons);
+	};
+	
+	CSG.Node.prototype = {
+	  clone: function() {
+	    var node = new CSG.Node();
+	    node.plane = this.plane && this.plane.clone();
+	    node.front = this.front && this.front.clone();
+	    node.back = this.back && this.back.clone();
+	    node.polygons = this.polygons.map(function(p) { return p.clone(); });
+	    return node;
+	  },
+	
+	  // Convert solid space to empty space and empty space to solid space.
+	  invert: function() {
+	    for (var i = 0; i < this.polygons.length; i++) {
+	      this.polygons[i].flip();
+	    }
+	    this.plane.flip();
+	    if (this.front) this.front.invert();
+	    if (this.back) this.back.invert();
+	    var temp = this.front;
+	    this.front = this.back;
+	    this.back = temp;
+	  },
+	
+	  // Recursively remove all polygons in `polygons` that are inside this BSP
+	  // tree.
+	  clipPolygons: function(polygons) {
+	    if (!this.plane) return polygons.slice();
+	    var front = [], back = [];
+	    for (var i = 0; i < polygons.length; i++) {
+	      this.plane.splitPolygon(polygons[i], front, back, front, back);
+	    }
+	    if (this.front) front = this.front.clipPolygons(front);
+	    if (this.back) back = this.back.clipPolygons(back);
+	    else back = [];
+	    return front.concat(back);
+	  },
+	
+	  // Remove all polygons in this BSP tree that are inside the other BSP tree
+	  // `bsp`.
+	  clipTo: function(bsp) {
+	    this.polygons = bsp.clipPolygons(this.polygons);
+	    if (this.front) this.front.clipTo(bsp);
+	    if (this.back) this.back.clipTo(bsp);
+	  },
+	
+	  // Return a list of all polygons in this BSP tree.
+	  allPolygons: function() {
+	    var polygons = this.polygons.slice();
+	    if (this.front) polygons = polygons.concat(this.front.allPolygons());
+	    if (this.back) polygons = polygons.concat(this.back.allPolygons());
+	    return polygons;
+	  },
+	
+	  // Build a BSP tree out of `polygons`. When called on an existing tree, the
+	  // new polygons are filtered down to the bottom of the tree and become new
+	  // nodes there. Each set of polygons is partitioned using the first polygon
+	  // (no heuristic is used to pick a good split).
+	  build: function(polygons) {
+	    if (!polygons.length) return;
+	    if (!this.plane) this.plane = polygons[0].plane.clone();
+	    var front = [], back = [];
+	    for (var i = 0; i < polygons.length; i++) {
+	      this.plane.splitPolygon(polygons[i], this.polygons, this.polygons, front, back);
+	    }
+	    if (front.length) {
+	      if (!this.front) this.front = new CSG.Node();
+	      this.front.build(front);
+	    }
+	    if (back.length) {
+	      if (!this.back) this.back = new CSG.Node();
+	      this.back.build(back);
+	    }
+	  }
+	};
 
 
-/***/ }
+/***/ }),
+/* 84 */
+/***/ (function(module, exports) {
+
+	'use strict';
+	window.ThreeBSP = (function() {
+		
+		var ThreeBSP,
+			EPSILON = 1e-5,
+			COPLANAR = 0,
+			FRONT = 1,
+			BACK = 2,
+			SPANNING = 3;
+		
+		ThreeBSP = function( geometry ) {
+			// Convert THREE.Geometry to ThreeBSP
+			var i, _length_i,
+				face, vertex, faceVertexUvs,
+				polygon,
+				polygons = [],
+				tree;
+		
+			if ( geometry instanceof THREE.Geometry ) {
+				this.matrix = new THREE.Matrix4;
+			} else if ( geometry instanceof THREE.Mesh ) {
+				// #todo: add hierarchy support
+				geometry.updateMatrix();
+				this.matrix = geometry.matrix.clone();
+				geometry = geometry.geometry;
+			} else if ( geometry instanceof ThreeBSP.Node ) {
+				this.tree = geometry;
+				this.matrix = new THREE.Matrix4;
+				return this;
+			} else {
+				throw 'ThreeBSP: Given geometry is unsupported';
+			}
+		
+			for ( i = 0, _length_i = geometry.faces.length; i < _length_i; i++ ) {
+				face = geometry.faces[i];
+				faceVertexUvs = geometry.faceVertexUvs[0][i];
+				polygon = new ThreeBSP.Polygon;
+				
+				if ( face instanceof THREE.Face3 ) {
+					vertex = geometry.vertices[ face.a ];
+					vertex = new ThreeBSP.Vertex( vertex.x, vertex.y, vertex.z, face.vertexNormals[0], new THREE.Vector2( faceVertexUvs[0].x, faceVertexUvs[0].y ) );
+					vertex.applyMatrix4(this.matrix);
+					polygon.vertices.push( vertex );
+					
+					vertex = geometry.vertices[ face.b ];
+					vertex = new ThreeBSP.Vertex( vertex.x, vertex.y, vertex.z, face.vertexNormals[1], new THREE.Vector2( faceVertexUvs[1].x, faceVertexUvs[1].y ) );
+					vertex.applyMatrix4(this.matrix);
+					polygon.vertices.push( vertex );
+					
+					vertex = geometry.vertices[ face.c ];
+					vertex = new ThreeBSP.Vertex( vertex.x, vertex.y, vertex.z, face.vertexNormals[2], new THREE.Vector2( faceVertexUvs[2].x, faceVertexUvs[2].y ) );
+					vertex.applyMatrix4(this.matrix);
+					polygon.vertices.push( vertex );
+				} else if ( typeof THREE.Face4 ) {
+					vertex = geometry.vertices[ face.a ];
+					vertex = new ThreeBSP.Vertex( vertex.x, vertex.y, vertex.z, face.vertexNormals[0], new THREE.Vector2( faceVertexUvs[0].x, faceVertexUvs[0].y ) );
+					vertex.applyMatrix4(this.matrix);
+					polygon.vertices.push( vertex );
+					
+					vertex = geometry.vertices[ face.b ];
+					vertex = new ThreeBSP.Vertex( vertex.x, vertex.y, vertex.z, face.vertexNormals[1], new THREE.Vector2( faceVertexUvs[1].x, faceVertexUvs[1].y ) );
+					vertex.applyMatrix4(this.matrix);
+					polygon.vertices.push( vertex );
+					
+					vertex = geometry.vertices[ face.c ];
+					vertex = new ThreeBSP.Vertex( vertex.x, vertex.y, vertex.z, face.vertexNormals[2], new THREE.Vector2( faceVertexUvs[2].x, faceVertexUvs[2].y ) );
+					vertex.applyMatrix4(this.matrix);
+					polygon.vertices.push( vertex );
+					
+					vertex = geometry.vertices[ face.d ];
+					vertex = new ThreeBSP.Vertex( vertex.x, vertex.y, vertex.z, face.vertexNormals[3], new THREE.Vector2( faceVertexUvs[3].x, faceVertexUvs[3].y ) );
+					vertex.applyMatrix4(this.matrix);
+					polygon.vertices.push( vertex );
+				} else {
+					throw 'Invalid face type at index ' + i;
+				}
+				
+				polygon.calculateProperties();
+				polygons.push( polygon );
+			};
+		
+			this.tree = new ThreeBSP.Node( polygons );
+		};
+		ThreeBSP.prototype.subtract = function( other_tree ) {
+			var a = this.tree.clone(),
+				b = other_tree.tree.clone();
+			
+			a.invert();
+			a.clipTo( b );
+			b.clipTo( a );
+			b.invert();
+			b.clipTo( a );
+			b.invert();
+			a.build( b.allPolygons() );
+			a.invert();
+			a = new ThreeBSP( a );
+			a.matrix = this.matrix;
+			return a;
+		};
+		ThreeBSP.prototype.union = function( other_tree ) {
+			var a = this.tree.clone(),
+				b = other_tree.tree.clone();
+			
+			a.clipTo( b );
+			b.clipTo( a );
+			b.invert();
+			b.clipTo( a );
+			b.invert();
+			a.build( b.allPolygons() );
+			a = new ThreeBSP( a );
+			a.matrix = this.matrix;
+			return a;
+		};
+		ThreeBSP.prototype.intersect = function( other_tree ) {
+			var a = this.tree.clone(),
+				b = other_tree.tree.clone();
+			
+			a.invert();
+			b.clipTo( a );
+			b.invert();
+			a.clipTo( b );
+			b.clipTo( a );
+			a.build( b.allPolygons() );
+			a.invert();
+			a = new ThreeBSP( a );
+			a.matrix = this.matrix;
+			return a;
+		};
+		ThreeBSP.prototype.toGeometry = function() {
+			var i, j,
+				matrix = new THREE.Matrix4().getInverse( this.matrix ),
+				geometry = new THREE.Geometry(),
+				polygons = this.tree.allPolygons(),
+				polygon_count = polygons.length,
+				polygon, polygon_vertice_count,
+				vertice_dict = {},
+				vertex_idx_a, vertex_idx_b, vertex_idx_c,
+				vertex, face,
+				verticeUvs;
+		
+			for ( i = 0; i < polygon_count; i++ ) {
+				polygon = polygons[i];
+				polygon_vertice_count = polygon.vertices.length;
+				
+				for ( j = 2; j < polygon_vertice_count; j++ ) {
+					verticeUvs = [];
+					
+					vertex = polygon.vertices[0];
+					verticeUvs.push( new THREE.Vector2( vertex.uv.x, vertex.uv.y ) );
+					vertex = new THREE.Vector3( vertex.x, vertex.y, vertex.z );
+					vertex.applyMatrix4(matrix);
+					
+					if ( typeof vertice_dict[ vertex.x + ',' + vertex.y + ',' + vertex.z ] !== 'undefined' ) {
+						vertex_idx_a = vertice_dict[ vertex.x + ',' + vertex.y + ',' + vertex.z ];
+					} else {
+						geometry.vertices.push( vertex );
+						vertex_idx_a = vertice_dict[ vertex.x + ',' + vertex.y + ',' + vertex.z ] = geometry.vertices.length - 1;
+					}
+					
+					vertex = polygon.vertices[j-1];
+					verticeUvs.push( new THREE.Vector2( vertex.uv.x, vertex.uv.y ) );
+					vertex = new THREE.Vector3( vertex.x, vertex.y, vertex.z );
+					vertex.applyMatrix4(matrix);
+					if ( typeof vertice_dict[ vertex.x + ',' + vertex.y + ',' + vertex.z ] !== 'undefined' ) {
+						vertex_idx_b = vertice_dict[ vertex.x + ',' + vertex.y + ',' + vertex.z ];
+					} else {
+						geometry.vertices.push( vertex );
+						vertex_idx_b = vertice_dict[ vertex.x + ',' + vertex.y + ',' + vertex.z ] = geometry.vertices.length - 1;
+					}
+					
+					vertex = polygon.vertices[j];
+					verticeUvs.push( new THREE.Vector2( vertex.uv.x, vertex.uv.y ) );
+					vertex = new THREE.Vector3( vertex.x, vertex.y, vertex.z );
+					vertex.applyMatrix4(matrix);
+					if ( typeof vertice_dict[ vertex.x + ',' + vertex.y + ',' + vertex.z ] !== 'undefined' ) {
+						vertex_idx_c = vertice_dict[ vertex.x + ',' + vertex.y + ',' + vertex.z ];
+					} else {
+						geometry.vertices.push( vertex );
+						vertex_idx_c = vertice_dict[ vertex.x + ',' + vertex.y + ',' + vertex.z ] = geometry.vertices.length - 1;
+					}
+					
+					face = new THREE.Face3(
+						vertex_idx_a,
+						vertex_idx_b,
+						vertex_idx_c,
+						new THREE.Vector3( polygon.normal.x, polygon.normal.y, polygon.normal.z )
+					);
+					
+					geometry.faces.push( face );
+					geometry.faceVertexUvs[0].push( verticeUvs );
+				}
+				
+			}
+			return geometry;
+		};
+		ThreeBSP.prototype.toMesh = function( material ) {
+			var geometry = this.toGeometry(),
+				mesh = new THREE.Mesh( geometry, material );
+			
+			mesh.position.getPositionFromMatrix( this.matrix );
+			mesh.rotation.setFromRotationMatrix( this.matrix );
+			
+			return mesh;
+		};
+		
+		
+		ThreeBSP.Polygon = function( vertices, normal, w ) {
+			if ( !( vertices instanceof Array ) ) {
+				vertices = [];
+			}
+			
+			this.vertices = vertices;
+			if ( vertices.length > 0 ) {
+				this.calculateProperties();
+			} else {
+				this.normal = this.w = undefined;
+			}
+		};
+		ThreeBSP.Polygon.prototype.calculateProperties = function() {
+			var a = this.vertices[0],
+				b = this.vertices[1],
+				c = this.vertices[2];
+				
+			this.normal = b.clone().subtract( a ).cross(
+				c.clone().subtract( a )
+			).normalize();
+			
+			this.w = this.normal.clone().dot( a );
+			
+			return this;
+		};
+		ThreeBSP.Polygon.prototype.clone = function() {
+			var i, vertice_count,
+				polygon = new ThreeBSP.Polygon;
+			
+			for ( i = 0, vertice_count = this.vertices.length; i < vertice_count; i++ ) {
+				polygon.vertices.push( this.vertices[i].clone() );
+			};
+			polygon.calculateProperties();
+			
+			return polygon;
+		};
+		
+		ThreeBSP.Polygon.prototype.flip = function() {
+			var i, vertices = [];
+			
+			this.normal.multiplyScalar( -1 );
+			this.w *= -1;
+			
+			for ( i = this.vertices.length - 1; i >= 0; i-- ) {
+				vertices.push( this.vertices[i] );
+			};
+			this.vertices = vertices;
+			
+			return this;
+		};
+		ThreeBSP.Polygon.prototype.classifyVertex = function( vertex ) {  
+			var side_value = this.normal.dot( vertex ) - this.w;
+			
+			if ( side_value < -EPSILON ) {
+				return BACK;
+			} else if ( side_value > EPSILON ) {
+				return FRONT;
+			} else {
+				return COPLANAR;
+			}
+		};
+		ThreeBSP.Polygon.prototype.classifySide = function( polygon ) {
+			var i, vertex, classification,
+				num_positive = 0,
+				num_negative = 0,
+				vertice_count = polygon.vertices.length;
+			
+			for ( i = 0; i < vertice_count; i++ ) {
+				vertex = polygon.vertices[i];
+				classification = this.classifyVertex( vertex );
+				if ( classification === FRONT ) {
+					num_positive++;
+				} else if ( classification === BACK ) {
+					num_negative++;
+				}
+			}
+			
+			if ( num_positive > 0 && num_negative === 0 ) {
+				return FRONT;
+			} else if ( num_positive === 0 && num_negative > 0 ) {
+				return BACK;
+			} else if ( num_positive === 0 && num_negative === 0 ) {
+				return COPLANAR;
+			} else {
+				return SPANNING;
+			}
+		};
+		ThreeBSP.Polygon.prototype.splitPolygon = function( polygon, coplanar_front, coplanar_back, front, back ) {
+			var classification = this.classifySide( polygon );
+			
+			if ( classification === COPLANAR ) {
+				
+				( this.normal.dot( polygon.normal ) > 0 ? coplanar_front : coplanar_back ).push( polygon );
+				
+			} else if ( classification === FRONT ) {
+				
+				front.push( polygon );
+				
+			} else if ( classification === BACK ) {
+				
+				back.push( polygon );
+				
+			} else {
+				
+				var vertice_count,
+					i, j, ti, tj, vi, vj,
+					t, v,
+					f = [],
+					b = [];
+				
+				for ( i = 0, vertice_count = polygon.vertices.length; i < vertice_count; i++ ) {
+					
+					j = (i + 1) % vertice_count;
+					vi = polygon.vertices[i];
+					vj = polygon.vertices[j];
+					ti = this.classifyVertex( vi );
+					tj = this.classifyVertex( vj );
+					
+					if ( ti != BACK ) f.push( vi );
+					if ( ti != FRONT ) b.push( vi );
+					if ( (ti | tj) === SPANNING ) {
+						t = ( this.w - this.normal.dot( vi ) ) / this.normal.dot( vj.clone().subtract( vi ) );
+						v = vi.interpolate( vj, t );
+						f.push( v );
+						b.push( v );
+					}
+				}
+				
+				
+				if ( f.length >= 3 ) front.push( new ThreeBSP.Polygon( f ).calculateProperties() );
+				if ( b.length >= 3 ) back.push( new ThreeBSP.Polygon( b ).calculateProperties() );
+			}
+		};
+		
+		ThreeBSP.Vertex = function( x, y, z, normal, uv ) {
+			this.x = x;
+			this.y = y;
+			this.z = z;
+			this.normal = normal || new THREE.Vector3;
+			this.uv = uv || new THREE.Vector2;
+		};
+		ThreeBSP.Vertex.prototype.clone = function() {
+			return new ThreeBSP.Vertex( this.x, this.y, this.z, this.normal.clone(), this.uv.clone() );
+		};
+		ThreeBSP.Vertex.prototype.add = function( vertex ) {
+			this.x += vertex.x;
+			this.y += vertex.y;
+			this.z += vertex.z;
+			return this;
+		};
+		ThreeBSP.Vertex.prototype.subtract = function( vertex ) {
+			this.x -= vertex.x;
+			this.y -= vertex.y;
+			this.z -= vertex.z;
+			return this;
+		};
+		ThreeBSP.Vertex.prototype.multiplyScalar = function( scalar ) {
+			this.x *= scalar;
+			this.y *= scalar;
+			this.z *= scalar;
+			return this;
+		};
+		ThreeBSP.Vertex.prototype.cross = function( vertex ) {
+			var x = this.x,
+				y = this.y,
+				z = this.z;
+	
+			this.x = y * vertex.z - z * vertex.y;
+			this.y = z * vertex.x - x * vertex.z;
+			this.z = x * vertex.y - y * vertex.x;
+			
+			return this;
+		};
+		ThreeBSP.Vertex.prototype.normalize = function() {
+			var length = Math.sqrt( this.x * this.x + this.y * this.y + this.z * this.z );
+			
+			this.x /= length;
+			this.y /= length;
+			this.z /= length;
+			
+			return this;
+		};
+		ThreeBSP.Vertex.prototype.dot = function( vertex ) {
+			return this.x * vertex.x + this.y * vertex.y + this.z * vertex.z;
+		};
+		ThreeBSP.Vertex.prototype.lerp = function( a, t ) {
+			this.add(
+				a.clone().subtract( this ).multiplyScalar( t )
+			);
+			
+			this.normal.add(
+				a.normal.clone().sub( this.normal ).multiplyScalar( t )
+			);
+			
+			this.uv.add(
+				a.uv.clone().sub( this.uv ).multiplyScalar( t )
+			);
+			
+			return this;
+		};
+		ThreeBSP.Vertex.prototype.interpolate = function( other, t ) {
+			return this.clone().lerp( other, t );
+		};
+		ThreeBSP.Vertex.prototype.applyMatrix4 = function ( m ) {
+	
+			// input: THREE.Matrix4 affine matrix
+	
+			var x = this.x, y = this.y, z = this.z;
+	
+			var e = m.elements;
+	
+			this.x = e[0] * x + e[4] * y + e[8]  * z + e[12];
+			this.y = e[1] * x + e[5] * y + e[9]  * z + e[13];
+			this.z = e[2] * x + e[6] * y + e[10] * z + e[14];
+	
+			return this;
+	
+		}
+		
+		
+		ThreeBSP.Node = function( polygons ) {
+			var i, polygon_count,
+				front = [],
+				back = [];
+	
+			this.polygons = [];
+			this.front = this.back = undefined;
+			
+			if ( !(polygons instanceof Array) || polygons.length === 0 ) return;
+	
+			this.divider = polygons[0].clone();
+			
+			for ( i = 0, polygon_count = polygons.length; i < polygon_count; i++ ) {
+				this.divider.splitPolygon( polygons[i], this.polygons, this.polygons, front, back );
+			}   
+			
+			if ( front.length > 0 ) {
+				this.front = new ThreeBSP.Node( front );
+			}
+			
+			if ( back.length > 0 ) {
+				this.back = new ThreeBSP.Node( back );
+			}
+		};
+		ThreeBSP.Node.isConvex = function( polygons ) {
+			var i, j;
+			for ( i = 0; i < polygons.length; i++ ) {
+				for ( j = 0; j < polygons.length; j++ ) {
+					if ( i !== j && polygons[i].classifySide( polygons[j] ) !== BACK ) {
+						return false;
+					}
+				}
+			}
+			return true;
+		};
+		ThreeBSP.Node.prototype.build = function( polygons ) {
+			var i, polygon_count,
+				front = [],
+				back = [];
+			
+			if ( !this.divider ) {
+				this.divider = polygons[0].clone();
+			}
+	
+			for ( i = 0, polygon_count = polygons.length; i < polygon_count; i++ ) {
+				this.divider.splitPolygon( polygons[i], this.polygons, this.polygons, front, back );
+			}   
+			
+			if ( front.length > 0 ) {
+				if ( !this.front ) this.front = new ThreeBSP.Node();
+				this.front.build( front );
+			}
+			
+			if ( back.length > 0 ) {
+				if ( !this.back ) this.back = new ThreeBSP.Node();
+				this.back.build( back );
+			}
+		};
+		ThreeBSP.Node.prototype.allPolygons = function() {
+			var polygons = this.polygons.slice();
+			if ( this.front ) polygons = polygons.concat( this.front.allPolygons() );
+			if ( this.back ) polygons = polygons.concat( this.back.allPolygons() );
+			return polygons;
+		};
+		ThreeBSP.Node.prototype.clone = function() {
+			var node = new ThreeBSP.Node();
+			
+			node.divider = this.divider.clone();
+			node.polygons = this.polygons.map( function( polygon ) { return polygon.clone(); } );
+			node.front = this.front && this.front.clone();
+			node.back = this.back && this.back.clone();
+			
+			return node;
+		};
+		ThreeBSP.Node.prototype.invert = function() {
+			var i, polygon_count, temp;
+			
+			for ( i = 0, polygon_count = this.polygons.length; i < polygon_count; i++ ) {
+				this.polygons[i].flip();
+			}
+			
+			this.divider.flip();
+			if ( this.front ) this.front.invert();
+			if ( this.back ) this.back.invert();
+			
+			temp = this.front;
+			this.front = this.back;
+			this.back = temp;
+			
+			return this;
+		};
+		ThreeBSP.Node.prototype.clipPolygons = function( polygons ) {
+			var i, polygon_count,
+				front, back;
+	
+			if ( !this.divider ) return polygons.slice();
+			
+			front = [], back = [];
+			
+			for ( i = 0, polygon_count = polygons.length; i < polygon_count; i++ ) {
+				this.divider.splitPolygon( polygons[i], front, back, front, back );
+			}
+	
+			if ( this.front ) front = this.front.clipPolygons( front );
+			if ( this.back ) back = this.back.clipPolygons( back );
+			else back = [];
+	
+			return front.concat( back );
+		};
+		
+		ThreeBSP.Node.prototype.clipTo = function( node ) {
+			this.polygons = node.clipPolygons( this.polygons );
+			if ( this.front ) this.front.clipTo( node );
+			if ( this.back ) this.back.clipTo( node );
+		};
+		
+		
+		return ThreeBSP;
+	})();
+
+/***/ }),
+/* 85 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, Node, NodeMaterialBase, Object3D, ParticleBasicMaterial, ParticlePool, ParticleSystem, RandomCloudGeometry, SparksAccelerate, SparksAccelerateFactor, SparksAccelerateVelocity, SparksAge, SparksCubeZone, SparksEmitter, SparksLifetime, SparksLineZone, SparksMove, SparksPointZone, SparksPosition, SparksRandomDrift, SparksSteadyCounter, Utils, _,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	Utils = __webpack_require__(9);
+	
+	Node = __webpack_require__(11);
+	
+	Object3D = __webpack_require__(71);
+	
+	NodeMaterialBase = __webpack_require__(58);
+	
+	__webpack_require__(69);
+	
+	__webpack_require__(57);
+	
+	__webpack_require__(86);
+	
+	__webpack_require__(87);
+	
+	ParticleSystem = (function(superClass) {
+	  extend(ParticleSystem, superClass);
+	
+	  function ParticleSystem() {
+	    this.compute = bind(this.compute, this);
+	    this.rebuild_geometry = bind(this.rebuild_geometry, this);
+	    this.remove = bind(this.remove, this);
+	    this.getFields = bind(this.getFields, this);
+	    this.initialize = bind(this.initialize, this);
+	    return ParticleSystem.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  ParticleSystem.node_name = 'ParticleSystem';
+	
+	  ParticleSystem.group_name = 'Particle';
+	
+	  ParticleSystem.prototype.initialize = function() {
+	    ParticleSystem.__super__.initialize.apply(this, arguments);
+	    this.ob = new THREE.ParticleSystem(new THREE.CubeGeometry(200, 200, 200), new THREE.ParticleBasicMaterial());
+	    this.ob.dynamic = true;
+	    this.geometry_cache = false;
+	    this.material_cache = false;
+	    return this.compute();
+	  };
+	
+	  ParticleSystem.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = ParticleSystem.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "geometry": {
+	          type: "Any",
+	          val: new THREE.CubeGeometry(200, 200, 200)
+	        },
+	        "material": {
+	          type: "Any",
+	          val: new THREE.ParticleBasicMaterial()
+	        },
+	        "sortParticles": false
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  ParticleSystem.prototype.remove = function() {
+	    ParticleSystem.__super__.remove.apply(this, arguments);
+	    delete this.geometry_cache;
+	    return delete this.material_cache;
+	  };
+	
+	  ParticleSystem.prototype.rebuild_geometry = function() {
+	    var field, geom;
+	    field = this.fields.getField('geometry');
+	    if (field.connections.length > 0) {
+	      geom = field.connections[0].from_field.node;
+	      geom.cached = [];
+	      return geom.compute();
+	    } else {
+	      return this.fields.getField('geometry').setValue(new THREE.CubeGeometry(200, 200, 200));
+	    }
+	  };
+	
+	  ParticleSystem.prototype.compute = function() {
+	    var needs_rebuild;
+	    needs_rebuild = false;
+	    if (this.material_cache !== this.fields.getField('material').getValue().id) {
+	      this.rebuild_geometry();
+	    }
+	    if (this.geometry_cache !== this.fields.getField('geometry').getValue().id || this.material_cache !== this.fields.getField('material').getValue().id || needs_rebuild) {
+	      this.ob = new THREE.ParticleSystem(this.fields.getField('geometry').getValue(), this.fields.getField('material').getValue());
+	      this.geometry_cache = this.fields.getField('geometry').getValue().id;
+	      this.material_cache = this.fields.getField('material').getValue().id;
+	    }
+	    this.applyFieldsToVal(this.fields.inputs, this.ob, ['children', 'geometry', 'material']);
+	    if (needs_rebuild === true) {
+	      this.trigger("RebuildAllShaders");
+	    }
+	    return this.fields.setField("out", this.ob);
+	  };
+	
+	  return ParticleSystem;
+	
+	})(Object3D);
+	
+	ThreeNodes.Core.addNodeType('ParticleSystem', ParticleSystem);
+	
+	ParticleBasicMaterial = (function(superClass) {
+	  extend(ParticleBasicMaterial, superClass);
+	
+	  function ParticleBasicMaterial() {
+	    this.getFields = bind(this.getFields, this);
+	    this.initialize = bind(this.initialize, this);
+	    return ParticleBasicMaterial.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  ParticleBasicMaterial.node_name = 'ParticleBasicMaterial';
+	
+	  ParticleBasicMaterial.group_name = 'Materials';
+	
+	  ParticleBasicMaterial.prototype.initialize = function(options) {
+	    ParticleBasicMaterial.__super__.initialize.apply(this, arguments);
+	    this.ob = [];
+	    this.material_class = THREE.ParticleBasicMaterial;
+	    this.vars_rebuild_shader_on_change = ["transparent", "depthTest", "map"];
+	    return this.material_cache = this.createCacheObject(this.vars_rebuild_shader_on_change);
+	  };
+	
+	  ParticleBasicMaterial.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = ParticleBasicMaterial.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "color": {
+	          type: "Color",
+	          val: new THREE.Color(0xff0000)
+	        },
+	        "map": {
+	          type: "Any",
+	          val: false
+	        },
+	        "size": 1,
+	        "sizeAttenuation": true,
+	        "vertexColors": false
+	      },
+	      outputs: {
+	        "out": {
+	          type: "Any",
+	          val: this.ob
+	        }
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  return ParticleBasicMaterial;
+	
+	})(NodeMaterialBase);
+	
+	ThreeNodes.Core.addNodeType('ParticleBasicMaterial', ParticleBasicMaterial);
+	
+	SparksEmitter = (function(superClass) {
+	  extend(SparksEmitter, superClass);
+	
+	  function SparksEmitter() {
+	    this.remove = bind(this.remove, this);
+	    this.compute = bind(this.compute, this);
+	    this.setTargetParticle = bind(this.setTargetParticle, this);
+	    this.getFields = bind(this.getFields, this);
+	    this.initialize = bind(this.initialize, this);
+	    return SparksEmitter.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  SparksEmitter.node_name = 'Emitter';
+	
+	  SparksEmitter.group_name = 'Particle.sparks';
+	
+	  SparksEmitter.prototype.initialize = function(options) {
+	    SparksEmitter.__super__.initialize.apply(this, arguments);
+	    this.auto_evaluate = true;
+	    this.geom = new THREE.Geometry();
+	    this.target_initializer = new SPARKS.Target(null, this.setTargetParticle);
+	    this.pool = this.fields.getField("pool").getValue();
+	    return this.ob = new SPARKS.Emitter(this.fields.getField("counter").getValue());
+	  };
+	
+	  SparksEmitter.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = SparksEmitter.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "counter": {
+	          type: "Any",
+	          val: new SPARKS.SteadyCounter(50)
+	        },
+	        "pool": {
+	          type: "Any",
+	          val: false
+	        },
+	        "initializers": {
+	          type: "Array",
+	          val: []
+	        },
+	        "actions": {
+	          type: "Array",
+	          val: []
+	        }
+	      },
+	      outputs: {
+	        "out": {
+	          type: "Any",
+	          val: this.ob
+	        }
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  SparksEmitter.prototype.setTargetParticle = function(p) {
+	    if (this.pool && this.pool.pool) {
+	      return this.pool.pool.get();
+	    }
+	  };
+	
+	  SparksEmitter.prototype.compute = function() {
+	    var initializers;
+	    if (this.fields.getField("pool").getValue() !== false) {
+	      if (this.pool !== this.fields.getField("pool").getValue()) {
+	        this.ob.removeCallback("created");
+	        this.ob.removeCallback("dead");
+	        this.ob.stop();
+	        this.ob = new SPARKS.Emitter(this.fields.getField("counter").getValue());
+	        this.geom = new THREE.Geometry();
+	        this.pool = this.fields.getField("pool").getValue();
+	        this.pool.init_pool(this.geom);
+	        this.ob.addCallback("created", this.pool.on_particle_created);
+	        this.ob.addCallback("dead", this.pool.on_particle_dead);
+	        console.log("pool particle setup...");
+	      }
+	    }
+	    initializers = this.fields.getField("initializers").getValue().slice(0);
+	    initializers.push(this.target_initializer);
+	    this.ob._initializers = initializers;
+	    this.ob._actions = this.fields.getField("actions").getValue();
+	    this.ob._counter = this.fields.getField("counter").getValue();
+	    if (this.pool !== false && this.ob.isRunning() === false) {
+	      this.ob.start();
+	    }
+	    return this.fields.setField("out", this.geom);
+	  };
+	
+	  SparksEmitter.prototype.remove = function() {
+	    SparksEmitter.__super__.remove.apply(this, arguments);
+	    if (this.ob) {
+	      this.ob.removeCallback("created");
+	      this.ob.removeCallback("dead");
+	      this.ob.stop();
+	    }
+	    delete this.ob;
+	    delete this.target_initializer;
+	    delete this.geom;
+	    return delete this.pool;
+	  };
+	
+	  return SparksEmitter;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('SparksEmitter', SparksEmitter);
+	
+	SparksAge = (function(superClass) {
+	  extend(SparksAge, superClass);
+	
+	  function SparksAge() {
+	    this.compute = bind(this.compute, this);
+	    this.remove = bind(this.remove, this);
+	    this.getFields = bind(this.getFields, this);
+	    this.initialize = bind(this.initialize, this);
+	    return SparksAge.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  SparksAge.node_name = 'Age';
+	
+	  SparksAge.group_name = 'Particle.sparks.actions';
+	
+	  SparksAge.prototype.initialize = function(options) {
+	    SparksAge.__super__.initialize.apply(this, arguments);
+	    this.auto_evaluate = true;
+	    return this.ob = new SPARKS.Age(TWEEN.Easing.Linear.EaseNone);
+	  };
+	
+	  SparksAge.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = SparksAge.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "easing": {
+	          type: "Any",
+	          val: TWEEN.Easing.Linear.EaseNone
+	        }
+	      },
+	      outputs: {
+	        "action": {
+	          type: "Any",
+	          val: this.ob
+	        }
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  SparksAge.prototype.remove = function() {
+	    delete this.ob;
+	    return SparksAge.__super__.remove.apply(this, arguments);
+	  };
+	
+	  SparksAge.prototype.compute = function() {
+	    this.ob._easing = this.fields.getField("easing").get("value");
+	    return this.fields.setField("action", this.ob);
+	  };
+	
+	  return SparksAge;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('SparksAge', SparksAge);
+	
+	SparksMove = (function(superClass) {
+	  extend(SparksMove, superClass);
+	
+	  function SparksMove() {
+	    this.compute = bind(this.compute, this);
+	    this.remove = bind(this.remove, this);
+	    this.getFields = bind(this.getFields, this);
+	    this.initialize = bind(this.initialize, this);
+	    return SparksMove.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  SparksMove.node_name = 'Move';
+	
+	  SparksMove.group_name = 'Particle.sparks.actions';
+	
+	  SparksMove.prototype.initialize = function(options) {
+	    SparksMove.__super__.initialize.apply(this, arguments);
+	    this.auto_evaluate = true;
+	    return this.ob = new SPARKS.Move();
+	  };
+	
+	  SparksMove.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = SparksMove.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      outputs: {
+	        "action": {
+	          type: "Any",
+	          val: this.ob
+	        }
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  SparksMove.prototype.remove = function() {
+	    delete this.ob;
+	    return SparksMove.__super__.remove.apply(this, arguments);
+	  };
+	
+	  SparksMove.prototype.compute = function() {
+	    return this.fields.setField("action", this.ob);
+	  };
+	
+	  return SparksMove;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('SparksMove', SparksMove);
+	
+	SparksAccelerate = (function(superClass) {
+	  extend(SparksAccelerate, superClass);
+	
+	  function SparksAccelerate() {
+	    this.compute = bind(this.compute, this);
+	    this.remove = bind(this.remove, this);
+	    this.getFields = bind(this.getFields, this);
+	    this.initialize = bind(this.initialize, this);
+	    return SparksAccelerate.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  SparksAccelerate.node_name = 'Accelerate';
+	
+	  SparksAccelerate.group_name = 'Particle.sparks.actions';
+	
+	  SparksAccelerate.prototype.initialize = function(options) {
+	    SparksAccelerate.__super__.initialize.apply(this, arguments);
+	    this.auto_evaluate = true;
+	    return this.ob = new SPARKS.Accelerate(new THREE.Vector3(0, 1, 0));
+	  };
+	
+	  SparksAccelerate.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = SparksAccelerate.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "vector": {
+	          type: "Vector3",
+	          val: new THREE.Vector3(0, 1, 0)
+	        }
+	      },
+	      outputs: {
+	        "action": {
+	          type: "Any",
+	          val: this.ob
+	        }
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  SparksAccelerate.prototype.remove = function() {
+	    delete this.ob;
+	    return SparksAccelerate.__super__.remove.apply(this, arguments);
+	  };
+	
+	  SparksAccelerate.prototype.compute = function() {
+	    this.ob.acceleration = this.fields.getField("vector").getValue();
+	    return this.fields.setField("action", this.ob);
+	  };
+	
+	  return SparksAccelerate;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('SparksAccelerate', SparksAccelerate);
+	
+	SparksAccelerateFactor = (function(superClass) {
+	  extend(SparksAccelerateFactor, superClass);
+	
+	  function SparksAccelerateFactor() {
+	    this.compute = bind(this.compute, this);
+	    this.remove = bind(this.remove, this);
+	    this.getFields = bind(this.getFields, this);
+	    this.initialize = bind(this.initialize, this);
+	    return SparksAccelerateFactor.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  SparksAccelerateFactor.node_name = 'AccelerateFactor';
+	
+	  SparksAccelerateFactor.group_name = 'Particle.sparks.actions';
+	
+	  SparksAccelerateFactor.prototype.initialize = function(options) {
+	    SparksAccelerateFactor.__super__.initialize.apply(this, arguments);
+	    this.auto_evaluate = true;
+	    return this.ob = new SPARKS.AccelerateFactor(2.0);
+	  };
+	
+	  SparksAccelerateFactor.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = SparksAccelerateFactor.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "factor": 2.0
+	      },
+	      outputs: {
+	        "action": {
+	          type: "Any",
+	          val: this.ob
+	        }
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  SparksAccelerateFactor.prototype.remove = function() {
+	    delete this.ob;
+	    return SparksAccelerateFactor.__super__.remove.apply(this, arguments);
+	  };
+	
+	  SparksAccelerateFactor.prototype.compute = function() {
+	    this.ob.factor = this.fields.getField("factor").getValue();
+	    return this.fields.setField("action", this.ob);
+	  };
+	
+	  return SparksAccelerateFactor;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('SparksAccelerateFactor', SparksAccelerateFactor);
+	
+	SparksAccelerateVelocity = (function(superClass) {
+	  extend(SparksAccelerateVelocity, superClass);
+	
+	  function SparksAccelerateVelocity() {
+	    this.compute = bind(this.compute, this);
+	    this.remove = bind(this.remove, this);
+	    this.getFields = bind(this.getFields, this);
+	    this.initialize = bind(this.initialize, this);
+	    return SparksAccelerateVelocity.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  SparksAccelerateVelocity.node_name = 'AccelerateVelocity';
+	
+	  SparksAccelerateVelocity.group_name = 'Particle.sparks.actions';
+	
+	  SparksAccelerateVelocity.prototype.initialize = function(options) {
+	    SparksAccelerateVelocity.__super__.initialize.apply(this, arguments);
+	    this.auto_evaluate = true;
+	    return this.ob = new SPARKS.AccelerateVelocity(2.0);
+	  };
+	
+	  SparksAccelerateVelocity.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = SparksAccelerateVelocity.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "factor": 2.0
+	      },
+	      outputs: {
+	        "action": {
+	          type: "Any",
+	          val: this.ob
+	        }
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  SparksAccelerateVelocity.prototype.remove = function() {
+	    delete this.ob;
+	    return SparksAccelerateVelocity.__super__.remove.apply(this, arguments);
+	  };
+	
+	  SparksAccelerateVelocity.prototype.compute = function() {
+	    this.ob.factor = this.fields.getField("factor").getValue();
+	    return this.fields.setField("action", this.ob);
+	  };
+	
+	  return SparksAccelerateVelocity;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('SparksAccelerateVelocity', SparksAccelerateVelocity);
+	
+	SparksRandomDrift = (function(superClass) {
+	  extend(SparksRandomDrift, superClass);
+	
+	  function SparksRandomDrift() {
+	    this.compute = bind(this.compute, this);
+	    this.remove = bind(this.remove, this);
+	    this.getFields = bind(this.getFields, this);
+	    this.initialize = bind(this.initialize, this);
+	    return SparksRandomDrift.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  SparksRandomDrift.node_name = 'RandomDrift';
+	
+	  SparksRandomDrift.group_name = 'Particle.sparks.actions';
+	
+	  SparksRandomDrift.prototype.initialize = function(options) {
+	    SparksRandomDrift.__super__.initialize.apply(this, arguments);
+	    this.auto_evaluate = true;
+	    return this.ob = new SPARKS.RandomDrift(new THREE.Vector3(0, 1, 0));
+	  };
+	
+	  SparksRandomDrift.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = SparksRandomDrift.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "vector": {
+	          type: "Vector3",
+	          val: new THREE.Vector3(0, 1, 0)
+	        }
+	      },
+	      outputs: {
+	        "action": {
+	          type: "Any",
+	          val: this.ob
+	        }
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  SparksRandomDrift.prototype.remove = function() {
+	    delete this.ob;
+	    return SparksRandomDrift.__super__.remove.apply(this, arguments);
+	  };
+	
+	  SparksRandomDrift.prototype.compute = function() {
+	    this.ob.drift = this.fields.getField("vector").getValue();
+	    return this.fields.setField("action", this.ob);
+	  };
+	
+	  return SparksRandomDrift;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('SparksRandomDrift', SparksRandomDrift);
+	
+	SparksLifetime = (function(superClass) {
+	  extend(SparksLifetime, superClass);
+	
+	  function SparksLifetime() {
+	    this.compute = bind(this.compute, this);
+	    this.remove = bind(this.remove, this);
+	    this.getFields = bind(this.getFields, this);
+	    this.initialize = bind(this.initialize, this);
+	    return SparksLifetime.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  SparksLifetime.node_name = 'Lifetime';
+	
+	  SparksLifetime.group_name = 'Particle.sparks.initializers';
+	
+	  SparksLifetime.prototype.initialize = function(options) {
+	    SparksLifetime.__super__.initialize.apply(this, arguments);
+	    this.auto_evaluate = true;
+	    return this.ob = new SPARKS.Lifetime(4, 7);
+	  };
+	
+	  SparksLifetime.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = SparksLifetime.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "min": 4,
+	        "max": 7
+	      },
+	      outputs: {
+	        "initializer": {
+	          type: "Any",
+	          val: this.ob
+	        }
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  SparksLifetime.prototype.remove = function() {
+	    delete this.ob;
+	    return SparksLifetime.__super__.remove.apply(this, arguments);
+	  };
+	
+	  SparksLifetime.prototype.compute = function() {
+	    this.ob._min = this.fields.getField("min").getValue();
+	    this.ob._min = this.fields.getField("max").getValue();
+	    return this.fields.setField("initializer", this.ob);
+	  };
+	
+	  return SparksLifetime;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('SparksLifetime', SparksLifetime);
+	
+	SparksPosition = (function(superClass) {
+	  extend(SparksPosition, superClass);
+	
+	  function SparksPosition() {
+	    this.compute = bind(this.compute, this);
+	    this.remove = bind(this.remove, this);
+	    this.getFields = bind(this.getFields, this);
+	    this.initialize = bind(this.initialize, this);
+	    return SparksPosition.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  SparksPosition.node_name = 'Position';
+	
+	  SparksPosition.group_name = 'Particle.sparks.initializers';
+	
+	  SparksPosition.prototype.initialize = function(options) {
+	    SparksPosition.__super__.initialize.apply(this, arguments);
+	    this.auto_evaluate = true;
+	    return this.ob = new SPARKS.Position(new SPARKS.PointZone(new THREE.Vector3(0, 0, 0)));
+	  };
+	
+	  SparksPosition.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = SparksPosition.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "zone": {
+	          type: "Any",
+	          val: new SPARKS.PointZone(new THREE.Vector3(0, 0, 0))
+	        }
+	      },
+	      outputs: {
+	        "initializer": {
+	          type: "Any",
+	          val: this.ob
+	        }
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  SparksPosition.prototype.remove = function() {
+	    delete this.ob;
+	    return SparksPosition.__super__.remove.apply(this, arguments);
+	  };
+	
+	  SparksPosition.prototype.compute = function() {
+	    this.ob.zone = this.fields.getField("zone").getValue();
+	    return this.fields.setField("initializer", this.ob);
+	  };
+	
+	  return SparksPosition;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('SparksPosition', SparksPosition);
+	
+	SparksPointZone = (function(superClass) {
+	  extend(SparksPointZone, superClass);
+	
+	  function SparksPointZone() {
+	    this.compute = bind(this.compute, this);
+	    this.remove = bind(this.remove, this);
+	    this.getFields = bind(this.getFields, this);
+	    this.initialize = bind(this.initialize, this);
+	    return SparksPointZone.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  SparksPointZone.node_name = 'PointZone';
+	
+	  SparksPointZone.group_name = 'Particle.sparks.zone';
+	
+	  SparksPointZone.prototype.initialize = function(options) {
+	    SparksPointZone.__super__.initialize.apply(this, arguments);
+	    this.auto_evaluate = true;
+	    return this.ob = new SPARKS.PointZone(new THREE.Vector3());
+	  };
+	
+	  SparksPointZone.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = SparksPointZone.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "pos": {
+	          type: "Vector3",
+	          val: new THREE.Vector3()
+	        }
+	      },
+	      outputs: {
+	        "zone": {
+	          type: "Any",
+	          val: this.ob
+	        }
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  SparksPointZone.prototype.remove = function() {
+	    delete this.ob;
+	    return SparksPointZone.__super__.remove.apply(this, arguments);
+	  };
+	
+	  SparksPointZone.prototype.compute = function() {
+	    this.ob.pos = this.fields.getField("pos").getValue();
+	    return this.fields.setField("zone", this.ob);
+	  };
+	
+	  return SparksPointZone;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('SparksPointZone', SparksPointZone);
+	
+	SparksLineZone = (function(superClass) {
+	  extend(SparksLineZone, superClass);
+	
+	  function SparksLineZone() {
+	    this.compute = bind(this.compute, this);
+	    this.remove = bind(this.remove, this);
+	    this.getFields = bind(this.getFields, this);
+	    this.initialize = bind(this.initialize, this);
+	    return SparksLineZone.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  SparksLineZone.node_name = 'LineZone';
+	
+	  SparksLineZone.group_name = 'Particle.sparks.zone';
+	
+	  SparksLineZone.prototype.initialize = function(options) {
+	    SparksLineZone.__super__.initialize.apply(this, arguments);
+	    this.auto_evaluate = true;
+	    return this.ob = new SPARKS.LineZone(new THREE.Vector3(), new THREE.Vector3(100, 0, 0));
+	  };
+	
+	  SparksLineZone.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = SparksLineZone.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "start": {
+	          type: "Vector3",
+	          val: new THREE.Vector3()
+	        },
+	        "end": {
+	          type: "Vector3",
+	          val: new THREE.Vector3(100, 0, 0)
+	        }
+	      },
+	      outputs: {
+	        "zone": {
+	          type: "Any",
+	          val: this.ob
+	        }
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  SparksLineZone.prototype.remove = function() {
+	    delete this.ob;
+	    return SparksLineZone.__super__.remove.apply(this, arguments);
+	  };
+	
+	  SparksLineZone.prototype.compute = function() {
+	    if (this.ob.start !== this.fields.get("start").getValue() || this.ob.end !== this.fields.get("end").getValue()) {
+	      this.ob.start = this.fields.getField("start").getValue();
+	      this.ob.end = this.fields.getField("end").getValue();
+	      this.ob._length = this.ob.end.clone().subSelf(this.ob.start);
+	    }
+	    return this.fields.setField("zone", this.ob);
+	  };
+	
+	  return SparksLineZone;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('SparksLineZone', SparksLineZone);
+	
+	SparksCubeZone = (function(superClass) {
+	  extend(SparksCubeZone, superClass);
+	
+	  function SparksCubeZone() {
+	    this.compute = bind(this.compute, this);
+	    this.remove = bind(this.remove, this);
+	    this.getFields = bind(this.getFields, this);
+	    this.initialize = bind(this.initialize, this);
+	    return SparksCubeZone.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  SparksCubeZone.node_name = 'CubeZone';
+	
+	  SparksCubeZone.group_name = 'Particle.sparks.zone';
+	
+	  SparksCubeZone.prototype.initialize = function(options) {
+	    SparksCubeZone.__super__.initialize.apply(this, arguments);
+	    this.auto_evaluate = true;
+	    return this.ob = new SPARKS.CubeZone(new THREE.Vector3(), 0, 0, 0);
+	  };
+	
+	  SparksCubeZone.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = SparksCubeZone.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "position": {
+	          type: "Vector3",
+	          val: new THREE.Vector3()
+	        },
+	        "x": 0,
+	        "y": 0,
+	        "z": 0
+	      },
+	      outputs: {
+	        "zone": {
+	          type: "Any",
+	          val: this.ob
+	        }
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  SparksCubeZone.prototype.remove = function() {
+	    delete this.ob;
+	    return SparksCubeZone.__super__.remove.apply(this, arguments);
+	  };
+	
+	  SparksCubeZone.prototype.compute = function() {
+	    this.ob.position = this.fields.getField("position").getValue();
+	    this.ob.x = this.fields.getField("x").getValue();
+	    this.ob.y = this.fields.getField("y").getValue();
+	    this.ob.z = this.fields.getField("z").getValue();
+	    return this.fields.setField("zone", this.ob);
+	  };
+	
+	  return SparksCubeZone;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('SparksCubeZone', SparksCubeZone);
+	
+	SparksSteadyCounter = (function(superClass) {
+	  extend(SparksSteadyCounter, superClass);
+	
+	  function SparksSteadyCounter() {
+	    this.compute = bind(this.compute, this);
+	    this.remove = bind(this.remove, this);
+	    this.getFields = bind(this.getFields, this);
+	    this.initialize = bind(this.initialize, this);
+	    return SparksSteadyCounter.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  SparksSteadyCounter.node_name = 'SteadyCounter';
+	
+	  SparksSteadyCounter.group_name = 'Particle.sparks';
+	
+	  SparksSteadyCounter.prototype.initialize = function(options) {
+	    SparksSteadyCounter.__super__.initialize.apply(this, arguments);
+	    this.auto_evaluate = true;
+	    return this.ob = new SPARKS.SteadyCounter(100);
+	  };
+	
+	  SparksSteadyCounter.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = SparksSteadyCounter.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "rate": 100
+	      },
+	      outputs: {
+	        "counter": {
+	          type: "Any",
+	          val: this.ob
+	        }
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  SparksSteadyCounter.prototype.remove = function() {
+	    delete this.ob;
+	    return SparksSteadyCounter.__super__.remove.apply(this, arguments);
+	  };
+	
+	  SparksSteadyCounter.prototype.compute = function() {
+	    this.ob.pos = this.fields.getField("rate").getValue();
+	    return this.fields.setField("counter", this.ob);
+	  };
+	
+	  return SparksSteadyCounter;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('SparksSteadyCounter', SparksSteadyCounter);
+	
+	ParticlePool = (function(superClass) {
+	  extend(ParticlePool, superClass);
+	
+	  function ParticlePool() {
+	    this.compute = bind(this.compute, this);
+	    this.on_particle_dead = bind(this.on_particle_dead, this);
+	    this.on_particle_updated = bind(this.on_particle_updated, this);
+	    this.on_particle_created = bind(this.on_particle_created, this);
+	    this.init_pool = bind(this.init_pool, this);
+	    this.remove = bind(this.remove, this);
+	    this.getFields = bind(this.getFields, this);
+	    this.initialize = bind(this.initialize, this);
+	    return ParticlePool.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  ParticlePool.node_name = 'ParticlePool';
+	
+	  ParticlePool.group_name = 'Particle.sparks';
+	
+	  ParticlePool.prototype.initialize = function(options) {
+	    ParticlePool.__super__.initialize.apply(this, arguments);
+	    this.auto_evaluate = true;
+	    return this.geom = false;
+	  };
+	
+	  ParticlePool.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = ParticlePool.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "maxParticles": 10000
+	      },
+	      outputs: {
+	        "pool": {
+	          type: "Any",
+	          val: this
+	        }
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  ParticlePool.prototype.remove = function() {
+	    delete this.pool;
+	    delete this.geom;
+	    return ParticlePool.__super__.remove.apply(this, arguments);
+	  };
+	
+	  ParticlePool.prototype.init_pool = function(geom) {
+	    var i, j, new_pos, pos, ref, results;
+	    this.geom = geom;
+	    this.pool = {
+	      pools: [],
+	      get: function() {
+	        if (this.pools.length > 0) {
+	          return this.pools.pop();
+	        }
+	        return null;
+	      },
+	      add: function(v) {
+	        return this.pools.push(v);
+	      }
+	    };
+	    new_pos = function() {
+	      return new THREE.Vector3(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY);
+	    };
+	    results = [];
+	    for (i = j = 0, ref = this.fields.getField("maxParticles").getValue() - 1; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
+	      pos = new_pos();
+	      geom.vertices.push(pos);
+	      results.push(this.pool.add(pos));
+	    }
+	    return results;
+	  };
+	
+	  ParticlePool.prototype.on_particle_created = function(particle) {
+	    var target;
+	    if (this.geom === false) {
+	      return false;
+	    }
+	    target = particle.target;
+	    if (target) {
+	      return particle.target.position = particle.position;
+	    }
+	  };
+	
+	  ParticlePool.prototype.on_particle_updated = function(particle) {
+	    return true;
+	  };
+	
+	  ParticlePool.prototype.on_particle_dead = function(particle) {
+	    var target;
+	    if (this.geom === false) {
+	      return false;
+	    }
+	    target = particle.target;
+	    if (target) {
+	      particle.target.position.set(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY);
+	      return this.pool.add(particle.target);
+	    }
+	  };
+	
+	  ParticlePool.prototype.compute = function() {
+	    if (this.geom !== false) {
+	      this.geom.verticesNeedUpdate = true;
+	    }
+	    return this.fields.setField("pool", this);
+	  };
+	
+	  return ParticlePool;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('ParticlePool', ParticlePool);
+	
+	RandomCloudGeometry = (function(superClass) {
+	  extend(RandomCloudGeometry, superClass);
+	
+	  function RandomCloudGeometry() {
+	    this.compute = bind(this.compute, this);
+	    this.generate = bind(this.generate, this);
+	    this.move_particles = bind(this.move_particles, this);
+	    this.limit_position = bind(this.limit_position, this);
+	    this.get_cache_array = bind(this.get_cache_array, this);
+	    this.remove = bind(this.remove, this);
+	    this.getFields = bind(this.getFields, this);
+	    this.initialize = bind(this.initialize, this);
+	    return RandomCloudGeometry.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  RandomCloudGeometry.node_name = 'RandomCloudGeometry';
+	
+	  RandomCloudGeometry.group_name = 'Particle';
+	
+	  RandomCloudGeometry.prototype.initialize = function(options) {
+	    RandomCloudGeometry.__super__.initialize.apply(this, arguments);
+	    this.auto_evaluate = true;
+	    this.ob = new THREE.Geometry();
+	    this.cache = this.get_cache_array();
+	    return this.generate();
+	  };
+	
+	  RandomCloudGeometry.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = RandomCloudGeometry.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "nbrParticles": 20000,
+	        "radius": 2000,
+	        "rndVelocity": {
+	          type: "Vector3",
+	          val: new THREE.Vector3(1, 1, 1)
+	        },
+	        "linearVelocity": {
+	          type: "Vector3",
+	          val: new THREE.Vector3(1, 1, 1)
+	        }
+	      },
+	      outputs: {
+	        "out": {
+	          type: "Any",
+	          val: this.ob
+	        }
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  RandomCloudGeometry.prototype.remove = function() {
+	    delete this.ob;
+	    delete this.cache;
+	    return RandomCloudGeometry.__super__.remove.apply(this, arguments);
+	  };
+	
+	  RandomCloudGeometry.prototype.get_cache_array = function() {
+	    return [this.fields.getField("radius").getValue(), this.fields.getField("nbrParticles").getValue(), this.fields.getField("linearVelocity").getValue()];
+	  };
+	
+	  RandomCloudGeometry.prototype.limit_position = function(pos) {
+	    var margin, radius;
+	    radius = this.fields.getField("radius").getValue();
+	    margin = 5;
+	    if (pos < radius * -1) {
+	      pos = radius - margin;
+	    } else if (pos > radius) {
+	      pos = radius * -1 + margin;
+	    }
+	    return pos;
+	  };
+	
+	  RandomCloudGeometry.prototype.move_particles = function() {
+	    var key, p, ref, rndVelocity;
+	    rndVelocity = this.fields.getField("rndVelocity").getValue();
+	    ref = this.ob.vertices;
+	    for (key in ref) {
+	      p = ref[key];
+	      p.x += Math.random() * rndVelocity.x - rndVelocity.x * 0.5 + p.velocity.x;
+	      p.y += Math.random() * rndVelocity.y - rndVelocity.y * 0.5 + p.velocity.y;
+	      p.z += Math.random() * rndVelocity.z - rndVelocity.z * 0.5 + p.velocity.z;
+	      p.x = this.limit_position(p.x);
+	      p.y = this.limit_position(p.y);
+	      p.z = this.limit_position(p.z);
+	    }
+	    this.ob.verticesNeedUpdate = true;
+	    return true;
+	  };
+	
+	  RandomCloudGeometry.prototype.generate = function() {
+	    var i, j, linearVelocity, rad, ref, total, v;
+	    this.ob = new THREE.Geometry();
+	    rad = this.fields.getField("radius").getValue();
+	    total = this.fields.getField("nbrParticles").getValue();
+	    linearVelocity = this.fields.getField("linearVelocity").getValue();
+	    for (i = j = 0, ref = total; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
+	      v = new THREE.Vector3(Math.random() * rad * 2 - rad, Math.random() * rad * 2 - rad, Math.random() * rad * 2 - rad);
+	      v.velocity = new THREE.Vector3(Math.random() * linearVelocity.x - linearVelocity.x * 0.5, Math.random() * linearVelocity.y - linearVelocity.y * 0.5, Math.random() * linearVelocity.z - linearVelocity.z * 0.5);
+	      this.ob.vertices.push(v);
+	    }
+	    return true;
+	  };
+	
+	  RandomCloudGeometry.prototype.compute = function() {
+	    var new_cache;
+	    new_cache = this.get_cache_array();
+	    if (Utils.flatArraysAreEquals(new_cache, this.cache) === false) {
+	      this.generate();
+	    }
+	    this.move_particles();
+	    this.cache = new_cache;
+	    return this.fields.setField("out", this.ob);
+	  };
+	
+	  return RandomCloudGeometry;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('RandomCloudGeometry', RandomCloudGeometry);
+
+
+/***/ }),
+/* 86 */
+/***/ (function(module, exports) {
+
+	// tween.js r5 - http://github.com/sole/tween.js
+	var TWEEN=TWEEN||function(){var a,e,c=60,b=false,h=[],i;return{setFPS:function(f){c=f||60},start:function(f){arguments.length!=0&&this.setFPS(f);e=setInterval(this.update,1E3/c)},stop:function(){clearInterval(e)},setAutostart:function(f){(b=f)&&!e&&this.start()},add:function(f){h.push(f);b&&!e&&this.start()},getAll:function(){return h},removeAll:function(){h=[]},remove:function(f){a=h.indexOf(f);a!==-1&&h.splice(a,1)},update:function(f){a=0;i=h.length;for(f=f||Date.now();a<i;)if(h[a].update(f))a++;
+	else{h.splice(a,1);i--}i==0&&b==true&&this.stop()}}}();
+	TWEEN.Tween=function(a){var e={},c={},b={},h=1E3,i=0,f=null,n=TWEEN.Easing.Linear.EaseNone,k=null,l=null,m=null;this.to=function(d,g){if(g!==null)h=g;for(var j in d)if(a[j]!==null)b[j]=d[j];return this};this.start=function(d){TWEEN.add(this);f=d?d+i:Date.now()+i;for(var g in b)if(a[g]!==null){e[g]=a[g];c[g]=b[g]-a[g]}return this};this.stop=function(){TWEEN.remove(this);return this};this.delay=function(d){i=d;return this};this.easing=function(d){n=d;return this};this.chain=function(d){k=d};this.onUpdate=
+	function(d){l=d;return this};this.onComplete=function(d){m=d;return this};this.update=function(d){var g,j;if(d<f)return true;d=(d-f)/h;d=d>1?1:d;j=n(d);for(g in c)a[g]=e[g]+c[g]*j;l!==null&&l.call(a,j);if(d==1){m!==null&&m.call(a);k!==null&&k.start();return false}return true}};TWEEN.Easing={Linear:{},Quadratic:{},Cubic:{},Quartic:{},Quintic:{},Sinusoidal:{},Exponential:{},Circular:{},Elastic:{},Back:{},Bounce:{}};TWEEN.Easing.Linear.EaseNone=function(a){return a};
+	TWEEN.Easing.Quadratic.EaseIn=function(a){return a*a};TWEEN.Easing.Quadratic.EaseOut=function(a){return-a*(a-2)};TWEEN.Easing.Quadratic.EaseInOut=function(a){if((a*=2)<1)return 0.5*a*a;return-0.5*(--a*(a-2)-1)};TWEEN.Easing.Cubic.EaseIn=function(a){return a*a*a};TWEEN.Easing.Cubic.EaseOut=function(a){return--a*a*a+1};TWEEN.Easing.Cubic.EaseInOut=function(a){if((a*=2)<1)return 0.5*a*a*a;return 0.5*((a-=2)*a*a+2)};TWEEN.Easing.Quartic.EaseIn=function(a){return a*a*a*a};
+	TWEEN.Easing.Quartic.EaseOut=function(a){return-(--a*a*a*a-1)};TWEEN.Easing.Quartic.EaseInOut=function(a){if((a*=2)<1)return 0.5*a*a*a*a;return-0.5*((a-=2)*a*a*a-2)};TWEEN.Easing.Quintic.EaseIn=function(a){return a*a*a*a*a};TWEEN.Easing.Quintic.EaseOut=function(a){return(a-=1)*a*a*a*a+1};TWEEN.Easing.Quintic.EaseInOut=function(a){if((a*=2)<1)return 0.5*a*a*a*a*a;return 0.5*((a-=2)*a*a*a*a+2)};TWEEN.Easing.Sinusoidal.EaseIn=function(a){return-Math.cos(a*Math.PI/2)+1};
+	TWEEN.Easing.Sinusoidal.EaseOut=function(a){return Math.sin(a*Math.PI/2)};TWEEN.Easing.Sinusoidal.EaseInOut=function(a){return-0.5*(Math.cos(Math.PI*a)-1)};TWEEN.Easing.Exponential.EaseIn=function(a){return a==0?0:Math.pow(2,10*(a-1))};TWEEN.Easing.Exponential.EaseOut=function(a){return a==1?1:-Math.pow(2,-10*a)+1};TWEEN.Easing.Exponential.EaseInOut=function(a){if(a==0)return 0;if(a==1)return 1;if((a*=2)<1)return 0.5*Math.pow(2,10*(a-1));return 0.5*(-Math.pow(2,-10*(a-1))+2)};
+	TWEEN.Easing.Circular.EaseIn=function(a){return-(Math.sqrt(1-a*a)-1)};TWEEN.Easing.Circular.EaseOut=function(a){return Math.sqrt(1- --a*a)};TWEEN.Easing.Circular.EaseInOut=function(a){if((a/=0.5)<1)return-0.5*(Math.sqrt(1-a*a)-1);return 0.5*(Math.sqrt(1-(a-=2)*a)+1)};TWEEN.Easing.Elastic.EaseIn=function(a){var e,c=0.1,b=0.4;if(a==0)return 0;if(a==1)return 1;b||(b=0.3);if(!c||c<1){c=1;e=b/4}else e=b/(2*Math.PI)*Math.asin(1/c);return-(c*Math.pow(2,10*(a-=1))*Math.sin((a-e)*2*Math.PI/b))};
+	TWEEN.Easing.Elastic.EaseOut=function(a){var e,c=0.1,b=0.4;if(a==0)return 0;if(a==1)return 1;b||(b=0.3);if(!c||c<1){c=1;e=b/4}else e=b/(2*Math.PI)*Math.asin(1/c);return c*Math.pow(2,-10*a)*Math.sin((a-e)*2*Math.PI/b)+1};
+	TWEEN.Easing.Elastic.EaseInOut=function(a){var e,c=0.1,b=0.4;if(a==0)return 0;if(a==1)return 1;b||(b=0.3);if(!c||c<1){c=1;e=b/4}else e=b/(2*Math.PI)*Math.asin(1/c);if((a*=2)<1)return-0.5*c*Math.pow(2,10*(a-=1))*Math.sin((a-e)*2*Math.PI/b);return c*Math.pow(2,-10*(a-=1))*Math.sin((a-e)*2*Math.PI/b)*0.5+1};TWEEN.Easing.Back.EaseIn=function(a){return a*a*(2.70158*a-1.70158)};TWEEN.Easing.Back.EaseOut=function(a){return(a-=1)*a*(2.70158*a+1.70158)+1};
+	TWEEN.Easing.Back.EaseInOut=function(a){if((a*=2)<1)return 0.5*a*a*(3.5949095*a-2.5949095);return 0.5*((a-=2)*a*(3.5949095*a+2.5949095)+2)};TWEEN.Easing.Bounce.EaseIn=function(a){return 1-TWEEN.Easing.Bounce.EaseOut(1-a)};TWEEN.Easing.Bounce.EaseOut=function(a){return(a/=1)<1/2.75?7.5625*a*a:a<2/2.75?7.5625*(a-=1.5/2.75)*a+0.75:a<2.5/2.75?7.5625*(a-=2.25/2.75)*a+0.9375:7.5625*(a-=2.625/2.75)*a+0.984375};
+	TWEEN.Easing.Bounce.EaseInOut=function(a){if(a<0.5)return TWEEN.Easing.Bounce.EaseIn(a*2)*0.5;return TWEEN.Easing.Bounce.EaseOut(a*2-1)*0.5+0.5};
+
+
+/***/ }),
+/* 87 */
+/***/ (function(module, exports) {
+
+	/*
+	 * @author zz85 (http://github.com/zz85 http://www.lab4games.net/zz85/blog)
+	 *
+	 * a simple to use javascript 3d particles system inspired by FliNT and Stardust
+	 * created with TWEEN.js and THREE.js
+	 *
+	 * for feature requests or bugs, please visit https://github.com/zz85/sparks.js
+	 *
+	 * licensed under the MIT license 
+	 */
+	
+	var SPARKS = {};
+	
+	/********************************
+	* Emitter Class
+	*
+	*   Creates and Manages Particles
+	*********************************/
+	
+	
+	SPARKS.Engine = {
+		// Combined Singleton Engine;
+		_TIMESTEP: 15,
+		_timer: null,
+		_lastTime: null,
+		_timerStep: 10,
+		_velocityVerlet: false,
+		_emitters: [],
+		_isRunning: false,
+		
+		add: function(emitter) {
+			this._emitters.push(emitter);
+		},
+		// run its built in timer / stepping
+		start: function() {
+			this._lastTime = Date.now();
+			this._timer = setTimeout(this.step, this._timerStep, this);
+			
+			for (var i=0,il=this._emitters.length;i<il;i++) {
+				this._emitters[i]._isRunning = true;
+			}
+			
+			this._isRunning = true;
+		},
+		
+		stop: function() {
+			this._isRunning = false;
+			for (var i=0,il=this._emitters.length;i<il;i++) {
+				this._emitters[i]._isRunning = false;
+			}
+			clearTimeout(this._timer);
+		},
+		
+		isRunning: function() {
+			return this._isRunning;
+		},
+		
+		// Step gets called upon by the engine
+		// but attempts to call update() on a regular basics
+		step: function(me) {
+			
+			var time = Date.now();
+			var elapsed = time - me._lastTime;
+		   	
+			if (!this._velocityVerlet) {
+				// if elapsed is way higher than time step, (usually after switching tabs, or excution cached in ff)
+				// we will drop cycles. perhaps set to a limit of 10 or something?
+				var maxBlock = me._TIMESTEP * 20;
+				
+				if (elapsed >= maxBlock) {
+					//console.log('warning: sparks.js is fast fowarding engine, skipping steps', elapsed / emitter._TIMESTEP);
+					//emitter.update( (elapsed - maxBlock) / 1000);
+					elapsed = maxBlock;
+				}
+			
+				while(elapsed >= me._TIMESTEP) {
+					me.update(me._TIMESTEP / 1000);
+					elapsed -= me._TIMESTEP;
+				}
+				me._lastTime = time - elapsed;
+				
+			} else {
+				me.update(elapsed/1000);
+				me._lastTime = time;
+			}
+			
+			
+			setTimeout(me.step, me._timerStep, me);
+			
+		},
+		
+		update: function(time) {
+			for (var i=0,il=this._emitters.length;i<il;i++) {
+				this._emitters[i].update(time);
+			}
+		}
+		
+	};
+	
+	SPARKS.Emitter = function (counter) {
+	    
+	    this._counter = counter ? counter : new SPARKS.SteadyCounter(10); // provides number of particles to produce
+	    
+	    this._particles = [];
+	    
+	    
+	    this._initializers = []; // use for creation of particles
+	    this._actions = [];     // uses action to update particles
+	    this._activities = [];  //  not supported yet
+	        
+	    this._handlers = [];
+	    
+	    this.callbacks = {};
+	};
+	
+	
+	SPARKS.Emitter.prototype = {
+		
+		_TIMESTEP: 15,
+		_timer: null,
+		_lastTime: null,
+		_timerStep: 10,
+		_velocityVerlet: false,
+		_isRunning: false,
+		
+		// run its built in timer / stepping
+		start: function() {
+			this._lastTime = Date.now();
+			this._timer = setTimeout(this.step, this._timerStep, this);
+			this._isRunning = true;
+		},
+		
+		stop: function() {
+			this._isRunning = false;
+			clearTimeout(this._timer);
+		},
+		
+		isRunning: function() {
+			return this._isRunning;
+		},
+		
+		// Step gets called upon by the engine
+		// but attempts to call update() on a regular basics
+		// This method is also described in http://gameclosure.com/2011/04/11/deterministic-delta-tee-in-js-games/
+		step: function(emitter) {
+			
+			var time = Date.now();
+			var elapsed = time - emitter._lastTime;
+		   	
+			if (!this._velocityVerlet) {
+				// if elapsed is way higher than time step, (usually after switching tabs, or excution cached in ff)
+				// we will drop cycles. perhaps set to a limit of 10 or something?
+				var maxBlock = emitter._TIMESTEP * 20;
+				
+				if (elapsed >= maxBlock) {
+					//console.log('warning: sparks.js is fast fowarding engine, skipping steps', elapsed / emitter._TIMESTEP);
+					//emitter.update( (elapsed - maxBlock) / 1000);
+					elapsed = maxBlock;
+				}
+			
+				while(elapsed >= emitter._TIMESTEP) {
+					emitter.update(emitter._TIMESTEP / 1000);
+					elapsed -= emitter._TIMESTEP;
+				}
+				emitter._lastTime = time - elapsed;
+				
+			} else {
+				emitter.update(elapsed/1000);
+				emitter._lastTime = time;
+			}
+			
+			
+			
+			if (emitter._isRunning)
+			setTimeout(emitter.step, emitter._timerStep, emitter);
+			
+		},
+	
+	
+		// Update particle engine in seconds, not milliseconds
+	    update: function(time) {
+			
+	        var len = this._counter.updateEmitter( this, time );
+	        
+	        // Create particles
+	        for( i = 0; i < len; i++ ) {
+	            this.createParticle();
+	        }
+	        
+	        // Update activities
+	        len = this._activities.length;
+	        for ( i = 0; i < len; i++ )
+	        {
+	            this._activities[i].update( this, time );
+	        }
+	        
+	        
+	        len = this._actions.length;
+	        var action;
+	        var len2 = this._particles.length;
+	        
+	        for( j = 0; j < len; j++ )
+	        {
+	            action = this._actions[j];
+	            for ( i = 0; i < len2; ++i )
+	            {
+	                particle = this._particles[i];
+	                action.update( this, particle, time );
+	            }
+	        }
+	        
+	        
+	        // remove dead particles
+	        for ( i = len2; i--; )
+	        {
+	            particle = this._particles[i];
+	            if ( particle.isDead )
+	            {
+	                //particle = 
+					this._particles.splice( i, 1 );
+	                this.dispatchEvent("dead", particle);
+					SPARKS.VectorPool.release(particle.position); //
+					SPARKS.VectorPool.release(particle.velocity);
+	                
+	            } else {
+	                this.dispatchEvent("updated", particle);
+	            }
+	        }
+	        
+			this.dispatchEvent("loopUpdated");
+			
+	    },
+	    
+	    createParticle: function() {
+	        var particle = new SPARKS.Particle();
+	        // In future, use a Particle Factory
+	        var len = this._initializers.length, i;
+	
+	        for ( i = 0; i < len; i++ ) {
+	            this._initializers[i].initialize( this, particle );
+	        }
+	        
+	        this._particles.push( particle );
+	        
+	        this.dispatchEvent("created", particle); // ParticleCreated
+	        
+	        return particle;
+	    },
+	    
+	    addInitializer: function (initializer) {
+	        this._initializers.push(initializer);
+	    },
+	    
+	    addAction: function (action) {
+	        this._actions.push(action);
+	    },
+	
+	    removeInitializer: function (initializer) {
+			var index = this._initializers.indexOf(initializer);
+			if (index > -1) {
+				this._initializers.splice( index, 1 );
+			}
+	    },
+	
+	    removeAction: function (action) {
+			var index = this._actions.indexOf(action);
+			if (index > -1) {
+				this._actions.splice( index, 1 );
+			}
+			//console.log('removeAction', index, this._actions);
+	    },
+	    
+	    addCallback: function(name, callback) {
+	        this.callbacks[name] = callback;
+	    },
+	    
+	    removeCallback: function(name) {
+	        delete this.callbacks[name];
+	    },
+	    
+	    dispatchEvent: function(name, args) {
+	        var callback = this.callbacks[name];
+	        if (callback) {
+	            callback(args);
+	        }
+	    
+	    }
+	    
+	
+	};
+	
+	
+	/*
+	 * Constant Names for
+	 * Events called by emitter.dispatchEvent()
+	 * 
+	 */
+	SPARKS.EVENT_PARTICLE_CREATED = "created"
+	SPARKS.EVENT_PARTICLE_UPDATED = "updated"
+	SPARKS.EVENT_PARTICLE_DEAD = "dead";
+	SPARKS.EVENT_LOOP_UPDATED = "loopUpdated";
+	
+	
+	
+	/*
+	 * Steady Counter attempts to produces a particle rate steadily
+	 *
+	 */
+	
+	// Number of particles per seconds
+	SPARKS.SteadyCounter = function(rate) {
+	    this.rate = rate;
+	    
+		// we use a shortfall counter to make up for slow emitters 
+		this.leftover = 0;
+		
+	};
+	
+	SPARKS.SteadyCounter.prototype.updateEmitter = function(emitter, time) {
+	
+		var targetRelease = time * this.rate + this.leftover;
+		var actualRelease = Math.floor(targetRelease);
+		
+		this.leftover = targetRelease - actualRelease;
+		
+		return actualRelease;
+	};
+	
+	
+	/*
+	 * Shot Counter produces specified particles 
+	 * on a single impluse or burst
+	 */
+	
+	SPARKS.ShotCounter = function(particles) {
+		this.particles = particles;
+		this.used = false;
+	};
+	
+	SPARKS.ShotCounter.prototype.updateEmitter = function(emitter, time) {
+	
+		if (this.used) {
+			return 0;
+		} else {
+			this.used = true;
+		}
+		
+		return this.particles;
+	};
+	
+	
+	/********************************
+	* Particle Class
+	*
+	*   Represents a single particle
+	*********************************/
+	SPARKS.Particle = function() {
+	
+	    /**
+	     * The lifetime of the particle, in seconds.
+	     */
+	    this.lifetime = 0;
+	    
+	    /**
+	     * The age of the particle, in seconds.
+	     */
+	    this.age = 0;
+	    
+	    /**
+	     * The energy of the particle.
+	     */
+	    this.energy = 1;
+	    
+	    /**
+	     * Whether the particle is dead and should be removed from the stage.
+	     */
+	    this.isDead = false;
+	    
+	    this.target = null; // tag
+	    
+	    /**
+	     * For 3D
+	     */
+	     
+	     this.position = SPARKS.VectorPool.get().set(0,0,0); //new THREE.Vector3( 0, 0, 0 );
+	     this.velocity = SPARKS.VectorPool.get().set(0,0,0); //new THREE.Vector3( 0, 0, 0 );
+		this._oldvelocity = SPARKS.VectorPool.get().set(0,0,0);
+	     // rotation vec3
+	     // angVelocity vec3
+	     // faceAxis vec3
+	    
+	};
+	
+	
+	/********************************
+	* Action Classes
+	*
+	*   An abstract class which have
+	*   update function
+	*********************************/
+	SPARKS.Action = function() {
+	    this._priority = 0;
+	};
+	
+	
+	SPARKS.Age = function(easing) {
+	    this._easing = (easing == null) ? TWEEN.Easing.Linear.EaseNone : easing;
+	};
+	
+	SPARKS.Age.prototype.update = function (emitter, particle, time) {
+	    particle.age += time;
+	    if( particle.age >= particle.lifetime )
+	    {
+	        particle.energy = 0;
+	        particle.isDead = true;
+	    }
+	    else
+	    {
+	        var t = this._easing(particle.age / particle.lifetime);
+	        particle.energy = -1 * t + 1;
+	    }
+	};
+	
+	/*
+	// Mark particle as dead when particle's < 0
+	
+	SPARKS.Death = function(easing) {
+	    this._easing = (easing == null) ? TWEEN.Linear.EaseNone : easing;
+	};
+	
+	SPARKS.Death.prototype.update = function (emitter, particle, time) {
+	    if (particle.life <= 0) {
+	        particle.isDead = true;
+	    }
+	};
+	*/
+				
+	
+	SPARKS.Move = function() {
+	    
+	};
+	
+	SPARKS.Move.prototype.update = function(emitter, particle, time) {
+	    // attempt verlet velocity updating.
+	    var p = particle.position;
+		var v = particle.velocity;
+	    var old = particle._oldvelocity;
+		
+		if (this._velocityVerlet) {	
+			p.x += (v.x + old.x) * 0.5 * time;
+			p.y += (v.y + old.y) * 0.5 * time;
+			p.z += (v.z + old.z) * 0.5 * time;
+		} else {
+			p.x += v.x * time;
+			p.y += v.y * time;
+			p.z += v.z * time;
+		}
+	
+	    //  OldVel = Vel;
+	    // Vel = Vel + Accel * dt;
+	    // Pos = Pos + (vel + Vel + Accel * dt) * 0.5 * dt;
+		
+	
+	
+	};
+	
+	/* Marks particles found in specified zone dead */
+	SPARKS.DeathZone = function(zone) {
+	    this.zone = zone;
+	};
+	
+	SPARKS.DeathZone.prototype.update = function(emitter, particle, time) {
+	    
+	    if (this.zone.contains(particle.position)) {
+			particle.isDead = true;
+		}
+	
+	};
+	
+	/*
+	 * SPARKS.ActionZone applies an action when particle is found in zone
+	 */
+	SPARKS.ActionZone = function(action, zone) {
+		this.action = action;
+	    this.zone = zone;
+	};
+	
+	SPARKS.ActionZone.prototype.update = function(emitter, particle, time) {
+	
+	    if (this.zone.contains(particle.position)) {
+			this.action.update( emitter, particle, time );
+		}
+	
+	};
+	
+	/*
+	 * Accelerate action affects velocity in specified 3d direction 
+	 */
+	SPARKS.Accelerate = function(x,y,z) {
+		
+		if (x instanceof THREE.Vector3) {
+			this.acceleration = x;
+			return;
+		}
+	
+	    this.acceleration = new THREE.Vector3(x,y,z);
+	    
+	};
+	
+	SPARKS.Accelerate.prototype.update = function(emitter, particle, time) {
+	    var acc = this.acceleration;
+	    
+	    var v = particle.velocity;
+	    
+		particle._oldvelocity.set(v.x, v.y, v.z);
+		
+	    v.x += acc.x * time;
+	    v.y += acc.y * time;
+	    v.z += acc.z * time; 
+	
+	};
+	
+	/*
+	 * Accelerate Factor accelerate based on a factor of particle's velocity.
+	 */
+	SPARKS.AccelerateFactor = function(factor) {
+	    this.factor = factor;
+	};
+	
+	SPARKS.AccelerateFactor.prototype.update = function(emitter, particle, time) {
+	    var factor = this.factor;
+	    
+	    var v = particle.velocity;
+		var len = v.length();
+		var adjFactor;
+	    if (len>0) {
+	
+			adjFactor = factor * time / len;
+			adjFactor += 1;
+			
+			v.multiplyScalar(adjFactor);
+	
+		}
+	
+	};
+	
+	/*
+	AccelerateNormal
+	 * AccelerateVelocity affects velocity based on its velocity direction
+	 */
+	SPARKS.AccelerateVelocity = function(factor) {
+	
+		this.factor = factor;
+	
+	};
+	
+	SPARKS.AccelerateVelocity.prototype.update = function(emitter, particle, time) {
+	    var factor = this.factor;
+	
+	    var v = particle.velocity;
+	
+	
+	    v.z += - v.x * factor;
+	    v.y += v.z * factor;
+	    v.x +=  v.y * factor;
+	
+	};
+	
+	
+	/* Set the max ammount of x,y,z drift movements in a second */
+	SPARKS.RandomDrift = function(x,y,z) {
+		if (x instanceof THREE.Vector3) {
+			this.drift = x;
+			return;
+		}
+	
+	    this.drift = new THREE.Vector3(x,y,z);
+	}
+	
+	
+	SPARKS.RandomDrift.prototype.update = function(emitter, particle, time) {
+	    var drift = this.drift;
+	    
+	    var v = particle.velocity;
+	    
+	    v.x += ( Math.random() - 0.5 ) * drift.x * time;
+	    v.y += ( Math.random() - 0.5 ) * drift.y * time;
+	    v.z += ( Math.random() - 0.5 ) * drift.z * time;
+	
+	};
+	
+	/********************************
+	* Zone Classes
+	*
+	*   An abstract classes which have
+	*   getLocation() function
+	*********************************/
+	SPARKS.Zone = function() {
+	};
+	
+	// TODO, contains() for Zone
+	
+	SPARKS.PointZone = function(pos) {
+	    this.pos = pos;
+	};
+	
+	SPARKS.PointZone.prototype.getLocation = function() {
+	    return this.pos;
+	};
+	
+	SPARKS.PointZone = function(pos) {
+	    this.pos = pos;
+	};
+	
+	SPARKS.PointZone.prototype.getLocation = function() {
+	    return this.pos;
+	};
+	
+	SPARKS.LineZone = function(start, end) {
+	    this.start = start;
+		this.end = end;
+		this._length = end.clone().sub( start );
+	};
+	
+	SPARKS.LineZone.prototype.getLocation = function() {
+	    var len = this._length.clone();
+	
+		len.multiplyScalar( Math.random() );
+		return len.add( this.start );
+		
+	};
+	
+	// Basically a RectangleZone
+	SPARKS.ParallelogramZone = function(corner, side1, side2) {
+	    this.corner = corner;
+		this.side1 = side1;
+		this.side2 = side2;
+	};
+	
+	SPARKS.ParallelogramZone.prototype.getLocation = function() {
+	    
+		var d1 = this.side1.clone().multiplyScalar( Math.random() );
+		var d2 = this.side2.clone().multiplyScalar( Math.random() );
+		d1.add(d2);
+		return d1.add( this.corner );
+		
+	};
+	
+	SPARKS.CubeZone = function(position, x, y, z) {
+	    this.position = position;
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	};
+	
+	SPARKS.CubeZone.prototype.getLocation = function() {
+	    //TODO use pool?
+	
+		var location = this.position.clone();
+		location.x += Math.random() * this.x;
+		location.y += Math.random() * this.y;
+		location.z += Math.random() * this.z;
+		
+		return location;
+		
+	};
+	
+	
+	SPARKS.CubeZone.prototype.contains = function(position) {
+	
+		var startX = this.position.x;
+		var startY = this.position.y;
+		var startZ = this.position.z;
+		var x = this.x; // width
+		var y = this.y; // depth
+		var z = this.z; // height
+		
+		if (x<0) {
+			startX += x;
+			x = Math.abs(x);
+		}
+		
+		if (y<0) {
+			startY += y;
+			y = Math.abs(y);
+		}
+		
+		if (z<0) {
+			startZ += z;
+			z = Math.abs(z);
+		}
+		
+		var diffX = position.x - startX;
+		var diffY = position.y - startY;
+		var diffZ = position.z - startZ;
+		
+		if ( (diffX > 0) && (diffX < x) && 
+				(diffY > 0) && (diffY < y) && 
+				(diffZ > 0) && (diffZ < z) ) {
+			return true;
+		}
+		
+		return false;
+		
+	};
+	
+	
+	
+	/**
+	 * The constructor creates a DiscZone 3D zone.
+	 * 
+	 * @param centre The point at the center of the disc.
+	 * @param normal A vector normal to the disc.
+	 * @param outerRadius The outer radius of the disc.
+	 * @param innerRadius The inner radius of the disc. This defines the hole 
+	 * in the center of the disc. If set to zero, there is no hole. 
+	 */
+	
+	/*
+	// BUGGY!!
+	SPARKS.DiscZone = function(center, radiusNormal, outerRadius, innerRadius) {
+	    this.center = center;
+		this.radiusNormal = radiusNormal;
+		this.outerRadius = (outerRadius==undefined) ? 0 : outerRadius;
+		this.innerRadius = (innerRadius==undefined) ? 0 : innerRadius;
+		
+	};
+	
+	SPARKS.DiscZone.prototype.getLocation = function() {
+	    var rand = Math.random();
+		var _innerRadius = this.innerRadius;
+		var _outerRadius = this.outerRadius;
+		var center = this.center;
+		var _normal = this.radiusNormal;
+		
+		_distToOrigin = _normal.dot( center );
+		
+		var radius = _innerRadius + (1 - rand * rand ) * ( _outerRadius - _innerRadius );
+		var angle = Math.random() * SPARKS.Utils.TWOPI;
+		
+		var _distToOrigin = _normal.dot( center );
+		var axes = SPARKS.Utils.getPerpendiculars( _normal.clone() );
+		var _planeAxis1 = axes[0];
+		var _planeAxis2 = axes[1];
+		
+		var p = _planeAxis1.clone();
+		p.multiplyScalar( radius * Math.cos( angle ) );
+		var p2 = _planeAxis2.clone();
+		p2.multiplyScalar( radius * Math.sin( angle ) );
+		p.add( p2 );
+		return _center.add( p );
+		
+	};
+	*/
+	
+	SPARKS.SphereCapZone = function(x, y, z, minr, maxr, angle) {
+	    this.x = x;
+	    this.y = y;
+	    this.z = z;
+	    this.minr = minr;
+	    this.maxr = maxr;
+	    this.angle = angle;
+	};
+	
+	SPARKS.SphereCapZone.prototype.getLocation = function() {
+	    var theta = Math.PI *2  * SPARKS.Utils.random();
+	    var r = SPARKS.Utils.random();
+	    
+	    //new THREE.Vector3
+	    var v =  SPARKS.VectorPool.get().set(r * Math.cos(theta), -1 / Math.tan(this.angle * SPARKS.Utils.DEGREE_TO_RADIAN), r * Math.sin(theta));
+	    
+	    //v.length = StardustMath.interpolate(0, _minRadius, 1, _maxRadius, Math.random());
+	            
+	    var i = this.minr - ((this.minr-this.maxr) *  Math.random() );
+	    v.multiplyScalar(i);
+	
+		v.__markedForReleased = true;
+	    
+	    return v;
+	};
+	
+	
+	/********************************
+	* Initializer Classes
+	*
+	*   Classes which initializes
+	*   particles. Implements initialize( emitter:Emitter, particle:Particle )
+	*********************************/
+	
+	// Specifies random life between max and min
+	SPARKS.Lifetime = function(min, max) {
+	    this._min = min;
+	    
+	    this._max = max ? max : min;
+	    
+	};
+	
+	SPARKS.Lifetime.prototype.initialize = function( emitter/*Emitter*/, particle/*Particle*/ ) {
+	    particle.lifetime = this._min + SPARKS.Utils.random() * ( this._max - this._min );
+	};
+	
+	
+	SPARKS.Position = function(zone) {
+	    this.zone = zone;
+	};
+	
+	SPARKS.Position.prototype.initialize = function( emitter/*Emitter*/, particle/*Particle*/ ) {
+	    var pos = this.zone.getLocation();
+	    particle.position.set(pos.x, pos.y, pos.z);
+	};
+	
+	SPARKS.Velocity = function(zone) {
+	    this.zone = zone;
+	};
+	
+	SPARKS.Velocity.prototype.initialize = function( emitter/*Emitter*/, particle/*Particle*/ ) {
+	    var pos = this.zone.getLocation();
+	    particle.velocity.set(pos.x, pos.y, pos.z);
+		if (pos.__markedForReleased) {
+			//console.log("release");
+			SPARKS.VectorPool.release(pos);
+			pos.__markedForReleased = false;
+		}
+	};
+	
+	SPARKS.Target = function(target, callback) {
+	    this.target = target;
+	    this.callback = callback;
+	};
+	
+	SPARKS.Target.prototype.initialize = function( emitter, particle ) {
+	
+	    if (this.callback) {
+	        particle.target = this.callback();
+	    } else {
+	        particle.target = this.target;
+	    }
+	
+	};
+	
+	/********************************
+	* VectorPool 
+	*
+	*  Reuse much of Vectors if possible
+	*********************************/
+	
+	SPARKS.VectorPool = {
+		__pools: [],
+	
+		// Get a new Vector
+		get: function() {
+			if (this.__pools.length>0) {
+				return this.__pools.pop();
+			}
+			
+			return this._addToPool();
+			
+		},
+		
+		// Release a vector back into the pool
+		release: function(v) {
+			this.__pools.push(v);
+		},
+		
+		// Create a bunch of vectors and add to the pool
+		_addToPool: function() {
+			//console.log("creating some pools");
+			
+			for (var i=0, size = 100; i < size; i++) {
+				this.__pools.push(new THREE.Vector3());
+			}
+			
+			return new THREE.Vector3();
+			
+		}
+		
+		
+		
+	};
+	
+	
+	/********************************
+	* Util Classes
+	*
+	*   Classes which initializes
+	*   particles. Implements initialize( emitter:Emitter, particle:Particle )
+	*********************************/
+	SPARKS.Utils = {
+	    random: function() {
+	        return Math.random();
+	    },
+	    DEGREE_TO_RADIAN: Math.PI / 180,
+		TWOPI: Math.PI * 2,
+	
+		getPerpendiculars: function(normal) {
+			var p1 = this.getPerpendicular( normal );
+			var p2 = normal.cross( p1 );
+			p2.normalize();
+			return [ p1, p2 ];
+		},
+		
+		getPerpendicular: function( v )
+		{
+			if( v.x == 0 )
+			{
+				return new THREE.Vector3D( 1, 0, 0 );
+			}
+			else
+			{
+				var temp = new THREE.Vector3( v.y, -v.x, 0 );
+				return temp.normalize();
+			}
+		}
+	
+	};
+
+/***/ })
 /******/ ])
 });
-
+;
 //# sourceMappingURL=ThreeNodes.NodeTypes.Three.js.map

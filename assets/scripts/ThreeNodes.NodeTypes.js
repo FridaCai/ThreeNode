@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("jQuery"), require("_"), require("Backbone"), require("libs/jshint"));
+		module.exports = factory(require("_"), require("Backbone"), require("jQuery"), require("libs/jshint"));
 	else if(typeof define === 'function' && define.amd)
-		define(["jQuery", "_", "Backbone", "libs/jshint"], factory);
+		define(["_", "Backbone", "jQuery", "libs/jshint"], factory);
 	else if(typeof exports === 'object')
-		exports["NodeTypes"] = factory(require("jQuery"), require("_"), require("Backbone"), require("libs/jshint"));
+		exports["NodeTypes"] = factory(require("_"), require("Backbone"), require("jQuery"), require("libs/jshint"));
 	else
-		root["ThreeNodes"] = root["ThreeNodes"] || {}, root["ThreeNodes"]["NodeTypes"] = factory(root["jQuery"], root["_"], root["Backbone"], root["libs/jshint"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_72__) {
+		root["ThreeNodes"] = root["ThreeNodes"] || {}, root["ThreeNodes"]["NodeTypes"] = factory(root["_"], root["Backbone"], root["jQuery"], root["libs/jshint"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_39__, __WEBPACK_EXTERNAL_MODULE_46__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -52,51 +52,26 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
-	__webpack_require__(16);
+	__webpack_require__(10);
 	
-	__webpack_require__(17);
+	__webpack_require__(42);
 	
-	__webpack_require__(18);
+	__webpack_require__(43);
 	
-	__webpack_require__(19);
+	__webpack_require__(50);
 	
-	__webpack_require__(20);
+	__webpack_require__(51);
 	
-	__webpack_require__(21);
+	__webpack_require__(52);
 	
-	__webpack_require__(22);
+	__webpack_require__(54);
 
 
-/***/ },
+/***/ }),
 /* 1 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
-
-/***/ },
-/* 2 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_2__;
-
-/***/ },
-/* 3 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_3__;
-
-/***/ },
-/* 4 */,
-/* 5 */,
-/* 6 */,
-/* 7 */,
-/* 8 */,
-/* 9 */,
-/* 10 */,
-/* 11 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Connections, Indexer, Nodes, _,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
@@ -107,9 +82,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	Indexer = __webpack_require__(43);
+	Indexer = __webpack_require__(4);
 	
-	Connections = __webpack_require__(57);
+	Connections = __webpack_require__(5);
 	
 	Nodes = (function(superClass) {
 	  extend(Nodes, superClass);
@@ -435,387 +410,271 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Nodes;
 
 
-/***/ },
-/* 12 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 2 */
+/***/ (function(module, exports) {
 
-	var Backbone, FieldsView, NodeView, _, _view_node_context_menu, _view_node_template, namespace,
+	module.exports = __WEBPACK_EXTERNAL_MODULE_2__;
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_3__;
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports) {
+
+	var Indexer;
+	
+	Indexer = (function() {
+	  function Indexer() {
+	    this.uid = 0;
+	  }
+	
+	  Indexer.prototype.getUID = function(increment) {
+	    if (increment == null) {
+	      increment = true;
+	    }
+	    if (increment) {
+	      return this.uid += 1;
+	    } else {
+	      return this.uid;
+	    }
+	  };
+	
+	  Indexer.prototype.reset = function() {
+	    return this.uid = 0;
+	  };
+	
+	  return Indexer;
+	
+	})();
+	
+	module.exports = Indexer;
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, Connection, Connections,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(2);
+	Backbone = __webpack_require__(3);
+	
+	Connection = __webpack_require__(6);
+	
+	Connections = (function(superClass) {
+	  extend(Connections, superClass);
+	
+	  function Connections() {
+	    this.removeAll = bind(this.removeAll, this);
+	    this.create = bind(this.create, this);
+	    this.render = bind(this.render, this);
+	    this.initialize = bind(this.initialize, this);
+	    return Connections.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Connections.prototype.model = Connection;
+	
+	  Connections.prototype.initialize = function(models, options) {
+	    this.indexer = options.indexer;
+	    this.bind("connection:removed", (function(_this) {
+	      return function(c) {
+	        return _this.remove(c);
+	      };
+	    })(this));
+	    return Connections.__super__.initialize.apply(this, arguments);
+	  };
+	
+	  Connections.prototype.render = function() {
+	    return this.each(function(c) {
+	      return c.render();
+	    });
+	  };
+	
+	  Connections.prototype.create = function(model, options) {
+	    if (!options) {
+	      options = {};
+	    }
+	    model.indexer = this.indexer;
+	    model = this._prepareModel(model, options);
+	    if (!model) {
+	      return false;
+	    }
+	    this.add(model, options);
+	    return model;
+	  };
+	
+	  Connections.prototype.removeAll = function() {
+	    return this.remove(this.models);
+	  };
+	
+	  return Connections;
+	
+	})(Backbone.Collection);
+	
+	module.exports = Connections;
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, Connection, Indexer,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
 	
 	Backbone = __webpack_require__(3);
 	
-	_view_node_template = __webpack_require__(73);
-	
-	_view_node_context_menu = __webpack_require__(74);
-	
-	FieldsView = __webpack_require__(59);
-	
-	namespace = __webpack_require__(50).namespace;
-	
-	__webpack_require__(51);
-	
-	__webpack_require__(1);
+	Indexer = __webpack_require__(4);
 	
 	
-	/* Node View */
+	/* Connection model */
 	
-	NodeView = (function(superClass) {
-	  extend(NodeView, superClass);
+	Connection = (function(superClass) {
+	  extend(Connection, superClass);
 	
-	  function NodeView() {
-	    this.makeDraggable = bind(this.makeDraggable, this);
-	    this.remove = bind(this.remove, this);
-	    this.computeNodePosition = bind(this.computeNodePosition, this);
-	    this.renderConnections = bind(this.renderConnections, this);
-	    this.addSelectedClass = bind(this.addSelectedClass, this);
-	    this.highlighAnimations = bind(this.highlighAnimations, this);
+	  function Connection() {
+	    this.switchFieldsIfNeeded = bind(this.switchFieldsIfNeeded, this);
+	    this.validate = bind(this.validate, this);
 	    this.render = bind(this.render, this);
-	    this.makeElement = bind(this.makeElement, this);
-	    this.initContextMenus = bind(this.initContextMenus, this);
-	    return NodeView.__super__.constructor.apply(this, arguments);
+	    this.remove = bind(this.remove, this);
+	    this.initialize = bind(this.initialize, this);
+	    this.sync = bind(this.sync, this);
+	    return Connection.__super__.constructor.apply(this, arguments);
 	  }
 	
-	  NodeView.prototype.className = "node";
+	  Connection.STATIC_INDEXER = new Indexer();
 	
-	  NodeView.prototype.initialize = function(options) {
-	    this.makeElement();
-	    if (!options.isSubNode) {
-	      this.makeDraggable();
-	    }
-	    this.initNodeClick();
-	    this.initTitleClick();
-	    this.fields_view = new FieldsView({
-	      node: this.model,
-	      collection: this.model.fields,
-	      el: $("> .options", this.$el)
-	    });
-	    this.model.on('change', this.render);
-	    this.model.on('remove', (function(_this) {
-	      return function() {
-	        return _this.remove();
-	      };
-	    })(this));
-	    this.model.on("node:computePosition", this.computeNodePosition);
-	    this.model.on("node:renderConnections", this.renderConnections);
-	    this.model.on("node:addSelectedClass", this.addSelectedClass);
-	    this.render();
-	    this.initContextMenus();
-	    return this.highlighAnimations();
+	  Connection.prototype.defaults = {
+	    "cid": -1
 	  };
 	
-	  NodeView.prototype.initContextMenus = function() {
-	    var node_menu;
-	    if ($("#node-context-menu").length < 1) {
-	      node_menu = _.template(_view_node_context_menu, {});
-	      $("body").append(node_menu);
+	  Connection.prototype.sync = function() {};
+	
+	  Connection.prototype.initialize = function(options) {
+	    var indexer;
+	    this.options = options;
+	    indexer = options.indexer || Connection.STATIC_INDEXER;
+	    if (this.get("cid") === -1) {
+	      this.set({
+	        "cid": indexer.getUID()
+	      });
 	    }
-	    this.$el.find(".head").contextMenu({
-	      menu: "node-context-menu"
-	    }, (function(_this) {
-	      return function(action, el, pos) {
-	        if (action === "remove_node") {
-	          return _this.model.remove();
-	        }
-	      };
-	    })(this));
+	    if (this.isValid()) {
+	      this.to_field.removeConnections();
+	      this.from_field.addConnection(this);
+	      this.to_field.addConnection(this);
+	      this.to_field.setValue(this.from_field.get("value"));
+	      return this.from_field.node.dirty = true;
+	    }
+	  };
+	
+	  Connection.prototype.remove = function() {
+	    this.from_field.unregisterConnection(this);
+	    this.to_field.unregisterConnection(this);
+	    this.to_field.removeConnections();
+	    this.to_field.node.dirty = true;
+	    this.to_field.changed = true;
+	    delete this.from_field;
+	    delete this.to_field;
+	    this.trigger("connection:removed", this);
+	    this.destroy();
+	    return false;
+	  };
+	
+	  Connection.prototype.render = function() {
+	    return this.trigger("render", this, this);
+	  };
+	
+	  Connection.prototype.validate = function(attrs, options) {
+	    this.from_field = attrs.from_field;
+	    this.to_field = attrs.to_field;
+	    if (!this.from_field || !this.to_field) {
+	      return true;
+	    }
+	    if (this.from_field.get("is_output") === this.to_field.get("is_output")) {
+	      return true;
+	    }
+	    if (this.from_field.node.get('nid') === this.to_field.node.get('nid')) {
+	      return true;
+	    }
+	    this.switchFieldsIfNeeded();
+	    return false;
+	  };
+	
+	  Connection.prototype.switchFieldsIfNeeded = function() {
+	    var f_out;
+	    if (this.from_field.get("is_output") === false) {
+	      f_out = this.to_field;
+	      this.to_field = this.from_field;
+	      this.from_field = f_out;
+	    }
 	    return this;
 	  };
 	
-	  NodeView.prototype.makeElement = function() {
-	    this.template = _.template(_view_node_template, this.model);
-	    this.$el.html(this.template);
-	    this.$el.addClass("type-" + this.model.constructor.group_name);
-	    return this.$el.addClass("node-" + this.model.typename());
+	  Connection.prototype.toJSON = function() {
+	    var res;
+	    res = {
+	      id: this.get("cid"),
+	      from_node: this.from_field.node.get("nid"),
+	      from_node_gid: this.from_field.node.get("gid"),
+	      from: this.from_field.get("machine_name"),
+	      to_node: this.to_field.node.get("nid"),
+	      to_node_gid: this.to_field.node.get("gid"),
+	      to: this.to_field.get("machine_name")
+	    };
+	    return res;
 	  };
 	
-	  NodeView.prototype.render = function() {
-	    this.$el.css({
-	      left: parseInt(this.model.get("x")),
-	      top: parseInt(this.model.get("y"))
-	    });
-	    this.$el.find("> .head span").text(this.model.get("name"));
-	    return this.$el.find("> .head span").show();
-	  };
+	  return Connection;
 	
-	  NodeView.prototype.highlighAnimations = function() {
-	    var $target, i, len, nodeAnimation, propTrack, ref;
-	    nodeAnimation = false;
-	    ref = this.model.anim.objectTrack.propertyTracks;
-	    for (i = 0, len = ref.length; i < len; i++) {
-	      propTrack = ref[i];
-	      $target = $('.inputs .field-' + propTrack.name, this.$el);
-	      if (propTrack.anims.length > 0) {
-	        $target.addClass("has-animation");
-	        nodeAnimation = true;
-	      } else {
-	        $target.removeClass("has-animation");
+	})(Backbone.Model);
+	
+	module.exports = Connection;
+
+
+/***/ }),
+/* 7 */,
+/* 8 */,
+/* 9 */
+/***/ (function(module, exports) {
+
+	var Utils;
+	
+	Utils = (function() {
+	  function Utils() {}
+	
+	  Utils.flatArraysAreEquals = function(arr1, arr2) {
+	    var i, j, k, len;
+	    if (arr1.length !== arr2.length) {
+	      return false;
+	    }
+	    for (i = j = 0, len = arr1.length; j < len; i = ++j) {
+	      k = arr1[i];
+	      if (arr1[i] !== arr2[i]) {
+	        return false;
 	      }
 	    }
-	    this.$el.toggleClass("node-has-animation", nodeAnimation);
 	    return true;
 	  };
 	
-	  NodeView.prototype.addSelectedClass = function() {
-	    return this.$el.addClass("ui-selected");
-	  };
+	  return Utils;
 	
-	  NodeView.prototype.renderConnections = function() {
-	    this.model.fields.renderConnections();
-	    if (this.model.nodes) {
-	      return _.each(this.model.nodes.models, function(n) {
-	        return n.fields.renderConnections();
-	      });
-	    }
-	  };
+	})();
 	
-	  NodeView.prototype.computeNodePosition = function() {
-	    var offset, pos;
-	    pos = $(this.el).position();
-	    offset = $("#container-wrapper").offset();
-	    return this.model.set({
-	      x: pos.left + $("#container-wrapper").scrollLeft(),
-	      y: pos.top + $("#container-wrapper").scrollTop()
-	    });
-	  };
-	
-	  NodeView.prototype.remove = function() {
-	    $(".field", this.el).destroyContextMenu();
-	    if (this.$el.data("draggable")) {
-	      this.$el.draggable("destroy");
-	    }
-	    $(this.el).unbind();
-	    this.undelegateEvents();
-	    if (this.fields_view) {
-	      this.fields_view.remove();
-	    }
-	    delete this.fields_view;
-	    return NodeView.__super__.remove.apply(this, arguments);
-	  };
-	
-	  NodeView.prototype.initNodeClick = function() {
-	    var self;
-	    self = this;
-	    $(this.el).click(function(e) {
-	      var selectable;
-	      if (e.metaKey === false) {
-	        $(".node").removeClass("ui-selected");
-	        $(this).addClass("ui-selecting");
-	      } else {
-	        if ($(this).hasClass("ui-selected")) {
-	          $(this).removeClass("ui-selected");
-	        } else {
-	          $(this).addClass("ui-selecting");
-	        }
-	      }
-	      selectable = $("#container").data("ui-selectable");
-	      if (!selectable) {
-	        return;
-	      }
-	      selectable.refresh();
-	      selectable._mouseStop(null);
-	      return self.model.fields.renderSidebar();
-	    });
-	    return this;
-	  };
-	
-	  NodeView.prototype.initTitleClick = function() {
-	    var $input, $title_span, self;
-	    self = this;
-	    $title_span = this.$el.find("> .head span");
-	    $input = $("<input type='text' />");
-	    this.$el.find("> .head").append($input);
-	    $input.hide();
-	    $input.on('mousedown', function(e) {
-	      return e.stopPropagation();
-	    });
-	    $title_span.dblclick(function(e) {
-	      var apply_input_result, prev;
-	      prev = $(this).html();
-	      $input.val(prev);
-	      $title_span.hide();
-	      $input.show();
-	      apply_input_result = function() {
-	        self.model.set('name', $input.val());
-	        $input.hide();
-	        return $title_span.show();
-	      };
-	      $input.blur(function(e) {
-	        return apply_input_result();
-	      });
-	      $("#graph").click(function(e) {
-	        return apply_input_result();
-	      });
-	      return $input.keydown(function(e) {
-	        if (e.keyCode === 13) {
-	          return apply_input_result();
-	        }
-	      });
-	    });
-	    return this;
-	  };
-	
-	  NodeView.prototype.makeDraggable = function() {
-	    var nodes_offset, selected_nodes, self;
-	    self = this;
-	    nodes_offset = {
-	      top: 0,
-	      left: 0
-	    };
-	    selected_nodes = $([]);
-	    $(this.el).draggable({
-	      start: function(ev, ui) {
-	        if ($(this).hasClass("ui-selected")) {
-	          selected_nodes = $(".ui-selected").each(function() {
-	            return $(this).data("offset", $(this).offset());
-	          });
-	        } else {
-	          selected_nodes = $([]);
-	          $(".node").removeClass("ui-selected");
-	        }
-	        return nodes_offset = $(this).offset();
-	      },
-	      drag: function(ev, ui) {
-	        var dl, dt;
-	        dt = ui.position.top - nodes_offset.top;
-	        dl = ui.position.left - nodes_offset.left;
-	        selected_nodes.not(this).each(function() {
-	          var dx, dy, el, offset;
-	          el = $(this);
-	          offset = el.data("offset");
-	          dx = offset.top + dt;
-	          dy = offset.left + dl;
-	          el.css({
-	            top: dx,
-	            left: dy
-	          });
-	          el.data("object").trigger("node:computePosition");
-	          return el.data("object").trigger("node:renderConnections");
-	        });
-	        return self.renderConnections();
-	      },
-	      stop: function() {
-	        selected_nodes.not(this).each(function() {
-	          var el;
-	          el = $(this).data("object");
-	          return el.trigger("node:renderConnections");
-	        });
-	        self.computeNodePosition();
-	        return self.renderConnections();
-	      }
-	    });
-	    return this;
-	  };
-	
-	  return NodeView;
-	
-	})(Backbone.View);
-	
-	ThreeNodes.Core.addNodeView('NodeView', NodeView);
-	
-	module.exports = NodeView;
+	module.exports = Utils;
 
 
-/***/ },
-/* 13 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Backbone, Color, NodeView, _, namespace,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	namespace = __webpack_require__(50).namespace;
-	
-	__webpack_require__(35);
-	
-	NodeView = __webpack_require__(12);
-	
-	__webpack_require__(71);
-	
-	Color = (function(superClass) {
-	  extend(Color, superClass);
-	
-	  function Color() {
-	    this.remove = bind(this.remove, this);
-	    this.init_preview = bind(this.init_preview, this);
-	    this.initialize = bind(this.initialize, this);
-	    return Color.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Color.prototype.initialize = function(options) {
-	    Color.__super__.initialize.apply(this, arguments);
-	    this.model.compute();
-	    return this.init_preview();
-	  };
-	
-	  Color.prototype.init_preview = function() {
-	    var col, fields;
-	    fields = this.model.fields;
-	    this.$picker_el = $("<div class='color_preview'></div>");
-	    col = fields.getField("rgb", true).getValue(0);
-	    this.$picker_el.ColorPicker({
-	      color: {
-	        r: Math.ceil(col.r * 255),
-	        g: Math.ceil(col.g * 255),
-	        b: Math.ceil(col.b * 255)
-	      },
-	      livePreview: false,
-	      onChange: (function(_this) {
-	        return function(hsb, hex, rgb) {
-	          fields.getField("r").setValue(rgb.r / 255);
-	          fields.getField("g").setValue(rgb.g / 255);
-	          return fields.getField("b").setValue(rgb.b / 255);
-	        };
-	      })(this)
-	    });
-	    $(".center", this.$el).append(this.$picker_el);
-	    return fields.getField("rgb", true).on_value_update_hooks.set_bg_color_preview = (function(_this) {
-	      return function(v) {
-	        return _this.$picker_el.css({
-	          background: v[0].getStyle()
-	        });
-	      };
-	    })(this);
-	  };
-	
-	  Color.prototype.remove = function() {
-	    this.$picker_el.each(function() {
-	      var cal, picker;
-	      if ($(this).data('colorpickerId')) {
-	        cal = $('#' + $(this).data('colorpickerId'));
-	        picker = cal.data('colorpicker');
-	        if (picker) {
-	          delete picker.onChange;
-	        }
-	        return cal.remove();
-	      }
-	    });
-	    this.$picker_el.unbind();
-	    this.$picker_el.remove();
-	    delete this.$picker_el;
-	    return Color.__super__.remove.apply(this, arguments);
-	  };
-	
-	  return Color;
-	
-	})(NodeView);
-	
-	module.exports = Color;
-
-
-/***/ },
-/* 14 */,
-/* 15 */,
-/* 16 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Boolean, Color, Euler, Node, NodeColorView, NodeNumberSimple, NodeWithCenterTextfield, Number, Quaternion, String, Vector2, Vector3, _,
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -826,13 +685,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	Node = __webpack_require__(35);
+	Node = __webpack_require__(11);
 	
-	NodeNumberSimple = __webpack_require__(36);
+	NodeNumberSimple = __webpack_require__(28);
 	
-	NodeWithCenterTextfield = __webpack_require__(37);
+	NodeWithCenterTextfield = __webpack_require__(29);
 	
-	NodeColorView = __webpack_require__(13);
+	NodeColorView = __webpack_require__(40);
 	
 	Number = (function(superClass) {
 	  extend(Number, superClass);
@@ -1304,2294 +1163,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	ThreeNodes.Core.addNodeType('Color', Color);
 
 
-/***/ },
-/* 17 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var And, Backbone, Equal, Greater, IfElse, Node, Or, Smaller, _, jQuery,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	jQuery = __webpack_require__(1);
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	Node = __webpack_require__(35);
-	
-	IfElse = (function(superClass) {
-	  extend(IfElse, superClass);
-	
-	  function IfElse() {
-	    this.compute = bind(this.compute, this);
-	    this.getFields = bind(this.getFields, this);
-	    return IfElse.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  IfElse.node_name = 'IfElse';
-	
-	  IfElse.group_name = 'Conditional';
-	
-	  IfElse.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = IfElse.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "condition": false,
-	        "val1": {
-	          type: "Any",
-	          val: 0.0
-	        },
-	        "val2": {
-	          type: "Any",
-	          val: 1.0
-	        }
-	      },
-	      outputs: {
-	        "out": {
-	          type: "Any",
-	          val: false
-	        }
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  IfElse.prototype.compute = function() {
-	    var cond, res;
-	    cond = this.fields.getField("condition").getValue();
-	    if (cond === false) {
-	      res = this.fields.getField("val1").attributes.value;
-	    } else {
-	      res = this.fields.getField("val2").attributes.value;
-	    }
-	    return this.fields.setField("out", res);
-	  };
-	
-	  return IfElse;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('IfElse', IfElse);
-	
-	And = (function(superClass) {
-	  extend(And, superClass);
-	
-	  function And() {
-	    this.compute = bind(this.compute, this);
-	    this.getFields = bind(this.getFields, this);
-	    return And.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  And.node_name = 'And';
-	
-	  And.group_name = 'Conditional';
-	
-	  And.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = And.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "val1": false,
-	        "val2": false
-	      },
-	      outputs: {
-	        "out": false
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  And.prototype.compute = function() {
-	    var res;
-	    res = this.fields.getField("val1").getValue() !== false && this.fields.getField("val2").getValue() !== false;
-	    return this.fields.setField("out", res);
-	  };
-	
-	  return And;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('And', And);
-	
-	Or = (function(superClass) {
-	  extend(Or, superClass);
-	
-	  function Or() {
-	    this.compute = bind(this.compute, this);
-	    this.getFields = bind(this.getFields, this);
-	    return Or.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Or.node_name = 'Or';
-	
-	  Or.group_name = 'Conditional';
-	
-	  Or.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = Or.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "val1": false,
-	        "val2": false
-	      },
-	      outputs: {
-	        "out": false
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  Or.prototype.compute = function() {
-	    var res;
-	    res = this.fields.getField("val1").getValue() !== false || this.fields.getField("val2").getValue() !== false;
-	    return this.fields.setField("out", res);
-	  };
-	
-	  return Or;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('Or', Or);
-	
-	Equal = (function(superClass) {
-	  extend(Equal, superClass);
-	
-	  function Equal() {
-	    this.compute = bind(this.compute, this);
-	    this.getFields = bind(this.getFields, this);
-	    return Equal.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Equal.node_name = 'Equal';
-	
-	  Equal.group_name = 'Conditional';
-	
-	  Equal.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = Equal.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "val1": {
-	          type: "Any",
-	          val: 0.0
-	        },
-	        "val2": {
-	          type: "Any",
-	          val: 1.0
-	        }
-	      },
-	      outputs: {
-	        "out": false
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  Equal.prototype.compute = function() {
-	    var res;
-	    res = this.fields.getField("val1").getValue(0) === this.fields.getField("val2").getValue(0);
-	    return this.fields.setField("out", res);
-	  };
-	
-	  return Equal;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('Equal', Equal);
-	
-	Smaller = (function(superClass) {
-	  extend(Smaller, superClass);
-	
-	  function Smaller() {
-	    this.compute = bind(this.compute, this);
-	    this.getFields = bind(this.getFields, this);
-	    return Smaller.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Smaller.node_name = 'Smaller';
-	
-	  Smaller.group_name = 'Conditional';
-	
-	  Smaller.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = Smaller.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "val1": {
-	          type: "Float",
-	          val: 0.0
-	        },
-	        "val2": {
-	          type: "Float",
-	          val: 1.0
-	        }
-	      },
-	      outputs: {
-	        "out": false
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  Smaller.prototype.compute = function() {
-	    var res;
-	    res = this.fields.getField("val1").getValue(0) < this.fields.getField("val2").getValue(0);
-	    return this.fields.setField("out", res);
-	  };
-	
-	  return Smaller;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('Smaller', Smaller);
-	
-	Greater = (function(superClass) {
-	  extend(Greater, superClass);
-	
-	  function Greater() {
-	    this.compute = bind(this.compute, this);
-	    this.getFields = bind(this.getFields, this);
-	    return Greater.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Greater.node_name = 'Greater';
-	
-	  Greater.group_name = 'Conditional';
-	
-	  Greater.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = Greater.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "val1": {
-	          type: "Float",
-	          val: 0.0
-	        },
-	        "val2": {
-	          type: "Float",
-	          val: 1.0
-	        }
-	      },
-	      outputs: {
-	        "out": false
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  Greater.prototype.compute = function() {
-	    var res;
-	    res = this.fields.getField("val1").getValue(0) > this.fields.getField("val2").getValue(0);
-	    return this.fields.setField("out", res);
-	  };
-	
-	  return Greater;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('Greater', Greater);
-
-
-/***/ },
-/* 18 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Backbone, Code, CodeView, Expression, ExpressionView, Node, NodeCodeView, _,
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	Node = __webpack_require__(35);
-	
-	NodeCodeView = __webpack_require__(38);
-	
-	CodeView = (function(superClass) {
-	  extend(CodeView, superClass);
-	
-	  function CodeView() {
-	    return CodeView.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  return CodeView;
-	
-	})(NodeCodeView);
-	
-	ThreeNodes.Core.addNodeView('Code', CodeView);
-	
-	ExpressionView = (function(superClass) {
-	  extend(ExpressionView, superClass);
-	
-	  function ExpressionView() {
-	    return ExpressionView.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  return ExpressionView;
-	
-	})(NodeCodeView);
-	
-	ThreeNodes.Core.addNodeView('Expression', ExpressionView);
-	
-	Expression = (function(superClass) {
-	  extend(Expression, superClass);
-	
-	  function Expression() {
-	    this.compute = bind(this.compute, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.toJSON = bind(this.toJSON, this);
-	    this.addCustomField = bind(this.addCustomField, this);
-	    this.onCodeUpdate = bind(this.onCodeUpdate, this);
-	    this.loadCustomFields = bind(this.loadCustomFields, this);
-	    this.initialize = bind(this.initialize, this);
-	    return Expression.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Expression.node_name = 'Expression';
-	
-	  Expression.group_name = 'Code';
-	
-	  Expression.prototype.initialize = function(options) {
-	    var field;
-	    this.custom_fields = {
-	      inputs: {},
-	      outputs: {}
-	    };
-	    this.loadCustomFields(options);
-	    Expression.__super__.initialize.apply(this, arguments);
-	    this.auto_evaluate = true;
-	    this.out = null;
-	    field = this.fields.getField("code");
-	    field.on("value_updated", this.onCodeUpdate);
-	    return this.onCodeUpdate(field.getValue());
-	  };
-	
-	  Expression.prototype.loadCustomFields = function(options) {
-	    if (!options.custom_fields) {
-	      return;
-	    }
-	    return this.custom_fields = $.extend(true, this.custom_fields, options.custom_fields);
-	  };
-	
-	  Expression.prototype.onCodeUpdate = function(code) {
-	    var error;
-	    if (code == null) {
-	      code = "";
-	    }
-	    try {
-	      return this["function"] = new Function(code);
-	    } catch (_error) {
-	      error = _error;
-	      console.warn(error);
-	      return this["function"] = false;
-	    }
-	  };
-	
-	  Expression.prototype.addCustomField = function(key, type, direction) {
-	    var field, instance, value;
-	    if (direction == null) {
-	      direction = 'inputs';
-	    }
-	    field = {
-	      key: key,
-	      type: type
-	    };
-	    this.custom_fields[direction][key] = field;
-	    value = false;
-	    instance = this.fields.addField(key, {
-	      value: value,
-	      type: type,
-	      "default": false
-	    }, direction);
-	    return instance;
-	  };
-	
-	  Expression.prototype.toJSON = function() {
-	    var res;
-	    res = Expression.__super__.toJSON.apply(this, arguments);
-	    res.custom_fields = this.custom_fields;
-	    return res;
-	  };
-	
-	  Expression.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = Expression.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "code": ""
-	      },
-	      outputs: {
-	        "out": {
-	          type: "Any",
-	          val: null
-	        }
-	      }
-	    };
-	    fields = $.extend(true, fields, this.custom_fields);
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  Expression.prototype.compute = function() {
-	    var code, error, result;
-	    code = this.fields.getField("code").getValue();
-	    result = this.out;
-	    if (this["function"] !== false) {
-	      try {
-	        result = this["function"]();
-	      } catch (_error) {
-	        error = _error;
-	      }
-	    }
-	    this.out = result;
-	    return this.fields.setField("out", this.out);
-	  };
-	
-	  return Expression;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('Expression', Expression);
-	
-	Code = (function(superClass) {
-	  extend(Code, superClass);
-	
-	  function Code() {
-	    this.getFields = bind(this.getFields, this);
-	    this.getDynamicFields = bind(this.getDynamicFields, this);
-	    this.initialize = bind(this.initialize, this);
-	    return Code.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Code.node_name = 'Code';
-	
-	  Code.group_name = 'Code';
-	
-	  Code.prototype.initialize = function(options) {
-	    return Code.__super__.initialize.apply(this, arguments);
-	  };
-	
-	  Code.prototype.getDynamicFields = function() {
-	    return {};
-	  };
-	
-	  Code.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = Code.__super__.getFields.apply(this, arguments);
-	    fields = this.getDynamicFields();
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  return Code;
-	
-	})(Expression);
-	
-	ThreeNodes.Core.addNodeType('Code', Code);
-
-
-/***/ },
-/* 19 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Backbone, MathAdd, MathAttenuation, MathCeil, MathCos, MathDivide, MathFloor, MathMax, MathMin, MathMod, MathMult, MathRound, MathSin, MathSubtract, MathTan, Node, NodeNumberParam1, NodeNumberSimple, _,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	Node = __webpack_require__(35);
-	
-	NodeNumberSimple = __webpack_require__(36);
-	
-	MathSin = (function(superClass) {
-	  extend(MathSin, superClass);
-	
-	  function MathSin() {
-	    this.process_val = bind(this.process_val, this);
-	    return MathSin.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  MathSin.node_name = 'Sin';
-	
-	  MathSin.group_name = 'Math';
-	
-	  MathSin.prototype.process_val = function(num, i) {
-	    return Math.sin(num);
-	  };
-	
-	  return MathSin;
-	
-	})(NodeNumberSimple);
-	
-	ThreeNodes.Core.addNodeType('MathSin', MathSin);
-	
-	MathCos = (function(superClass) {
-	  extend(MathCos, superClass);
-	
-	  function MathCos() {
-	    this.process_val = bind(this.process_val, this);
-	    return MathCos.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  MathCos.node_name = 'Cos';
-	
-	  MathCos.group_name = 'Math';
-	
-	  MathCos.prototype.process_val = function(num, i) {
-	    return Math.cos(num);
-	  };
-	
-	  return MathCos;
-	
-	})(NodeNumberSimple);
-	
-	ThreeNodes.Core.addNodeType('MathCos', MathCos);
-	
-	MathTan = (function(superClass) {
-	  extend(MathTan, superClass);
-	
-	  function MathTan() {
-	    this.process_val = bind(this.process_val, this);
-	    return MathTan.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  MathTan.node_name = 'Tan';
-	
-	  MathTan.group_name = 'Math';
-	
-	  MathTan.prototype.process_val = function(num, i) {
-	    return Math.tan(num);
-	  };
-	
-	  return MathTan;
-	
-	})(NodeNumberSimple);
-	
-	ThreeNodes.Core.addNodeType('MathTan', MathTan);
-	
-	MathRound = (function(superClass) {
-	  extend(MathRound, superClass);
-	
-	  function MathRound() {
-	    this.process_val = bind(this.process_val, this);
-	    return MathRound.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  MathRound.node_name = 'Round';
-	
-	  MathRound.group_name = 'Math';
-	
-	  MathRound.prototype.process_val = function(num, i) {
-	    return Math.round(num);
-	  };
-	
-	  return MathRound;
-	
-	})(NodeNumberSimple);
-	
-	ThreeNodes.Core.addNodeType('MathRound', MathRound);
-	
-	MathCeil = (function(superClass) {
-	  extend(MathCeil, superClass);
-	
-	  function MathCeil() {
-	    this.process_val = bind(this.process_val, this);
-	    return MathCeil.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  MathCeil.node_name = 'Ceil';
-	
-	  MathCeil.group_name = 'Math';
-	
-	  MathCeil.prototype.process_val = function(num, i) {
-	    return Math.ceil(num);
-	  };
-	
-	  return MathCeil;
-	
-	})(NodeNumberSimple);
-	
-	ThreeNodes.Core.addNodeType('MathCeil', MathCeil);
-	
-	MathFloor = (function(superClass) {
-	  extend(MathFloor, superClass);
-	
-	  function MathFloor() {
-	    this.process_val = bind(this.process_val, this);
-	    return MathFloor.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  MathFloor.node_name = 'Floor';
-	
-	  MathFloor.group_name = 'Math';
-	
-	  MathFloor.prototype.process_val = function(num, i) {
-	    return Math.floor(num);
-	  };
-	
-	  return MathFloor;
-	
-	})(NodeNumberSimple);
-	
-	ThreeNodes.Core.addNodeType('MathFloor', MathFloor);
-	
-	NodeNumberParam1 = (function(superClass) {
-	  extend(NodeNumberParam1, superClass);
-	
-	  function NodeNumberParam1() {
-	    this.compute = bind(this.compute, this);
-	    this.remove = bind(this.remove, this);
-	    this.apply_num_to_vec3 = bind(this.apply_num_to_vec3, this);
-	    this.apply_num_to_vec2 = bind(this.apply_num_to_vec2, this);
-	    this.process_val = bind(this.process_val, this);
-	    return NodeNumberParam1.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  NodeNumberParam1.prototype.process_val = function(num, numb, i) {
-	    return num + numb;
-	  };
-	
-	  NodeNumberParam1.prototype.apply_num_to_vec2 = function(a, b, i) {
-	    switch ($.type(a)) {
-	      case "number":
-	        return new THREE.Vector2(this.process_val(a, b.x, i), this.process_val(a, b.y, i));
-	      case "object":
-	        return new THREE.Vector2(this.process_val(a.x, b, i), this.process_val(a.y, b, i));
-	    }
-	  };
-	
-	  NodeNumberParam1.prototype.apply_num_to_vec3 = function(a, b, i) {
-	    switch ($.type(a)) {
-	      case "number":
-	        return new THREE.Vector3(this.process_val(a, b.x, i), this.process_val(a, b.y, i), this.process_val(a, b.z, i));
-	      case "object":
-	        return new THREE.Vector3(this.process_val(a.x, b, i), this.process_val(a.y, b, i), this.process_val(a.z, b, i));
-	    }
-	  };
-	
-	  NodeNumberParam1.prototype.remove = function() {
-	    delete this.v_factor;
-	    return NodeNumberParam1.__super__.remove.apply(this, arguments);
-	  };
-	
-	  NodeNumberParam1.prototype.compute = function() {
-	    var i, j, numItems, ref, ref1, refb, res;
-	    res = [];
-	    numItems = this.fields.getMaxInputSliceCount();
-	    for (i = j = 0, ref1 = numItems; 0 <= ref1 ? j <= ref1 : j >= ref1; i = 0 <= ref1 ? ++j : --j) {
-	      ref = this.v_in.getValue(i);
-	      refb = this.v_factor.getValue(i);
-	      switch ($.type(ref)) {
-	        case "number":
-	          switch ($.type(refb)) {
-	            case "number":
-	              res[i] = this.process_val(ref, refb, i);
-	              break;
-	            case "object":
-	              switch (refb.constructor) {
-	                case THREE.Vector2:
-	                  res[i] = this.apply_num_to_vec2(ref, refb, i);
-	                  break;
-	                case THREE.Vector3:
-	                  res[i] = this.apply_num_to_vec3(ref, refb, i);
-	              }
-	          }
-	          break;
-	        case "object":
-	          switch (ref.constructor) {
-	            case THREE.Vector2:
-	              switch ($.type(refb)) {
-	                case "number":
-	                  res[i] = this.apply_num_to_vec2(ref, refb, i);
-	                  break;
-	                case "object":
-	                  res[i] = new THREE.Vector2(this.process_val(ref.x, refb.x, i), this.process_val(ref.y, refb.y, i));
-	              }
-	              break;
-	            case THREE.Vector3:
-	              switch ($.type(refb)) {
-	                case "number":
-	                  res[i] = this.apply_num_to_vec3(ref, refb, i);
-	                  break;
-	                case "object":
-	                  res[i] = new THREE.Vector3(this.process_val(ref.x, refb.x, i), this.process_val(ref.y, refb.y, i), this.process_val(ref.z, refb.z, i));
-	              }
-	          }
-	      }
-	    }
-	    this.v_out.setValue(res);
-	    return true;
-	  };
-	
-	  return NodeNumberParam1;
-	
-	})(NodeNumberSimple);
-	
-	MathMod = (function(superClass) {
-	  extend(MathMod, superClass);
-	
-	  function MathMod() {
-	    this.process_val = bind(this.process_val, this);
-	    this.onFieldsCreated = bind(this.onFieldsCreated, this);
-	    this.getFields = bind(this.getFields, this);
-	    return MathMod.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  MathMod.node_name = 'Mod';
-	
-	  MathMod.group_name = 'Math';
-	
-	  MathMod.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = MathMod.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "y": {
-	          type: "Float",
-	          val: 2
-	        }
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  MathMod.prototype.onFieldsCreated = function() {
-	    MathMod.__super__.onFieldsCreated.apply(this, arguments);
-	    return this.v_factor = this.fields.getField("y");
-	  };
-	
-	  MathMod.prototype.process_val = function(num, numb, i) {
-	    return num % numb;
-	  };
-	
-	  return MathMod;
-	
-	})(NodeNumberParam1);
-	
-	ThreeNodes.Core.addNodeType('MathMod', MathMod);
-	
-	MathAdd = (function(superClass) {
-	  extend(MathAdd, superClass);
-	
-	  function MathAdd() {
-	    this.process_val = bind(this.process_val, this);
-	    this.onFieldsCreated = bind(this.onFieldsCreated, this);
-	    this.getFields = bind(this.getFields, this);
-	    return MathAdd.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  MathAdd.node_name = 'Add';
-	
-	  MathAdd.group_name = 'Math';
-	
-	  MathAdd.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = MathAdd.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "y": {
-	          type: "Float",
-	          val: 1
-	        }
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  MathAdd.prototype.onFieldsCreated = function() {
-	    MathAdd.__super__.onFieldsCreated.apply(this, arguments);
-	    return this.v_factor = this.fields.getField("y");
-	  };
-	
-	  MathAdd.prototype.process_val = function(num, numb, i) {
-	    return num + numb;
-	  };
-	
-	  return MathAdd;
-	
-	})(NodeNumberParam1);
-	
-	ThreeNodes.Core.addNodeType('MathAdd', MathAdd);
-	
-	MathSubtract = (function(superClass) {
-	  extend(MathSubtract, superClass);
-	
-	  function MathSubtract() {
-	    this.process_val = bind(this.process_val, this);
-	    this.onFieldsCreated = bind(this.onFieldsCreated, this);
-	    this.getFields = bind(this.getFields, this);
-	    return MathSubtract.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  MathSubtract.node_name = 'Subtract';
-	
-	  MathSubtract.group_name = 'Math';
-	
-	  MathSubtract.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = MathSubtract.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "y": {
-	          type: "Float",
-	          val: 1
-	        }
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  MathSubtract.prototype.onFieldsCreated = function() {
-	    MathSubtract.__super__.onFieldsCreated.apply(this, arguments);
-	    return this.v_factor = this.fields.getField("y");
-	  };
-	
-	  MathSubtract.prototype.process_val = function(num, numb, i) {
-	    return num - numb;
-	  };
-	
-	  return MathSubtract;
-	
-	})(NodeNumberParam1);
-	
-	ThreeNodes.Core.addNodeType('MathSubtract', MathSubtract);
-	
-	MathMult = (function(superClass) {
-	  extend(MathMult, superClass);
-	
-	  function MathMult() {
-	    this.process_val = bind(this.process_val, this);
-	    this.onFieldsCreated = bind(this.onFieldsCreated, this);
-	    this.getFields = bind(this.getFields, this);
-	    return MathMult.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  MathMult.node_name = 'Mult';
-	
-	  MathMult.group_name = 'Math';
-	
-	  MathMult.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = MathMult.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "factor": {
-	          type: "Float",
-	          val: 2
-	        }
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  MathMult.prototype.onFieldsCreated = function() {
-	    MathMult.__super__.onFieldsCreated.apply(this, arguments);
-	    return this.v_factor = this.fields.getField("factor");
-	  };
-	
-	  MathMult.prototype.process_val = function(num, numb, i) {
-	    return num * numb;
-	  };
-	
-	  return MathMult;
-	
-	})(NodeNumberParam1);
-	
-	ThreeNodes.Core.addNodeType('MathMult', MathMult);
-	
-	MathDivide = (function(superClass) {
-	  extend(MathDivide, superClass);
-	
-	  function MathDivide() {
-	    this.process_val = bind(this.process_val, this);
-	    this.onFieldsCreated = bind(this.onFieldsCreated, this);
-	    this.getFields = bind(this.getFields, this);
-	    return MathDivide.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  MathDivide.node_name = 'Divide';
-	
-	  MathDivide.group_name = 'Math';
-	
-	  MathDivide.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = MathDivide.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "y": {
-	          type: "Float",
-	          val: 2
-	        }
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  MathDivide.prototype.onFieldsCreated = function() {
-	    MathDivide.__super__.onFieldsCreated.apply(this, arguments);
-	    return this.v_factor = this.fields.getField("y");
-	  };
-	
-	  MathDivide.prototype.process_val = function(num, numb, i) {
-	    return num / numb;
-	  };
-	
-	  return MathDivide;
-	
-	})(NodeNumberParam1);
-	
-	ThreeNodes.Core.addNodeType('MathDivide', MathDivide);
-	
-	MathMin = (function(superClass) {
-	  extend(MathMin, superClass);
-	
-	  function MathMin() {
-	    this.process_val = bind(this.process_val, this);
-	    this.onFieldsCreated = bind(this.onFieldsCreated, this);
-	    this.getFields = bind(this.getFields, this);
-	    return MathMin.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  MathMin.node_name = 'Min';
-	
-	  MathMin.group_name = 'Math';
-	
-	  MathMin.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = MathMin.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "in2": {
-	          type: "Float",
-	          val: 0
-	        }
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  MathMin.prototype.onFieldsCreated = function() {
-	    MathMin.__super__.onFieldsCreated.apply(this, arguments);
-	    return this.v_factor = this.fields.getField("in2");
-	  };
-	
-	  MathMin.prototype.process_val = function(num, numb, i) {
-	    return Math.min(num, numb);
-	  };
-	
-	  return MathMin;
-	
-	})(NodeNumberParam1);
-	
-	ThreeNodes.Core.addNodeType('MathMin', MathMin);
-	
-	MathMax = (function(superClass) {
-	  extend(MathMax, superClass);
-	
-	  function MathMax() {
-	    this.process_val = bind(this.process_val, this);
-	    this.onFieldsCreated = bind(this.onFieldsCreated, this);
-	    this.getFields = bind(this.getFields, this);
-	    return MathMax.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  MathMax.node_name = 'Max';
-	
-	  MathMax.group_name = 'Math';
-	
-	  MathMax.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = MathMax.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "in2": {
-	          type: "Float",
-	          val: 0
-	        }
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  MathMax.prototype.onFieldsCreated = function() {
-	    MathMax.__super__.onFieldsCreated.apply(this, arguments);
-	    return this.v_factor = this.fields.getField("in2");
-	  };
-	
-	  MathMax.prototype.process_val = function(num, numb, i) {
-	    return Math.max(num, numb);
-	  };
-	
-	  return MathMax;
-	
-	})(NodeNumberParam1);
-	
-	ThreeNodes.Core.addNodeType('MathMax', MathMax);
-	
-	MathAttenuation = (function(superClass) {
-	  extend(MathAttenuation, superClass);
-	
-	  function MathAttenuation() {
-	    this.process_val = bind(this.process_val, this);
-	    this.onFieldsCreated = bind(this.onFieldsCreated, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.initialize = bind(this.initialize, this);
-	    return MathAttenuation.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  MathAttenuation.node_name = 'Attenuation';
-	
-	  MathAttenuation.group_name = 'Math';
-	
-	  MathAttenuation.prototype.initialize = function(options) {
-	    MathAttenuation.__super__.initialize.apply(this, arguments);
-	    return this.val = 0;
-	  };
-	
-	  MathAttenuation.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = MathAttenuation.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "default": 0,
-	        "reset": false,
-	        "factor": 0.8
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  MathAttenuation.prototype.onFieldsCreated = function() {
-	    MathAttenuation.__super__.onFieldsCreated.apply(this, arguments);
-	    this.def_val = this.fields.getField("default");
-	    this.reset_val = this.fields.getField("reset");
-	    this.v_factor = this.fields.getField("factor");
-	    return this.val = this.def_val.getValue();
-	  };
-	
-	  MathAttenuation.prototype.process_val = function(num, numb, i) {
-	    if (this.reset_val.getValue(i) === true) {
-	      this.val = this.def_val.getValue(i);
-	    }
-	    this.val = this.val + (this.v_in.getValue(i) - this.val) * this.v_factor.getValue(i);
-	    return this.val;
-	  };
-	
-	  return MathAttenuation;
-	
-	})(NodeNumberParam1);
-	
-	ThreeNodes.Core.addNodeType('MathAttenuation', MathAttenuation);
-
-
-/***/ },
-/* 20 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Backbone, Font, Get, LFO, Merge, Mouse, Mp3Input, Node, NodeWithCenterTextfield, Random, Screen, Timer, _,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	Node = __webpack_require__(35);
-	
-	NodeWithCenterTextfield = __webpack_require__(37);
-	
-	Random = (function(superClass) {
-	  extend(Random, superClass);
-	
-	  function Random() {
-	    this.getCenterField = bind(this.getCenterField, this);
-	    return Random.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Random.prototype.getCenterField = function() {
-	    return this.model.fields.getField("out", true);
-	  };
-	
-	  return Random;
-	
-	})(NodeWithCenterTextfield);
-	
-	ThreeNodes.Core.addNodeView('Random', Random);
-	
-	LFO = (function(superClass) {
-	  extend(LFO, superClass);
-	
-	  function LFO() {
-	    this.getCenterField = bind(this.getCenterField, this);
-	    return LFO.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  LFO.prototype.getCenterField = function() {
-	    return this.model.fields.getField("out", true);
-	  };
-	
-	  return LFO;
-	
-	})(NodeWithCenterTextfield);
-	
-	ThreeNodes.Core.addNodeView('LFO', LFO);
-	
-	Timer = (function(superClass) {
-	  extend(Timer, superClass);
-	
-	  function Timer() {
-	    this.getCenterField = bind(this.getCenterField, this);
-	    return Timer.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Timer.prototype.getCenterField = function() {
-	    return this.model.fields.getField("out", true);
-	  };
-	
-	  return Timer;
-	
-	})(NodeWithCenterTextfield);
-	
-	ThreeNodes.Core.addNodeView('Timer', Timer);
-	
-	Random = (function(superClass) {
-	  extend(Random, superClass);
-	
-	  function Random() {
-	    this.compute = bind(this.compute, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.initialize = bind(this.initialize, this);
-	    return Random.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Random.node_name = 'Random';
-	
-	  Random.group_name = 'Utils';
-	
-	  Random.prototype.initialize = function(options) {
-	    Random.__super__.initialize.apply(this, arguments);
-	    return this.auto_evaluate = true;
-	  };
-	
-	  Random.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = Random.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "min": 0,
-	        "max": 1
-	      },
-	      outputs: {
-	        "out": 0
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  Random.prototype.compute = function() {
-	    var value;
-	    value = this.fields.getField("min").getValue() + Math.random() * (this.fields.getField("max").getValue() - this.fields.getField("min").getValue());
-	    return this.fields.setField("out", value);
-	  };
-	
-	  return Random;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('Random', Random);
-	
-	LFO = (function(superClass) {
-	  extend(LFO, superClass);
-	
-	  function LFO() {
-	    this.compute = bind(this.compute, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.initialize = bind(this.initialize, this);
-	    return LFO.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  LFO.node_name = 'LFO';
-	
-	  LFO.group_name = 'Utils';
-	
-	  LFO.prototype.initialize = function(options) {
-	    LFO.__super__.initialize.apply(this, arguments);
-	    this.auto_evaluate = true;
-	    this.rndB = Math.random();
-	    this.rndA = this.rndB;
-	    this.rndrange = 1;
-	    this.flip = 0;
-	    this.taskinterval = 1;
-	    this.taskintervalhold = 20;
-	    this.clock = 0;
-	    return this.PI = 3.14159;
-	  };
-	
-	  LFO.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = LFO.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "min": 0,
-	        "max": 1,
-	        "duration": 1000,
-	        "mode": {
-	          type: "Float",
-	          val: 0,
-	          values: {
-	            "sawtooth": 0,
-	            "sine": 1,
-	            "triangle": 2,
-	            "square waver": 3,
-	            "random": 4,
-	            "random triangle": 5
-	          }
-	        }
-	      },
-	      outputs: {
-	        "out": 0
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  LFO.prototype.compute = function() {
-	    var duration, halfway, hi, lfoout, lfout, low, max, min, mode, range, src, srctmp, time;
-	    duration = this.fields.getField("duration").getValue();
-	    min = this.fields.getField("min").getValue();
-	    max = this.fields.getField("max").getValue();
-	    mode = this.fields.getField("mode").getValue();
-	    this.clock = Date.now();
-	    time = (this.taskinterval * this.clock) % duration;
-	    src = time / duration;
-	    range = max - min;
-	    lfoout = 0;
-	    lfout = (function() {
-	      switch (mode) {
-	        case 0:
-	          return (src * range) + min;
-	        case 1:
-	          return (range * Math.sin(src * this.PI)) + min;
-	        case 2:
-	          halfway = duration / 2;
-	          if (time < halfway) {
-	            return (2 * src * range) + min;
-	          } else {
-	            srctmp = (halfway - (time - halfway)) / duration;
-	            return (2 * srctmp * range) + min;
-	          }
-	          break;
-	        case 3:
-	          low = time < duration / 2;
-	          hi = time >= duration / 2;
-	          return low * min + hi * max;
-	        case 4:
-	          if (time >= duration - this.taskinterval) {
-	            this.rndA = Math.random();
-	          }
-	          return (this.rndA * range) + min;
-	        case 5:
-	          if (time < this.taskinterval) {
-	            this.rndA = this.rndB;
-	            this.rndB = range * Math.random() + min;
-	            this.rndrange = this.rndB - this.rndA;
-	          }
-	          return src * this.rndrange + this.rndA;
-	      }
-	    }).call(this);
-	    return this.fields.setField("out", lfout);
-	  };
-	
-	  return LFO;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('LFO', LFO);
-	
-	Merge = (function(superClass) {
-	  extend(Merge, superClass);
-	
-	  function Merge() {
-	    this.compute = bind(this.compute, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.initialize = bind(this.initialize, this);
-	    return Merge.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Merge.node_name = 'Merge';
-	
-	  Merge.group_name = 'Utils';
-	
-	  Merge.prototype.initialize = function(options) {
-	    Merge.__super__.initialize.apply(this, arguments);
-	    return this.auto_evaluate = false;
-	  };
-	
-	  Merge.prototype.getFields = function() {
-	    var fields;
-	    fields = {
-	      inputs: {
-	        "in0": {
-	          type: "Any",
-	          val: null
-	        },
-	        "in1": {
-	          type: "Any",
-	          val: null
-	        },
-	        "in2": {
-	          type: "Any",
-	          val: null
-	        },
-	        "in3": {
-	          type: "Any",
-	          val: null
-	        },
-	        "in4": {
-	          type: "Any",
-	          val: null
-	        },
-	        "in5": {
-	          type: "Any",
-	          val: null
-	        }
-	      },
-	      outputs: {
-	        "out": {
-	          type: "Array",
-	          val: []
-	        }
-	      }
-	    };
-	    return fields;
-	  };
-	
-	  Merge.prototype.compute = function() {
-	    var changed, f, field, result, subval;
-	    result = [];
-	    changed = false;
-	    for (f in this.fields.inputs) {
-	      field = this.fields.inputs[f];
-	      subval = field.get("value");
-	      if (subval !== null && field.connections.length > 0 && field.changed === true) {
-	        changed = true;
-	        if (jQuery.type(subval) === "array") {
-	          result = result.concat(subval);
-	        } else {
-	          result[result.length] = subval;
-	        }
-	      }
-	    }
-	    if (changed) {
-	      return this.fields.setField("out", result);
-	    }
-	  };
-	
-	  return Merge;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('Merge', Merge);
-	
-	Get = (function(superClass) {
-	  extend(Get, superClass);
-	
-	  function Get() {
-	    this.compute = bind(this.compute, this);
-	    this.getFields = bind(this.getFields, this);
-	    return Get.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Get.node_name = 'Get';
-	
-	  Get.group_name = 'Utils';
-	
-	  Get.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = Get.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "array": {
-	          type: "Array",
-	          val: null
-	        },
-	        "index": 0
-	      },
-	      outputs: {
-	        "out": {
-	          type: "Any",
-	          val: null
-	        }
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  Get.prototype.compute = function() {
-	    var arr, ind, old;
-	    old = this.fields.getField("out", true).getValue();
-	    this.value = false;
-	    arr = this.fields.getField("array").getValue();
-	    ind = parseInt(this.fields.getField("index").getValue());
-	    if ($.type(arr) === "array") {
-	      this.value = arr[ind % arr.length];
-	    }
-	    if (this.value !== old) {
-	      return this.fields.setField("out", this.value);
-	    }
-	  };
-	
-	  return Get;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('Get', Get);
-	
-	Mp3Input = (function(superClass) {
-	  extend(Mp3Input, superClass);
-	
-	  function Mp3Input() {
-	    this.compute = bind(this.compute, this);
-	    this.remove = bind(this.remove, this);
-	    this.getAverageLevel = bind(this.getAverageLevel, this);
-	    this.onSoundLoad = bind(this.onSoundLoad, this);
-	    this.loadAudioBuffer = bind(this.loadAudioBuffer, this);
-	    this.loadAudio = bind(this.loadAudio, this);
-	    this.createSound = bind(this.createSound, this);
-	    this.finishLoad = bind(this.finishLoad, this);
-	    this.remove = bind(this.remove, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.initialize = bind(this.initialize, this);
-	    return Mp3Input.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Mp3Input.node_name = 'Mp3Input';
-	
-	  Mp3Input.group_name = 'Utils';
-	
-	  Mp3Input.prototype.initialize = function(options) {
-	    Mp3Input.__super__.initialize.apply(this, arguments);
-	    this.auto_evaluate = true;
-	    this.counter = 0;
-	    this.playing = false;
-	    window.AudioContext = window.AudioContext || window.webkitAudioContext;
-	    if (AudioContext) {
-	      this.audioContext = new AudioContext();
-	    } else {
-	      $(".options", this.main_view).prepend('<p class="warning">This node currently require a webaudio capable browser.</p>');
-	    }
-	    return this.url_cache = "";
-	  };
-	
-	  Mp3Input.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = Mp3Input.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "url": "",
-	        "smoothingTime": 0.1
-	      },
-	      outputs: {
-	        "average": 0,
-	        "low": 0,
-	        "medium": 0,
-	        "high": 0
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  Mp3Input.prototype.remove = function() {
-	    this.stopSound();
-	    delete this.audioContext;
-	    delete this.url_cache;
-	    return Mp3Input.__super__.remove.apply(this, arguments);
-	  };
-	
-	  Mp3Input.prototype.onRegister = function() {
-	    Mp3Input.__super__.onRegister.apply(this, arguments);
-	    if (this.fields.getField("url").getValue() !== "") {
-	      return this.loadAudio(this.fields.getField("url").getValue());
-	    }
-	  };
-	
-	  Mp3Input.prototype.stopSound = function() {
-	    if (!this.source) {
-	      return false;
-	    }
-	    if (this.playing === true) {
-	      this.source.stop(0.0);
-	      this.source.disconnect(0);
-	      return this.playing = false;
-	    }
-	  };
-	
-	  Mp3Input.prototype.playSound = function(time) {
-	    if (this.source && this.audioContext && this.audioBuffer) {
-	      this.stopSound();
-	      this.source = this.createSound();
-	      this.source.start(0, time, this.audioBuffer.duration - time);
-	      return this.playing = true;
-	    }
-	  };
-	
-	  Mp3Input.prototype.finishLoad = function() {
-	    var delay;
-	    this.source.buffer = this.audioBuffer;
-	    this.source.looping = true;
-	    this.onSoundLoad();
-	    Timeline.getGlobalInstance().maxTime = this.audioBuffer.duration;
-	    delay = function(ms, func) {
-	      return setTimeout(func, ms);
-	    };
-	    return delay(1000, (function(_this) {
-	      return function() {
-	        Timeline.getGlobalInstance().stop();
-	        return Timeline.getGlobalInstance().play();
-	      };
-	    })(this));
-	  };
-	
-	  Mp3Input.prototype.createSound = function() {
-	    var src;
-	    src = this.audioContext.createBufferSource();
-	    if (this.audioBuffer) {
-	      src.buffer = this.audioBuffer;
-	    }
-	    src.connect(this.analyser);
-	    this.analyser.connect(this.audioContext.destination);
-	    return src;
-	  };
-	
-	  Mp3Input.prototype.loadAudio = function(url) {
-	    Timeline.getGlobalInstance().stop();
-	    this.analyser = this.audioContext.createAnalyser();
-	    this.analyser.fftSize = 1024;
-	    this.source = this.createSound();
-	    return this.loadAudioBuffer(url);
-	  };
-	
-	  Mp3Input.prototype.loadAudioBuffer = function(url) {
-	    var onDecoded, request;
-	    request = new XMLHttpRequest();
-	    request.open("GET", url, true);
-	    request.responseType = "arraybuffer";
-	    onDecoded = (function(_this) {
-	      return function(buffer) {
-	        _this.audioBuffer = buffer;
-	        return _this.finishLoad();
-	      };
-	    })(this);
-	    request.onload = (function(_this) {
-	      return function() {
-	        return _this.audioContext.decodeAudioData(request.response, onDecoded);
-	      };
-	    })(this);
-	    request.send();
-	    return this;
-	  };
-	
-	  Mp3Input.prototype.onSoundLoad = function() {
-	    this.freqByteData = new Uint8Array(this.analyser.frequencyBinCount);
-	    return this.timeByteData = new Uint8Array(this.analyser.frequencyBinCount);
-	  };
-	
-	  Mp3Input.prototype.getAverageLevel = function(start, max) {
-	    var i, j, length, ref, ref1, sum;
-	    if (start == null) {
-	      start = 0;
-	    }
-	    if (max == null) {
-	      max = 512;
-	    }
-	    if (!this.freqByteData) {
-	      return 0;
-	    }
-	    start = Math.floor(start);
-	    max = Math.floor(max);
-	    length = max - start;
-	    sum = 0;
-	    for (i = j = ref = start, ref1 = max; ref <= ref1 ? j <= ref1 : j >= ref1; i = ref <= ref1 ? ++j : --j) {
-	      sum += this.freqByteData[i];
-	    }
-	    return sum / length;
-	  };
-	
-	  Mp3Input.prototype.remove = function() {
-	    Mp3Input.__super__.remove.apply(this, arguments);
-	    if (this.source) {
-	      this.source.stop(0.0);
-	      this.source.disconnect();
-	    }
-	    this.freqByteData = false;
-	    this.timeByteData = false;
-	    this.audioBuffer = false;
-	    this.audioContext = false;
-	    return this.source = false;
-	  };
-	
-	  Mp3Input.prototype.compute = function() {
-	    var length, length3rd;
-	    if (!window.AudioContext) {
-	      return;
-	    }
-	    if (this.url_cache !== this.fields.getField("url").getValue()) {
-	      this.url_cache = this.fields.getField("url").getValue();
-	      this.loadAudio(this.url_cache);
-	    }
-	    if (this.analyser && this.freqByteData) {
-	      this.analyser.smoothingTimeConstant = this.fields.getField("smoothingTime").getValue();
-	      this.analyser.getByteFrequencyData(this.freqByteData);
-	      this.analyser.getByteTimeDomainData(this.timeByteData);
-	    }
-	    if (this.freqByteData) {
-	      length = this.freqByteData.length;
-	      length3rd = length / 3;
-	      this.fields.setField("average", this.getAverageLevel(0, length - 1));
-	      this.fields.setField("low", this.getAverageLevel(0, length3rd - 1));
-	      this.fields.setField("medium", this.getAverageLevel(length3rd, (length3rd * 2) - 1));
-	      this.fields.setField("high", this.getAverageLevel(length3rd * 2, length - 1));
-	    }
-	    return true;
-	  };
-	
-	  return Mp3Input;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('Mp3Input', Mp3Input);
-	
-	Mouse = (function(superClass) {
-	  extend(Mouse, superClass);
-	
-	  function Mouse() {
-	    this.compute = bind(this.compute, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.initialize = bind(this.initialize, this);
-	    return Mouse.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Mouse.node_name = 'Mouse';
-	
-	  Mouse.group_name = 'Utils';
-	
-	  Mouse.prototype.initialize = function(options) {
-	    Mouse.__super__.initialize.apply(this, arguments);
-	    return this.auto_evaluate = true;
-	  };
-	
-	  Mouse.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = Mouse.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      outputs: {
-	        "xy": {
-	          type: "Vector2",
-	          val: new THREE.Vector2()
-	        },
-	        "x": 0,
-	        "y": 0
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  Mouse.prototype.compute = function() {
-	    var dx, dy;
-	    dx = ThreeNodes.renderer.mouseX;
-	    dy = ThreeNodes.renderer.mouseY;
-	    this.fields.setField("xy", new THREE.Vector2(dx, dy));
-	    this.fields.setField("x", dx);
-	    return this.fields.setField("y", dy);
-	  };
-	
-	  return Mouse;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('Mouse', Mouse);
-	
-	Screen = (function(superClass) {
-	  extend(Screen, superClass);
-	
-	  function Screen() {
-	    this.compute = bind(this.compute, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.remove = bind(this.remove, this);
-	    this.initialize = bind(this.initialize, this);
-	    return Screen.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Screen.node_name = 'Screen';
-	
-	  Screen.group_name = 'Utils';
-	
-	  Screen.width = 0;
-	
-	  Screen.height = 0;
-	
-	  Screen.onResize = function(e) {
-	    Screen.width = $(window).width();
-	    return Screen.height = $(window).height();
-	  };
-	
-	  Screen.prototype.initialize = function(options) {
-	    Screen.__super__.initialize.apply(this, arguments);
-	    this.auto_evaluate = true;
-	    $(window).on("resize.threenodes", Screen.onResize);
-	    return Screen.onResize();
-	  };
-	
-	  Screen.prototype.remove = function() {
-	    Screen.__super__.remove.apply(this, arguments);
-	    return $(window).off("resize.threenodes");
-	  };
-	
-	  Screen.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = Screen.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      outputs: {
-	        "width": Screen.width,
-	        "height": Screen.height
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  Screen.prototype.compute = function() {
-	    this.fields.setField("width", Screen.width);
-	    return this.fields.setField("height", Screen.height);
-	  };
-	
-	  return Screen;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('Screen', Screen);
-	
-	Timer = (function(superClass) {
-	  extend(Timer, superClass);
-	
-	  function Timer() {
-	    this.compute = bind(this.compute, this);
-	    this.get_time = bind(this.get_time, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.initialize = bind(this.initialize, this);
-	    return Timer.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Timer.node_name = 'Timer';
-	
-	  Timer.group_name = 'Utils';
-	
-	  Timer.prototype.initialize = function(options) {
-	    Timer.__super__.initialize.apply(this, arguments);
-	    this.auto_evaluate = true;
-	    this.old = this.get_time();
-	    return this.counter = 0;
-	  };
-	
-	  Timer.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = Timer.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "reset": false,
-	        "pause": false,
-	        "max": 99999999999
-	      },
-	      outputs: {
-	        "out": 0
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  Timer.prototype.get_time = function() {
-	    return new Date().getTime();
-	  };
-	
-	  Timer.prototype.compute = function() {
-	    var diff, now, oldval;
-	    oldval = this.fields.getField("out", true).getValue();
-	    now = this.get_time();
-	    if (this.fields.getField("pause").getValue() === false) {
-	      this.counter += now - this.old;
-	    }
-	    if (this.fields.getField("reset").getValue() === true) {
-	      this.counter = 0;
-	    }
-	    diff = this.fields.getField("max").getValue() - this.counter;
-	    if (diff <= 0) {
-	      this.counter = 0;
-	    }
-	    this.old = now;
-	    return this.fields.setField("out", this.counter);
-	  };
-	
-	  return Timer;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('Timer', Timer);
-	
-	Font = (function(superClass) {
-	  extend(Font, superClass);
-	
-	  function Font() {
-	    this.compute = bind(this.compute, this);
-	    this.remove = bind(this.remove, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.initialize = bind(this.initialize, this);
-	    return Font.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Font.node_name = 'Font';
-	
-	  Font.group_name = 'Utils';
-	
-	  Font.prototype.initialize = function(options) {
-	    var dir, i;
-	    Font.__super__.initialize.apply(this, arguments);
-	    this.auto_evaluate = true;
-	    this.ob = "";
-	    dir = "../../../../../../assets/fonts/";
-	    this.files = {
-	      "helvetiker": {
-	        "normal": dir + "helvetiker_regular.typeface",
-	        "bold": dir + "helvetiker_bold.typeface"
-	      },
-	      "optimer": {
-	        "normal": dir + "optimer_regular.typeface",
-	        "bold": dir + "optimer_bold.typeface"
-	      },
-	      "gentilis": {
-	        "normal": dir + "gentilis_regular.typeface",
-	        "bold": dir + "gentilis_bold.typeface"
-	      },
-	      "droid sans": {
-	        "normal": dir + "droid/droid_sans_regular.typeface",
-	        "bold": dir + "droid/droid_sans_bold.typeface"
-	      },
-	      "droid serif": {
-	        "normal": dir + "droid/droid_serif_regular.typeface",
-	        "bold": dir + "droid/droid_serif_bold.typeface"
-	      }
-	    };
-	    this.reverseFontMap = {};
-	    this.reverseWeightMap = {};
-	    for (i in this.fields.getField("weight").get("possibilities")) {
-	      this.reverseWeightMap[this.fields.getField("weight").get("possibilities")[i]] = i;
-	    }
-	    for (i in this.fields.getField("font").get("possibilities")) {
-	      this.reverseFontMap[this.fields.getField("font").get("possibilities")[i]] = i;
-	    }
-	    this.fontcache = -1;
-	    return this.weightcache = -1;
-	  };
-	
-	  Font.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = Font.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "font": {
-	          type: "Float",
-	          val: 0,
-	          values: {
-	            "helvetiker": 0,
-	            "optimer": 1,
-	            "gentilis": 2,
-	            "droid sans": 3,
-	            "droid serif": 4
-	          }
-	        },
-	        "weight": {
-	          type: "Float",
-	          val: 0,
-	          values: {
-	            "normal": 0,
-	            "bold": 1
-	          }
-	        }
-	      },
-	      outputs: {
-	        "out": {
-	          type: "Any",
-	          val: this.ob
-	        }
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  Font.prototype.remove = function() {
-	    delete this.reverseFontMap;
-	    delete this.reverseWeightMap;
-	    delete this.ob;
-	    return Font.__super__.remove.apply(this, arguments);
-	  };
-	
-	  Font.prototype.compute = function() {
-	    var findex, font, weight, windex;
-	    findex = parseInt(this.fields.getField("font").getValue());
-	    windex = parseInt(this.fields.getField("weight").getValue());
-	    if (findex > 4 || findex < 0) {
-	      findex = 0;
-	    }
-	    if (windex !== 0 || windex !== 1) {
-	      windex = 0;
-	    }
-	    font = this.reverseFontMap[findex];
-	    weight = this.reverseWeightMap[windex];
-	    this.ob = {
-	      font: font,
-	      weight: weight
-	    };
-	    this.fontcache = findex;
-	    this.weightcache = windex;
-	    return this.fields.setField("out", this.ob);
-	  };
-	
-	  return Font;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('Font', Font);
-
-
-/***/ },
-/* 21 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Backbone, LinearSpread, Node, RandomSpread, Rc4Random, _,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	Rc4Random = __webpack_require__(39);
-	
-	Node = __webpack_require__(35);
-	
-	RandomSpread = (function(superClass) {
-	  extend(RandomSpread, superClass);
-	
-	  function RandomSpread() {
-	    this.compute = bind(this.compute, this);
-	    this.remove = bind(this.remove, this);
-	    this.onFieldsCreated = bind(this.onFieldsCreated, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.initialize = bind(this.initialize, this);
-	    return RandomSpread.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  RandomSpread.node_name = 'RandomSpread';
-	
-	  RandomSpread.group_name = 'Spread';
-	
-	  RandomSpread.prototype.initialize = function(options) {
-	    RandomSpread.__super__.initialize.apply(this, arguments);
-	    this.auto_evaluate = false;
-	    this.rnd = false;
-	    this.value = false;
-	    this.seed = false;
-	    this.count = false;
-	    this.width = false;
-	    return this.offset = false;
-	  };
-	
-	  RandomSpread.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = RandomSpread.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "count": 1,
-	        "seed": 1,
-	        "width": 1,
-	        "offset": 0
-	      },
-	      outputs: {
-	        "out": 0
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  RandomSpread.prototype.onFieldsCreated = function() {
-	    return this.v_out = this.fields.getField("out", true);
-	  };
-	
-	  RandomSpread.prototype.remove = function() {
-	    delete this.v_out;
-	    return RandomSpread.__super__.remove.apply(this, arguments);
-	  };
-	
-	  RandomSpread.prototype.compute = function() {
-	    var i, j, needs_rebuild, ref;
-	    needs_rebuild = false;
-	    if (this.seed !== this.fields.getField("seed").get("value") || this.count !== parseInt(this.fields.getField("count").getValue(0)) || this.width !== this.fields.getField("width").get("value") || this.offset !== this.fields.getField("offset").get("value")) {
-	      this.seed = this.fields.getField("seed").get("value");
-	      this.rnd = new Rc4Random(this.seed.toString());
-	      this.value = [];
-	      this.width = this.fields.getField("width").getValue(0);
-	      this.offset = this.fields.getField("offset").getValue(0);
-	      this.count = parseInt(this.fields.getField("count").get("value"));
-	      for (i = j = 0, ref = this.count - 1; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
-	        this.value[i] = this.rnd.getRandomNumber() * this.width - this.width / 2 + this.offset;
-	      }
-	    }
-	    return this.fields.setField("out", this.value);
-	  };
-	
-	  return RandomSpread;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('RandomSpread', RandomSpread);
-	
-	LinearSpread = (function(superClass) {
-	  extend(LinearSpread, superClass);
-	
-	  function LinearSpread() {
-	    this.compute = bind(this.compute, this);
-	    this.remove = bind(this.remove, this);
-	    this.onFieldsCreated = bind(this.onFieldsCreated, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.initialize = bind(this.initialize, this);
-	    return LinearSpread.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  LinearSpread.node_name = 'LinearSpread';
-	
-	  LinearSpread.group_name = 'Spread';
-	
-	  LinearSpread.prototype.initialize = function(options) {
-	    LinearSpread.__super__.initialize.apply(this, arguments);
-	    this.auto_evaluate = false;
-	    this.value = false;
-	    this.count = false;
-	    this.width = false;
-	    this.phase = false;
-	    return this.offset = false;
-	  };
-	
-	  LinearSpread.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = LinearSpread.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "count": 1,
-	        "width": 1,
-	        "phase": 0,
-	        "offset": 0
-	      },
-	      outputs: {
-	        "out": 0
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  LinearSpread.prototype.onFieldsCreated = function() {
-	    return this.v_out = this.fields.getField("out", true);
-	  };
-	
-	  LinearSpread.prototype.remove = function() {
-	    delete this.v_out;
-	    return LinearSpread.__super__.remove.apply(this, arguments);
-	  };
-	
-	  LinearSpread.prototype.compute = function() {
-	    var i, j, needs_rebuild, ref, res, shift, stepSize;
-	    needs_rebuild = false;
-	    this.width = this.fields.getField("width").getValue(0);
-	    this.offset = this.fields.getField("offset").getValue(0);
-	    this.phase = this.fields.getField("phase").getValue(0);
-	    this.count = parseInt(this.fields.getField("count").getValue());
-	    this.value = [];
-	    stepSize = this.width / this.count;
-	    shift = stepSize / 2;
-	    for (i = j = 0, ref = this.count - 1; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
-	      res = (i * stepSize + shift + this.phase) % this.width;
-	      res = this.offset - this.width / 2 + res;
-	      this.value[i] = res;
-	    }
-	    return this.fields.setField("out", this.value);
-	  };
-	
-	  return LinearSpread;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('LinearSpread', LinearSpread);
-
-
-/***/ },
-/* 22 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Backbone, Group, Node, Nodes, _,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	Nodes = __webpack_require__(11);
-	
-	Node = __webpack_require__(35);
-	
-	Group = (function(superClass) {
-	  extend(Group, superClass);
-	
-	  function Group() {
-	    this.compute = bind(this.compute, this);
-	    this.remove = bind(this.remove, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.toJSON = bind(this.toJSON, this);
-	    this.initSubnodes = bind(this.initSubnodes, this);
-	    this.initialize = bind(this.initialize, this);
-	    return Group.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Group.node_name = 'Group';
-	
-	  Group.group_name = false;
-	
-	  Group.prototype.initialize = function(options) {
-	    var connection, j, len, ref, results;
-	    this.initSubnodes(options);
-	    Group.__super__.initialize.apply(this, arguments);
-	    this.nodes.each((function(_this) {
-	      return function(node) {
-	        return node.set("gid", _this.get("nid"));
-	      };
-	    })(this));
-	    ref = this.definition.get("connections");
-	    results = [];
-	    for (j = 0, len = ref.length; j < len; j++) {
-	      connection = ref[j];
-	      results.push(this.nodes.createConnectionFromObject(connection));
-	    }
-	    return results;
-	  };
-	
-	  Group.prototype.initSubnodes = function(options) {
-	    var j, len, n, nds, node, results;
-	    this.nodes = new Nodes([], {
-	      settings: options.settings,
-	      parent: this
-	    });
-	    this.definition = options.definition;
-	    nds = options.nodes ? options.nodes : this.definition.get("nodes");
-	    results = [];
-	    for (j = 0, len = nds.length; j < len; j++) {
-	      node = nds[j];
-	      results.push(n = this.nodes.createNode(node));
-	    }
-	    return results;
-	  };
-	
-	  Group.prototype.toJSON = function() {
-	    var res;
-	    res = {
-	      nid: this.get('nid'),
-	      name: this.get('name'),
-	      type: this.typename(),
-	      anim: this.getAnimationData(),
-	      x: this.get('x'),
-	      y: this.get('y'),
-	      nodes: jQuery.map(this.nodes.models, function(n, i) {
-	        return n.toJSON();
-	      }),
-	      definition_id: this.definition.get("gid")
-	    };
-	    return res;
-	  };
-	
-	  Group.prototype.getFields = function() {
-	    return false;
-	  };
-	
-	  Group.prototype.remove = function() {
-	    if (this.nodes) {
-	      this.nodes.destroy();
-	      delete this.nodes;
-	    }
-	    delete this.definition;
-	    return Group.__super__.remove.apply(this, arguments);
-	  };
-	
-	  Group.prototype.compute = function() {
-	    return this;
-	  };
-	
-	  return Group;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('Group', Group);
-
-
-/***/ },
-/* 23 */,
-/* 24 */,
-/* 25 */,
-/* 26 */,
-/* 27 */,
-/* 28 */,
-/* 29 */,
-/* 30 */,
-/* 31 */,
-/* 32 */,
-/* 33 */,
-/* 34 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Utils;
-	
-	Utils = (function() {
-	  function Utils() {}
-	
-	  Utils.flatArraysAreEquals = function(arr1, arr2) {
-	    var i, j, k, len;
-	    if (arr1.length !== arr2.length) {
-	      return false;
-	    }
-	    for (i = j = 0, len = arr1.length; j < len; i = ++j) {
-	      k = arr1[i];
-	      if (arr1[i] !== arr2[i]) {
-	        return false;
-	      }
-	    }
-	    return true;
-	  };
-	
-	  return Utils;
-	
-	})();
-	
-	module.exports = Utils;
-
-
-/***/ },
-/* 35 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Fields, Node, Utils, _,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
@@ -3602,9 +1176,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	Utils = __webpack_require__(34);
+	Utils = __webpack_require__(9);
 	
-	Fields = __webpack_require__(78);
+	Fields = __webpack_require__(12);
 	
 	
 	/* Node model */
@@ -3909,9 +1483,2319 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Node;
 
 
-/***/ },
-/* 36 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, Fields, _,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	__webpack_require__(13);
+	
+	
+	/* Fields Collection */
+	
+	Fields = (function(superClass) {
+	  extend(Fields, superClass);
+	
+	  function Fields() {
+	    this.renderSidebar = bind(this.renderSidebar, this);
+	    this.addFields = bind(this.addFields, this);
+	    this.addField = bind(this.addField, this);
+	    this.removeConnections = bind(this.removeConnections, this);
+	    this.renderConnections = bind(this.renderConnections, this);
+	    this.setFieldInputUnchanged = bind(this.setFieldInputUnchanged, this);
+	    this.hasUnconnectedFields = bind(this.hasUnconnectedFields, this);
+	    this.hasUnconnectedOutputs = bind(this.hasUnconnectedOutputs, this);
+	    this.hasUnconnectedInputs = bind(this.hasUnconnectedInputs, this);
+	    this.getDownstreamNodes = bind(this.getDownstreamNodes, this);
+	    this.getUpstreamNodes = bind(this.getUpstreamNodes, this);
+	    this.getMaxInputSliceCount = bind(this.getMaxInputSliceCount, this);
+	    this.setField = bind(this.setField, this);
+	    this.getField = bind(this.getField, this);
+	    this.toJSON = bind(this.toJSON, this);
+	    this.load = bind(this.load, this);
+	    this.destroy = bind(this.destroy, this);
+	    this.initialize = bind(this.initialize, this);
+	    return Fields.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Fields.prototype.initialize = function(models, options) {
+	    Fields.__super__.initialize.apply(this, arguments);
+	    this.node = options.node;
+	    this.indexer = options.indexer;
+	    this.inputs = {};
+	    this.outputs = {};
+	    this.special_elements = {
+	      left: [],
+	      center: [],
+	      right: []
+	    };
+	    return this.addFields(this.node.getFields());
+	  };
+	
+	  Fields.prototype.destroy = function() {
+	    this.removeConnections();
+	    while (this.models.length > 0) {
+	      this.models[0].remove();
+	    }
+	    delete this.node;
+	    delete this.inputs;
+	    delete this.outputs;
+	    delete this.indexer;
+	    return delete this.special_elements;
+	  };
+	
+	  Fields.prototype.load = function(data) {
+	    var f, j, len, node_field, ref;
+	    if (!data || !data["in"]) {
+	      return false;
+	    }
+	    ref = data["in"];
+	    for (j = 0, len = ref.length; j < len; j++) {
+	      f = ref[j];
+	      if (!f.nid) {
+	        node_field = this.inputs[f.name];
+	      } else {
+	        node_field = this.inputs[f.name + "-" + f.nid];
+	      }
+	      if (node_field) {
+	        node_field.load(f.val);
+	      }
+	    }
+	    return true;
+	  };
+	
+	  Fields.prototype.toJSON = function() {
+	    var data;
+	    data = {
+	      "in": jQuery.map(this.inputs, function(f, i) {
+	        return f.toJSON();
+	      }),
+	      out: jQuery.map(this.outputs, function(f, i) {
+	        return f.toJSON();
+	      })
+	    };
+	    return data;
+	  };
+	
+	  Fields.prototype.getField = function(key, is_out) {
+	    var target;
+	    if (is_out == null) {
+	      is_out = false;
+	    }
+	    target = is_out === true ? "outputs" : "inputs";
+	    return this[target][key];
+	  };
+	
+	  Fields.prototype.setField = function(key, value) {
+	    if (this.outputs[key]) {
+	      return this.outputs[key].setValue(value);
+	    }
+	  };
+	
+	  Fields.prototype.getMaxInputSliceCount = function() {
+	    var f, fname, ref, result, val;
+	    result = 1;
+	    ref = this.inputs;
+	    for (fname in ref) {
+	      f = ref[fname];
+	      val = f.attributes.value;
+	      if (val && $.type(val) === "array") {
+	        if (val.length > result) {
+	          result = val.length;
+	        }
+	      }
+	    }
+	    return result - 1;
+	  };
+	
+	  Fields.prototype.getUpstreamNodes = function() {
+	    var c, f, fname, j, len, ref, ref1, res;
+	    res = [];
+	    ref = this.inputs;
+	    for (fname in ref) {
+	      f = ref[fname];
+	      ref1 = f.connections;
+	      for (j = 0, len = ref1.length; j < len; j++) {
+	        c = ref1[j];
+	        res[res.length] = c.from_field.node;
+	      }
+	    }
+	    return res;
+	  };
+	
+	  Fields.prototype.getDownstreamNodes = function() {
+	    var c, f, fname, j, k, len, len1, ref, ref1, res;
+	    res = [];
+	    ref = this.outputs;
+	    for (f = j = 0, len = ref.length; j < len; f = ++j) {
+	      fname = ref[f];
+	      f = this.inputs[fname];
+	      ref1 = f.connections;
+	      for (k = 0, len1 = ref1.length; k < len1; k++) {
+	        c = ref1[k];
+	        res[res.length] = c.to_field.node;
+	      }
+	    }
+	    return res;
+	  };
+	
+	  Fields.prototype.hasUnconnectedInputs = function() {
+	    var f, fname, ref;
+	    ref = this.inputs;
+	    for (fname in ref) {
+	      f = ref[fname];
+	      if (f.connections.length === 0) {
+	        return true;
+	      }
+	    }
+	    return false;
+	  };
+	
+	  Fields.prototype.hasUnconnectedOutputs = function() {
+	    var f, fname, ref;
+	    ref = this.outputs;
+	    for (fname in ref) {
+	      f = ref[fname];
+	      if (f.connections.length === 0) {
+	        return true;
+	      }
+	    }
+	    return false;
+	  };
+	
+	  Fields.prototype.hasUnconnectedFields = function() {
+	    return hasUnconnectedInputs() || hasUnconnectedOutputs();
+	  };
+	
+	  Fields.prototype.setFieldInputUnchanged = function() {
+	    var f, fname, j, len, ref, results;
+	    ref = this.inputs;
+	    results = [];
+	    for (j = 0, len = ref.length; j < len; j++) {
+	      fname = ref[j];
+	      f = this.inputs[fname];
+	      results.push(f.changed = false);
+	    }
+	    return results;
+	  };
+	
+	  Fields.prototype.renderConnections = function() {
+	    return this.invoke("renderConnections");
+	  };
+	
+	  Fields.prototype.removeConnections = function() {
+	    return this.invoke("removeConnections");
+	  };
+	
+	  Fields.prototype.addField = function(name, value, direction) {
+	    var f, field, field_index, field_is_out, target;
+	    if (direction == null) {
+	      direction = "inputs";
+	    }
+	    f = false;
+	    field_is_out = direction !== "inputs";
+	    if ($.type(value) !== "object") {
+	      value = this.getFieldValueObject(value);
+	    }
+	    if (value.propagateDirty == null) {
+	      value.propagateDirty = true;
+	    }
+	    field = new ThreeNodes.Core.fields.models[value.type]({
+	      name: name,
+	      value: value.val,
+	      possibilities: value.values,
+	      node: this.node,
+	      is_output: field_is_out,
+	      "default": value["default"],
+	      subfield: value.subfield,
+	      indexer: this.indexer,
+	      propagateDirty: value.propagateDirty
+	    });
+	    target = field.get("is_output") === false ? "inputs" : "outputs";
+	    field_index = field.get("name");
+	    if (field.subfield) {
+	      field_index += "-" + field.subfield.node.get("nid");
+	    }
+	    this[target][field_index] = field;
+	    this.add(field);
+	    return field;
+	  };
+	
+	  Fields.prototype.addFields = function(fields_array) {
+	    var dir, fname, value;
+	    for (dir in fields_array) {
+	      for (fname in fields_array[dir]) {
+	        value = fields_array[dir][fname];
+	        this.addField(fname, value, dir);
+	      }
+	    }
+	    return this;
+	  };
+	
+	  Fields.prototype.renderSidebar = function() {
+	    this.trigger("renderSidebar");
+	    return this;
+	  };
+	
+	  Fields.prototype.getFieldValueObject = function(default_value) {
+	    var ftype, res;
+	    ftype = (function() {
+	      switch ($.type(default_value)) {
+	        case "number":
+	          return "Float";
+	        case "boolean":
+	          return "Bool";
+	        default:
+	          return "String";
+	      }
+	    })();
+	    res = {
+	      type: ftype,
+	      val: default_value
+	    };
+	    return res;
+	  };
+	
+	  return Fields;
+	
+	})(Backbone.Collection);
+	
+	module.exports = Fields;
+
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Any, Array, Backbone, Bool, BoolField, Camera, Color, Euler, EulerField, Float, FloatField, Fog, Geometry, Indexer, Material, Mesh, NodeField, Object3D, Quaternion, QuaternionField, Scene, String, StringField, Texture, Vector2, Vector2Field, Vector3, Vector3Field, Vector4, Vector4Field, _, namespace,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	Indexer = __webpack_require__(4);
+	
+	namespace = __webpack_require__(14).namespace;
+	
+	BoolField = __webpack_require__(15);
+	
+	StringField = __webpack_require__(21);
+	
+	FloatField = __webpack_require__(22);
+	
+	Vector2Field = __webpack_require__(23);
+	
+	Vector3Field = __webpack_require__(24);
+	
+	Vector4Field = __webpack_require__(25);
+	
+	QuaternionField = __webpack_require__(26);
+	
+	EulerField = __webpack_require__(27);
+	
+	
+	/* Field model */
+	
+	NodeField = (function(superClass) {
+	  extend(NodeField, superClass);
+	
+	  function NodeField() {
+	    this.onValueChanged = bind(this.onValueChanged, this);
+	    this.removeConnections = bind(this.removeConnections, this);
+	    this.unregisterConnection = bind(this.unregisterConnection, this);
+	    this.addConnection = bind(this.addConnection, this);
+	    this.computeValue = bind(this.computeValue, this);
+	    this.renderConnections = bind(this.renderConnections, this);
+	    this.toJSON = bind(this.toJSON, this);
+	    this.isAnimationProperty = bind(this.isAnimationProperty, this);
+	    this.getSliceCount = bind(this.getSliceCount, this);
+	    this.isConnected = bind(this.isConnected, this);
+	    this.isChanged = bind(this.isChanged, this);
+	    this.getValue = bind(this.getValue, this);
+	    this.setValue = bind(this.setValue, this);
+	    this.remove = bind(this.remove, this);
+	    this.initialize = bind(this.initialize, this);
+	    this.load = bind(this.load, this);
+	    this.set = bind(this.set, this);
+	    this._validate = bind(this._validate, this);
+	    this.sync = bind(this.sync, this);
+	    return NodeField.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  NodeField.VIEW = false;
+	
+	  NodeField.STATIC_INDEXER = new Indexer();
+	
+	  NodeField.prototype.defaults = function() {
+	    return {
+	      fid: -1,
+	      name: "fieldname",
+	      machine_name: "fieldname-nid",
+	      is_output: false,
+	      value: 0,
+	      "default": null
+	    };
+	  };
+	
+	  NodeField.prototype.sync = function() {};
+	
+	  NodeField.prototype._validate = function(attrs, options) {
+	    return true;
+	  };
+	
+	  NodeField.prototype.set = function(key, value, options) {
+	    if (options == null) {
+	      options = {};
+	    }
+	    if (key === "value") {
+	      this.attributes[key] = value;
+	      return this;
+	    }
+	    return NodeField.__super__.set.apply(this, arguments);
+	  };
+	
+	  NodeField.prototype.load = function(data) {
+	    var property;
+	    if (!data && data !== false) {
+	      return;
+	    }
+	    if ($.type(data) !== "object") {
+	      this.setValue(data);
+	    } else {
+	      for (property in data) {
+	        this.attributes.value[property] = data[property];
+	      }
+	    }
+	    return this;
+	  };
+	
+	  NodeField.prototype.initialize = function(options) {
+	    var indexer, self;
+	    self = this;
+	    this.node = options.node;
+	    this.subfield = options.subfield;
+	    this.propagateDirty = options.propagateDirty != null ? options.propagateDirty : true;
+	    indexer = options.indexer || ThreeNodes.NodeField.STATIC_INDEXER;
+	    this.changed = true;
+	    this.connections = [];
+	    this.on_value_update_hooks = {};
+	    this.set("machine_name", this.get("name"));
+	    if (this.subfield && this.subfield.node) {
+	      this.set("machine_name", this.get("name") + "-" + this.subfield.node.get("nid"));
+	    }
+	    if (this.get("fid") === -1) {
+	      return this.set("fid", indexer.getUID());
+	    }
+	  };
+	
+	  NodeField.prototype.remove = function() {
+	    delete this.on_value_update_hooks;
+	    delete this.node;
+	    delete this.connections;
+	    delete this.button;
+	    delete this.subfield;
+	    return this.destroy();
+	  };
+	
+	  NodeField.prototype.isEqual = function(val, prev) {
+	    var i, j, len, prev1, same_array, val1;
+	    if (_.isArray(val) && _.isArray(prev)) {
+	      if (val.length !== prev.length) {
+	        return false;
+	      }
+	      same_array = true;
+	      for (i = j = 0, len = val.length; j < len; i = ++j) {
+	        val1 = val[i];
+	        prev1 = prev[i];
+	        if (this.isEqual(val1, prev1) === false) {
+	          same_array = false;
+	          break;
+	        }
+	      }
+	      if (same_array === false) {
+	        return false;
+	      } else {
+	        return true;
+	      }
+	    } else if (_.isObject(val) && _.isObject(prev)) {
+	      if ((val.uuid != null) && (prev.uuid != null) && val.uuid === prev.uuid) {
+	        return true;
+	      }
+	      return false;
+	    } else if (val === prev) {
+	      return true;
+	    }
+	    return false;
+	  };
+	
+	  NodeField.prototype.setValue = function(v) {
+	    var connection, default_val, hook, j, len, new_val, prev_val, propagate, ref, setNodeDirty, tmp_val;
+	    prev_val = this.attributes["value"];
+	    if (this.isEqual(v, prev_val)) {
+	      return false;
+	    }
+	    this.changed = true;
+	    propagate = this.propagateDirty;
+	    setNodeDirty = function(node) {
+	      node.dirty = true;
+	      if (propagate && node.parent) {
+	        return setNodeDirty(node.parent);
+	      }
+	    };
+	    if (this.node) {
+	      setNodeDirty(this.node);
+	    }
+	    new_val = this.onValueChanged(v);
+	    if ($.type(new_val) === "array") {
+	      tmp_val = _.filter(new_val, function(item) {
+	        return item !== null;
+	      });
+	      if (this.constructor === Array) {
+	        new_val = tmp_val;
+	      } else {
+	        if (tmp_val.length !== 0) {
+	          new_val = tmp_val;
+	        } else {
+	          new_val = null;
+	        }
+	      }
+	    }
+	    if (new_val === null) {
+	      default_val = this.attributes["default"];
+	      if (default_val !== null && default_val !== void 0) {
+	        prev_val = default_val;
+	      }
+	      new_val = prev_val;
+	    }
+	    this.attributes["value"] = new_val;
+	    this.trigger("value_updated", new_val);
+	    for (hook in this.on_value_update_hooks) {
+	      this.on_value_update_hooks[hook](new_val);
+	    }
+	    if (this.attributes["is_output"] === true) {
+	      ref = this.connections;
+	      for (j = 0, len = ref.length; j < len; j++) {
+	        connection = ref[j];
+	        connection.to_field.setValue(new_val);
+	      }
+	    }
+	    return true;
+	  };
+	
+	  NodeField.prototype.getValue = function(index) {
+	    var val;
+	    if (index == null) {
+	      index = 0;
+	    }
+	    val = this.attributes["value"];
+	    if ($.type(val) !== "array") {
+	      return val;
+	    } else {
+	      return val[index % val.length];
+	    }
+	  };
+	
+	  NodeField.prototype.isChanged = function() {
+	    var res;
+	    res = this.changed;
+	    this.changed = false;
+	    return res;
+	  };
+	
+	  NodeField.prototype.isConnected = function() {
+	    return this.connections.length > 0;
+	  };
+	
+	  NodeField.prototype.getSliceCount = function() {
+	    var val;
+	    val = this.attributes["value"];
+	    if (jQuery.type(val) !== "array") {
+	      return 1;
+	    }
+	    return val.length;
+	  };
+	
+	  NodeField.prototype.isAnimationProperty = function() {
+	    if (this.constructor === Float || this.constructor === Bool) {
+	      return true;
+	    }
+	    return false;
+	  };
+	
+	  NodeField.prototype.toJSON = function() {
+	    var res, val, val_type;
+	    res = {
+	      name: this.get("name")
+	    };
+	    if (this.subfield) {
+	      res.nid = this.subfield.node.get("nid");
+	    }
+	    val = this.get("value");
+	    val_type = jQuery.type(val);
+	    if (val_type !== "object" && val_type !== "array") {
+	      res.val = val;
+	    }
+	    if (val_type === "object") {
+	      if (val.constructor === THREE.Vector2 || val.constructor === THREE.Vector3 || val.constructor === THREE.Vector4 || val.constructor === THREE.Color) {
+	        res.val = val;
+	      }
+	    }
+	    return res;
+	  };
+	
+	  NodeField.prototype.renderConnections = function() {
+	    var connection, j, len, ref;
+	    ref = this.connections;
+	    for (j = 0, len = ref.length; j < len; j++) {
+	      connection = ref[j];
+	      connection.render();
+	    }
+	    return true;
+	  };
+	
+	  NodeField.prototype.computeValue = function(val) {
+	    return val;
+	  };
+	
+	  NodeField.prototype.addConnection = function(c) {
+	    if (this.connections.indexOf(c) === -1) {
+	      this.connections.push(c);
+	      if (this.get("is_output") === true) {
+	        this.node.addOutConnection(c, this);
+	      }
+	      this.node.disablePropertyAnim(this);
+	    }
+	    return c;
+	  };
+	
+	  NodeField.prototype.unregisterConnection = function(c) {
+	    var ind;
+	    this.node.removeConnection(c);
+	    ind = this.connections.indexOf(c);
+	    if (ind !== -1) {
+	      this.connections.splice(ind, 1);
+	    }
+	    if (this.connections.length === 0) {
+	      return this.node.enablePropertyAnim(this);
+	    }
+	  };
+	
+	  NodeField.prototype.removeConnections = function() {
+	    while (this.connections.length > 0) {
+	      this.connections[0].remove();
+	    }
+	    return this;
+	  };
+	
+	  NodeField.prototype.onValueChanged = function(val) {
+	    var self;
+	    self = this;
+	    if ($.type(val) === "array") {
+	      return _.map(val, function(n) {
+	        return self.computeValue(n);
+	      });
+	    }
+	    return this.computeValue(val);
+	  };
+	
+	  return NodeField;
+	
+	})(Backbone.Model);
+	
+	Any = (function(superClass) {
+	  extend(Any, superClass);
+	
+	  function Any() {
+	    this.onValueChanged = bind(this.onValueChanged, this);
+	    this.computeValue = bind(this.computeValue, this);
+	    return Any.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Any.prototype.computeValue = function(val) {
+	    return val;
+	  };
+	
+	  Any.prototype.onValueChanged = function(val) {
+	    return val;
+	  };
+	
+	  return Any;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('Any', Any);
+	
+	Array = (function(superClass) {
+	  extend(Array, superClass);
+	
+	  function Array() {
+	    this.getValue = bind(this.getValue, this);
+	    this.onValueChanged = bind(this.onValueChanged, this);
+	    this.removeConnections = bind(this.removeConnections, this);
+	    this.computeValue = bind(this.computeValue, this);
+	    return Array.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Array.prototype.computeValue = function(val) {
+	    if (!val || val === false) {
+	      return [];
+	    }
+	    if ($.type(val) === "array") {
+	      return val;
+	    } else {
+	      return [val];
+	    }
+	  };
+	
+	  Array.prototype.removeConnections = function() {
+	    Array.__super__.removeConnections.apply(this, arguments);
+	    if (this.get("is_output") === false) {
+	      return this.setValue([]);
+	    }
+	  };
+	
+	  Array.prototype.onValueChanged = function(val) {
+	    return this.computeValue(val);
+	  };
+	
+	  Array.prototype.getValue = function(index) {
+	    if (index == null) {
+	      index = 0;
+	    }
+	    return this.get("value");
+	  };
+	
+	  return Array;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('Array', Array);
+	
+	Bool = (function(superClass) {
+	  extend(Bool, superClass);
+	
+	  function Bool() {
+	    this.computeValue = bind(this.computeValue, this);
+	    return Bool.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Bool.VIEW = BoolField;
+	
+	  Bool.prototype.computeValue = function(val) {
+	    switch ($.type(val)) {
+	      case "boolean":
+	        return val;
+	      case "number":
+	        return val !== 0;
+	      case "string":
+	        return val === "1";
+	    }
+	    return null;
+	  };
+	
+	  return Bool;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('Bool', Bool);
+	
+	String = (function(superClass) {
+	  extend(String, superClass);
+	
+	  function String() {
+	    this.computeValue = bind(this.computeValue, this);
+	    return String.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  String.VIEW = StringField;
+	
+	  String.prototype.computeValue = function(val) {
+	    switch ($.type(val)) {
+	      case "array":
+	        return val;
+	      case "number":
+	        return val.toString;
+	      case "string":
+	        return val;
+	    }
+	    return null;
+	  };
+	
+	  return String;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('String', String);
+	
+	Float = (function(superClass) {
+	  extend(Float, superClass);
+	
+	  function Float() {
+	    this.computeValue = bind(this.computeValue, this);
+	    return Float.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Float.VIEW = FloatField;
+	
+	  Float.prototype.computeValue = function(val) {
+	    switch ($.type(val)) {
+	      case "number":
+	      case "string":
+	        return parseFloat(val);
+	      case "object":
+	        if (val.constructor === THREE.Vector2 || val.constructor === THREE.Vector3) {
+	          return val;
+	        }
+	        break;
+	      case "boolean":
+	        if (val === true) {
+	          return 1;
+	        } else {
+	          return 0;
+	        }
+	    }
+	    return null;
+	  };
+	
+	  return Float;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('Float', Float);
+	
+	Vector2 = (function(superClass) {
+	  extend(Vector2, superClass);
+	
+	  function Vector2() {
+	    this.computeValue = bind(this.computeValue, this);
+	    return Vector2.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Vector2.VIEW = Vector2Field;
+	
+	  Vector2.prototype.computeValue = function(val) {
+	    if ($.type(val) === "object") {
+	      if (val.constructor === THREE.Vector2) {
+	        return val;
+	      }
+	    }
+	    return null;
+	  };
+	
+	  return Vector2;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('Vector2', Vector2);
+	
+	Vector3 = (function(superClass) {
+	  extend(Vector3, superClass);
+	
+	  function Vector3() {
+	    this.computeValue = bind(this.computeValue, this);
+	    return Vector3.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Vector3.VIEW = Vector3Field;
+	
+	  Vector3.prototype.computeValue = function(val) {
+	    if ($.type(val) === "object") {
+	      if (val.constructor === THREE.Vector3) {
+	        return val;
+	      }
+	    }
+	    return null;
+	  };
+	
+	  return Vector3;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('Vector3', Vector3);
+	
+	Vector4 = (function(superClass) {
+	  extend(Vector4, superClass);
+	
+	  function Vector4() {
+	    this.computeValue = bind(this.computeValue, this);
+	    return Vector4.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Vector4.VIEW = Vector4Field;
+	
+	  Vector4.prototype.computeValue = function(val) {
+	    if ($.type(val) === "object") {
+	      if (val.constructor === THREE.Vector4) {
+	        return val;
+	      }
+	    }
+	    return null;
+	  };
+	
+	  return Vector4;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('Vector4', Vector4);
+	
+	Quaternion = (function(superClass) {
+	  extend(Quaternion, superClass);
+	
+	  function Quaternion() {
+	    this.computeValue = bind(this.computeValue, this);
+	    return Quaternion.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Quaternion.VIEW = QuaternionField;
+	
+	  Quaternion.prototype.computeValue = function(val) {
+	    if ($.type(val) === "object") {
+	      if (val.constructor === THREE.Quaternion) {
+	        return val;
+	      }
+	    }
+	    return null;
+	  };
+	
+	  return Quaternion;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('Quaternion', Quaternion);
+	
+	Euler = (function(superClass) {
+	  extend(Euler, superClass);
+	
+	  function Euler() {
+	    this.computeValue = bind(this.computeValue, this);
+	    return Euler.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Euler.VIEW = EulerField;
+	
+	  Euler.prototype.computeValue = function(val) {
+	    if ($.type(val) === "object") {
+	      if (val.constructor === THREE.Euler) {
+	        return val;
+	      }
+	    }
+	    return null;
+	  };
+	
+	  return Euler;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('Euler', Euler);
+	
+	Color = (function(superClass) {
+	  extend(Color, superClass);
+	
+	  function Color() {
+	    this.computeValue = bind(this.computeValue, this);
+	    return Color.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Color.VIEW = false;
+	
+	  Color.prototype.computeValue = function(val) {
+	    switch ($.type(val)) {
+	      case "number":
+	        return new THREE.Color().setRGB(val, val, val);
+	      case "object":
+	        switch (val.constructor) {
+	          case THREE.Color:
+	            return val;
+	          case THREE.Vector3:
+	            return new THREE.Color().setRGB(val.x, val.y, val.z);
+	        }
+	        break;
+	      case "boolean":
+	        if (val) {
+	          return new THREE.Color(0xffffff);
+	        } else {
+	          return new THREE.Color(0x000000);
+	        }
+	    }
+	    return null;
+	  };
+	
+	  return Color;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('Color', Color);
+	
+	Object3D = (function(superClass) {
+	  extend(Object3D, superClass);
+	
+	  function Object3D() {
+	    this.computeValue = bind(this.computeValue, this);
+	    return Object3D.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Object3D.prototype.computeValue = function(val) {
+	    if ($.type(val) === "object") {
+	      if (val.constructor === THREE.Object3D || val instanceof THREE.Object3D) {
+	        return val;
+	      }
+	    }
+	    return null;
+	  };
+	
+	  return Object3D;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('Object3D', Object3D);
+	
+	Scene = (function(superClass) {
+	  extend(Scene, superClass);
+	
+	  function Scene() {
+	    this.computeValue = bind(this.computeValue, this);
+	    return Scene.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Scene.prototype.computeValue = function(val) {
+	    if ($.type(val) === "object") {
+	      if (val instanceof THREE.Scene) {
+	        return val;
+	      }
+	    }
+	    return null;
+	  };
+	
+	  return Scene;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('Scene', Scene);
+	
+	Camera = (function(superClass) {
+	  extend(Camera, superClass);
+	
+	  function Camera() {
+	    this.computeValue = bind(this.computeValue, this);
+	    return Camera.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Camera.prototype.computeValue = function(val) {
+	    if ($.type(val) === "object") {
+	      if (val instanceof THREE.Camera || val instanceof THREE.PerspectiveCamera || val instanceof THREE.OrthographicCamera) {
+	        return val;
+	      }
+	    }
+	    return null;
+	  };
+	
+	  return Camera;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('Camera', Camera);
+	
+	Mesh = (function(superClass) {
+	  extend(Mesh, superClass);
+	
+	  function Mesh() {
+	    this.computeValue = bind(this.computeValue, this);
+	    return Mesh.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Mesh.prototype.computeValue = function(val) {
+	    if ($.type(val) === "object") {
+	      if (val.constructor === THREE.Mesh || val instanceof THREE.Mesh) {
+	        return val;
+	      }
+	    }
+	    return null;
+	  };
+	
+	  return Mesh;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('Mesh', Mesh);
+	
+	Geometry = (function(superClass) {
+	  extend(Geometry, superClass);
+	
+	  function Geometry() {
+	    this.computeValue = bind(this.computeValue, this);
+	    return Geometry.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Geometry.prototype.computeValue = function(val) {
+	    if ($.type(val) === "object") {
+	      if (val.constructor === THREE.Geometry || val instanceof THREE.Geometry) {
+	        return val;
+	      }
+	    }
+	    return null;
+	  };
+	
+	  return Geometry;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('Geometry', Geometry);
+	
+	Material = (function(superClass) {
+	  extend(Material, superClass);
+	
+	  function Material() {
+	    this.computeValue = bind(this.computeValue, this);
+	    return Material.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Material.prototype.computeValue = function(val) {
+	    if ($.type(val) === "object") {
+	      if (val.constructor === THREE.Material || val instanceof THREE.Material) {
+	        return val;
+	      }
+	    }
+	    return null;
+	  };
+	
+	  return Material;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('Material', Material);
+	
+	Texture = (function(superClass) {
+	  extend(Texture, superClass);
+	
+	  function Texture() {
+	    this.computeValue = bind(this.computeValue, this);
+	    return Texture.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Texture.prototype.computeValue = function(val) {
+	    if ($.type(val) === "object") {
+	      if (val.constructor === THREE.Texture || val instanceof THREE.Texture) {
+	        return val;
+	      }
+	    }
+	    return null;
+	  };
+	
+	  return Texture;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('Texture', Texture);
+	
+	Fog = (function(superClass) {
+	  extend(Fog, superClass);
+	
+	  function Fog() {
+	    this.computeValue = bind(this.computeValue, this);
+	    return Fog.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Fog.prototype.computeValue = function(val) {
+	    if ($.type(val) === "object") {
+	      if (val.constructor === THREE.Fog || val.constructor === THREE.FogExp2) {
+	        return val;
+	      }
+	    }
+	    return null;
+	  };
+	
+	  return Fog;
+	
+	})(NodeField);
+	
+	ThreeNodes.Core.addFieldType('Fog', Fog);
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports) {
+
+	/*
+	 * namespace.coffee v1.0.0
+	 * Copyright (c) 2011 CodeCatalyst, LLC.
+	 * Open source under the MIT License.
+	 */
+	(function() {
+	  var namespace;
+	  namespace = function(name, values) {
+	    var key, subpackage, target, value, _i, _len, _ref, _results;
+	    target = typeof exports !== "undefined" && exports !== null ? exports : window;
+	    //target = window;
+	    if (name.length > 0) {
+	      _ref = name.split('.');
+	      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+	        subpackage = _ref[_i];
+	        target = target[subpackage] || (target[subpackage] = {});
+	      }
+	    }
+	    _results = [];
+	    for (key in values) {
+	      value = values[key];
+	      _results.push(target[key] = value);
+	    }
+	    return _results;
+	  };
+	  namespace("", {
+	    namespace: namespace
+	  });
+	}).call(this);
+
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, BaseField, BoolField, _, namespace,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	namespace = __webpack_require__(14).namespace;
+	
+	BaseField = __webpack_require__(16);
+	
+	
+	/* SidebarField View */
+	
+	BoolField = (function(superClass) {
+	  extend(BoolField, superClass);
+	
+	  function BoolField() {
+	    this.render = bind(this.render, this);
+	    this.on_value_updated = bind(this.on_value_updated, this);
+	    return BoolField.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  BoolField.prototype.on_value_updated = function(new_val) {
+	    if (this.model.getValue() === true) {
+	      return this.$checkbox.attr('checked', 'checked');
+	    } else {
+	      return this.$checkbox.removeAttr('checked');
+	    }
+	  };
+	
+	  BoolField.prototype.render = function() {
+	    var $container, $target, id;
+	    console.log("check..");
+	    $target = this.createSidebarContainer();
+	    id = "side-field-checkbox-" + (this.model.get('fid'));
+	    $container = $("<div><input type='checkbox' id='" + id + "'/></div>").appendTo($target);
+	    this.$checkbox = $("input", $container);
+	    if (this.model.getValue() === true) {
+	      this.$checkbox.attr('checked', 'checked');
+	    }
+	    this.$checkbox.change((function(_this) {
+	      return function(e) {
+	        if (_this.$checkbox.is(':checked')) {
+	          return _this.model.setValue(true);
+	        } else {
+	          return _this.model.setValue(false);
+	        }
+	      };
+	    })(this));
+	    return this;
+	  };
+	
+	  return BoolField;
+	
+	})(BaseField);
+	
+	module.exports = BoolField;
+
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, BaseField, SidebarTextfield, _, _view_field_sidebar_container,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	_view_field_sidebar_container = __webpack_require__(17);
+	
+	SidebarTextfield = __webpack_require__(18);
+	
+	
+	/* BaseField View */
+	
+	BaseField = (function(superClass) {
+	  extend(BaseField, superClass);
+	
+	  function BaseField() {
+	    this.createSidebarFieldTitle = bind(this.createSidebarFieldTitle, this);
+	    this.createSubvalTextinput = bind(this.createSubvalTextinput, this);
+	    this.createTextfield = bind(this.createTextfield, this);
+	    this.createSidebarContainer = bind(this.createSidebarContainer, this);
+	    this.render = bind(this.render, this);
+	    this.on_value_updated = bind(this.on_value_updated, this);
+	    return BaseField.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  BaseField.prototype.initialize = function(options) {
+	    BaseField.__super__.initialize.apply(this, arguments);
+	    this.model.on("value_updated", this.on_value_updated);
+	    return this.render();
+	  };
+	
+	  BaseField.prototype.on_value_updated = function(new_val) {
+	    return this;
+	  };
+	
+	  BaseField.prototype.render = function() {
+	    return this;
+	  };
+	
+	  BaseField.prototype.createSidebarContainer = function(name) {
+	    var options;
+	    if (name == null) {
+	      name = this.model.get("name");
+	    }
+	    options = {
+	      fid: this.model.get("fid"),
+	      model: this,
+	      name: name
+	    };
+	    this.container = $(_.template(_view_field_sidebar_container, options));
+	    this.$el.append(this.container);
+	    return this.container;
+	  };
+	
+	  BaseField.prototype.createTextfield = function($target, type, link_to_val) {
+	    var textField;
+	    if (type == null) {
+	      type = "float";
+	    }
+	    if (link_to_val == null) {
+	      link_to_val = true;
+	    }
+	    textField = new SidebarTextfield({
+	      model: this.model,
+	      el: $target,
+	      type: type,
+	      link_to_val: link_to_val
+	    });
+	    return textField;
+	  };
+	
+	  BaseField.prototype.createSubvalTextinput = function(subval, type) {
+	    var $target, textfield;
+	    if (type == null) {
+	      type = "float";
+	    }
+	    $target = this.createSidebarContainer(subval);
+	    textfield = this.createTextfield($target, type, false);
+	    textfield.linkTextfieldToSubval(subval, type);
+	    return false;
+	  };
+	
+	  BaseField.prototype.createSidebarFieldTitle = function(name) {
+	    if (name == null) {
+	      name = this.model.get("name");
+	    }
+	    this.$el.append("<h3>" + name + "</h3>");
+	    return this.$el;
+	  };
+	
+	  return BaseField;
+	
+	})(Backbone.View);
+	
+	module.exports = BaseField;
+
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports) {
+
+	module.exports = "<div data-fid=\"<%= fid %>\" class='field-wrapper'>\n  <h3><%= name %></h3>\n</div>\n";
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, DraggableNumber, SidebarTextfield, _, _view_field_textfield,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	_view_field_textfield = __webpack_require__(19);
+	
+	DraggableNumber = __webpack_require__(20);
+	
+	
+	/* SidebarTextfield View */
+	
+	SidebarTextfield = (function(superClass) {
+	  extend(SidebarTextfield, superClass);
+	
+	  function SidebarTextfield() {
+	    this.addTextfieldSlider = bind(this.addTextfieldSlider, this);
+	    this.linkTextfieldToSubval = bind(this.linkTextfieldToSubval, this);
+	    this.linkTextfieldToVal = bind(this.linkTextfieldToVal, this);
+	    this.render = bind(this.render, this);
+	    return SidebarTextfield.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  SidebarTextfield.prototype.initialize = function(options) {
+	    SidebarTextfield.__super__.initialize.apply(this, arguments);
+	    this.slider = false;
+	    return this.render();
+	  };
+	
+	  SidebarTextfield.prototype.render = function() {
+	    this.container = $(_.template(_view_field_textfield, this.options));
+	    this.$el.append(this.container);
+	    this.$input = $("input", this.container);
+	    return this;
+	  };
+	
+	  SidebarTextfield.prototype.linkTextfieldToVal = function(type) {
+	    var on_value_changed;
+	    if (type == null) {
+	      type = "float";
+	    }
+	    this.$input.val(this.model.getValue());
+	    if (this.options.type === "float" && this.slider === false) {
+	      this.slider = this.addTextfieldSlider();
+	    }
+	    on_value_changed = (function(_this) {
+	      return function(v) {
+	        if (_this.slider) {
+	          return _this.slider.set(v);
+	        }
+	      };
+	    })(this);
+	    this.model.on("value_updated", on_value_changed);
+	    this.$input.val(this.model.getValue());
+	    if (this.slider) {
+	      this.slider._options.changeCallback = (function(_this) {
+	        return function(new_val) {
+	          return _this.model.setValue(new_val);
+	        };
+	      })(this);
+	    }
+	    this.$input.keypress((function(_this) {
+	      return function(e) {
+	        if (e.which === 13) {
+	          if (type === "float") {
+	            _this.model.setValue(parseFloat(_this.$input.val()));
+	          } else {
+	            _this.model.setValue(_this.$input.val());
+	          }
+	          return _this.$input.blur();
+	        }
+	      };
+	    })(this));
+	    return this;
+	  };
+	
+	  SidebarTextfield.prototype.linkTextfieldToSubval = function(subval, type) {
+	    var updateVal;
+	    if (type == null) {
+	      type = "float";
+	    }
+	    this.$input.val(this.model.getValue()[subval]);
+	    if (this.options.type === "float") {
+	      this.slider = this.addTextfieldSlider();
+	    }
+	    this.model.on_value_update_hooks["update_sidebar_textfield_" + subval] = (function(_this) {
+	      return function(v) {
+	        return _this.$input.val(v[subval]);
+	      };
+	    })(this);
+	    updateVal = (function(_this) {
+	      return function() {
+	        var dval;
+	        dval = _this.$input.val();
+	        if (type === "float") {
+	          dval = parseFloat(dval);
+	        }
+	        if ($.type(_this.model.attributes.value) === "array") {
+	          return _this.model.attributes.value[0][subval] = dval;
+	        } else {
+	          return _this.model.attributes.value[subval] = dval;
+	        }
+	      };
+	    })(this);
+	    this.slider._options.changeCallback = (function(_this) {
+	      return function(new_val) {
+	        return updateVal();
+	      };
+	    })(this);
+	    this.$input.change((function(_this) {
+	      return function(e) {
+	        return updateVal();
+	      };
+	    })(this));
+	    this.$input.keypress((function(_this) {
+	      return function(e) {
+	        if (e.which === 13) {
+	          updateVal();
+	          return _this.$input.blur();
+	        }
+	      };
+	    })(this));
+	    return this;
+	  };
+	
+	  SidebarTextfield.prototype.addTextfieldSlider = function() {
+	    var slider;
+	    slider = new DraggableNumber(this.$input.get(0));
+	    return slider;
+	  };
+	
+	  return SidebarTextfield;
+	
+	})(Backbone.View);
+	
+	module.exports = SidebarTextfield;
+
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports) {
+
+	module.exports = "<div class='input-container'>\n  <input type='text' class='field-<%= type %>' />\n</div>\n";
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	/**!
+	 * draggable-number.js
+	 * Minimal numeric input widget
+	 *
+	 * @license Licensed under the MIT (http://www.opensource.org/licenses/mit-license.php) license.
+	 * @author David Mignot - http://idflood.com
+	 * @version 0.3.0
+	 **/
+	(function(root, factory) {
+	    if(true) {
+	        module.exports = factory();
+	    }
+	    else if(typeof define === 'function' && define.amd) {
+	        define([], factory);
+	    }
+	    else {
+	        root['DraggableNumber'] = factory();
+	    }
+	}(this, function() {
+	// Utility function to replace .bind(this) since it is not available in all browsers.
+	var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+	
+	/**
+	 * Define the DraggableNumber element.
+	 * @constructor
+	 * @param {DomElement} input - The input which will be converted to a draggableNumber.
+	 */
+	DraggableNumber = function (input, options) {
+	  this._options = options !== undefined ? options : {};
+	
+	  this._input = input;
+	  this._span = document.createElement("span");
+	  this._isDragging = false;
+	  this._lastMousePosition = {x: 0, y: 0};
+	  this._value = 0;
+	
+	  // Minimum mouse movement before a drag start.
+	  this._dragThreshold = this._setOption('dragThreshold', 10);
+	
+	  // Min/max value.
+	  this._min = this._setOption('min', -Infinity);
+	  this._max = this._setOption('max', Infinity);
+	
+	  // Store the original display style for the input and span.
+	  this._inputDisplayStyle = "";
+	  this._spanDisplayStyle = "";
+	
+	  this._init();
+	};
+	
+	/**
+	 * Constant used when there is no key modifier.
+	 * @constant
+	 * type {Number}
+	 */
+	DraggableNumber.MODIFIER_NONE = 0;
+	
+	/**
+	 * Constant used when there is a shift key modifier.
+	 * @constant
+	 * type {Number}
+	 */
+	DraggableNumber.MODIFIER_LARGE = 1;
+	
+	/**
+	 * Constant used when there is a control key modifier.
+	 * @constant
+	 * type {Number}
+	 */
+	DraggableNumber.MODIFIER_SMALL = 2;
+	
+	DraggableNumber.prototype = {
+	  constructor: DraggableNumber,
+	
+	  /**
+	   * Initialize the DraggableNumber.
+	   * @private
+	   */
+	  _init: function () {
+	    // Get the inital _value from the input.
+	    this._value = parseFloat(this._input.value, 10);
+	
+	    // Add a span containing the _value. Clicking on the span will show the
+	    // input. Dragging the span will change the _value.
+	    this._addSpan();
+	
+	    // Save the original display style of the input and span.
+	    this._inputDisplayStyle = this._input.style.display;
+	    this._spanDisplayStyle = this._span.style.display;
+	
+	    // Hide the input.
+	    this._input.style.display = 'none';
+	
+	    // Bind 'this' on event callbacks.
+	    this._onMouseUp = __bind(this._onMouseUp, this);
+	    this._onMouseMove = __bind(this._onMouseMove, this);
+	    this._onMouseDown = __bind(this._onMouseDown, this);
+	    this._onInputBlur = __bind(this._onInputBlur, this);
+	    this._onInputKeyDown = __bind(this._onInputKeyDown, this);
+	    this._onInputChange = __bind(this._onInputChange, this);
+	
+	    // Add mousedown event handler.
+	    this._span.addEventListener('mousedown', this._onMouseDown, false);
+	
+	    // Add key events on the input.
+	    this._input.addEventListener('blur', this._onInputBlur, false);
+	    this._input.addEventListener('keypress', this._onInputKeyDown, false);
+	
+	    // Directly assign the function instead of using addeventlistener.
+	    // To programatically change the _value of the draggableNumber you
+	    // could then do:
+	    // input._value = new_number;
+	    // input.onchange();
+	    this._input.onchange = this._onInputChange;
+	  },
+	
+	  /**
+	   * Set the DraggableNumber value.
+	   * @public
+	   * @param {Number} new_value - The new value.
+	   */
+	  set: function (new_value) {
+	    new_value = this._constraintValue(new_value);
+	    this._value = new_value;
+	    this._input.value = this._value;
+	    this._span.innerHTML = this._value;
+	  },
+	
+	  /**
+	   * Get the DraggableNumber value.
+	   * @public
+	   * @returns {Number}
+	   */
+	  get: function () {
+	    return this._value;
+	  },
+	
+	  /**
+	   * Set the minimum value.
+	   * @public
+	   * @param {Number} min - The minimum value.
+	   */
+	  setMin: function (min) {
+	    this._min = min;
+	    // Set the value with current value to automatically constrain it if needed.
+	    this.set(this._value);
+	  },
+	
+	  /**
+	   * Set the maximum value.
+	   * @public
+	   * @param {Number} min - The minimum value.
+	   */
+	  setMax: function (max) {
+	    this._max = max;
+	    // Set the value with current value to automatically constrain it if needed.
+	    this.set(this._value);
+	  },
+	
+	  /**
+	   * Remove the DraggableNumber.
+	   * @public
+	   */
+	  destroy: function () {
+	    // Remove event listeners.
+	    this._span.removeEventListener('mousedown', this._onMouseDown, false);
+	    this._input.removeEventListener('blur', this._onInputBlur, false);
+	    this._input.removeEventListener('keypress', this._onInputKeyDown, false);
+	    document.removeEventListener('mouseup', this._onMouseUp, false);
+	    document.removeEventListener('mousemove', this._onMouseMove, false);
+	
+	    // Remove the span element.
+	    if (this._span.parentNode) {
+	      this._span.parentNode.removeChild(this._span);
+	    }
+	
+	    // Delete variables.
+	    delete this._input;
+	    delete this._span;
+	    delete this._inputDisplayStyle;
+	    delete this._spanDisplayStyle;
+	  },
+	
+	  /**
+	   * Set an option value based on the option parameter and the data attribute.
+	   * @private
+	   * @param {String} name - The option name.
+	   * @param {Number} defaultValue - The default value.
+	   * @returns {Number}
+	   */
+	  _setOption: function (name, defaultValue) {
+	    // Return the option if it is defined.
+	    if (this._options[name] !== undefined) {
+	      return this._options[name];
+	    }
+	    // Return the data attribute if it is defined.
+	    if (this._input.hasAttribute("data-" + name)) {
+	      return parseFloat(this._input.getAttribute("data-" + name), 10);
+	    }
+	    // If there is no option and no attribute, return the default value.
+	    return defaultValue;
+	  },
+	
+	  /**
+	   * Prevent selection on the whole document.
+	   * @private
+	   * @param {Boolean} prevent - Should we prevent or not the selection.
+	   */
+	  _preventSelection: function (prevent) {
+	    var value = 'none';
+	    if (prevent === false) {
+	      value = 'all';
+	    }
+	
+	    document.body.style['-moz-user-select'] = value;
+	    document.body.style['-webkit-user-select'] = value;
+	    document.body.style['-ms-user-select'] = value;
+	    document.body.style['user-select'] = value;
+	  },
+	
+	  /**
+	   * Add a span element before the input.
+	   * @private
+	   */
+	  _addSpan: function () {
+	    var inputParent = this._input.parentNode;
+	    inputParent.insertBefore(this._span, this._input);
+	    this._span.innerHTML = this.get();
+	
+	    // Add resize cursor.
+	    this._span.style.cursor = "col-resize";
+	  },
+	
+	  /**
+	   * Display the input and hide the span element.
+	   * @private
+	   */
+	  _showInput: function () {
+	    this._input.style.display = this._inputDisplayStyle;
+	    this._span.style.display = 'none';
+	    this._input.focus();
+	  },
+	
+	  /**
+	   * Show the span element and hide the input.
+	   * @private
+	   */
+	  _showSpan: function () {
+	    this._input.style.display = 'none';
+	    this._span.style.display = this._spanDisplayStyle;
+	  },
+	
+	  /**
+	   * Called on input blur, set the new value and display span.
+	   * @private
+	   * @param {Object} e - Event.
+	   */
+	  _onInputBlur: function (e) {
+	    this._onInputChange();
+	    this._showSpan();
+	  },
+	
+	  /**
+	   * Called on input onchange event, set the value based on the input value.
+	   * @private
+	   */
+	  _onInputChange: function () {
+	    this.set(parseFloat(this._input.value, 10));
+	  },
+	
+	  /**
+	   * Called on input key down, blur on enter.
+	   * @private
+	   * @param {Object} e - Key event.
+	   */
+	  _onInputKeyDown: function (e) {
+	    var keyEnter = 13;
+	    if (e.charCode == keyEnter) {
+	      this._input.blur();
+	    }
+	  },
+	
+	  /**
+	   * Called on span mouse down, prevent selection and initalize logic for mouse drag.
+	   * @private
+	   * @param {Object} e - Mouse event.
+	   */
+	  _onMouseDown: function (e) {
+	    this._preventSelection(true);
+	    this._isDragging = false;
+	    this._lastMousePosition = {x: e.clientX, y: e.clientY};
+	
+	    document.addEventListener('mouseup', this._onMouseUp, false);
+	    document.addEventListener('mousemove', this._onMouseMove, false);
+	  },
+	
+	  /**
+	   * Called on span mouse up, show input if no drag.
+	   * @private
+	   * @param {Object} e - Mouse event.
+	   */
+	  _onMouseUp: function (e) {
+	    this._preventSelection(false);
+	    // If we didn't drag the span then we display the input.
+	    if (this._isDragging === false) {
+	      this._showInput();
+	    }
+	    this._isDragging = false;
+	
+	    document.removeEventListener('mouseup', this._onMouseUp, false);
+	    document.removeEventListener('mousemove', this._onMouseMove, false);
+	  },
+	
+	  /**
+	   * Check if difference bettween 2 positions is above minimum threshold.
+	   * @private
+	   * @param {Object} newMousePosition - the new mouse position.
+	   * @param {Object} lastMousePosition - the last mouse position.
+	   * @returns {Boolean}
+	   */
+	  _hasMovedEnough: function (newMousePosition, lastMousePosition) {
+	    if (Math.abs(newMousePosition.x - lastMousePosition.x) >= this._dragThreshold ||
+	      Math.abs(newMousePosition.y - lastMousePosition.y) >= this._dragThreshold) {
+	      return true;
+	    }
+	    return false;
+	  },
+	
+	  _onMouseMove: function (e) {
+	    // Get the new mouse position.
+	    var newMousePosition = {x: e.clientX, y: e.clientY};
+	
+	    if (this._hasMovedEnough(newMousePosition, this._lastMousePosition)) {
+	      this._isDragging = true;
+	    }
+	
+	    // If we are not dragging don't do anything.
+	    if (this._isDragging === false) {
+	      return;
+	    }
+	
+	    // Get the increment modifier. Small increment * 0.1, large increment * 10.
+	    var modifier = DraggableNumber.MODIFIER_NONE;
+	    if (e.shiftKey) {
+	      modifier = DraggableNumber.MODIFIER_LARGE;
+	    }
+	    else if (e.ctrlKey) {
+	      modifier = DraggableNumber.MODIFIER_SMALL;
+	    }
+	
+	    // Calculate the delta with previous mouse position.
+	    var delta = this._getLargestDelta(newMousePosition, this._lastMousePosition);
+	
+	    // Get the number offset.
+	    var offset = this._getNumberOffset(delta, modifier);
+	
+	    // Update the input number.
+	    var new_value = this.get() + offset;
+	    this.set(new_value);
+	
+	    // Call onchange callback if it exists.
+	    if ("changeCallback" in this._options) {
+	      this._options.changeCallback(new_value);
+	    }
+	
+	    // Save current mouse position.
+	    this._lastMousePosition = newMousePosition;
+	  },
+	
+	  /**
+	   * Return the number offset based on a delta and a modifier.
+	   * @private
+	   * @param {Number} delta - a positive or negative number.
+	   * @param {Number} modifier - the modifier type.
+	   * @returns {Number}
+	   */
+	  _getNumberOffset: function (delta, modifier) {
+	    var increment = 1;
+	    if (modifier == DraggableNumber.MODIFIER_SMALL) {
+	      increment *= 0.1;
+	    }
+	    else if (modifier == DraggableNumber.MODIFIER_LARGE) {
+	      increment *= 10;
+	    }
+	    // Negative increment if delta is negative.
+	    if (delta < 0) {
+	      increment *= -1;
+	    }
+	    return increment;
+	  },
+	
+	  /**
+	   * Return the largest difference between two positions, either x or y.
+	   * @private
+	   * @param {Object} newMousePosition - the new mouse position.
+	   * @param {Object} lastMousePosition - the last mouse position.
+	   * @returns {Number}
+	   */
+	  _getLargestDelta: function (newPosition, oldPosition) {
+	    var result = 0;
+	    var delta = {
+	      x: newPosition.x - oldPosition.x,
+	      y: newPosition.y - oldPosition.y,
+	    };
+	
+	    if (Math.abs(delta.x) > Math.abs(delta.y)) {
+	      return delta.x;
+	    }
+	    else {
+	      // Inverse the position.y since mouse move to up should increase the _value.
+	      return delta.y * -1;
+	    }
+	  },
+	
+	  /**
+	   * Constrain a value between min and max.
+	   * @private
+	   * @param {Number} value - The value to constrain.
+	   * @returns {Number}
+	   */
+	  _constraintValue: function (value) {
+	    value = Math.min(value, this._max);
+	    value = Math.max(value, this._min);
+	    return value;
+	  }
+	};
+	
+	    return DraggableNumber;
+	}));
+	
+
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, BaseField, StringField, _, namespace,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	namespace = __webpack_require__(14).namespace;
+	
+	BaseField = __webpack_require__(16);
+	
+	
+	/* StringField View */
+	
+	StringField = (function(superClass) {
+	  extend(StringField, superClass);
+	
+	  function StringField() {
+	    this.create_sidebar_input = bind(this.create_sidebar_input, this);
+	    this.create_sidebar_select = bind(this.create_sidebar_select, this);
+	    this.render = bind(this.render, this);
+	    return StringField.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  StringField.prototype.render = function() {
+	    var $target;
+	    $target = this.createSidebarContainer();
+	    if (this.model.attributes.possibilities) {
+	      this.create_sidebar_select($target);
+	    } else {
+	      this.create_sidebar_input($target);
+	    }
+	    return true;
+	  };
+	
+	  StringField.prototype.create_sidebar_select = function($target) {
+	    var dval, f, input, self;
+	    self = this;
+	    input = "<div><select>";
+	    for (f in this.model.get("possibilities")) {
+	      dval = this.model.get("possibilities")[f];
+	      if (dval === this.val) {
+	        input += "<option value='" + dval + "' selected='selected'>" + f + "</option>";
+	      } else {
+	        input += "<option value='" + dval + "'>" + f + "</option>";
+	      }
+	    }
+	    input += "</select></div>";
+	    $target.append(input);
+	    $("select", $target).change((function(_this) {
+	      return function(e) {
+	        return _this.model.setValue($("select", $target).val());
+	      };
+	    })(this));
+	    return true;
+	  };
+	
+	  StringField.prototype.create_sidebar_input = function($target) {
+	    this.textfield = this.createTextfield($target, "string");
+	    return this.textfield.linkTextfieldToVal("string");
+	  };
+	
+	  return StringField;
+	
+	})(BaseField);
+	
+	module.exports = StringField;
+
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, BaseField, FloatField, _, namespace,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	namespace = __webpack_require__(14).namespace;
+	
+	BaseField = __webpack_require__(16);
+	
+	
+	/* FloatField View */
+	
+	FloatField = (function(superClass) {
+	  extend(FloatField, superClass);
+	
+	  function FloatField() {
+	    this.create_sidebar_input = bind(this.create_sidebar_input, this);
+	    this.create_sidebar_select = bind(this.create_sidebar_select, this);
+	    this.render = bind(this.render, this);
+	    return FloatField.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  FloatField.prototype.initialize = function(options) {
+	    return FloatField.__super__.initialize.apply(this, arguments);
+	  };
+	
+	  FloatField.prototype.render = function() {
+	    var $target;
+	    $target = this.createSidebarContainer();
+	    if (this.model.attributes.possibilities) {
+	      this.create_sidebar_select($target);
+	    } else {
+	      this.create_sidebar_input($target);
+	    }
+	    return true;
+	  };
+	
+	  FloatField.prototype.create_sidebar_select = function($target) {
+	    var dval, f, input, self;
+	    self = this;
+	    input = "<div><select>";
+	    for (f in this.model.get("possibilities")) {
+	      dval = this.model.get("possibilities")[f];
+	      if (dval === this.val) {
+	        input += "<option value='" + dval + "' selected='selected'>" + f + "</option>";
+	      } else {
+	        input += "<option value='" + dval + "'>" + f + "</option>";
+	      }
+	    }
+	    input += "</select></div>";
+	    $target.append(input);
+	    $("select", $target).change((function(_this) {
+	      return function(e) {
+	        return _this.model.setValue($("select", $target).val());
+	      };
+	    })(this));
+	    return true;
+	  };
+	
+	  FloatField.prototype.create_sidebar_input = function($target) {
+	    this.textfield = this.createTextfield($target);
+	    return this.textfield.linkTextfieldToVal();
+	  };
+	
+	  return FloatField;
+	
+	})(BaseField);
+	
+	module.exports = FloatField;
+
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, BaseField, Vector2Field, _, namespace,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	namespace = __webpack_require__(14).namespace;
+	
+	BaseField = __webpack_require__(16);
+	
+	
+	/* Vector2Field View */
+	
+	Vector2Field = (function(superClass) {
+	  extend(Vector2Field, superClass);
+	
+	  function Vector2Field() {
+	    this.render = bind(this.render, this);
+	    return Vector2Field.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Vector2Field.prototype.render = function() {
+	    this.createSidebarFieldTitle();
+	    this.createSubvalTextinput("x");
+	    this.createSubvalTextinput("y");
+	    return this;
+	  };
+	
+	  return Vector2Field;
+	
+	})(BaseField);
+	
+	module.exports = Vector2Field;
+
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, BaseField, Vector3Field, _, namespace,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	namespace = __webpack_require__(14).namespace;
+	
+	BaseField = __webpack_require__(16);
+	
+	
+	/* Vector3Field View */
+	
+	Vector3Field = (function(superClass) {
+	  extend(Vector3Field, superClass);
+	
+	  function Vector3Field() {
+	    this.render = bind(this.render, this);
+	    return Vector3Field.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Vector3Field.prototype.render = function() {
+	    this.createSidebarFieldTitle();
+	    this.createSubvalTextinput("x");
+	    this.createSubvalTextinput("y");
+	    this.createSubvalTextinput("z");
+	    return this;
+	  };
+	
+	  return Vector3Field;
+	
+	})(BaseField);
+	
+	module.exports = Vector3Field;
+
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, BaseField, Vector4Field, _, namespace,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	namespace = __webpack_require__(14).namespace;
+	
+	BaseField = __webpack_require__(16);
+	
+	
+	/* Vector4Field View */
+	
+	Vector4Field = (function(superClass) {
+	  extend(Vector4Field, superClass);
+	
+	  function Vector4Field() {
+	    this.render = bind(this.render, this);
+	    return Vector4Field.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Vector4Field.prototype.render = function() {
+	    this.createSidebarFieldTitle();
+	    this.createSubvalTextinput("x");
+	    this.createSubvalTextinput("y");
+	    this.createSubvalTextinput("z");
+	    this.createSubvalTextinput("w");
+	    return this;
+	  };
+	
+	  return Vector4Field;
+	
+	})(BaseField);
+	
+	module.exports = Vector4Field;
+
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, BaseField, QuaternionField, _, namespace,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	namespace = __webpack_require__(14).namespace;
+	
+	BaseField = __webpack_require__(16);
+	
+	
+	/* Vector3Field View */
+	
+	QuaternionField = (function(superClass) {
+	  extend(QuaternionField, superClass);
+	
+	  function QuaternionField() {
+	    this.render = bind(this.render, this);
+	    return QuaternionField.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  QuaternionField.prototype.render = function() {
+	    this.createSidebarFieldTitle();
+	    this.createSubvalTextinput("x");
+	    this.createSubvalTextinput("y");
+	    this.createSubvalTextinput("z");
+	    this.createSubvalTextinput("w");
+	    return this;
+	  };
+	
+	  return QuaternionField;
+	
+	})(BaseField);
+	
+	module.exports = QuaternionField;
+
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, BaseField, EulerField, _, namespace,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	namespace = __webpack_require__(14).namespace;
+	
+	BaseField = __webpack_require__(16);
+	
+	
+	/* Euler3Field View */
+	
+	EulerField = (function(superClass) {
+	  extend(EulerField, superClass);
+	
+	  function EulerField() {
+	    this.render = bind(this.render, this);
+	    return EulerField.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  EulerField.prototype.render = function() {
+	    this.createSidebarFieldTitle();
+	    this.createSubvalTextinput("x");
+	    this.createSubvalTextinput("y");
+	    this.createSubvalTextinput("z");
+	    this.createSubvalTextinput("order", "string");
+	    return this;
+	  };
+	
+	  return EulerField;
+	
+	})(BaseField);
+	
+	module.exports = EulerField;
+
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Fields, Node, NodeNumberSimple, Utils, _,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
@@ -3922,11 +3806,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	Utils = __webpack_require__(34);
+	Utils = __webpack_require__(9);
 	
-	Fields = __webpack_require__(78);
+	Fields = __webpack_require__(12);
 	
-	Node = __webpack_require__(35);
+	Node = __webpack_require__(11);
 	
 	
 	/* NodeNumberSimple model */
@@ -4012,9 +3896,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = NodeNumberSimple;
 
 
-/***/ },
-/* 37 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, NodeView, NodeWithCenterTextfield, _,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
@@ -4025,9 +3909,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	__webpack_require__(35);
+	__webpack_require__(11);
 	
-	NodeView = __webpack_require__(12);
+	NodeView = __webpack_require__(30);
 	
 	NodeWithCenterTextfield = (function(superClass) {
 	  extend(NodeWithCenterTextfield, superClass);
@@ -4074,11 +3958,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = NodeWithCenterTextfield;
 
 
-/***/ },
-/* 38 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 30 */
+/***/ (function(module, exports, __webpack_require__) {
 
-	var Backbone, CodeMirror, NodeCodeView, NodeView, _,
+	var Backbone, FieldsView, NodeView, _, _view_node_context_menu, _view_node_template, namespace,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
@@ -4087,243 +3971,582 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	CodeMirror = __webpack_require__(91);
+	_view_node_template = __webpack_require__(31);
 	
-	__webpack_require__(72);
+	_view_node_context_menu = __webpack_require__(32);
 	
-	__webpack_require__(92);
+	FieldsView = __webpack_require__(33);
 	
-	__webpack_require__(93);
+	namespace = __webpack_require__(14).namespace;
 	
-	__webpack_require__(94);
+	__webpack_require__(38);
 	
-	__webpack_require__(35);
+	__webpack_require__(39);
 	
-	NodeView = __webpack_require__(12);
 	
-	NodeCodeView = (function(superClass) {
-	  extend(NodeCodeView, superClass);
+	/* Node View */
 	
-	  function NodeCodeView() {
-	    this.getCenterField = bind(this.getCenterField, this);
+	NodeView = (function(superClass) {
+	  extend(NodeView, superClass);
+	
+	  function NodeView() {
+	    this.makeDraggable = bind(this.makeDraggable, this);
+	    this.remove = bind(this.remove, this);
+	    this.computeNodePosition = bind(this.computeNodePosition, this);
+	    this.renderConnections = bind(this.renderConnections, this);
+	    this.addSelectedClass = bind(this.addSelectedClass, this);
+	    this.highlighAnimations = bind(this.highlighAnimations, this);
 	    this.render = bind(this.render, this);
-	    this.initialize = bind(this.initialize, this);
-	    return NodeCodeView.__super__.constructor.apply(this, arguments);
+	    this.makeElement = bind(this.makeElement, this);
+	    this.initContextMenus = bind(this.initContextMenus, this);
+	    return NodeView.__super__.constructor.apply(this, arguments);
 	  }
 	
-	  NodeCodeView.prototype.initialize = function(options) {
-	    var $codemirror, container, editor, f_in, field, self;
-	    NodeCodeView.__super__.initialize.apply(this, arguments);
-	    field = this.getCenterField();
-	    container = $("<div><textarea data-fid='" + (field.get('fid')) + "' spellcheck='false'></textarea></div>");
-	    this.$el.find('.options .center').append(container);
-	    f_in = $("textarea", container);
-	    field.on_value_update_hooks.update_center_textfield = function(v) {
-	      if (v !== null) {
-	        return f_in.val(v.toString());
-	      }
-	    };
-	    f_in.val(field.getValue());
-	    editor = CodeMirror.fromTextArea(f_in.get(0), {
-	      mode: "javascript",
-	      theme: 'monokai',
-	      tabSize: 2,
-	      lineNumbers: false,
-	      gutters: ["CodeMirror-lint-markers"],
-	      lint: true
-	    });
-	    self = this;
-	    this.$el.resizable({
-	      minHeight: 50,
-	      minWidth: 220,
-	      ghost: false,
-	      resize: function(event, ui) {
-	        var model, size;
-	        size = ui.size;
-	        editor.setSize(null, size.height - 37);
-	        model = self.model;
-	        model.set("width", size.width - 13);
-	        model.set("height", size.height - 13);
-	        return self.renderConnections();
-	      }
-	    });
-	    editor.on("change", function(instance, changeObj) {
-	      return field.setValue(editor.getValue());
-	    });
-	    $codemirror = this.$el.find('.CodeMirror');
-	    $codemirror.parent().on("mousemove click mouseup mousedown", function(e) {
-	      return e.stopPropagation();
-	    });
-	    if (this.model.get('height')) {
-	      editor.setSize(null, this.model.get('height') - 37 + 13);
+	  NodeView.prototype.className = "node";
+	
+	  NodeView.prototype.initialize = function(options) {
+	    this.makeElement();
+	    if (!options.isSubNode) {
+	      this.makeDraggable();
 	    }
-	    if (field.get("is_output") === true) {
-	      f_in.attr("disabled", "disabled");
-	      editor.setOption('readOnly', true);
-	    } else {
-	      f_in.keyup(function(e) {
-	        return field.setValue($(this).val());
-	      });
+	    this.initNodeClick();
+	    this.initTitleClick();
+	    this.fields_view = new FieldsView({
+	      node: this.model,
+	      collection: this.model.fields,
+	      el: $("> .options", this.$el)
+	    });
+	    this.model.on('change', this.render);
+	    this.model.on('remove', (function(_this) {
+	      return function() {
+	        return _this.remove();
+	      };
+	    })(this));
+	    this.model.on("node:computePosition", this.computeNodePosition);
+	    this.model.on("node:renderConnections", this.renderConnections);
+	    this.model.on("node:addSelectedClass", this.addSelectedClass);
+	    this.render();
+	    this.initContextMenus();
+	    return this.highlighAnimations();
+	  };
+	
+	  NodeView.prototype.initContextMenus = function() {
+	    var node_menu;
+	    if ($("#node-context-menu").length < 1) {
+	      node_menu = _.template(_view_node_context_menu, {});
+	      $("body").append(node_menu);
 	    }
+	    this.$el.find(".head").contextMenu({
+	      menu: "node-context-menu"
+	    }, (function(_this) {
+	      return function(action, el, pos) {
+	        if (action === "remove_node") {
+	          return _this.model.remove();
+	        }
+	      };
+	    })(this));
 	    return this;
 	  };
 	
-	  NodeCodeView.prototype.render = function() {
-	    NodeCodeView.__super__.render.apply(this, arguments);
-	    if (this.model.get('width')) {
-	      this.$el.css('width', this.model.get('width'));
-	    }
-	    if (this.model.get('height')) {
-	      return this.$el.css('height', this.model.get('height'));
-	    }
+	  NodeView.prototype.makeElement = function() {
+	    this.template = _.template(_view_node_template, this.model);
+	    this.$el.html(this.template);
+	    this.$el.addClass("type-" + this.model.constructor.group_name);
+	    return this.$el.addClass("node-" + this.model.typename());
 	  };
 	
-	  NodeCodeView.prototype.getCenterField = function() {
-	    return this.model.fields.getField("code");
+	  NodeView.prototype.render = function() {
+	    this.$el.css({
+	      left: parseInt(this.model.get("x")),
+	      top: parseInt(this.model.get("y"))
+	    });
+	    this.$el.find("> .head span").text(this.model.get("name"));
+	    return this.$el.find("> .head span").show();
 	  };
 	
-	  return NodeCodeView;
-	
-	})(NodeView);
-	
-	module.exports = NodeCodeView;
-
-
-/***/ },
-/* 39 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Rc4Random,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-	
-	Rc4Random = (function() {
-	  function Rc4Random(seed) {
-	    this.getRandomNumber = bind(this.getRandomNumber, this);
-	    this.getRandomByte = bind(this.getRandomByte, this);
-	    var i, j, k, l, ref, ref1, t;
-	    this.keySchedule = [];
-	    this.keySchedule_i = 0;
-	    this.keySchedule_j = 0;
-	    for (i = k = 0, ref = 256 - 1; 0 <= ref ? k <= ref : k >= ref; i = 0 <= ref ? ++k : --k) {
-	      this.keySchedule[i] = i;
-	    }
-	    j = 0;
-	    for (i = l = 0, ref1 = 256 - 1; 0 <= ref1 ? l <= ref1 : l >= ref1; i = 0 <= ref1 ? ++l : --l) {
-	      j = (j + this.keySchedule[i] + seed.charCodeAt(i % seed.length)) % 256;
-	      t = this.keySchedule[i];
-	      this.keySchedule[i] = this.keySchedule[j];
-	      this.keySchedule[j] = t;
-	    }
-	  }
-	
-	  Rc4Random.prototype.getRandomByte = function() {
-	    var t;
-	    this.keySchedule_i = (this.keySchedule_i + 1) % 256;
-	    this.keySchedule_j = (this.keySchedule_j + this.keySchedule[this.keySchedule_i]) % 256;
-	    t = this.keySchedule[this.keySchedule_i];
-	    this.keySchedule[this.keySchedule_i] = this.keySchedule[this.keySchedule_j];
-	    this.keySchedule[this.keySchedule_j] = t;
-	    return this.keySchedule[(this.keySchedule[this.keySchedule_i] + this.keySchedule[this.keySchedule_j]) % 256];
-	  };
-	
-	  Rc4Random.prototype.getRandomNumber = function() {
-	    var i, k, multiplier, number, ref;
-	    number = 0;
-	    multiplier = 1;
-	    for (i = k = 0, ref = 8 - 1; 0 <= ref ? k <= ref : k >= ref; i = 0 <= ref ? ++k : --k) {
-	      number += this.getRandomByte() * multiplier;
-	      multiplier *= 256;
-	    }
-	    return number / 18446744073709551616;
-	  };
-	
-	  return Rc4Random;
-	
-	})();
-	
-	module.exports = Rc4Random;
-
-
-/***/ },
-/* 40 */,
-/* 41 */,
-/* 42 */,
-/* 43 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Indexer;
-	
-	Indexer = (function() {
-	  function Indexer() {
-	    this.uid = 0;
-	  }
-	
-	  Indexer.prototype.getUID = function(increment) {
-	    if (increment == null) {
-	      increment = true;
-	    }
-	    if (increment) {
-	      return this.uid += 1;
-	    } else {
-	      return this.uid;
-	    }
-	  };
-	
-	  Indexer.prototype.reset = function() {
-	    return this.uid = 0;
-	  };
-	
-	  return Indexer;
-	
-	})();
-	
-	module.exports = Indexer;
-
-
-/***/ },
-/* 44 */,
-/* 45 */,
-/* 46 */,
-/* 47 */,
-/* 48 */,
-/* 49 */,
-/* 50 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	 * namespace.coffee v1.0.0
-	 * Copyright (c) 2011 CodeCatalyst, LLC.
-	 * Open source under the MIT License.
-	 */
-	(function() {
-	  var namespace;
-	  namespace = function(name, values) {
-	    var key, subpackage, target, value, _i, _len, _ref, _results;
-	    target = typeof exports !== "undefined" && exports !== null ? exports : window;
-	    //target = window;
-	    if (name.length > 0) {
-	      _ref = name.split('.');
-	      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	        subpackage = _ref[_i];
-	        target = target[subpackage] || (target[subpackage] = {});
+	  NodeView.prototype.highlighAnimations = function() {
+	    var $target, i, len, nodeAnimation, propTrack, ref;
+	    nodeAnimation = false;
+	    ref = this.model.anim.objectTrack.propertyTracks;
+	    for (i = 0, len = ref.length; i < len; i++) {
+	      propTrack = ref[i];
+	      $target = $('.inputs .field-' + propTrack.name, this.$el);
+	      if (propTrack.anims.length > 0) {
+	        $target.addClass("has-animation");
+	        nodeAnimation = true;
+	      } else {
+	        $target.removeClass("has-animation");
 	      }
 	    }
-	    _results = [];
-	    for (key in values) {
-	      value = values[key];
-	      _results.push(target[key] = value);
-	    }
-	    return _results;
+	    this.$el.toggleClass("node-has-animation", nodeAnimation);
+	    return true;
 	  };
-	  namespace("", {
-	    namespace: namespace
-	  });
-	}).call(this);
+	
+	  NodeView.prototype.addSelectedClass = function() {
+	    return this.$el.addClass("ui-selected");
+	  };
+	
+	  NodeView.prototype.renderConnections = function() {
+	    this.model.fields.renderConnections();
+	    if (this.model.nodes) {
+	      return _.each(this.model.nodes.models, function(n) {
+	        return n.fields.renderConnections();
+	      });
+	    }
+	  };
+	
+	  NodeView.prototype.computeNodePosition = function() {
+	    var offset, pos;
+	    pos = $(this.el).position();
+	    offset = $("#container-wrapper").offset();
+	    return this.model.set({
+	      x: pos.left + $("#container-wrapper").scrollLeft(),
+	      y: pos.top + $("#container-wrapper").scrollTop()
+	    });
+	  };
+	
+	  NodeView.prototype.remove = function() {
+	    $(".field", this.el).destroyContextMenu();
+	    if (this.$el.data("draggable")) {
+	      this.$el.draggable("destroy");
+	    }
+	    $(this.el).unbind();
+	    this.undelegateEvents();
+	    if (this.fields_view) {
+	      this.fields_view.remove();
+	    }
+	    delete this.fields_view;
+	    return NodeView.__super__.remove.apply(this, arguments);
+	  };
+	
+	  NodeView.prototype.initNodeClick = function() {
+	    var self;
+	    self = this;
+	    $(this.el).click(function(e) {
+	      var selectable;
+	      if (e.metaKey === false) {
+	        $(".node").removeClass("ui-selected");
+	        $(this).addClass("ui-selecting");
+	      } else {
+	        if ($(this).hasClass("ui-selected")) {
+	          $(this).removeClass("ui-selected");
+	        } else {
+	          $(this).addClass("ui-selecting");
+	        }
+	      }
+	      selectable = $("#container").data("ui-selectable");
+	      if (!selectable) {
+	        return;
+	      }
+	      selectable.refresh();
+	      selectable._mouseStop(null);
+	      return self.model.fields.renderSidebar();
+	    });
+	    return this;
+	  };
+	
+	  NodeView.prototype.initTitleClick = function() {
+	    var $input, $title_span, self;
+	    self = this;
+	    $title_span = this.$el.find("> .head span");
+	    $input = $("<input type='text' />");
+	    this.$el.find("> .head").append($input);
+	    $input.hide();
+	    $input.on('mousedown', function(e) {
+	      return e.stopPropagation();
+	    });
+	    $title_span.dblclick(function(e) {
+	      var apply_input_result, prev;
+	      prev = $(this).html();
+	      $input.val(prev);
+	      $title_span.hide();
+	      $input.show();
+	      apply_input_result = function() {
+	        self.model.set('name', $input.val());
+	        $input.hide();
+	        return $title_span.show();
+	      };
+	      $input.blur(function(e) {
+	        return apply_input_result();
+	      });
+	      $("#graph").click(function(e) {
+	        return apply_input_result();
+	      });
+	      return $input.keydown(function(e) {
+	        if (e.keyCode === 13) {
+	          return apply_input_result();
+	        }
+	      });
+	    });
+	    return this;
+	  };
+	
+	  NodeView.prototype.makeDraggable = function() {
+	    var nodes_offset, selected_nodes, self;
+	    self = this;
+	    nodes_offset = {
+	      top: 0,
+	      left: 0
+	    };
+	    selected_nodes = $([]);
+	    $(this.el).draggable({
+	      start: function(ev, ui) {
+	        if ($(this).hasClass("ui-selected")) {
+	          selected_nodes = $(".ui-selected").each(function() {
+	            return $(this).data("offset", $(this).offset());
+	          });
+	        } else {
+	          selected_nodes = $([]);
+	          $(".node").removeClass("ui-selected");
+	        }
+	        return nodes_offset = $(this).offset();
+	      },
+	      drag: function(ev, ui) {
+	        var dl, dt;
+	        dt = ui.position.top - nodes_offset.top;
+	        dl = ui.position.left - nodes_offset.left;
+	        selected_nodes.not(this).each(function() {
+	          var dx, dy, el, offset;
+	          el = $(this);
+	          offset = el.data("offset");
+	          dx = offset.top + dt;
+	          dy = offset.left + dl;
+	          el.css({
+	            top: dx,
+	            left: dy
+	          });
+	          el.data("object").trigger("node:computePosition");
+	          return el.data("object").trigger("node:renderConnections");
+	        });
+	        return self.renderConnections();
+	      },
+	      stop: function() {
+	        selected_nodes.not(this).each(function() {
+	          var el;
+	          el = $(this).data("object");
+	          return el.trigger("node:renderConnections");
+	        });
+	        self.computeNodePosition();
+	        return self.renderConnections();
+	      }
+	    });
+	    return this;
+	  };
+	
+	  return NodeView;
+	
+	})(Backbone.View);
+	
+	ThreeNodes.Core.addNodeView('NodeView', NodeView);
+	
+	module.exports = NodeView;
 
 
-/***/ },
-/* 51 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 31 */
+/***/ (function(module, exports) {
+
+	module.exports = "<div class='head'><span><%= get(\"name\") %></span></div>\n<div class='options'>\n  <div class='inputs'></div>\n  <div class='center'></div>\n  <div class='outputs'></div>\n</div>\n";
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports) {
+
+	module.exports = "<ul id=\"node-context-menu\" class=\"context-menu\">\n  <li><a href=\"#remove_node\">Remove node</a></li>\n</ul>";
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, FieldButton, FieldsView, _,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	FieldButton = __webpack_require__(34);
+	
+	__webpack_require__(39);
+	
+	
+	/* Fields View */
+	
+	FieldsView = (function(superClass) {
+	  extend(FieldsView, superClass);
+	
+	  function FieldsView() {
+	    this.remove = bind(this.remove, this);
+	    this.onFieldCreated = bind(this.onFieldCreated, this);
+	    return FieldsView.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  FieldsView.prototype.initialize = function(options) {
+	    FieldsView.__super__.initialize.apply(this, arguments);
+	    this.node = options.node;
+	    this.subviews = [];
+	    this.collection.on("add", this.onFieldCreated);
+	    return this.collection.each(this.onFieldCreated);
+	  };
+	
+	  FieldsView.prototype.onFieldCreated = function(field) {
+	    var $node, connection, from_gid, isInsideAnotherDOMnode, target, to_gid, view;
+	    target = field.get("is_output") === false ? ".inputs" : ".outputs";
+	    if (field.get("is_output") === false && field.isConnected()) {
+	      connection = field.connections[0];
+	      $node = this.$el.parent();
+	      isInsideAnotherDOMnode = function() {
+	        return $node.parent().closest(".node").length > 0;
+	      };
+	      if (isInsideAnotherDOMnode()) {
+	        from_gid = connection.from_field.node.get("gid");
+	        to_gid = connection.to_field.node.get("gid");
+	        if (from_gid !== "-1" && to_gid !== "-1" && from_gid === to_gid) {
+	          return;
+	        }
+	      }
+	    }
+	    view = new FieldButton({
+	      model: field
+	    });
+	    view.$el.appendTo($(target, this.$el));
+	    field.button = view.$el;
+	    return this.subviews.push(view);
+	  };
+	
+	  FieldsView.prototype.remove = function() {
+	    var views;
+	    this.undelegateEvents();
+	    this.collection.off("add", this.onFieldCreated);
+	    views = this.subviews.concat();
+	    _.each(views, function(view) {
+	      return view.remove();
+	    });
+	    $("input", $(this.el)).remove();
+	    delete this.collection;
+	    delete this.node;
+	    delete this.subviews;
+	    return FieldsView.__super__.remove.apply(this, arguments);
+	  };
+	
+	  return FieldsView;
+	
+	})(Backbone.View);
+	
+	module.exports = FieldsView;
+
+
+/***/ }),
+/* 34 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, FieldButton, _, _view_field_context_menu, _view_node_field_in, _view_node_field_out,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	_view_node_field_in = __webpack_require__(35);
+	
+	_view_node_field_out = __webpack_require__(36);
+	
+	_view_field_context_menu = __webpack_require__(37);
+	
+	__webpack_require__(9);
+	
+	__webpack_require__(38);
+	
+	
+	/* FieldButton View */
+	
+	FieldButton = (function(superClass) {
+	  extend(FieldButton, superClass);
+	
+	  function FieldButton() {
+	    this.render = bind(this.render, this);
+	    this.makeElement = bind(this.makeElement, this);
+	    this.remove = bind(this.remove, this);
+	    return FieldButton.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  FieldButton.prototype.className = "field";
+	
+	  FieldButton.prototype.initialize = function(options) {
+	    FieldButton.__super__.initialize.apply(this, arguments);
+	    this.makeElement();
+	    return this.render();
+	  };
+	
+	  FieldButton.prototype.remove = function() {
+	    var $inner;
+	    $inner = $(".inner-field", this.$el);
+	    if ($inner.data("droppable")) {
+	      $inner.droppable("destroy");
+	    }
+	    if ($inner.data("draggable")) {
+	      $inner.draggable("destroy");
+	    }
+	    $inner.remove();
+	    return FieldButton.__super__.remove.apply(this, arguments);
+	  };
+	
+	  FieldButton.prototype.makeElement = function() {
+	    var bt, layout;
+	    layout = this.model.get("is_output") ? _view_node_field_out : _view_node_field_in;
+	    bt = _.template(layout, {
+	      fid: this.model.get("fid"),
+	      name: this.model.get("name")
+	    });
+	    return this.$el.html(bt);
+	  };
+	
+	  FieldButton.prototype.render = function() {
+	    this.$el.attr("rel", this.model.get("name"));
+	    this.$el.addClass("field-" + this.model.get("name"));
+	    this.$el.data("object", this.model);
+	    this.$el.data("fid", this.model.get("fid"));
+	    this.initContextMenu();
+	    return this.addFieldListener();
+	  };
+	
+	  FieldButton.prototype.initContextMenu = function() {
+	    var menu_field_menu;
+	    if ($("#field-context-menu").length < 1) {
+	      menu_field_menu = _.template(_view_field_context_menu, {});
+	      $("body").append(menu_field_menu);
+	    }
+	    this.$el.contextMenu({
+	      menu: "field-context-menu"
+	    }, (function(_this) {
+	      return function(action, el, pos) {
+	        if (action === "removeConnection") {
+	          return _this.model.removeConnections();
+	        }
+	      };
+	    })(this));
+	    return this;
+	  };
+	
+	  FieldButton.prototype.addFieldListener = function() {
+	    var accept_class, field, getPath, highlight_possible_targets, self, start_offset_x, start_offset_y;
+	    self = this;
+	    field = this.model;
+	    start_offset_x = 0;
+	    start_offset_y = 0;
+	    getPath = function(start, end, offset) {
+	      var ofx, ofy;
+	      ofx = $("#container-wrapper").scrollLeft();
+	      ofy = $("#container-wrapper").scrollTop();
+	      return "M" + (start.left + offset.left + 2) + " " + (start.top + offset.top + 2) + " L" + (end.left + offset.left + ofx - start_offset_x) + " " + (end.top + offset.top + ofy - start_offset_y);
+	    };
+	    highlight_possible_targets = function() {
+	      var target;
+	      target = ".outputs .field";
+	      if (field.get("is_output") === true) {
+	        target = ".inputs .field";
+	      }
+	      return $(target).filter(function() {
+	        return $(this).parent().parent().parent().data("nid") !== field.node.get("nid");
+	      }).addClass("field-possible-target");
+	    };
+	    $(".inner-field", this.$el).draggable({
+	      helper: function() {
+	        return $("<div class='ui-widget-drag-helper'></div>");
+	      },
+	      scroll: true,
+	      cursor: 'pointer',
+	      cursorAt: {
+	        left: 0,
+	        top: 0
+	      },
+	      start: function(event, ui) {
+	        start_offset_x = $("#container-wrapper").scrollLeft();
+	        start_offset_y = $("#container-wrapper").scrollTop();
+	        highlight_possible_targets();
+	        if (ThreeNodes.UI.UIView.connecting_line) {
+	          return ThreeNodes.UI.UIView.connecting_line.attr({
+	            opacity: 1
+	          });
+	        }
+	      },
+	      stop: function(event, ui) {
+	        $(".field").removeClass("field-possible-target");
+	        if (ThreeNodes.UI.UIView.connecting_line) {
+	          return ThreeNodes.UI.UIView.connecting_line.attr({
+	            opacity: 0
+	          });
+	        }
+	      },
+	      drag: function(event, ui) {
+	        var node_pos, pos;
+	        if (ThreeNodes.UI.UIView.connecting_line) {
+	          pos = $(this).position();
+	          node_pos = {
+	            left: field.node.get("x"),
+	            top: field.node.get("y")
+	          };
+	          ThreeNodes.UI.UIView.connecting_line.attr({
+	            path: getPath(pos, ui.position, node_pos)
+	          });
+	          return true;
+	        }
+	      }
+	    });
+	    accept_class = ".outputs .inner-field";
+	    if (field && field.get("is_output") === true) {
+	      accept_class = ".inputs .inner-field";
+	    }
+	    $(".inner-field", this.$el).droppable({
+	      accept: accept_class,
+	      activeClass: "ui-state-active",
+	      hoverClass: "ui-state-hover",
+	      drop: function(event, ui) {
+	        var field2, origin;
+	        origin = $(ui.draggable).parent();
+	        field2 = origin.data("object");
+	        if (field.node.parent) {
+	          return field2.node.createConnection(field, field2);
+	        } else {
+	          return field.node.createConnection(field, field2);
+	        }
+	      }
+	    });
+	    return this;
+	  };
+	
+	  return FieldButton;
+	
+	})(Backbone.View);
+	
+	module.exports = FieldButton;
+
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports) {
+
+	module.exports = "<span class=\"inner-field\"><span></span><%= name %></span>";
+
+/***/ }),
+/* 36 */
+/***/ (function(module, exports) {
+
+	module.exports = "<span class=\"inner-field\"><%= name %><span></span></span>";
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports) {
+
+	module.exports = "<ul id=\"field-context-menu\" class=\"context-menu\">\n  <li><a href=\"#removeConnection\">Remove connection(s)</a></li>\n</ul>";
+
+/***/ }),
+/* 38 */
+/***/ (function(module, exports) {
 
 	// jQuery Context Menu Plugin
 	//
@@ -4538,83 +4761,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(jQuery);
 
 
-/***/ },
-/* 52 */,
-/* 53 */,
-/* 54 */,
-/* 55 */,
-/* 56 */,
-/* 57 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 39 */
+/***/ (function(module, exports) {
 
-	var Backbone, Connection, Connections,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	Backbone = __webpack_require__(3);
-	
-	Connection = __webpack_require__(89);
-	
-	Connections = (function(superClass) {
-	  extend(Connections, superClass);
-	
-	  function Connections() {
-	    this.removeAll = bind(this.removeAll, this);
-	    this.create = bind(this.create, this);
-	    this.render = bind(this.render, this);
-	    this.initialize = bind(this.initialize, this);
-	    return Connections.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Connections.prototype.model = Connection;
-	
-	  Connections.prototype.initialize = function(models, options) {
-	    this.indexer = options.indexer;
-	    this.bind("connection:removed", (function(_this) {
-	      return function(c) {
-	        return _this.remove(c);
-	      };
-	    })(this));
-	    return Connections.__super__.initialize.apply(this, arguments);
-	  };
-	
-	  Connections.prototype.render = function() {
-	    return this.each(function(c) {
-	      return c.render();
-	    });
-	  };
-	
-	  Connections.prototype.create = function(model, options) {
-	    if (!options) {
-	      options = {};
-	    }
-	    model.indexer = this.indexer;
-	    model = this._prepareModel(model, options);
-	    if (!model) {
-	      return false;
-	    }
-	    this.add(model, options);
-	    return model;
-	  };
-	
-	  Connections.prototype.removeAll = function() {
-	    return this.remove(this.models);
-	  };
-	
-	  return Connections;
-	
-	})(Backbone.Collection);
-	
-	module.exports = Connections;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_39__;
 
+/***/ }),
+/* 40 */
+/***/ (function(module, exports, __webpack_require__) {
 
-/***/ },
-/* 58 */,
-/* 59 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Backbone, FieldButton, FieldsView, _,
+	var Backbone, Color, NodeView, _, namespace,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
@@ -4623,91 +4780,88 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	FieldButton = __webpack_require__(90);
+	namespace = __webpack_require__(14).namespace;
 	
-	__webpack_require__(1);
+	__webpack_require__(11);
 	
+	NodeView = __webpack_require__(30);
 	
-	/* Fields View */
+	__webpack_require__(41);
 	
-	FieldsView = (function(superClass) {
-	  extend(FieldsView, superClass);
+	Color = (function(superClass) {
+	  extend(Color, superClass);
 	
-	  function FieldsView() {
+	  function Color() {
 	    this.remove = bind(this.remove, this);
-	    this.onFieldCreated = bind(this.onFieldCreated, this);
-	    return FieldsView.__super__.constructor.apply(this, arguments);
+	    this.init_preview = bind(this.init_preview, this);
+	    this.initialize = bind(this.initialize, this);
+	    return Color.__super__.constructor.apply(this, arguments);
 	  }
 	
-	  FieldsView.prototype.initialize = function(options) {
-	    FieldsView.__super__.initialize.apply(this, arguments);
-	    this.node = options.node;
-	    this.subviews = [];
-	    this.collection.on("add", this.onFieldCreated);
-	    return this.collection.each(this.onFieldCreated);
+	  Color.prototype.initialize = function(options) {
+	    Color.__super__.initialize.apply(this, arguments);
+	    this.model.compute();
+	    return this.init_preview();
 	  };
 	
-	  FieldsView.prototype.onFieldCreated = function(field) {
-	    var $node, connection, from_gid, isInsideAnotherDOMnode, target, to_gid, view;
-	    target = field.get("is_output") === false ? ".inputs" : ".outputs";
-	    if (field.get("is_output") === false && field.isConnected()) {
-	      connection = field.connections[0];
-	      $node = this.$el.parent();
-	      isInsideAnotherDOMnode = function() {
-	        return $node.parent().closest(".node").length > 0;
+	  Color.prototype.init_preview = function() {
+	    var col, fields;
+	    fields = this.model.fields;
+	    this.$picker_el = $("<div class='color_preview'></div>");
+	    col = fields.getField("rgb", true).getValue(0);
+	    this.$picker_el.ColorPicker({
+	      color: {
+	        r: Math.ceil(col.r * 255),
+	        g: Math.ceil(col.g * 255),
+	        b: Math.ceil(col.b * 255)
+	      },
+	      livePreview: false,
+	      onChange: (function(_this) {
+	        return function(hsb, hex, rgb) {
+	          fields.getField("r").setValue(rgb.r / 255);
+	          fields.getField("g").setValue(rgb.g / 255);
+	          return fields.getField("b").setValue(rgb.b / 255);
+	        };
+	      })(this)
+	    });
+	    $(".center", this.$el).append(this.$picker_el);
+	    return fields.getField("rgb", true).on_value_update_hooks.set_bg_color_preview = (function(_this) {
+	      return function(v) {
+	        return _this.$picker_el.css({
+	          background: v[0].getStyle()
+	        });
 	      };
-	      if (isInsideAnotherDOMnode()) {
-	        from_gid = connection.from_field.node.get("gid");
-	        to_gid = connection.to_field.node.get("gid");
-	        if (from_gid !== "-1" && to_gid !== "-1" && from_gid === to_gid) {
-	          return;
+	    })(this);
+	  };
+	
+	  Color.prototype.remove = function() {
+	    this.$picker_el.each(function() {
+	      var cal, picker;
+	      if ($(this).data('colorpickerId')) {
+	        cal = $('#' + $(this).data('colorpickerId'));
+	        picker = cal.data('colorpicker');
+	        if (picker) {
+	          delete picker.onChange;
 	        }
+	        return cal.remove();
 	      }
-	    }
-	    view = new FieldButton({
-	      model: field
 	    });
-	    view.$el.appendTo($(target, this.$el));
-	    field.button = view.$el;
-	    return this.subviews.push(view);
+	    this.$picker_el.unbind();
+	    this.$picker_el.remove();
+	    delete this.$picker_el;
+	    return Color.__super__.remove.apply(this, arguments);
 	  };
 	
-	  FieldsView.prototype.remove = function() {
-	    var views;
-	    this.undelegateEvents();
-	    this.collection.off("add", this.onFieldCreated);
-	    views = this.subviews.concat();
-	    _.each(views, function(view) {
-	      return view.remove();
-	    });
-	    $("input", $(this.el)).remove();
-	    delete this.collection;
-	    delete this.node;
-	    delete this.subviews;
-	    return FieldsView.__super__.remove.apply(this, arguments);
-	  };
+	  return Color;
 	
-	  return FieldsView;
+	})(NodeView);
 	
-	})(Backbone.View);
-	
-	module.exports = FieldsView;
+	module.exports = Color;
 
 
-/***/ },
-/* 60 */,
-/* 61 */,
-/* 62 */,
-/* 63 */,
-/* 64 */,
-/* 65 */,
-/* 66 */,
-/* 67 */,
-/* 68 */,
-/* 69 */,
-/* 70 */,
-/* 71 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 41 */
+/***/ (function(module, exports) {
 
 	/**
 	 *
@@ -5195,32 +5349,500 @@ return /******/ (function(modules) { // webpackBootstrap
 		});
 	})(jQuery)
 
-/***/ },
-/* 72 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 42 */
+/***/ (function(module, exports, __webpack_require__) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_72__;
+	var And, Backbone, Equal, Greater, IfElse, Node, Or, Smaller, _, jQuery,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	jQuery = __webpack_require__(39);
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	Node = __webpack_require__(11);
+	
+	IfElse = (function(superClass) {
+	  extend(IfElse, superClass);
+	
+	  function IfElse() {
+	    this.compute = bind(this.compute, this);
+	    this.getFields = bind(this.getFields, this);
+	    return IfElse.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  IfElse.node_name = 'IfElse';
+	
+	  IfElse.group_name = 'Conditional';
+	
+	  IfElse.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = IfElse.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "condition": false,
+	        "val1": {
+	          type: "Any",
+	          val: 0.0
+	        },
+	        "val2": {
+	          type: "Any",
+	          val: 1.0
+	        }
+	      },
+	      outputs: {
+	        "out": {
+	          type: "Any",
+	          val: false
+	        }
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  IfElse.prototype.compute = function() {
+	    var cond, res;
+	    cond = this.fields.getField("condition").getValue();
+	    if (cond === false) {
+	      res = this.fields.getField("val1").attributes.value;
+	    } else {
+	      res = this.fields.getField("val2").attributes.value;
+	    }
+	    return this.fields.setField("out", res);
+	  };
+	
+	  return IfElse;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('IfElse', IfElse);
+	
+	And = (function(superClass) {
+	  extend(And, superClass);
+	
+	  function And() {
+	    this.compute = bind(this.compute, this);
+	    this.getFields = bind(this.getFields, this);
+	    return And.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  And.node_name = 'And';
+	
+	  And.group_name = 'Conditional';
+	
+	  And.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = And.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "val1": false,
+	        "val2": false
+	      },
+	      outputs: {
+	        "out": false
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  And.prototype.compute = function() {
+	    var res;
+	    res = this.fields.getField("val1").getValue() !== false && this.fields.getField("val2").getValue() !== false;
+	    return this.fields.setField("out", res);
+	  };
+	
+	  return And;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('And', And);
+	
+	Or = (function(superClass) {
+	  extend(Or, superClass);
+	
+	  function Or() {
+	    this.compute = bind(this.compute, this);
+	    this.getFields = bind(this.getFields, this);
+	    return Or.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Or.node_name = 'Or';
+	
+	  Or.group_name = 'Conditional';
+	
+	  Or.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = Or.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "val1": false,
+	        "val2": false
+	      },
+	      outputs: {
+	        "out": false
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  Or.prototype.compute = function() {
+	    var res;
+	    res = this.fields.getField("val1").getValue() !== false || this.fields.getField("val2").getValue() !== false;
+	    return this.fields.setField("out", res);
+	  };
+	
+	  return Or;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('Or', Or);
+	
+	Equal = (function(superClass) {
+	  extend(Equal, superClass);
+	
+	  function Equal() {
+	    this.compute = bind(this.compute, this);
+	    this.getFields = bind(this.getFields, this);
+	    return Equal.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Equal.node_name = 'Equal';
+	
+	  Equal.group_name = 'Conditional';
+	
+	  Equal.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = Equal.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "val1": {
+	          type: "Any",
+	          val: 0.0
+	        },
+	        "val2": {
+	          type: "Any",
+	          val: 1.0
+	        }
+	      },
+	      outputs: {
+	        "out": false
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  Equal.prototype.compute = function() {
+	    var res;
+	    res = this.fields.getField("val1").getValue(0) === this.fields.getField("val2").getValue(0);
+	    return this.fields.setField("out", res);
+	  };
+	
+	  return Equal;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('Equal', Equal);
+	
+	Smaller = (function(superClass) {
+	  extend(Smaller, superClass);
+	
+	  function Smaller() {
+	    this.compute = bind(this.compute, this);
+	    this.getFields = bind(this.getFields, this);
+	    return Smaller.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Smaller.node_name = 'Smaller';
+	
+	  Smaller.group_name = 'Conditional';
+	
+	  Smaller.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = Smaller.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "val1": {
+	          type: "Float",
+	          val: 0.0
+	        },
+	        "val2": {
+	          type: "Float",
+	          val: 1.0
+	        }
+	      },
+	      outputs: {
+	        "out": false
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  Smaller.prototype.compute = function() {
+	    var res;
+	    res = this.fields.getField("val1").getValue(0) < this.fields.getField("val2").getValue(0);
+	    return this.fields.setField("out", res);
+	  };
+	
+	  return Smaller;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('Smaller', Smaller);
+	
+	Greater = (function(superClass) {
+	  extend(Greater, superClass);
+	
+	  function Greater() {
+	    this.compute = bind(this.compute, this);
+	    this.getFields = bind(this.getFields, this);
+	    return Greater.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Greater.node_name = 'Greater';
+	
+	  Greater.group_name = 'Conditional';
+	
+	  Greater.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = Greater.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "val1": {
+	          type: "Float",
+	          val: 0.0
+	        },
+	        "val2": {
+	          type: "Float",
+	          val: 1.0
+	        }
+	      },
+	      outputs: {
+	        "out": false
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  Greater.prototype.compute = function() {
+	    var res;
+	    res = this.fields.getField("val1").getValue(0) > this.fields.getField("val2").getValue(0);
+	    return this.fields.setField("out", res);
+	  };
+	
+	  return Greater;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('Greater', Greater);
 
-/***/ },
-/* 73 */
-/***/ function(module, exports, __webpack_require__) {
 
-	module.exports = "<div class='head'><span><%= get(\"name\") %></span></div>\n<div class='options'>\n  <div class='inputs'></div>\n  <div class='center'></div>\n  <div class='outputs'></div>\n</div>\n";
+/***/ }),
+/* 43 */
+/***/ (function(module, exports, __webpack_require__) {
 
-/***/ },
-/* 74 */
-/***/ function(module, exports, __webpack_require__) {
+	var Backbone, Code, CodeView, Expression, ExpressionView, Node, NodeCodeView, _,
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	Node = __webpack_require__(11);
+	
+	NodeCodeView = __webpack_require__(44);
+	
+	CodeView = (function(superClass) {
+	  extend(CodeView, superClass);
+	
+	  function CodeView() {
+	    return CodeView.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  return CodeView;
+	
+	})(NodeCodeView);
+	
+	ThreeNodes.Core.addNodeView('Code', CodeView);
+	
+	ExpressionView = (function(superClass) {
+	  extend(ExpressionView, superClass);
+	
+	  function ExpressionView() {
+	    return ExpressionView.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  return ExpressionView;
+	
+	})(NodeCodeView);
+	
+	ThreeNodes.Core.addNodeView('Expression', ExpressionView);
+	
+	Expression = (function(superClass) {
+	  extend(Expression, superClass);
+	
+	  function Expression() {
+	    this.compute = bind(this.compute, this);
+	    this.getFields = bind(this.getFields, this);
+	    this.toJSON = bind(this.toJSON, this);
+	    this.addCustomField = bind(this.addCustomField, this);
+	    this.onCodeUpdate = bind(this.onCodeUpdate, this);
+	    this.loadCustomFields = bind(this.loadCustomFields, this);
+	    this.initialize = bind(this.initialize, this);
+	    return Expression.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Expression.node_name = 'Expression';
+	
+	  Expression.group_name = 'Code';
+	
+	  Expression.prototype.initialize = function(options) {
+	    var field;
+	    this.custom_fields = {
+	      inputs: {},
+	      outputs: {}
+	    };
+	    this.loadCustomFields(options);
+	    Expression.__super__.initialize.apply(this, arguments);
+	    this.auto_evaluate = true;
+	    this.out = null;
+	    field = this.fields.getField("code");
+	    field.on("value_updated", this.onCodeUpdate);
+	    return this.onCodeUpdate(field.getValue());
+	  };
+	
+	  Expression.prototype.loadCustomFields = function(options) {
+	    if (!options.custom_fields) {
+	      return;
+	    }
+	    return this.custom_fields = $.extend(true, this.custom_fields, options.custom_fields);
+	  };
+	
+	  Expression.prototype.onCodeUpdate = function(code) {
+	    var error;
+	    if (code == null) {
+	      code = "";
+	    }
+	    try {
+	      return this["function"] = new Function(code);
+	    } catch (error1) {
+	      error = error1;
+	      console.warn(error);
+	      return this["function"] = false;
+	    }
+	  };
+	
+	  Expression.prototype.addCustomField = function(key, type, direction) {
+	    var field, instance, value;
+	    if (direction == null) {
+	      direction = 'inputs';
+	    }
+	    field = {
+	      key: key,
+	      type: type
+	    };
+	    this.custom_fields[direction][key] = field;
+	    value = false;
+	    instance = this.fields.addField(key, {
+	      value: value,
+	      type: type,
+	      "default": false
+	    }, direction);
+	    return instance;
+	  };
+	
+	  Expression.prototype.toJSON = function() {
+	    var res;
+	    res = Expression.__super__.toJSON.apply(this, arguments);
+	    res.custom_fields = this.custom_fields;
+	    return res;
+	  };
+	
+	  Expression.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = Expression.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "code": ""
+	      },
+	      outputs: {
+	        "out": {
+	          type: "Any",
+	          val: null
+	        }
+	      }
+	    };
+	    fields = $.extend(true, fields, this.custom_fields);
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  Expression.prototype.compute = function() {
+	    var code, error, result;
+	    code = this.fields.getField("code").getValue();
+	    result = this.out;
+	    if (this["function"] !== false) {
+	      try {
+	        result = this["function"]();
+	      } catch (error1) {
+	        error = error1;
+	      }
+	    }
+	    this.out = result;
+	    return this.fields.setField("out", this.out);
+	  };
+	
+	  return Expression;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('Expression', Expression);
+	
+	Code = (function(superClass) {
+	  extend(Code, superClass);
+	
+	  function Code() {
+	    this.getFields = bind(this.getFields, this);
+	    this.getDynamicFields = bind(this.getDynamicFields, this);
+	    this.initialize = bind(this.initialize, this);
+	    return Code.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Code.node_name = 'Code';
+	
+	  Code.group_name = 'Code';
+	
+	  Code.prototype.initialize = function(options) {
+	    return Code.__super__.initialize.apply(this, arguments);
+	  };
+	
+	  Code.prototype.getDynamicFields = function() {
+	    return {};
+	  };
+	
+	  Code.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = Code.__super__.getFields.apply(this, arguments);
+	    fields = this.getDynamicFields();
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  return Code;
+	
+	})(Expression);
+	
+	ThreeNodes.Core.addNodeType('Code', Code);
 
-	module.exports = "<ul id=\"node-context-menu\" class=\"context-menu\">\n  <li><a href=\"#remove_node\">Remove node</a></li>\n</ul>";
 
-/***/ },
-/* 75 */,
-/* 76 */,
-/* 77 */,
-/* 78 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 44 */
+/***/ (function(module, exports, __webpack_require__) {
 
-	var Backbone, Fields, _,
+	var Backbone, CodeMirror, NodeCodeView, NodeView, _,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
@@ -5229,601 +5851,111 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	__webpack_require__(95);
+	CodeMirror = __webpack_require__(45);
 	
+	__webpack_require__(46);
 	
-	/* Fields Collection */
+	__webpack_require__(47);
 	
-	Fields = (function(superClass) {
-	  extend(Fields, superClass);
+	__webpack_require__(48);
 	
-	  function Fields() {
-	    this.renderSidebar = bind(this.renderSidebar, this);
-	    this.addFields = bind(this.addFields, this);
-	    this.addField = bind(this.addField, this);
-	    this.removeConnections = bind(this.removeConnections, this);
-	    this.renderConnections = bind(this.renderConnections, this);
-	    this.setFieldInputUnchanged = bind(this.setFieldInputUnchanged, this);
-	    this.hasUnconnectedFields = bind(this.hasUnconnectedFields, this);
-	    this.hasUnconnectedOutputs = bind(this.hasUnconnectedOutputs, this);
-	    this.hasUnconnectedInputs = bind(this.hasUnconnectedInputs, this);
-	    this.getDownstreamNodes = bind(this.getDownstreamNodes, this);
-	    this.getUpstreamNodes = bind(this.getUpstreamNodes, this);
-	    this.getMaxInputSliceCount = bind(this.getMaxInputSliceCount, this);
-	    this.setField = bind(this.setField, this);
-	    this.getField = bind(this.getField, this);
-	    this.toJSON = bind(this.toJSON, this);
-	    this.load = bind(this.load, this);
-	    this.destroy = bind(this.destroy, this);
-	    this.initialize = bind(this.initialize, this);
-	    return Fields.__super__.constructor.apply(this, arguments);
-	  }
+	__webpack_require__(49);
 	
-	  Fields.prototype.initialize = function(models, options) {
-	    Fields.__super__.initialize.apply(this, arguments);
-	    this.node = options.node;
-	    this.indexer = options.indexer;
-	    this.inputs = {};
-	    this.outputs = {};
-	    this.special_elements = {
-	      left: [],
-	      center: [],
-	      right: []
-	    };
-	    return this.addFields(this.node.getFields());
-	  };
+	__webpack_require__(11);
 	
-	  Fields.prototype.destroy = function() {
-	    this.removeConnections();
-	    while (this.models.length > 0) {
-	      this.models[0].remove();
-	    }
-	    delete this.node;
-	    delete this.inputs;
-	    delete this.outputs;
-	    delete this.indexer;
-	    return delete this.special_elements;
-	  };
+	NodeView = __webpack_require__(30);
 	
-	  Fields.prototype.load = function(data) {
-	    var f, j, len, node_field, ref;
-	    if (!data || !data["in"]) {
-	      return false;
-	    }
-	    ref = data["in"];
-	    for (j = 0, len = ref.length; j < len; j++) {
-	      f = ref[j];
-	      if (!f.nid) {
-	        node_field = this.inputs[f.name];
-	      } else {
-	        node_field = this.inputs[f.name + "-" + f.nid];
-	      }
-	      if (node_field) {
-	        node_field.load(f.val);
-	      }
-	    }
-	    return true;
-	  };
+	NodeCodeView = (function(superClass) {
+	  extend(NodeCodeView, superClass);
 	
-	  Fields.prototype.toJSON = function() {
-	    var data;
-	    data = {
-	      "in": jQuery.map(this.inputs, function(f, i) {
-	        return f.toJSON();
-	      }),
-	      out: jQuery.map(this.outputs, function(f, i) {
-	        return f.toJSON();
-	      })
-	    };
-	    return data;
-	  };
-	
-	  Fields.prototype.getField = function(key, is_out) {
-	    var target;
-	    if (is_out == null) {
-	      is_out = false;
-	    }
-	    target = is_out === true ? "outputs" : "inputs";
-	    return this[target][key];
-	  };
-	
-	  Fields.prototype.setField = function(key, value) {
-	    if (this.outputs[key]) {
-	      return this.outputs[key].setValue(value);
-	    }
-	  };
-	
-	  Fields.prototype.getMaxInputSliceCount = function() {
-	    var f, fname, ref, result, val;
-	    result = 1;
-	    ref = this.inputs;
-	    for (fname in ref) {
-	      f = ref[fname];
-	      val = f.attributes.value;
-	      if (val && $.type(val) === "array") {
-	        if (val.length > result) {
-	          result = val.length;
-	        }
-	      }
-	    }
-	    return result - 1;
-	  };
-	
-	  Fields.prototype.getUpstreamNodes = function() {
-	    var c, f, fname, j, len, ref, ref1, res;
-	    res = [];
-	    ref = this.inputs;
-	    for (fname in ref) {
-	      f = ref[fname];
-	      ref1 = f.connections;
-	      for (j = 0, len = ref1.length; j < len; j++) {
-	        c = ref1[j];
-	        res[res.length] = c.from_field.node;
-	      }
-	    }
-	    return res;
-	  };
-	
-	  Fields.prototype.getDownstreamNodes = function() {
-	    var c, f, fname, j, k, len, len1, ref, ref1, res;
-	    res = [];
-	    ref = this.outputs;
-	    for (f = j = 0, len = ref.length; j < len; f = ++j) {
-	      fname = ref[f];
-	      f = this.inputs[fname];
-	      ref1 = f.connections;
-	      for (k = 0, len1 = ref1.length; k < len1; k++) {
-	        c = ref1[k];
-	        res[res.length] = c.to_field.node;
-	      }
-	    }
-	    return res;
-	  };
-	
-	  Fields.prototype.hasUnconnectedInputs = function() {
-	    var f, fname, ref;
-	    ref = this.inputs;
-	    for (fname in ref) {
-	      f = ref[fname];
-	      if (f.connections.length === 0) {
-	        return true;
-	      }
-	    }
-	    return false;
-	  };
-	
-	  Fields.prototype.hasUnconnectedOutputs = function() {
-	    var f, fname, ref;
-	    ref = this.outputs;
-	    for (fname in ref) {
-	      f = ref[fname];
-	      if (f.connections.length === 0) {
-	        return true;
-	      }
-	    }
-	    return false;
-	  };
-	
-	  Fields.prototype.hasUnconnectedFields = function() {
-	    return hasUnconnectedInputs() || hasUnconnectedOutputs();
-	  };
-	
-	  Fields.prototype.setFieldInputUnchanged = function() {
-	    var f, fname, j, len, ref, results;
-	    ref = this.inputs;
-	    results = [];
-	    for (j = 0, len = ref.length; j < len; j++) {
-	      fname = ref[j];
-	      f = this.inputs[fname];
-	      results.push(f.changed = false);
-	    }
-	    return results;
-	  };
-	
-	  Fields.prototype.renderConnections = function() {
-	    return this.invoke("renderConnections");
-	  };
-	
-	  Fields.prototype.removeConnections = function() {
-	    return this.invoke("removeConnections");
-	  };
-	
-	  Fields.prototype.addField = function(name, value, direction) {
-	    var f, field, field_index, field_is_out, target;
-	    if (direction == null) {
-	      direction = "inputs";
-	    }
-	    f = false;
-	    field_is_out = direction !== "inputs";
-	    if ($.type(value) !== "object") {
-	      value = this.getFieldValueObject(value);
-	    }
-	    if (value.propagateDirty == null) {
-	      value.propagateDirty = true;
-	    }
-	    field = new ThreeNodes.Core.fields.models[value.type]({
-	      name: name,
-	      value: value.val,
-	      possibilities: value.values,
-	      node: this.node,
-	      is_output: field_is_out,
-	      "default": value["default"],
-	      subfield: value.subfield,
-	      indexer: this.indexer,
-	      propagateDirty: value.propagateDirty
-	    });
-	    target = field.get("is_output") === false ? "inputs" : "outputs";
-	    field_index = field.get("name");
-	    if (field.subfield) {
-	      field_index += "-" + field.subfield.node.get("nid");
-	    }
-	    this[target][field_index] = field;
-	    this.add(field);
-	    return field;
-	  };
-	
-	  Fields.prototype.addFields = function(fields_array) {
-	    var dir, fname, value;
-	    for (dir in fields_array) {
-	      for (fname in fields_array[dir]) {
-	        value = fields_array[dir][fname];
-	        this.addField(fname, value, dir);
-	      }
-	    }
-	    return this;
-	  };
-	
-	  Fields.prototype.renderSidebar = function() {
-	    this.trigger("renderSidebar");
-	    return this;
-	  };
-	
-	  Fields.prototype.getFieldValueObject = function(default_value) {
-	    var ftype, res;
-	    ftype = (function() {
-	      switch ($.type(default_value)) {
-	        case "number":
-	          return "Float";
-	        case "boolean":
-	          return "Bool";
-	        default:
-	          return "String";
-	      }
-	    })();
-	    res = {
-	      type: ftype,
-	      val: default_value
-	    };
-	    return res;
-	  };
-	
-	  return Fields;
-	
-	})(Backbone.Collection);
-	
-	module.exports = Fields;
-
-
-/***/ },
-/* 79 */,
-/* 80 */,
-/* 81 */,
-/* 82 */,
-/* 83 */,
-/* 84 */,
-/* 85 */,
-/* 86 */,
-/* 87 */,
-/* 88 */,
-/* 89 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Backbone, Connection, Indexer,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	Backbone = __webpack_require__(3);
-	
-	Indexer = __webpack_require__(43);
-	
-	
-	/* Connection model */
-	
-	Connection = (function(superClass) {
-	  extend(Connection, superClass);
-	
-	  function Connection() {
-	    this.switchFieldsIfNeeded = bind(this.switchFieldsIfNeeded, this);
-	    this.validate = bind(this.validate, this);
+	  function NodeCodeView() {
+	    this.getCenterField = bind(this.getCenterField, this);
 	    this.render = bind(this.render, this);
-	    this.remove = bind(this.remove, this);
 	    this.initialize = bind(this.initialize, this);
-	    this.sync = bind(this.sync, this);
-	    return Connection.__super__.constructor.apply(this, arguments);
+	    return NodeCodeView.__super__.constructor.apply(this, arguments);
 	  }
 	
-	  Connection.STATIC_INDEXER = new Indexer();
-	
-	  Connection.prototype.defaults = {
-	    "cid": -1
-	  };
-	
-	  Connection.prototype.sync = function() {};
-	
-	  Connection.prototype.initialize = function(options) {
-	    var indexer;
-	    this.options = options;
-	    indexer = options.indexer || Connection.STATIC_INDEXER;
-	    if (this.get("cid") === -1) {
-	      this.set({
-	        "cid": indexer.getUID()
+	  NodeCodeView.prototype.initialize = function(options) {
+	    var $codemirror, container, editor, f_in, field, self;
+	    NodeCodeView.__super__.initialize.apply(this, arguments);
+	    field = this.getCenterField();
+	    container = $("<div><textarea data-fid='" + (field.get('fid')) + "' spellcheck='false'></textarea></div>");
+	    this.$el.find('.options .center').append(container);
+	    f_in = $("textarea", container);
+	    field.on_value_update_hooks.update_center_textfield = function(v) {
+	      if (v !== null) {
+	        return f_in.val(v.toString());
+	      }
+	    };
+	    f_in.val(field.getValue());
+	    editor = CodeMirror.fromTextArea(f_in.get(0), {
+	      mode: "javascript",
+	      theme: 'monokai',
+	      tabSize: 2,
+	      lineNumbers: false,
+	      gutters: ["CodeMirror-lint-markers"],
+	      lint: true
+	    });
+	    self = this;
+	    this.$el.resizable({
+	      minHeight: 50,
+	      minWidth: 220,
+	      ghost: false,
+	      resize: function(event, ui) {
+	        var model, size;
+	        size = ui.size;
+	        editor.setSize(null, size.height - 37);
+	        model = self.model;
+	        model.set("width", size.width - 13);
+	        model.set("height", size.height - 13);
+	        return self.renderConnections();
+	      }
+	    });
+	    editor.on("change", function(instance, changeObj) {
+	      return field.setValue(editor.getValue());
+	    });
+	    $codemirror = this.$el.find('.CodeMirror');
+	    $codemirror.parent().on("mousemove click mouseup mousedown", function(e) {
+	      return e.stopPropagation();
+	    });
+	    if (this.model.get('height')) {
+	      editor.setSize(null, this.model.get('height') - 37 + 13);
+	    }
+	    if (field.get("is_output") === true) {
+	      f_in.attr("disabled", "disabled");
+	      editor.setOption('readOnly', true);
+	    } else {
+	      f_in.keyup(function(e) {
+	        return field.setValue($(this).val());
 	      });
 	    }
-	    if (this.isValid()) {
-	      this.to_field.removeConnections();
-	      this.from_field.addConnection(this);
-	      this.to_field.addConnection(this);
-	      this.to_field.setValue(this.from_field.get("value"));
-	      return this.from_field.node.dirty = true;
-	    }
-	  };
-	
-	  Connection.prototype.remove = function() {
-	    this.from_field.unregisterConnection(this);
-	    this.to_field.unregisterConnection(this);
-	    this.to_field.removeConnections();
-	    this.to_field.node.dirty = true;
-	    this.to_field.changed = true;
-	    delete this.from_field;
-	    delete this.to_field;
-	    this.trigger("connection:removed", this);
-	    this.destroy();
-	    return false;
-	  };
-	
-	  Connection.prototype.render = function() {
-	    return this.trigger("render", this, this);
-	  };
-	
-	  Connection.prototype.validate = function(attrs, options) {
-	    this.from_field = attrs.from_field;
-	    this.to_field = attrs.to_field;
-	    if (!this.from_field || !this.to_field) {
-	      return true;
-	    }
-	    if (this.from_field.get("is_output") === this.to_field.get("is_output")) {
-	      return true;
-	    }
-	    if (this.from_field.node.get('nid') === this.to_field.node.get('nid')) {
-	      return true;
-	    }
-	    this.switchFieldsIfNeeded();
-	    return false;
-	  };
-	
-	  Connection.prototype.switchFieldsIfNeeded = function() {
-	    var f_out;
-	    if (this.from_field.get("is_output") === false) {
-	      f_out = this.to_field;
-	      this.to_field = this.from_field;
-	      this.from_field = f_out;
-	    }
 	    return this;
 	  };
 	
-	  Connection.prototype.toJSON = function() {
-	    var res;
-	    res = {
-	      id: this.get("cid"),
-	      from_node: this.from_field.node.get("nid"),
-	      from_node_gid: this.from_field.node.get("gid"),
-	      from: this.from_field.get("machine_name"),
-	      to_node: this.to_field.node.get("nid"),
-	      to_node_gid: this.to_field.node.get("gid"),
-	      to: this.to_field.get("machine_name")
-	    };
-	    return res;
-	  };
-	
-	  return Connection;
-	
-	})(Backbone.Model);
-	
-	module.exports = Connection;
-
-
-/***/ },
-/* 90 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Backbone, FieldButton, _, _view_field_context_menu, _view_node_field_in, _view_node_field_out,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	_view_node_field_in = __webpack_require__(96);
-	
-	_view_node_field_out = __webpack_require__(97);
-	
-	_view_field_context_menu = __webpack_require__(98);
-	
-	__webpack_require__(34);
-	
-	__webpack_require__(51);
-	
-	
-	/* FieldButton View */
-	
-	FieldButton = (function(superClass) {
-	  extend(FieldButton, superClass);
-	
-	  function FieldButton() {
-	    this.render = bind(this.render, this);
-	    this.makeElement = bind(this.makeElement, this);
-	    this.remove = bind(this.remove, this);
-	    return FieldButton.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  FieldButton.prototype.className = "field";
-	
-	  FieldButton.prototype.initialize = function(options) {
-	    FieldButton.__super__.initialize.apply(this, arguments);
-	    this.makeElement();
-	    return this.render();
-	  };
-	
-	  FieldButton.prototype.remove = function() {
-	    var $inner;
-	    $inner = $(".inner-field", this.$el);
-	    if ($inner.data("droppable")) {
-	      $inner.droppable("destroy");
+	  NodeCodeView.prototype.render = function() {
+	    NodeCodeView.__super__.render.apply(this, arguments);
+	    if (this.model.get('width')) {
+	      this.$el.css('width', this.model.get('width'));
 	    }
-	    if ($inner.data("draggable")) {
-	      $inner.draggable("destroy");
+	    if (this.model.get('height')) {
+	      return this.$el.css('height', this.model.get('height'));
 	    }
-	    $inner.remove();
-	    return FieldButton.__super__.remove.apply(this, arguments);
 	  };
 	
-	  FieldButton.prototype.makeElement = function() {
-	    var bt, layout;
-	    layout = this.model.get("is_output") ? _view_node_field_out : _view_node_field_in;
-	    bt = _.template(layout, {
-	      fid: this.model.get("fid"),
-	      name: this.model.get("name")
-	    });
-	    return this.$el.html(bt);
+	  NodeCodeView.prototype.getCenterField = function() {
+	    return this.model.fields.getField("code");
 	  };
 	
-	  FieldButton.prototype.render = function() {
-	    this.$el.attr("rel", this.model.get("name"));
-	    this.$el.addClass("field-" + this.model.get("name"));
-	    this.$el.data("object", this.model);
-	    this.$el.data("fid", this.model.get("fid"));
-	    this.initContextMenu();
-	    return this.addFieldListener();
-	  };
+	  return NodeCodeView;
 	
-	  FieldButton.prototype.initContextMenu = function() {
-	    var menu_field_menu;
-	    if ($("#field-context-menu").length < 1) {
-	      menu_field_menu = _.template(_view_field_context_menu, {});
-	      $("body").append(menu_field_menu);
-	    }
-	    this.$el.contextMenu({
-	      menu: "field-context-menu"
-	    }, (function(_this) {
-	      return function(action, el, pos) {
-	        if (action === "removeConnection") {
-	          return _this.model.removeConnections();
-	        }
-	      };
-	    })(this));
-	    return this;
-	  };
+	})(NodeView);
 	
-	  FieldButton.prototype.addFieldListener = function() {
-	    var accept_class, field, getPath, highlight_possible_targets, self, start_offset_x, start_offset_y;
-	    self = this;
-	    field = this.model;
-	    start_offset_x = 0;
-	    start_offset_y = 0;
-	    getPath = function(start, end, offset) {
-	      var ofx, ofy;
-	      ofx = $("#container-wrapper").scrollLeft();
-	      ofy = $("#container-wrapper").scrollTop();
-	      return "M" + (start.left + offset.left + 2) + " " + (start.top + offset.top + 2) + " L" + (end.left + offset.left + ofx - start_offset_x) + " " + (end.top + offset.top + ofy - start_offset_y);
-	    };
-	    highlight_possible_targets = function() {
-	      var target;
-	      target = ".outputs .field";
-	      if (field.get("is_output") === true) {
-	        target = ".inputs .field";
-	      }
-	      return $(target).filter(function() {
-	        return $(this).parent().parent().parent().data("nid") !== field.node.get("nid");
-	      }).addClass("field-possible-target");
-	    };
-	    $(".inner-field", this.$el).draggable({
-	      helper: function() {
-	        return $("<div class='ui-widget-drag-helper'></div>");
-	      },
-	      scroll: true,
-	      cursor: 'pointer',
-	      cursorAt: {
-	        left: 0,
-	        top: 0
-	      },
-	      start: function(event, ui) {
-	        start_offset_x = $("#container-wrapper").scrollLeft();
-	        start_offset_y = $("#container-wrapper").scrollTop();
-	        highlight_possible_targets();
-	        if (ThreeNodes.UI.UIView.connecting_line) {
-	          return ThreeNodes.UI.UIView.connecting_line.attr({
-	            opacity: 1
-	          });
-	        }
-	      },
-	      stop: function(event, ui) {
-	        $(".field").removeClass("field-possible-target");
-	        if (ThreeNodes.UI.UIView.connecting_line) {
-	          return ThreeNodes.UI.UIView.connecting_line.attr({
-	            opacity: 0
-	          });
-	        }
-	      },
-	      drag: function(event, ui) {
-	        var node_pos, pos;
-	        if (ThreeNodes.UI.UIView.connecting_line) {
-	          pos = $(this).position();
-	          node_pos = {
-	            left: field.node.get("x"),
-	            top: field.node.get("y")
-	          };
-	          ThreeNodes.UI.UIView.connecting_line.attr({
-	            path: getPath(pos, ui.position, node_pos)
-	          });
-	          return true;
-	        }
-	      }
-	    });
-	    accept_class = ".outputs .inner-field";
-	    if (field && field.get("is_output") === true) {
-	      accept_class = ".inputs .inner-field";
-	    }
-	    $(".inner-field", this.$el).droppable({
-	      accept: accept_class,
-	      activeClass: "ui-state-active",
-	      hoverClass: "ui-state-hover",
-	      drop: function(event, ui) {
-	        var field2, origin;
-	        origin = $(ui.draggable).parent();
-	        field2 = origin.data("object");
-	        if (field.node.parent) {
-	          return field2.node.createConnection(field, field2);
-	        } else {
-	          return field.node.createConnection(field, field2);
-	        }
-	      }
-	    });
-	    return this;
-	  };
-	
-	  return FieldButton;
-	
-	})(Backbone.View);
-	
-	module.exports = FieldButton;
+	module.exports = NodeCodeView;
 
 
-/***/ },
-/* 91 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 45 */
+/***/ (function(module, exports, __webpack_require__) {
 
 	// CodeMirror, copyright (c) by Marijn Haverbeke and others
 	// Distributed under an MIT license: http://codemirror.net/LICENSE
@@ -13428,9 +13560,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 
 
-/***/ },
-/* 92 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 46 */
+/***/ (function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_46__;
+
+/***/ }),
+/* 47 */
+/***/ (function(module, exports, __webpack_require__) {
 
 	// CodeMirror, copyright (c) by Marijn Haverbeke and others
 	// Distributed under an MIT license: http://codemirror.net/LICENSE
@@ -13439,7 +13577,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	(function(mod) {
 	  if (true) // CommonJS
-	    mod(__webpack_require__(91));
+	    mod(__webpack_require__(45));
 	  else if (typeof define == "function" && define.amd) // AMD
 	    define(["../../lib/codemirror"], mod);
 	  else // Plain browser env
@@ -14097,16 +14235,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 
 
-/***/ },
-/* 93 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 48 */
+/***/ (function(module, exports, __webpack_require__) {
 
 	// CodeMirror, copyright (c) by Marijn Haverbeke and others
 	// Distributed under an MIT license: http://codemirror.net/LICENSE
 	
 	(function(mod) {
 	  if (true) // CommonJS
-	    mod(__webpack_require__(91));
+	    mod(__webpack_require__(45));
 	  else if (typeof define == "function" && define.amd) // AMD
 	    define(["../../lib/codemirror"], mod);
 	  else // Plain browser env
@@ -14313,16 +14451,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 
 
-/***/ },
-/* 94 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 49 */
+/***/ (function(module, exports, __webpack_require__) {
 
 	// CodeMirror, copyright (c) by Marijn Haverbeke and others
 	// Distributed under an MIT license: http://codemirror.net/LICENSE
 	
 	(function(mod) {
 	  if (true) // CommonJS
-	    mod(__webpack_require__(91));
+	    mod(__webpack_require__(45));
 	  else if (typeof define == "function" && define.amd) // AMD
 	    define(["../../lib/codemirror"], mod);
 	  else // Plain browser env
@@ -14455,11 +14593,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 
 
-/***/ },
-/* 95 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 50 */
+/***/ (function(module, exports, __webpack_require__) {
 
-	var Any, Array, Backbone, Bool, BoolField, Camera, Color, Euler, EulerField, Float, FloatField, Fog, Geometry, Indexer, Material, Mesh, NodeField, Object3D, Quaternion, QuaternionField, Scene, String, StringField, Texture, Vector2, Vector2Field, Vector3, Vector3Field, Vector4, Vector4Field, _, namespace,
+	var Backbone, MathAdd, MathAttenuation, MathCeil, MathCos, MathDivide, MathFloor, MathMax, MathMin, MathMod, MathMult, MathRound, MathSin, MathSubtract, MathTan, Node, NodeNumberParam1, NodeNumberSimple, _,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
@@ -14468,2000 +14606,1805 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	Indexer = __webpack_require__(43);
+	Node = __webpack_require__(11);
 	
-	namespace = __webpack_require__(50).namespace;
+	NodeNumberSimple = __webpack_require__(28);
 	
-	BoolField = __webpack_require__(99);
+	MathSin = (function(superClass) {
+	  extend(MathSin, superClass);
 	
-	StringField = __webpack_require__(100);
+	  function MathSin() {
+	    this.process_val = bind(this.process_val, this);
+	    return MathSin.__super__.constructor.apply(this, arguments);
+	  }
 	
-	FloatField = __webpack_require__(101);
+	  MathSin.node_name = 'Sin';
 	
-	Vector2Field = __webpack_require__(102);
+	  MathSin.group_name = 'Math';
 	
-	Vector3Field = __webpack_require__(103);
+	  MathSin.prototype.process_val = function(num, i) {
+	    return Math.sin(num);
+	  };
 	
-	Vector4Field = __webpack_require__(104);
+	  return MathSin;
 	
-	QuaternionField = __webpack_require__(105);
+	})(NodeNumberSimple);
 	
-	EulerField = __webpack_require__(106);
+	ThreeNodes.Core.addNodeType('MathSin', MathSin);
 	
+	MathCos = (function(superClass) {
+	  extend(MathCos, superClass);
 	
-	/* Field model */
+	  function MathCos() {
+	    this.process_val = bind(this.process_val, this);
+	    return MathCos.__super__.constructor.apply(this, arguments);
+	  }
 	
-	NodeField = (function(superClass) {
-	  extend(NodeField, superClass);
+	  MathCos.node_name = 'Cos';
 	
-	  function NodeField() {
-	    this.onValueChanged = bind(this.onValueChanged, this);
-	    this.removeConnections = bind(this.removeConnections, this);
-	    this.unregisterConnection = bind(this.unregisterConnection, this);
-	    this.addConnection = bind(this.addConnection, this);
-	    this.computeValue = bind(this.computeValue, this);
-	    this.renderConnections = bind(this.renderConnections, this);
-	    this.toJSON = bind(this.toJSON, this);
-	    this.isAnimationProperty = bind(this.isAnimationProperty, this);
-	    this.getSliceCount = bind(this.getSliceCount, this);
-	    this.isConnected = bind(this.isConnected, this);
-	    this.isChanged = bind(this.isChanged, this);
-	    this.getValue = bind(this.getValue, this);
-	    this.setValue = bind(this.setValue, this);
+	  MathCos.group_name = 'Math';
+	
+	  MathCos.prototype.process_val = function(num, i) {
+	    return Math.cos(num);
+	  };
+	
+	  return MathCos;
+	
+	})(NodeNumberSimple);
+	
+	ThreeNodes.Core.addNodeType('MathCos', MathCos);
+	
+	MathTan = (function(superClass) {
+	  extend(MathTan, superClass);
+	
+	  function MathTan() {
+	    this.process_val = bind(this.process_val, this);
+	    return MathTan.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  MathTan.node_name = 'Tan';
+	
+	  MathTan.group_name = 'Math';
+	
+	  MathTan.prototype.process_val = function(num, i) {
+	    return Math.tan(num);
+	  };
+	
+	  return MathTan;
+	
+	})(NodeNumberSimple);
+	
+	ThreeNodes.Core.addNodeType('MathTan', MathTan);
+	
+	MathRound = (function(superClass) {
+	  extend(MathRound, superClass);
+	
+	  function MathRound() {
+	    this.process_val = bind(this.process_val, this);
+	    return MathRound.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  MathRound.node_name = 'Round';
+	
+	  MathRound.group_name = 'Math';
+	
+	  MathRound.prototype.process_val = function(num, i) {
+	    return Math.round(num);
+	  };
+	
+	  return MathRound;
+	
+	})(NodeNumberSimple);
+	
+	ThreeNodes.Core.addNodeType('MathRound', MathRound);
+	
+	MathCeil = (function(superClass) {
+	  extend(MathCeil, superClass);
+	
+	  function MathCeil() {
+	    this.process_val = bind(this.process_val, this);
+	    return MathCeil.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  MathCeil.node_name = 'Ceil';
+	
+	  MathCeil.group_name = 'Math';
+	
+	  MathCeil.prototype.process_val = function(num, i) {
+	    return Math.ceil(num);
+	  };
+	
+	  return MathCeil;
+	
+	})(NodeNumberSimple);
+	
+	ThreeNodes.Core.addNodeType('MathCeil', MathCeil);
+	
+	MathFloor = (function(superClass) {
+	  extend(MathFloor, superClass);
+	
+	  function MathFloor() {
+	    this.process_val = bind(this.process_val, this);
+	    return MathFloor.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  MathFloor.node_name = 'Floor';
+	
+	  MathFloor.group_name = 'Math';
+	
+	  MathFloor.prototype.process_val = function(num, i) {
+	    return Math.floor(num);
+	  };
+	
+	  return MathFloor;
+	
+	})(NodeNumberSimple);
+	
+	ThreeNodes.Core.addNodeType('MathFloor', MathFloor);
+	
+	NodeNumberParam1 = (function(superClass) {
+	  extend(NodeNumberParam1, superClass);
+	
+	  function NodeNumberParam1() {
+	    this.compute = bind(this.compute, this);
+	    this.remove = bind(this.remove, this);
+	    this.apply_num_to_vec3 = bind(this.apply_num_to_vec3, this);
+	    this.apply_num_to_vec2 = bind(this.apply_num_to_vec2, this);
+	    this.process_val = bind(this.process_val, this);
+	    return NodeNumberParam1.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  NodeNumberParam1.prototype.process_val = function(num, numb, i) {
+	    return num + numb;
+	  };
+	
+	  NodeNumberParam1.prototype.apply_num_to_vec2 = function(a, b, i) {
+	    switch ($.type(a)) {
+	      case "number":
+	        return new THREE.Vector2(this.process_val(a, b.x, i), this.process_val(a, b.y, i));
+	      case "object":
+	        return new THREE.Vector2(this.process_val(a.x, b, i), this.process_val(a.y, b, i));
+	    }
+	  };
+	
+	  NodeNumberParam1.prototype.apply_num_to_vec3 = function(a, b, i) {
+	    switch ($.type(a)) {
+	      case "number":
+	        return new THREE.Vector3(this.process_val(a, b.x, i), this.process_val(a, b.y, i), this.process_val(a, b.z, i));
+	      case "object":
+	        return new THREE.Vector3(this.process_val(a.x, b, i), this.process_val(a.y, b, i), this.process_val(a.z, b, i));
+	    }
+	  };
+	
+	  NodeNumberParam1.prototype.remove = function() {
+	    delete this.v_factor;
+	    return NodeNumberParam1.__super__.remove.apply(this, arguments);
+	  };
+	
+	  NodeNumberParam1.prototype.compute = function() {
+	    var i, j, numItems, ref, ref1, refb, res;
+	    res = [];
+	    numItems = this.fields.getMaxInputSliceCount();
+	    for (i = j = 0, ref1 = numItems; 0 <= ref1 ? j <= ref1 : j >= ref1; i = 0 <= ref1 ? ++j : --j) {
+	      ref = this.v_in.getValue(i);
+	      refb = this.v_factor.getValue(i);
+	      switch ($.type(ref)) {
+	        case "number":
+	          switch ($.type(refb)) {
+	            case "number":
+	              res[i] = this.process_val(ref, refb, i);
+	              break;
+	            case "object":
+	              switch (refb.constructor) {
+	                case THREE.Vector2:
+	                  res[i] = this.apply_num_to_vec2(ref, refb, i);
+	                  break;
+	                case THREE.Vector3:
+	                  res[i] = this.apply_num_to_vec3(ref, refb, i);
+	              }
+	          }
+	          break;
+	        case "object":
+	          switch (ref.constructor) {
+	            case THREE.Vector2:
+	              switch ($.type(refb)) {
+	                case "number":
+	                  res[i] = this.apply_num_to_vec2(ref, refb, i);
+	                  break;
+	                case "object":
+	                  res[i] = new THREE.Vector2(this.process_val(ref.x, refb.x, i), this.process_val(ref.y, refb.y, i));
+	              }
+	              break;
+	            case THREE.Vector3:
+	              switch ($.type(refb)) {
+	                case "number":
+	                  res[i] = this.apply_num_to_vec3(ref, refb, i);
+	                  break;
+	                case "object":
+	                  res[i] = new THREE.Vector3(this.process_val(ref.x, refb.x, i), this.process_val(ref.y, refb.y, i), this.process_val(ref.z, refb.z, i));
+	              }
+	          }
+	      }
+	    }
+	    this.v_out.setValue(res);
+	    return true;
+	  };
+	
+	  return NodeNumberParam1;
+	
+	})(NodeNumberSimple);
+	
+	MathMod = (function(superClass) {
+	  extend(MathMod, superClass);
+	
+	  function MathMod() {
+	    this.process_val = bind(this.process_val, this);
+	    this.onFieldsCreated = bind(this.onFieldsCreated, this);
+	    this.getFields = bind(this.getFields, this);
+	    return MathMod.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  MathMod.node_name = 'Mod';
+	
+	  MathMod.group_name = 'Math';
+	
+	  MathMod.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = MathMod.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "y": {
+	          type: "Float",
+	          val: 2
+	        }
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  MathMod.prototype.onFieldsCreated = function() {
+	    MathMod.__super__.onFieldsCreated.apply(this, arguments);
+	    return this.v_factor = this.fields.getField("y");
+	  };
+	
+	  MathMod.prototype.process_val = function(num, numb, i) {
+	    return num % numb;
+	  };
+	
+	  return MathMod;
+	
+	})(NodeNumberParam1);
+	
+	ThreeNodes.Core.addNodeType('MathMod', MathMod);
+	
+	MathAdd = (function(superClass) {
+	  extend(MathAdd, superClass);
+	
+	  function MathAdd() {
+	    this.process_val = bind(this.process_val, this);
+	    this.onFieldsCreated = bind(this.onFieldsCreated, this);
+	    this.getFields = bind(this.getFields, this);
+	    return MathAdd.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  MathAdd.node_name = 'Add';
+	
+	  MathAdd.group_name = 'Math';
+	
+	  MathAdd.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = MathAdd.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "y": {
+	          type: "Float",
+	          val: 1
+	        }
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  MathAdd.prototype.onFieldsCreated = function() {
+	    MathAdd.__super__.onFieldsCreated.apply(this, arguments);
+	    return this.v_factor = this.fields.getField("y");
+	  };
+	
+	  MathAdd.prototype.process_val = function(num, numb, i) {
+	    return num + numb;
+	  };
+	
+	  return MathAdd;
+	
+	})(NodeNumberParam1);
+	
+	ThreeNodes.Core.addNodeType('MathAdd', MathAdd);
+	
+	MathSubtract = (function(superClass) {
+	  extend(MathSubtract, superClass);
+	
+	  function MathSubtract() {
+	    this.process_val = bind(this.process_val, this);
+	    this.onFieldsCreated = bind(this.onFieldsCreated, this);
+	    this.getFields = bind(this.getFields, this);
+	    return MathSubtract.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  MathSubtract.node_name = 'Subtract';
+	
+	  MathSubtract.group_name = 'Math';
+	
+	  MathSubtract.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = MathSubtract.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "y": {
+	          type: "Float",
+	          val: 1
+	        }
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  MathSubtract.prototype.onFieldsCreated = function() {
+	    MathSubtract.__super__.onFieldsCreated.apply(this, arguments);
+	    return this.v_factor = this.fields.getField("y");
+	  };
+	
+	  MathSubtract.prototype.process_val = function(num, numb, i) {
+	    return num - numb;
+	  };
+	
+	  return MathSubtract;
+	
+	})(NodeNumberParam1);
+	
+	ThreeNodes.Core.addNodeType('MathSubtract', MathSubtract);
+	
+	MathMult = (function(superClass) {
+	  extend(MathMult, superClass);
+	
+	  function MathMult() {
+	    this.process_val = bind(this.process_val, this);
+	    this.onFieldsCreated = bind(this.onFieldsCreated, this);
+	    this.getFields = bind(this.getFields, this);
+	    return MathMult.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  MathMult.node_name = 'Mult';
+	
+	  MathMult.group_name = 'Math';
+	
+	  MathMult.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = MathMult.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "factor": {
+	          type: "Float",
+	          val: 2
+	        }
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  MathMult.prototype.onFieldsCreated = function() {
+	    MathMult.__super__.onFieldsCreated.apply(this, arguments);
+	    return this.v_factor = this.fields.getField("factor");
+	  };
+	
+	  MathMult.prototype.process_val = function(num, numb, i) {
+	    return num * numb;
+	  };
+	
+	  return MathMult;
+	
+	})(NodeNumberParam1);
+	
+	ThreeNodes.Core.addNodeType('MathMult', MathMult);
+	
+	MathDivide = (function(superClass) {
+	  extend(MathDivide, superClass);
+	
+	  function MathDivide() {
+	    this.process_val = bind(this.process_val, this);
+	    this.onFieldsCreated = bind(this.onFieldsCreated, this);
+	    this.getFields = bind(this.getFields, this);
+	    return MathDivide.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  MathDivide.node_name = 'Divide';
+	
+	  MathDivide.group_name = 'Math';
+	
+	  MathDivide.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = MathDivide.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "y": {
+	          type: "Float",
+	          val: 2
+	        }
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  MathDivide.prototype.onFieldsCreated = function() {
+	    MathDivide.__super__.onFieldsCreated.apply(this, arguments);
+	    return this.v_factor = this.fields.getField("y");
+	  };
+	
+	  MathDivide.prototype.process_val = function(num, numb, i) {
+	    return num / numb;
+	  };
+	
+	  return MathDivide;
+	
+	})(NodeNumberParam1);
+	
+	ThreeNodes.Core.addNodeType('MathDivide', MathDivide);
+	
+	MathMin = (function(superClass) {
+	  extend(MathMin, superClass);
+	
+	  function MathMin() {
+	    this.process_val = bind(this.process_val, this);
+	    this.onFieldsCreated = bind(this.onFieldsCreated, this);
+	    this.getFields = bind(this.getFields, this);
+	    return MathMin.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  MathMin.node_name = 'Min';
+	
+	  MathMin.group_name = 'Math';
+	
+	  MathMin.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = MathMin.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "in2": {
+	          type: "Float",
+	          val: 0
+	        }
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  MathMin.prototype.onFieldsCreated = function() {
+	    MathMin.__super__.onFieldsCreated.apply(this, arguments);
+	    return this.v_factor = this.fields.getField("in2");
+	  };
+	
+	  MathMin.prototype.process_val = function(num, numb, i) {
+	    return Math.min(num, numb);
+	  };
+	
+	  return MathMin;
+	
+	})(NodeNumberParam1);
+	
+	ThreeNodes.Core.addNodeType('MathMin', MathMin);
+	
+	MathMax = (function(superClass) {
+	  extend(MathMax, superClass);
+	
+	  function MathMax() {
+	    this.process_val = bind(this.process_val, this);
+	    this.onFieldsCreated = bind(this.onFieldsCreated, this);
+	    this.getFields = bind(this.getFields, this);
+	    return MathMax.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  MathMax.node_name = 'Max';
+	
+	  MathMax.group_name = 'Math';
+	
+	  MathMax.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = MathMax.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "in2": {
+	          type: "Float",
+	          val: 0
+	        }
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  MathMax.prototype.onFieldsCreated = function() {
+	    MathMax.__super__.onFieldsCreated.apply(this, arguments);
+	    return this.v_factor = this.fields.getField("in2");
+	  };
+	
+	  MathMax.prototype.process_val = function(num, numb, i) {
+	    return Math.max(num, numb);
+	  };
+	
+	  return MathMax;
+	
+	})(NodeNumberParam1);
+	
+	ThreeNodes.Core.addNodeType('MathMax', MathMax);
+	
+	MathAttenuation = (function(superClass) {
+	  extend(MathAttenuation, superClass);
+	
+	  function MathAttenuation() {
+	    this.process_val = bind(this.process_val, this);
+	    this.onFieldsCreated = bind(this.onFieldsCreated, this);
+	    this.getFields = bind(this.getFields, this);
+	    this.initialize = bind(this.initialize, this);
+	    return MathAttenuation.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  MathAttenuation.node_name = 'Attenuation';
+	
+	  MathAttenuation.group_name = 'Math';
+	
+	  MathAttenuation.prototype.initialize = function(options) {
+	    MathAttenuation.__super__.initialize.apply(this, arguments);
+	    return this.val = 0;
+	  };
+	
+	  MathAttenuation.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = MathAttenuation.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "default": 0,
+	        "reset": false,
+	        "factor": 0.8
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  MathAttenuation.prototype.onFieldsCreated = function() {
+	    MathAttenuation.__super__.onFieldsCreated.apply(this, arguments);
+	    this.def_val = this.fields.getField("default");
+	    this.reset_val = this.fields.getField("reset");
+	    this.v_factor = this.fields.getField("factor");
+	    return this.val = this.def_val.getValue();
+	  };
+	
+	  MathAttenuation.prototype.process_val = function(num, numb, i) {
+	    if (this.reset_val.getValue(i) === true) {
+	      this.val = this.def_val.getValue(i);
+	    }
+	    this.val = this.val + (this.v_in.getValue(i) - this.val) * this.v_factor.getValue(i);
+	    return this.val;
+	  };
+	
+	  return MathAttenuation;
+	
+	})(NodeNumberParam1);
+	
+	ThreeNodes.Core.addNodeType('MathAttenuation', MathAttenuation);
+
+
+/***/ }),
+/* 51 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, Font, Get, LFO, Merge, Mouse, Mp3Input, Node, NodeWithCenterTextfield, Random, Screen, Timer, _,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	Node = __webpack_require__(11);
+	
+	NodeWithCenterTextfield = __webpack_require__(29);
+	
+	Random = (function(superClass) {
+	  extend(Random, superClass);
+	
+	  function Random() {
+	    this.getCenterField = bind(this.getCenterField, this);
+	    return Random.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Random.prototype.getCenterField = function() {
+	    return this.model.fields.getField("out", true);
+	  };
+	
+	  return Random;
+	
+	})(NodeWithCenterTextfield);
+	
+	ThreeNodes.Core.addNodeView('Random', Random);
+	
+	LFO = (function(superClass) {
+	  extend(LFO, superClass);
+	
+	  function LFO() {
+	    this.getCenterField = bind(this.getCenterField, this);
+	    return LFO.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  LFO.prototype.getCenterField = function() {
+	    return this.model.fields.getField("out", true);
+	  };
+	
+	  return LFO;
+	
+	})(NodeWithCenterTextfield);
+	
+	ThreeNodes.Core.addNodeView('LFO', LFO);
+	
+	Timer = (function(superClass) {
+	  extend(Timer, superClass);
+	
+	  function Timer() {
+	    this.getCenterField = bind(this.getCenterField, this);
+	    return Timer.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Timer.prototype.getCenterField = function() {
+	    return this.model.fields.getField("out", true);
+	  };
+	
+	  return Timer;
+	
+	})(NodeWithCenterTextfield);
+	
+	ThreeNodes.Core.addNodeView('Timer', Timer);
+	
+	Random = (function(superClass) {
+	  extend(Random, superClass);
+	
+	  function Random() {
+	    this.compute = bind(this.compute, this);
+	    this.getFields = bind(this.getFields, this);
+	    this.initialize = bind(this.initialize, this);
+	    return Random.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Random.node_name = 'Random';
+	
+	  Random.group_name = 'Utils';
+	
+	  Random.prototype.initialize = function(options) {
+	    Random.__super__.initialize.apply(this, arguments);
+	    return this.auto_evaluate = true;
+	  };
+	
+	  Random.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = Random.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "min": 0,
+	        "max": 1
+	      },
+	      outputs: {
+	        "out": 0
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  Random.prototype.compute = function() {
+	    var value;
+	    value = this.fields.getField("min").getValue() + Math.random() * (this.fields.getField("max").getValue() - this.fields.getField("min").getValue());
+	    return this.fields.setField("out", value);
+	  };
+	
+	  return Random;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('Random', Random);
+	
+	LFO = (function(superClass) {
+	  extend(LFO, superClass);
+	
+	  function LFO() {
+	    this.compute = bind(this.compute, this);
+	    this.getFields = bind(this.getFields, this);
+	    this.initialize = bind(this.initialize, this);
+	    return LFO.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  LFO.node_name = 'LFO';
+	
+	  LFO.group_name = 'Utils';
+	
+	  LFO.prototype.initialize = function(options) {
+	    LFO.__super__.initialize.apply(this, arguments);
+	    this.auto_evaluate = true;
+	    this.rndB = Math.random();
+	    this.rndA = this.rndB;
+	    this.rndrange = 1;
+	    this.flip = 0;
+	    this.taskinterval = 1;
+	    this.taskintervalhold = 20;
+	    this.clock = 0;
+	    return this.PI = 3.14159;
+	  };
+	
+	  LFO.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = LFO.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "min": 0,
+	        "max": 1,
+	        "duration": 1000,
+	        "mode": {
+	          type: "Float",
+	          val: 0,
+	          values: {
+	            "sawtooth": 0,
+	            "sine": 1,
+	            "triangle": 2,
+	            "square waver": 3,
+	            "random": 4,
+	            "random triangle": 5
+	          }
+	        }
+	      },
+	      outputs: {
+	        "out": 0
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  LFO.prototype.compute = function() {
+	    var duration, halfway, hi, lfoout, lfout, low, max, min, mode, range, src, srctmp, time;
+	    duration = this.fields.getField("duration").getValue();
+	    min = this.fields.getField("min").getValue();
+	    max = this.fields.getField("max").getValue();
+	    mode = this.fields.getField("mode").getValue();
+	    this.clock = Date.now();
+	    time = (this.taskinterval * this.clock) % duration;
+	    src = time / duration;
+	    range = max - min;
+	    lfoout = 0;
+	    lfout = (function() {
+	      switch (mode) {
+	        case 0:
+	          return (src * range) + min;
+	        case 1:
+	          return (range * Math.sin(src * this.PI)) + min;
+	        case 2:
+	          halfway = duration / 2;
+	          if (time < halfway) {
+	            return (2 * src * range) + min;
+	          } else {
+	            srctmp = (halfway - (time - halfway)) / duration;
+	            return (2 * srctmp * range) + min;
+	          }
+	          break;
+	        case 3:
+	          low = time < duration / 2;
+	          hi = time >= duration / 2;
+	          return low * min + hi * max;
+	        case 4:
+	          if (time >= duration - this.taskinterval) {
+	            this.rndA = Math.random();
+	          }
+	          return (this.rndA * range) + min;
+	        case 5:
+	          if (time < this.taskinterval) {
+	            this.rndA = this.rndB;
+	            this.rndB = range * Math.random() + min;
+	            this.rndrange = this.rndB - this.rndA;
+	          }
+	          return src * this.rndrange + this.rndA;
+	      }
+	    }).call(this);
+	    return this.fields.setField("out", lfout);
+	  };
+	
+	  return LFO;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('LFO', LFO);
+	
+	Merge = (function(superClass) {
+	  extend(Merge, superClass);
+	
+	  function Merge() {
+	    this.compute = bind(this.compute, this);
+	    this.getFields = bind(this.getFields, this);
+	    this.initialize = bind(this.initialize, this);
+	    return Merge.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Merge.node_name = 'Merge';
+	
+	  Merge.group_name = 'Utils';
+	
+	  Merge.prototype.initialize = function(options) {
+	    Merge.__super__.initialize.apply(this, arguments);
+	    return this.auto_evaluate = false;
+	  };
+	
+	  Merge.prototype.getFields = function() {
+	    var fields;
+	    fields = {
+	      inputs: {
+	        "in0": {
+	          type: "Any",
+	          val: null
+	        },
+	        "in1": {
+	          type: "Any",
+	          val: null
+	        },
+	        "in2": {
+	          type: "Any",
+	          val: null
+	        },
+	        "in3": {
+	          type: "Any",
+	          val: null
+	        },
+	        "in4": {
+	          type: "Any",
+	          val: null
+	        },
+	        "in5": {
+	          type: "Any",
+	          val: null
+	        }
+	      },
+	      outputs: {
+	        "out": {
+	          type: "Array",
+	          val: []
+	        }
+	      }
+	    };
+	    return fields;
+	  };
+	
+	  Merge.prototype.compute = function() {
+	    var changed, f, field, result, subval;
+	    result = [];
+	    changed = false;
+	    for (f in this.fields.inputs) {
+	      field = this.fields.inputs[f];
+	      subval = field.get("value");
+	      if (subval !== null && field.connections.length > 0 && field.changed === true) {
+	        changed = true;
+	        if (jQuery.type(subval) === "array") {
+	          result = result.concat(subval);
+	        } else {
+	          result[result.length] = subval;
+	        }
+	      }
+	    }
+	    if (changed) {
+	      return this.fields.setField("out", result);
+	    }
+	  };
+	
+	  return Merge;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('Merge', Merge);
+	
+	Get = (function(superClass) {
+	  extend(Get, superClass);
+	
+	  function Get() {
+	    this.compute = bind(this.compute, this);
+	    this.getFields = bind(this.getFields, this);
+	    return Get.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Get.node_name = 'Get';
+	
+	  Get.group_name = 'Utils';
+	
+	  Get.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = Get.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "array": {
+	          type: "Array",
+	          val: null
+	        },
+	        "index": 0
+	      },
+	      outputs: {
+	        "out": {
+	          type: "Any",
+	          val: null
+	        }
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  Get.prototype.compute = function() {
+	    var arr, ind, old;
+	    old = this.fields.getField("out", true).getValue();
+	    this.value = false;
+	    arr = this.fields.getField("array").getValue();
+	    ind = parseInt(this.fields.getField("index").getValue());
+	    if ($.type(arr) === "array") {
+	      this.value = arr[ind % arr.length];
+	    }
+	    if (this.value !== old) {
+	      return this.fields.setField("out", this.value);
+	    }
+	  };
+	
+	  return Get;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('Get', Get);
+	
+	Mp3Input = (function(superClass) {
+	  extend(Mp3Input, superClass);
+	
+	  function Mp3Input() {
+	    this.compute = bind(this.compute, this);
+	    this.remove = bind(this.remove, this);
+	    this.getAverageLevel = bind(this.getAverageLevel, this);
+	    this.onSoundLoad = bind(this.onSoundLoad, this);
+	    this.loadAudioBuffer = bind(this.loadAudioBuffer, this);
+	    this.loadAudio = bind(this.loadAudio, this);
+	    this.createSound = bind(this.createSound, this);
+	    this.finishLoad = bind(this.finishLoad, this);
+	    this.remove = bind(this.remove, this);
+	    this.getFields = bind(this.getFields, this);
+	    this.initialize = bind(this.initialize, this);
+	    return Mp3Input.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Mp3Input.node_name = 'Mp3Input';
+	
+	  Mp3Input.group_name = 'Utils';
+	
+	  Mp3Input.prototype.initialize = function(options) {
+	    Mp3Input.__super__.initialize.apply(this, arguments);
+	    this.auto_evaluate = true;
+	    this.counter = 0;
+	    this.playing = false;
+	    window.AudioContext = window.AudioContext || window.webkitAudioContext;
+	    if (AudioContext) {
+	      this.audioContext = new AudioContext();
+	    } else {
+	      $(".options", this.main_view).prepend('<p class="warning">This node currently require a webaudio capable browser.</p>');
+	    }
+	    return this.url_cache = "";
+	  };
+	
+	  Mp3Input.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = Mp3Input.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "url": "",
+	        "smoothingTime": 0.1
+	      },
+	      outputs: {
+	        "average": 0,
+	        "low": 0,
+	        "medium": 0,
+	        "high": 0
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  Mp3Input.prototype.remove = function() {
+	    this.stopSound();
+	    delete this.audioContext;
+	    delete this.url_cache;
+	    return Mp3Input.__super__.remove.apply(this, arguments);
+	  };
+	
+	  Mp3Input.prototype.onRegister = function() {
+	    Mp3Input.__super__.onRegister.apply(this, arguments);
+	    if (this.fields.getField("url").getValue() !== "") {
+	      return this.loadAudio(this.fields.getField("url").getValue());
+	    }
+	  };
+	
+	  Mp3Input.prototype.stopSound = function() {
+	    if (!this.source) {
+	      return false;
+	    }
+	    if (this.playing === true) {
+	      this.source.stop(0.0);
+	      this.source.disconnect(0);
+	      return this.playing = false;
+	    }
+	  };
+	
+	  Mp3Input.prototype.playSound = function(time) {
+	    if (this.source && this.audioContext && this.audioBuffer) {
+	      this.stopSound();
+	      this.source = this.createSound();
+	      this.source.start(0, time, this.audioBuffer.duration - time);
+	      return this.playing = true;
+	    }
+	  };
+	
+	  Mp3Input.prototype.finishLoad = function() {
+	    var delay;
+	    this.source.buffer = this.audioBuffer;
+	    this.source.looping = true;
+	    this.onSoundLoad();
+	    Timeline.getGlobalInstance().maxTime = this.audioBuffer.duration;
+	    delay = function(ms, func) {
+	      return setTimeout(func, ms);
+	    };
+	    return delay(1000, (function(_this) {
+	      return function() {
+	        Timeline.getGlobalInstance().stop();
+	        return Timeline.getGlobalInstance().play();
+	      };
+	    })(this));
+	  };
+	
+	  Mp3Input.prototype.createSound = function() {
+	    var src;
+	    src = this.audioContext.createBufferSource();
+	    if (this.audioBuffer) {
+	      src.buffer = this.audioBuffer;
+	    }
+	    src.connect(this.analyser);
+	    this.analyser.connect(this.audioContext.destination);
+	    return src;
+	  };
+	
+	  Mp3Input.prototype.loadAudio = function(url) {
+	    Timeline.getGlobalInstance().stop();
+	    this.analyser = this.audioContext.createAnalyser();
+	    this.analyser.fftSize = 1024;
+	    this.source = this.createSound();
+	    return this.loadAudioBuffer(url);
+	  };
+	
+	  Mp3Input.prototype.loadAudioBuffer = function(url) {
+	    var onDecoded, request;
+	    request = new XMLHttpRequest();
+	    request.open("GET", url, true);
+	    request.responseType = "arraybuffer";
+	    onDecoded = (function(_this) {
+	      return function(buffer) {
+	        _this.audioBuffer = buffer;
+	        return _this.finishLoad();
+	      };
+	    })(this);
+	    request.onload = (function(_this) {
+	      return function() {
+	        return _this.audioContext.decodeAudioData(request.response, onDecoded);
+	      };
+	    })(this);
+	    request.send();
+	    return this;
+	  };
+	
+	  Mp3Input.prototype.onSoundLoad = function() {
+	    this.freqByteData = new Uint8Array(this.analyser.frequencyBinCount);
+	    return this.timeByteData = new Uint8Array(this.analyser.frequencyBinCount);
+	  };
+	
+	  Mp3Input.prototype.getAverageLevel = function(start, max) {
+	    var i, j, length, ref, ref1, sum;
+	    if (start == null) {
+	      start = 0;
+	    }
+	    if (max == null) {
+	      max = 512;
+	    }
+	    if (!this.freqByteData) {
+	      return 0;
+	    }
+	    start = Math.floor(start);
+	    max = Math.floor(max);
+	    length = max - start;
+	    sum = 0;
+	    for (i = j = ref = start, ref1 = max; ref <= ref1 ? j <= ref1 : j >= ref1; i = ref <= ref1 ? ++j : --j) {
+	      sum += this.freqByteData[i];
+	    }
+	    return sum / length;
+	  };
+	
+	  Mp3Input.prototype.remove = function() {
+	    Mp3Input.__super__.remove.apply(this, arguments);
+	    if (this.source) {
+	      this.source.stop(0.0);
+	      this.source.disconnect();
+	    }
+	    this.freqByteData = false;
+	    this.timeByteData = false;
+	    this.audioBuffer = false;
+	    this.audioContext = false;
+	    return this.source = false;
+	  };
+	
+	  Mp3Input.prototype.compute = function() {
+	    var length, length3rd;
+	    if (!window.AudioContext) {
+	      return;
+	    }
+	    if (this.url_cache !== this.fields.getField("url").getValue()) {
+	      this.url_cache = this.fields.getField("url").getValue();
+	      this.loadAudio(this.url_cache);
+	    }
+	    if (this.analyser && this.freqByteData) {
+	      this.analyser.smoothingTimeConstant = this.fields.getField("smoothingTime").getValue();
+	      this.analyser.getByteFrequencyData(this.freqByteData);
+	      this.analyser.getByteTimeDomainData(this.timeByteData);
+	    }
+	    if (this.freqByteData) {
+	      length = this.freqByteData.length;
+	      length3rd = length / 3;
+	      this.fields.setField("average", this.getAverageLevel(0, length - 1));
+	      this.fields.setField("low", this.getAverageLevel(0, length3rd - 1));
+	      this.fields.setField("medium", this.getAverageLevel(length3rd, (length3rd * 2) - 1));
+	      this.fields.setField("high", this.getAverageLevel(length3rd * 2, length - 1));
+	    }
+	    return true;
+	  };
+	
+	  return Mp3Input;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('Mp3Input', Mp3Input);
+	
+	Mouse = (function(superClass) {
+	  extend(Mouse, superClass);
+	
+	  function Mouse() {
+	    this.compute = bind(this.compute, this);
+	    this.getFields = bind(this.getFields, this);
+	    this.initialize = bind(this.initialize, this);
+	    return Mouse.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Mouse.node_name = 'Mouse';
+	
+	  Mouse.group_name = 'Utils';
+	
+	  Mouse.prototype.initialize = function(options) {
+	    Mouse.__super__.initialize.apply(this, arguments);
+	    return this.auto_evaluate = true;
+	  };
+	
+	  Mouse.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = Mouse.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      outputs: {
+	        "xy": {
+	          type: "Vector2",
+	          val: new THREE.Vector2()
+	        },
+	        "x": 0,
+	        "y": 0
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  Mouse.prototype.compute = function() {
+	    var dx, dy;
+	    dx = ThreeNodes.renderer.mouseX;
+	    dy = ThreeNodes.renderer.mouseY;
+	    this.fields.setField("xy", new THREE.Vector2(dx, dy));
+	    this.fields.setField("x", dx);
+	    return this.fields.setField("y", dy);
+	  };
+	
+	  return Mouse;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('Mouse', Mouse);
+	
+	Screen = (function(superClass) {
+	  extend(Screen, superClass);
+	
+	  function Screen() {
+	    this.compute = bind(this.compute, this);
+	    this.getFields = bind(this.getFields, this);
 	    this.remove = bind(this.remove, this);
 	    this.initialize = bind(this.initialize, this);
-	    this.load = bind(this.load, this);
-	    this.set = bind(this.set, this);
-	    this._validate = bind(this._validate, this);
-	    this.sync = bind(this.sync, this);
-	    return NodeField.__super__.constructor.apply(this, arguments);
+	    return Screen.__super__.constructor.apply(this, arguments);
 	  }
 	
-	  NodeField.VIEW = false;
+	  Screen.node_name = 'Screen';
 	
-	  NodeField.STATIC_INDEXER = new Indexer();
+	  Screen.group_name = 'Utils';
 	
-	  NodeField.prototype.defaults = function() {
-	    return {
-	      fid: -1,
-	      name: "fieldname",
-	      machine_name: "fieldname-nid",
-	      is_output: false,
-	      value: 0,
-	      "default": null
+	  Screen.width = 0;
+	
+	  Screen.height = 0;
+	
+	  Screen.onResize = function(e) {
+	    Screen.width = $(window).width();
+	    return Screen.height = $(window).height();
+	  };
+	
+	  Screen.prototype.initialize = function(options) {
+	    Screen.__super__.initialize.apply(this, arguments);
+	    this.auto_evaluate = true;
+	    $(window).on("resize.threenodes", Screen.onResize);
+	    return Screen.onResize();
+	  };
+	
+	  Screen.prototype.remove = function() {
+	    Screen.__super__.remove.apply(this, arguments);
+	    return $(window).off("resize.threenodes");
+	  };
+	
+	  Screen.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = Screen.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      outputs: {
+	        "width": Screen.width,
+	        "height": Screen.height
+	      }
 	    };
+	    return $.extend(true, base_fields, fields);
 	  };
 	
-	  NodeField.prototype.sync = function() {};
-	
-	  NodeField.prototype._validate = function(attrs, options) {
-	    return true;
+	  Screen.prototype.compute = function() {
+	    this.fields.setField("width", Screen.width);
+	    return this.fields.setField("height", Screen.height);
 	  };
 	
-	  NodeField.prototype.set = function(key, value, options) {
-	    if (options == null) {
-	      options = {};
-	    }
-	    if (key === "value") {
-	      this.attributes[key] = value;
-	      return this;
-	    }
-	    return NodeField.__super__.set.apply(this, arguments);
+	  return Screen;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('Screen', Screen);
+	
+	Timer = (function(superClass) {
+	  extend(Timer, superClass);
+	
+	  function Timer() {
+	    this.compute = bind(this.compute, this);
+	    this.get_time = bind(this.get_time, this);
+	    this.getFields = bind(this.getFields, this);
+	    this.initialize = bind(this.initialize, this);
+	    return Timer.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Timer.node_name = 'Timer';
+	
+	  Timer.group_name = 'Utils';
+	
+	  Timer.prototype.initialize = function(options) {
+	    Timer.__super__.initialize.apply(this, arguments);
+	    this.auto_evaluate = true;
+	    this.old = this.get_time();
+	    return this.counter = 0;
 	  };
 	
-	  NodeField.prototype.load = function(data) {
-	    var property;
-	    if (!data && data !== false) {
-	      return;
-	    }
-	    if ($.type(data) !== "object") {
-	      this.setValue(data);
-	    } else {
-	      for (property in data) {
-	        this.attributes.value[property] = data[property];
+	  Timer.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = Timer.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "reset": false,
+	        "pause": false,
+	        "max": 99999999999
+	      },
+	      outputs: {
+	        "out": 0
 	      }
-	    }
-	    return this;
+	    };
+	    return $.extend(true, base_fields, fields);
 	  };
 	
-	  NodeField.prototype.initialize = function(options) {
-	    var indexer, self;
-	    self = this;
-	    this.node = options.node;
-	    this.subfield = options.subfield;
-	    this.propagateDirty = options.propagateDirty != null ? options.propagateDirty : true;
-	    indexer = options.indexer || ThreeNodes.NodeField.STATIC_INDEXER;
-	    this.changed = true;
-	    this.connections = [];
-	    this.on_value_update_hooks = {};
-	    this.set("machine_name", this.get("name"));
-	    if (this.subfield && this.subfield.node) {
-	      this.set("machine_name", this.get("name") + "-" + this.subfield.node.get("nid"));
-	    }
-	    if (this.get("fid") === -1) {
-	      return this.set("fid", indexer.getUID());
-	    }
+	  Timer.prototype.get_time = function() {
+	    return new Date().getTime();
 	  };
 	
-	  NodeField.prototype.remove = function() {
-	    delete this.on_value_update_hooks;
-	    delete this.node;
-	    delete this.connections;
-	    delete this.button;
-	    delete this.subfield;
-	    return this.destroy();
+	  Timer.prototype.compute = function() {
+	    var diff, now, oldval;
+	    oldval = this.fields.getField("out", true).getValue();
+	    now = this.get_time();
+	    if (this.fields.getField("pause").getValue() === false) {
+	      this.counter += now - this.old;
+	    }
+	    if (this.fields.getField("reset").getValue() === true) {
+	      this.counter = 0;
+	    }
+	    diff = this.fields.getField("max").getValue() - this.counter;
+	    if (diff <= 0) {
+	      this.counter = 0;
+	    }
+	    this.old = now;
+	    return this.fields.setField("out", this.counter);
 	  };
 	
-	  NodeField.prototype.isEqual = function(val, prev) {
-	    var i, j, len, prev1, same_array, val1;
-	    if (_.isArray(val) && _.isArray(prev)) {
-	      if (val.length !== prev.length) {
-	        return false;
+	  return Timer;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('Timer', Timer);
+	
+	Font = (function(superClass) {
+	  extend(Font, superClass);
+	
+	  function Font() {
+	    this.compute = bind(this.compute, this);
+	    this.remove = bind(this.remove, this);
+	    this.getFields = bind(this.getFields, this);
+	    this.initialize = bind(this.initialize, this);
+	    return Font.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Font.node_name = 'Font';
+	
+	  Font.group_name = 'Utils';
+	
+	  Font.prototype.initialize = function(options) {
+	    var dir, i;
+	    Font.__super__.initialize.apply(this, arguments);
+	    this.auto_evaluate = true;
+	    this.ob = "";
+	    dir = "../../../../../../assets/fonts/";
+	    this.files = {
+	      "helvetiker": {
+	        "normal": dir + "helvetiker_regular.typeface",
+	        "bold": dir + "helvetiker_bold.typeface"
+	      },
+	      "optimer": {
+	        "normal": dir + "optimer_regular.typeface",
+	        "bold": dir + "optimer_bold.typeface"
+	      },
+	      "gentilis": {
+	        "normal": dir + "gentilis_regular.typeface",
+	        "bold": dir + "gentilis_bold.typeface"
+	      },
+	      "droid sans": {
+	        "normal": dir + "droid/droid_sans_regular.typeface",
+	        "bold": dir + "droid/droid_sans_bold.typeface"
+	      },
+	      "droid serif": {
+	        "normal": dir + "droid/droid_serif_regular.typeface",
+	        "bold": dir + "droid/droid_serif_bold.typeface"
 	      }
-	      same_array = true;
-	      for (i = j = 0, len = val.length; j < len; i = ++j) {
-	        val1 = val[i];
-	        prev1 = prev[i];
-	        if (this.isEqual(val1, prev1) === false) {
-	          same_array = false;
-	          break;
+	    };
+	    this.reverseFontMap = {};
+	    this.reverseWeightMap = {};
+	    for (i in this.fields.getField("weight").get("possibilities")) {
+	      this.reverseWeightMap[this.fields.getField("weight").get("possibilities")[i]] = i;
+	    }
+	    for (i in this.fields.getField("font").get("possibilities")) {
+	      this.reverseFontMap[this.fields.getField("font").get("possibilities")[i]] = i;
+	    }
+	    this.fontcache = -1;
+	    return this.weightcache = -1;
+	  };
+	
+	  Font.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = Font.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "font": {
+	          type: "Float",
+	          val: 0,
+	          values: {
+	            "helvetiker": 0,
+	            "optimer": 1,
+	            "gentilis": 2,
+	            "droid sans": 3,
+	            "droid serif": 4
+	          }
+	        },
+	        "weight": {
+	          type: "Float",
+	          val: 0,
+	          values: {
+	            "normal": 0,
+	            "bold": 1
+	          }
+	        }
+	      },
+	      outputs: {
+	        "out": {
+	          type: "Any",
+	          val: this.ob
 	        }
 	      }
-	      if (same_array === false) {
-	        return false;
-	      } else {
-	        return true;
-	      }
-	    } else if (_.isObject(val) && _.isObject(prev)) {
-	      if ((val.uuid != null) && (prev.uuid != null) && val.uuid === prev.uuid) {
-	        return true;
-	      }
-	      return false;
-	    } else if (val === prev) {
-	      return true;
-	    }
-	    return false;
+	    };
+	    return $.extend(true, base_fields, fields);
 	  };
 	
-	  NodeField.prototype.setValue = function(v) {
-	    var connection, default_val, hook, j, len, new_val, prev_val, propagate, ref, setNodeDirty, tmp_val;
-	    prev_val = this.attributes["value"];
-	    if (this.isEqual(v, prev_val)) {
-	      return false;
+	  Font.prototype.remove = function() {
+	    delete this.reverseFontMap;
+	    delete this.reverseWeightMap;
+	    delete this.ob;
+	    return Font.__super__.remove.apply(this, arguments);
+	  };
+	
+	  Font.prototype.compute = function() {
+	    var findex, font, weight, windex;
+	    findex = parseInt(this.fields.getField("font").getValue());
+	    windex = parseInt(this.fields.getField("weight").getValue());
+	    if (findex > 4 || findex < 0) {
+	      findex = 0;
 	    }
-	    this.changed = true;
-	    propagate = this.propagateDirty;
-	    setNodeDirty = function(node) {
-	      node.dirty = true;
-	      if (propagate && node.parent) {
-	        return setNodeDirty(node.parent);
+	    if (windex !== 0 || windex !== 1) {
+	      windex = 0;
+	    }
+	    font = this.reverseFontMap[findex];
+	    weight = this.reverseWeightMap[windex];
+	    this.ob = {
+	      font: font,
+	      weight: weight
+	    };
+	    this.fontcache = findex;
+	    this.weightcache = windex;
+	    return this.fields.setField("out", this.ob);
+	  };
+	
+	  return Font;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('Font', Font);
+
+
+/***/ }),
+/* 52 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, LinearSpread, Node, RandomSpread, Rc4Random, _,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	Rc4Random = __webpack_require__(53);
+	
+	Node = __webpack_require__(11);
+	
+	RandomSpread = (function(superClass) {
+	  extend(RandomSpread, superClass);
+	
+	  function RandomSpread() {
+	    this.compute = bind(this.compute, this);
+	    this.remove = bind(this.remove, this);
+	    this.onFieldsCreated = bind(this.onFieldsCreated, this);
+	    this.getFields = bind(this.getFields, this);
+	    this.initialize = bind(this.initialize, this);
+	    return RandomSpread.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  RandomSpread.node_name = 'RandomSpread';
+	
+	  RandomSpread.group_name = 'Spread';
+	
+	  RandomSpread.prototype.initialize = function(options) {
+	    RandomSpread.__super__.initialize.apply(this, arguments);
+	    this.auto_evaluate = false;
+	    this.rnd = false;
+	    this.value = false;
+	    this.seed = false;
+	    this.count = false;
+	    this.width = false;
+	    return this.offset = false;
+	  };
+	
+	  RandomSpread.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = RandomSpread.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "count": 1,
+	        "seed": 1,
+	        "width": 1,
+	        "offset": 0
+	      },
+	      outputs: {
+	        "out": 0
 	      }
 	    };
-	    if (this.node) {
-	      setNodeDirty(this.node);
-	    }
-	    new_val = this.onValueChanged(v);
-	    if ($.type(new_val) === "array") {
-	      tmp_val = _.filter(new_val, function(item) {
-	        return item !== null;
-	      });
-	      if (this.constructor === Array) {
-	        new_val = tmp_val;
-	      } else {
-	        if (tmp_val.length !== 0) {
-	          new_val = tmp_val;
-	        } else {
-	          new_val = null;
-	        }
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  RandomSpread.prototype.onFieldsCreated = function() {
+	    return this.v_out = this.fields.getField("out", true);
+	  };
+	
+	  RandomSpread.prototype.remove = function() {
+	    delete this.v_out;
+	    return RandomSpread.__super__.remove.apply(this, arguments);
+	  };
+	
+	  RandomSpread.prototype.compute = function() {
+	    var i, j, needs_rebuild, ref;
+	    needs_rebuild = false;
+	    if (this.seed !== this.fields.getField("seed").get("value") || this.count !== parseInt(this.fields.getField("count").getValue(0)) || this.width !== this.fields.getField("width").get("value") || this.offset !== this.fields.getField("offset").get("value")) {
+	      this.seed = this.fields.getField("seed").get("value");
+	      this.rnd = new Rc4Random(this.seed.toString());
+	      this.value = [];
+	      this.width = this.fields.getField("width").getValue(0);
+	      this.offset = this.fields.getField("offset").getValue(0);
+	      this.count = parseInt(this.fields.getField("count").get("value"));
+	      for (i = j = 0, ref = this.count - 1; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
+	        this.value[i] = this.rnd.getRandomNumber() * this.width - this.width / 2 + this.offset;
 	      }
 	    }
-	    if (new_val === null) {
-	      default_val = this.attributes["default"];
-	      if (default_val !== null && default_val !== void 0) {
-	        prev_val = default_val;
+	    return this.fields.setField("out", this.value);
+	  };
+	
+	  return RandomSpread;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('RandomSpread', RandomSpread);
+	
+	LinearSpread = (function(superClass) {
+	  extend(LinearSpread, superClass);
+	
+	  function LinearSpread() {
+	    this.compute = bind(this.compute, this);
+	    this.remove = bind(this.remove, this);
+	    this.onFieldsCreated = bind(this.onFieldsCreated, this);
+	    this.getFields = bind(this.getFields, this);
+	    this.initialize = bind(this.initialize, this);
+	    return LinearSpread.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  LinearSpread.node_name = 'LinearSpread';
+	
+	  LinearSpread.group_name = 'Spread';
+	
+	  LinearSpread.prototype.initialize = function(options) {
+	    LinearSpread.__super__.initialize.apply(this, arguments);
+	    this.auto_evaluate = false;
+	    this.value = false;
+	    this.count = false;
+	    this.width = false;
+	    this.phase = false;
+	    return this.offset = false;
+	  };
+	
+	  LinearSpread.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = LinearSpread.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "count": 1,
+	        "width": 1,
+	        "phase": 0,
+	        "offset": 0
+	      },
+	      outputs: {
+	        "out": 0
 	      }
-	      new_val = prev_val;
-	    }
-	    this.attributes["value"] = new_val;
-	    this.trigger("value_updated", new_val);
-	    for (hook in this.on_value_update_hooks) {
-	      this.on_value_update_hooks[hook](new_val);
-	    }
-	    if (this.attributes["is_output"] === true) {
-	      ref = this.connections;
-	      for (j = 0, len = ref.length; j < len; j++) {
-	        connection = ref[j];
-	        connection.to_field.setValue(new_val);
-	      }
-	    }
-	    return true;
-	  };
-	
-	  NodeField.prototype.getValue = function(index) {
-	    var val;
-	    if (index == null) {
-	      index = 0;
-	    }
-	    val = this.attributes["value"];
-	    if ($.type(val) !== "array") {
-	      return val;
-	    } else {
-	      return val[index % val.length];
-	    }
-	  };
-	
-	  NodeField.prototype.isChanged = function() {
-	    var res;
-	    res = this.changed;
-	    this.changed = false;
-	    return res;
-	  };
-	
-	  NodeField.prototype.isConnected = function() {
-	    return this.connections.length > 0;
-	  };
-	
-	  NodeField.prototype.getSliceCount = function() {
-	    var val;
-	    val = this.attributes["value"];
-	    if (jQuery.type(val) !== "array") {
-	      return 1;
-	    }
-	    return val.length;
-	  };
-	
-	  NodeField.prototype.isAnimationProperty = function() {
-	    if (this.constructor === Float || this.constructor === Bool) {
-	      return true;
-	    }
-	    return false;
-	  };
-	
-	  NodeField.prototype.toJSON = function() {
-	    var res, val, val_type;
-	    res = {
-	      name: this.get("name")
 	    };
-	    if (this.subfield) {
-	      res.nid = this.subfield.node.get("nid");
-	    }
-	    val = this.get("value");
-	    val_type = jQuery.type(val);
-	    if (val_type !== "object" && val_type !== "array") {
-	      res.val = val;
-	    }
-	    if (val_type === "object") {
-	      if (val.constructor === THREE.Vector2 || val.constructor === THREE.Vector3 || val.constructor === THREE.Vector4 || val.constructor === THREE.Color) {
-	        res.val = val;
-	      }
-	    }
-	    return res;
+	    return $.extend(true, base_fields, fields);
 	  };
 	
-	  NodeField.prototype.renderConnections = function() {
-	    var connection, j, len, ref;
-	    ref = this.connections;
+	  LinearSpread.prototype.onFieldsCreated = function() {
+	    return this.v_out = this.fields.getField("out", true);
+	  };
+	
+	  LinearSpread.prototype.remove = function() {
+	    delete this.v_out;
+	    return LinearSpread.__super__.remove.apply(this, arguments);
+	  };
+	
+	  LinearSpread.prototype.compute = function() {
+	    var i, j, needs_rebuild, ref, res, shift, stepSize;
+	    needs_rebuild = false;
+	    this.width = this.fields.getField("width").getValue(0);
+	    this.offset = this.fields.getField("offset").getValue(0);
+	    this.phase = this.fields.getField("phase").getValue(0);
+	    this.count = parseInt(this.fields.getField("count").getValue());
+	    this.value = [];
+	    stepSize = this.width / this.count;
+	    shift = stepSize / 2;
+	    for (i = j = 0, ref = this.count - 1; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
+	      res = (i * stepSize + shift + this.phase) % this.width;
+	      res = this.offset - this.width / 2 + res;
+	      this.value[i] = res;
+	    }
+	    return this.fields.setField("out", this.value);
+	  };
+	
+	  return LinearSpread;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('LinearSpread', LinearSpread);
+
+
+/***/ }),
+/* 53 */
+/***/ (function(module, exports) {
+
+	var Rc4Random,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+	
+	Rc4Random = (function() {
+	  function Rc4Random(seed) {
+	    this.getRandomNumber = bind(this.getRandomNumber, this);
+	    this.getRandomByte = bind(this.getRandomByte, this);
+	    var i, j, k, l, ref, ref1, t;
+	    this.keySchedule = [];
+	    this.keySchedule_i = 0;
+	    this.keySchedule_j = 0;
+	    for (i = k = 0, ref = 256 - 1; 0 <= ref ? k <= ref : k >= ref; i = 0 <= ref ? ++k : --k) {
+	      this.keySchedule[i] = i;
+	    }
+	    j = 0;
+	    for (i = l = 0, ref1 = 256 - 1; 0 <= ref1 ? l <= ref1 : l >= ref1; i = 0 <= ref1 ? ++l : --l) {
+	      j = (j + this.keySchedule[i] + seed.charCodeAt(i % seed.length)) % 256;
+	      t = this.keySchedule[i];
+	      this.keySchedule[i] = this.keySchedule[j];
+	      this.keySchedule[j] = t;
+	    }
+	  }
+	
+	  Rc4Random.prototype.getRandomByte = function() {
+	    var t;
+	    this.keySchedule_i = (this.keySchedule_i + 1) % 256;
+	    this.keySchedule_j = (this.keySchedule_j + this.keySchedule[this.keySchedule_i]) % 256;
+	    t = this.keySchedule[this.keySchedule_i];
+	    this.keySchedule[this.keySchedule_i] = this.keySchedule[this.keySchedule_j];
+	    this.keySchedule[this.keySchedule_j] = t;
+	    return this.keySchedule[(this.keySchedule[this.keySchedule_i] + this.keySchedule[this.keySchedule_j]) % 256];
+	  };
+	
+	  Rc4Random.prototype.getRandomNumber = function() {
+	    var i, k, multiplier, number, ref;
+	    number = 0;
+	    multiplier = 1;
+	    for (i = k = 0, ref = 8 - 1; 0 <= ref ? k <= ref : k >= ref; i = 0 <= ref ? ++k : --k) {
+	      number += this.getRandomByte() * multiplier;
+	      multiplier *= 256;
+	    }
+	    return number / 18446744073709551616;
+	  };
+	
+	  return Rc4Random;
+	
+	})();
+	
+	module.exports = Rc4Random;
+
+
+/***/ }),
+/* 54 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, Group, Node, Nodes, _,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	Nodes = __webpack_require__(1);
+	
+	Node = __webpack_require__(11);
+	
+	Group = (function(superClass) {
+	  extend(Group, superClass);
+	
+	  function Group() {
+	    this.compute = bind(this.compute, this);
+	    this.remove = bind(this.remove, this);
+	    this.getFields = bind(this.getFields, this);
+	    this.toJSON = bind(this.toJSON, this);
+	    this.initSubnodes = bind(this.initSubnodes, this);
+	    this.initialize = bind(this.initialize, this);
+	    return Group.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Group.node_name = 'Group';
+	
+	  Group.group_name = false;
+	
+	  Group.prototype.initialize = function(options) {
+	    var connection, j, len, ref, results;
+	    this.initSubnodes(options);
+	    Group.__super__.initialize.apply(this, arguments);
+	    this.nodes.each((function(_this) {
+	      return function(node) {
+	        return node.set("gid", _this.get("nid"));
+	      };
+	    })(this));
+	    ref = this.definition.get("connections");
+	    results = [];
 	    for (j = 0, len = ref.length; j < len; j++) {
 	      connection = ref[j];
-	      connection.render();
+	      results.push(this.nodes.createConnectionFromObject(connection));
 	    }
-	    return true;
+	    return results;
 	  };
 	
-	  NodeField.prototype.computeValue = function(val) {
-	    return val;
-	  };
-	
-	  NodeField.prototype.addConnection = function(c) {
-	    if (this.connections.indexOf(c) === -1) {
-	      this.connections.push(c);
-	      if (this.get("is_output") === true) {
-	        this.node.addOutConnection(c, this);
-	      }
-	      this.node.disablePropertyAnim(this);
-	    }
-	    return c;
-	  };
-	
-	  NodeField.prototype.unregisterConnection = function(c) {
-	    var ind;
-	    this.node.removeConnection(c);
-	    ind = this.connections.indexOf(c);
-	    if (ind !== -1) {
-	      this.connections.splice(ind, 1);
-	    }
-	    if (this.connections.length === 0) {
-	      return this.node.enablePropertyAnim(this);
-	    }
-	  };
-	
-	  NodeField.prototype.removeConnections = function() {
-	    while (this.connections.length > 0) {
-	      this.connections[0].remove();
-	    }
-	    return this;
-	  };
-	
-	  NodeField.prototype.onValueChanged = function(val) {
-	    var self;
-	    self = this;
-	    if ($.type(val) === "array") {
-	      return _.map(val, function(n) {
-	        return self.computeValue(n);
-	      });
-	    }
-	    return this.computeValue(val);
-	  };
-	
-	  return NodeField;
-	
-	})(Backbone.Model);
-	
-	Any = (function(superClass) {
-	  extend(Any, superClass);
-	
-	  function Any() {
-	    this.onValueChanged = bind(this.onValueChanged, this);
-	    this.computeValue = bind(this.computeValue, this);
-	    return Any.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Any.prototype.computeValue = function(val) {
-	    return val;
-	  };
-	
-	  Any.prototype.onValueChanged = function(val) {
-	    return val;
-	  };
-	
-	  return Any;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Any', Any);
-	
-	Array = (function(superClass) {
-	  extend(Array, superClass);
-	
-	  function Array() {
-	    this.getValue = bind(this.getValue, this);
-	    this.onValueChanged = bind(this.onValueChanged, this);
-	    this.removeConnections = bind(this.removeConnections, this);
-	    this.computeValue = bind(this.computeValue, this);
-	    return Array.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Array.prototype.computeValue = function(val) {
-	    if (!val || val === false) {
-	      return [];
-	    }
-	    if ($.type(val) === "array") {
-	      return val;
-	    } else {
-	      return [val];
-	    }
-	  };
-	
-	  Array.prototype.removeConnections = function() {
-	    Array.__super__.removeConnections.apply(this, arguments);
-	    if (this.get("is_output") === false) {
-	      return this.setValue([]);
-	    }
-	  };
-	
-	  Array.prototype.onValueChanged = function(val) {
-	    return this.computeValue(val);
-	  };
-	
-	  Array.prototype.getValue = function(index) {
-	    if (index == null) {
-	      index = 0;
-	    }
-	    return this.get("value");
-	  };
-	
-	  return Array;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Array', Array);
-	
-	Bool = (function(superClass) {
-	  extend(Bool, superClass);
-	
-	  function Bool() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Bool.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Bool.VIEW = BoolField;
-	
-	  Bool.prototype.computeValue = function(val) {
-	    switch ($.type(val)) {
-	      case "boolean":
-	        return val;
-	      case "number":
-	        return val !== 0;
-	      case "string":
-	        return val === "1";
-	    }
-	    return null;
-	  };
-	
-	  return Bool;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Bool', Bool);
-	
-	String = (function(superClass) {
-	  extend(String, superClass);
-	
-	  function String() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return String.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  String.VIEW = StringField;
-	
-	  String.prototype.computeValue = function(val) {
-	    switch ($.type(val)) {
-	      case "array":
-	        return val;
-	      case "number":
-	        return val.toString;
-	      case "string":
-	        return val;
-	    }
-	    return null;
-	  };
-	
-	  return String;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('String', String);
-	
-	Float = (function(superClass) {
-	  extend(Float, superClass);
-	
-	  function Float() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Float.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Float.VIEW = FloatField;
-	
-	  Float.prototype.computeValue = function(val) {
-	    switch ($.type(val)) {
-	      case "number":
-	      case "string":
-	        return parseFloat(val);
-	      case "object":
-	        if (val.constructor === THREE.Vector2 || val.constructor === THREE.Vector3) {
-	          return val;
-	        }
-	        break;
-	      case "boolean":
-	        if (val === true) {
-	          return 1;
-	        } else {
-	          return 0;
-	        }
-	    }
-	    return null;
-	  };
-	
-	  return Float;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Float', Float);
-	
-	Vector2 = (function(superClass) {
-	  extend(Vector2, superClass);
-	
-	  function Vector2() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Vector2.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Vector2.VIEW = Vector2Field;
-	
-	  Vector2.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val.constructor === THREE.Vector2) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Vector2;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Vector2', Vector2);
-	
-	Vector3 = (function(superClass) {
-	  extend(Vector3, superClass);
-	
-	  function Vector3() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Vector3.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Vector3.VIEW = Vector3Field;
-	
-	  Vector3.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val.constructor === THREE.Vector3) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Vector3;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Vector3', Vector3);
-	
-	Vector4 = (function(superClass) {
-	  extend(Vector4, superClass);
-	
-	  function Vector4() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Vector4.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Vector4.VIEW = Vector4Field;
-	
-	  Vector4.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val.constructor === THREE.Vector4) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Vector4;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Vector4', Vector4);
-	
-	Quaternion = (function(superClass) {
-	  extend(Quaternion, superClass);
-	
-	  function Quaternion() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Quaternion.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Quaternion.VIEW = QuaternionField;
-	
-	  Quaternion.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val.constructor === THREE.Quaternion) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Quaternion;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Quaternion', Quaternion);
-	
-	Euler = (function(superClass) {
-	  extend(Euler, superClass);
-	
-	  function Euler() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Euler.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Euler.VIEW = EulerField;
-	
-	  Euler.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val.constructor === THREE.Euler) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Euler;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Euler', Euler);
-	
-	Color = (function(superClass) {
-	  extend(Color, superClass);
-	
-	  function Color() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Color.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Color.VIEW = false;
-	
-	  Color.prototype.computeValue = function(val) {
-	    switch ($.type(val)) {
-	      case "number":
-	        return new THREE.Color().setRGB(val, val, val);
-	      case "object":
-	        switch (val.constructor) {
-	          case THREE.Color:
-	            return val;
-	          case THREE.Vector3:
-	            return new THREE.Color().setRGB(val.x, val.y, val.z);
-	        }
-	        break;
-	      case "boolean":
-	        if (val) {
-	          return new THREE.Color(0xffffff);
-	        } else {
-	          return new THREE.Color(0x000000);
-	        }
-	    }
-	    return null;
-	  };
-	
-	  return Color;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Color', Color);
-	
-	Object3D = (function(superClass) {
-	  extend(Object3D, superClass);
-	
-	  function Object3D() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Object3D.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Object3D.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val.constructor === THREE.Object3D || val instanceof THREE.Object3D) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Object3D;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Object3D', Object3D);
-	
-	Scene = (function(superClass) {
-	  extend(Scene, superClass);
-	
-	  function Scene() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Scene.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Scene.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val instanceof THREE.Scene) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Scene;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Scene', Scene);
-	
-	Camera = (function(superClass) {
-	  extend(Camera, superClass);
-	
-	  function Camera() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Camera.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Camera.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val instanceof THREE.Camera || val instanceof THREE.PerspectiveCamera || val instanceof THREE.OrthographicCamera) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Camera;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Camera', Camera);
-	
-	Mesh = (function(superClass) {
-	  extend(Mesh, superClass);
-	
-	  function Mesh() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Mesh.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Mesh.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val.constructor === THREE.Mesh || val instanceof THREE.Mesh) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Mesh;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Mesh', Mesh);
-	
-	Geometry = (function(superClass) {
-	  extend(Geometry, superClass);
-	
-	  function Geometry() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Geometry.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Geometry.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val.constructor === THREE.Geometry || val instanceof THREE.Geometry) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Geometry;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Geometry', Geometry);
-	
-	Material = (function(superClass) {
-	  extend(Material, superClass);
-	
-	  function Material() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Material.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Material.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val.constructor === THREE.Material || val instanceof THREE.Material) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Material;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Material', Material);
-	
-	Texture = (function(superClass) {
-	  extend(Texture, superClass);
-	
-	  function Texture() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Texture.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Texture.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val.constructor === THREE.Texture || val instanceof THREE.Texture) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Texture;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Texture', Texture);
-	
-	Fog = (function(superClass) {
-	  extend(Fog, superClass);
-	
-	  function Fog() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Fog.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Fog.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val.constructor === THREE.Fog || val.constructor === THREE.FogExp2) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Fog;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Fog', Fog);
-
-
-/***/ },
-/* 96 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = "<span class=\"inner-field\"><span></span><%= name %></span>";
-
-/***/ },
-/* 97 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = "<span class=\"inner-field\"><%= name %><span></span></span>";
-
-/***/ },
-/* 98 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = "<ul id=\"field-context-menu\" class=\"context-menu\">\n  <li><a href=\"#removeConnection\">Remove connection(s)</a></li>\n</ul>";
-
-/***/ },
-/* 99 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Backbone, BaseField, BoolField, _, namespace,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	namespace = __webpack_require__(50).namespace;
-	
-	BaseField = __webpack_require__(107);
-	
-	
-	/* SidebarField View */
-	
-	BoolField = (function(superClass) {
-	  extend(BoolField, superClass);
-	
-	  function BoolField() {
-	    this.render = bind(this.render, this);
-	    this.on_value_updated = bind(this.on_value_updated, this);
-	    return BoolField.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  BoolField.prototype.on_value_updated = function(new_val) {
-	    if (this.model.getValue() === true) {
-	      return this.$checkbox.attr('checked', 'checked');
-	    } else {
-	      return this.$checkbox.removeAttr('checked');
-	    }
-	  };
-	
-	  BoolField.prototype.render = function() {
-	    var $container, $target, id;
-	    console.log("check..");
-	    $target = this.createSidebarContainer();
-	    id = "side-field-checkbox-" + (this.model.get('fid'));
-	    $container = $("<div><input type='checkbox' id='" + id + "'/></div>").appendTo($target);
-	    this.$checkbox = $("input", $container);
-	    if (this.model.getValue() === true) {
-	      this.$checkbox.attr('checked', 'checked');
-	    }
-	    this.$checkbox.change((function(_this) {
-	      return function(e) {
-	        if (_this.$checkbox.is(':checked')) {
-	          return _this.model.setValue(true);
-	        } else {
-	          return _this.model.setValue(false);
-	        }
-	      };
-	    })(this));
-	    return this;
-	  };
-	
-	  return BoolField;
-	
-	})(BaseField);
-	
-	module.exports = BoolField;
-
-
-/***/ },
-/* 100 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Backbone, BaseField, StringField, _, namespace,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	namespace = __webpack_require__(50).namespace;
-	
-	BaseField = __webpack_require__(107);
-	
-	
-	/* StringField View */
-	
-	StringField = (function(superClass) {
-	  extend(StringField, superClass);
-	
-	  function StringField() {
-	    this.create_sidebar_input = bind(this.create_sidebar_input, this);
-	    this.create_sidebar_select = bind(this.create_sidebar_select, this);
-	    this.render = bind(this.render, this);
-	    return StringField.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  StringField.prototype.render = function() {
-	    var $target;
-	    $target = this.createSidebarContainer();
-	    if (this.model.attributes.possibilities) {
-	      this.create_sidebar_select($target);
-	    } else {
-	      this.create_sidebar_input($target);
-	    }
-	    return true;
-	  };
-	
-	  StringField.prototype.create_sidebar_select = function($target) {
-	    var dval, f, input, self;
-	    self = this;
-	    input = "<div><select>";
-	    for (f in this.model.get("possibilities")) {
-	      dval = this.model.get("possibilities")[f];
-	      if (dval === this.val) {
-	        input += "<option value='" + dval + "' selected='selected'>" + f + "</option>";
-	      } else {
-	        input += "<option value='" + dval + "'>" + f + "</option>";
-	      }
-	    }
-	    input += "</select></div>";
-	    $target.append(input);
-	    $("select", $target).change((function(_this) {
-	      return function(e) {
-	        return _this.model.setValue($("select", $target).val());
-	      };
-	    })(this));
-	    return true;
-	  };
-	
-	  StringField.prototype.create_sidebar_input = function($target) {
-	    this.textfield = this.createTextfield($target, "string");
-	    return this.textfield.linkTextfieldToVal("string");
-	  };
-	
-	  return StringField;
-	
-	})(BaseField);
-	
-	module.exports = StringField;
-
-
-/***/ },
-/* 101 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Backbone, BaseField, FloatField, _, namespace,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	namespace = __webpack_require__(50).namespace;
-	
-	BaseField = __webpack_require__(107);
-	
-	
-	/* FloatField View */
-	
-	FloatField = (function(superClass) {
-	  extend(FloatField, superClass);
-	
-	  function FloatField() {
-	    this.create_sidebar_input = bind(this.create_sidebar_input, this);
-	    this.create_sidebar_select = bind(this.create_sidebar_select, this);
-	    this.render = bind(this.render, this);
-	    return FloatField.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  FloatField.prototype.initialize = function(options) {
-	    return FloatField.__super__.initialize.apply(this, arguments);
-	  };
-	
-	  FloatField.prototype.render = function() {
-	    var $target;
-	    $target = this.createSidebarContainer();
-	    if (this.model.attributes.possibilities) {
-	      this.create_sidebar_select($target);
-	    } else {
-	      this.create_sidebar_input($target);
-	    }
-	    return true;
-	  };
-	
-	  FloatField.prototype.create_sidebar_select = function($target) {
-	    var dval, f, input, self;
-	    self = this;
-	    input = "<div><select>";
-	    for (f in this.model.get("possibilities")) {
-	      dval = this.model.get("possibilities")[f];
-	      if (dval === this.val) {
-	        input += "<option value='" + dval + "' selected='selected'>" + f + "</option>";
-	      } else {
-	        input += "<option value='" + dval + "'>" + f + "</option>";
-	      }
-	    }
-	    input += "</select></div>";
-	    $target.append(input);
-	    $("select", $target).change((function(_this) {
-	      return function(e) {
-	        return _this.model.setValue($("select", $target).val());
-	      };
-	    })(this));
-	    return true;
-	  };
-	
-	  FloatField.prototype.create_sidebar_input = function($target) {
-	    this.textfield = this.createTextfield($target);
-	    return this.textfield.linkTextfieldToVal();
-	  };
-	
-	  return FloatField;
-	
-	})(BaseField);
-	
-	module.exports = FloatField;
-
-
-/***/ },
-/* 102 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Backbone, BaseField, Vector2Field, _, namespace,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	namespace = __webpack_require__(50).namespace;
-	
-	BaseField = __webpack_require__(107);
-	
-	
-	/* Vector2Field View */
-	
-	Vector2Field = (function(superClass) {
-	  extend(Vector2Field, superClass);
-	
-	  function Vector2Field() {
-	    this.render = bind(this.render, this);
-	    return Vector2Field.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Vector2Field.prototype.render = function() {
-	    this.createSidebarFieldTitle();
-	    this.createSubvalTextinput("x");
-	    this.createSubvalTextinput("y");
-	    return this;
-	  };
-	
-	  return Vector2Field;
-	
-	})(BaseField);
-	
-	module.exports = Vector2Field;
-
-
-/***/ },
-/* 103 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Backbone, BaseField, Vector3Field, _, namespace,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	namespace = __webpack_require__(50).namespace;
-	
-	BaseField = __webpack_require__(107);
-	
-	
-	/* Vector3Field View */
-	
-	Vector3Field = (function(superClass) {
-	  extend(Vector3Field, superClass);
-	
-	  function Vector3Field() {
-	    this.render = bind(this.render, this);
-	    return Vector3Field.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Vector3Field.prototype.render = function() {
-	    this.createSidebarFieldTitle();
-	    this.createSubvalTextinput("x");
-	    this.createSubvalTextinput("y");
-	    this.createSubvalTextinput("z");
-	    return this;
-	  };
-	
-	  return Vector3Field;
-	
-	})(BaseField);
-	
-	module.exports = Vector3Field;
-
-
-/***/ },
-/* 104 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Backbone, BaseField, Vector4Field, _, namespace,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	namespace = __webpack_require__(50).namespace;
-	
-	BaseField = __webpack_require__(107);
-	
-	
-	/* Vector4Field View */
-	
-	Vector4Field = (function(superClass) {
-	  extend(Vector4Field, superClass);
-	
-	  function Vector4Field() {
-	    this.render = bind(this.render, this);
-	    return Vector4Field.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Vector4Field.prototype.render = function() {
-	    this.createSidebarFieldTitle();
-	    this.createSubvalTextinput("x");
-	    this.createSubvalTextinput("y");
-	    this.createSubvalTextinput("z");
-	    this.createSubvalTextinput("w");
-	    return this;
-	  };
-	
-	  return Vector4Field;
-	
-	})(BaseField);
-	
-	module.exports = Vector4Field;
-
-
-/***/ },
-/* 105 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Backbone, BaseField, QuaternionField, _, namespace,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	namespace = __webpack_require__(50).namespace;
-	
-	BaseField = __webpack_require__(107);
-	
-	
-	/* Vector3Field View */
-	
-	QuaternionField = (function(superClass) {
-	  extend(QuaternionField, superClass);
-	
-	  function QuaternionField() {
-	    this.render = bind(this.render, this);
-	    return QuaternionField.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  QuaternionField.prototype.render = function() {
-	    this.createSidebarFieldTitle();
-	    this.createSubvalTextinput("x");
-	    this.createSubvalTextinput("y");
-	    this.createSubvalTextinput("z");
-	    this.createSubvalTextinput("w");
-	    return this;
-	  };
-	
-	  return QuaternionField;
-	
-	})(BaseField);
-	
-	module.exports = QuaternionField;
-
-
-/***/ },
-/* 106 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Backbone, BaseField, EulerField, _, namespace,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	namespace = __webpack_require__(50).namespace;
-	
-	BaseField = __webpack_require__(107);
-	
-	
-	/* Euler3Field View */
-	
-	EulerField = (function(superClass) {
-	  extend(EulerField, superClass);
-	
-	  function EulerField() {
-	    this.render = bind(this.render, this);
-	    return EulerField.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  EulerField.prototype.render = function() {
-	    this.createSidebarFieldTitle();
-	    this.createSubvalTextinput("x");
-	    this.createSubvalTextinput("y");
-	    this.createSubvalTextinput("z");
-	    this.createSubvalTextinput("order", "string");
-	    return this;
-	  };
-	
-	  return EulerField;
-	
-	})(BaseField);
-	
-	module.exports = EulerField;
-
-
-/***/ },
-/* 107 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Backbone, BaseField, SidebarTextfield, _, _view_field_sidebar_container,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	_view_field_sidebar_container = __webpack_require__(108);
-	
-	SidebarTextfield = __webpack_require__(109);
-	
-	
-	/* BaseField View */
-	
-	BaseField = (function(superClass) {
-	  extend(BaseField, superClass);
-	
-	  function BaseField() {
-	    this.createSidebarFieldTitle = bind(this.createSidebarFieldTitle, this);
-	    this.createSubvalTextinput = bind(this.createSubvalTextinput, this);
-	    this.createTextfield = bind(this.createTextfield, this);
-	    this.createSidebarContainer = bind(this.createSidebarContainer, this);
-	    this.render = bind(this.render, this);
-	    this.on_value_updated = bind(this.on_value_updated, this);
-	    return BaseField.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  BaseField.prototype.initialize = function(options) {
-	    BaseField.__super__.initialize.apply(this, arguments);
-	    this.model.on("value_updated", this.on_value_updated);
-	    return this.render();
-	  };
-	
-	  BaseField.prototype.on_value_updated = function(new_val) {
-	    return this;
-	  };
-	
-	  BaseField.prototype.render = function() {
-	    return this;
-	  };
-	
-	  BaseField.prototype.createSidebarContainer = function(name) {
-	    var options;
-	    if (name == null) {
-	      name = this.model.get("name");
-	    }
-	    options = {
-	      fid: this.model.get("fid"),
-	      model: this,
-	      name: name
-	    };
-	    this.container = $(_.template(_view_field_sidebar_container, options));
-	    this.$el.append(this.container);
-	    return this.container;
-	  };
-	
-	  BaseField.prototype.createTextfield = function($target, type, link_to_val) {
-	    var textField;
-	    if (type == null) {
-	      type = "float";
-	    }
-	    if (link_to_val == null) {
-	      link_to_val = true;
-	    }
-	    textField = new SidebarTextfield({
-	      model: this.model,
-	      el: $target,
-	      type: type,
-	      link_to_val: link_to_val
+	  Group.prototype.initSubnodes = function(options) {
+	    var j, len, n, nds, node, results;
+	    this.nodes = new Nodes([], {
+	      settings: options.settings,
+	      parent: this
 	    });
-	    return textField;
+	    this.definition = options.definition;
+	    nds = options.nodes ? options.nodes : this.definition.get("nodes");
+	    results = [];
+	    for (j = 0, len = nds.length; j < len; j++) {
+	      node = nds[j];
+	      results.push(n = this.nodes.createNode(node));
+	    }
+	    return results;
 	  };
 	
-	  BaseField.prototype.createSubvalTextinput = function(subval, type) {
-	    var $target, textfield;
-	    if (type == null) {
-	      type = "float";
-	    }
-	    $target = this.createSidebarContainer(subval);
-	    textfield = this.createTextfield($target, type, false);
-	    textfield.linkTextfieldToSubval(subval, type);
-	    return false;
-	  };
-	
-	  BaseField.prototype.createSidebarFieldTitle = function(name) {
-	    if (name == null) {
-	      name = this.model.get("name");
-	    }
-	    this.$el.append("<h3>" + name + "</h3>");
-	    return this.$el;
-	  };
-	
-	  return BaseField;
-	
-	})(Backbone.View);
-	
-	module.exports = BaseField;
-
-
-/***/ },
-/* 108 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = "<div data-fid=\"<%= fid %>\" class='field-wrapper'>\n  <h3><%= name %></h3>\n</div>\n";
-
-/***/ },
-/* 109 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Backbone, DraggableNumber, SidebarTextfield, _, _view_field_textfield,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	_view_field_textfield = __webpack_require__(110);
-	
-	DraggableNumber = __webpack_require__(111);
-	
-	
-	/* SidebarTextfield View */
-	
-	SidebarTextfield = (function(superClass) {
-	  extend(SidebarTextfield, superClass);
-	
-	  function SidebarTextfield() {
-	    this.addTextfieldSlider = bind(this.addTextfieldSlider, this);
-	    this.linkTextfieldToSubval = bind(this.linkTextfieldToSubval, this);
-	    this.linkTextfieldToVal = bind(this.linkTextfieldToVal, this);
-	    this.render = bind(this.render, this);
-	    return SidebarTextfield.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  SidebarTextfield.prototype.initialize = function(options) {
-	    SidebarTextfield.__super__.initialize.apply(this, arguments);
-	    this.slider = false;
-	    return this.render();
-	  };
-	
-	  SidebarTextfield.prototype.render = function() {
-	    this.container = $(_.template(_view_field_textfield, this.options));
-	    this.$el.append(this.container);
-	    this.$input = $("input", this.container);
-	    return this;
-	  };
-	
-	  SidebarTextfield.prototype.linkTextfieldToVal = function(type) {
-	    var on_value_changed;
-	    if (type == null) {
-	      type = "float";
-	    }
-	    this.$input.val(this.model.getValue());
-	    if (this.options.type === "float" && this.slider === false) {
-	      this.slider = this.addTextfieldSlider();
-	    }
-	    on_value_changed = (function(_this) {
-	      return function(v) {
-	        if (_this.slider) {
-	          return _this.slider.set(v);
-	        }
-	      };
-	    })(this);
-	    this.model.on("value_updated", on_value_changed);
-	    this.$input.val(this.model.getValue());
-	    if (this.slider) {
-	      this.slider._options.changeCallback = (function(_this) {
-	        return function(new_val) {
-	          return _this.model.setValue(new_val);
-	        };
-	      })(this);
-	    }
-	    this.$input.keypress((function(_this) {
-	      return function(e) {
-	        if (e.which === 13) {
-	          if (type === "float") {
-	            _this.model.setValue(parseFloat(_this.$input.val()));
-	          } else {
-	            _this.model.setValue(_this.$input.val());
-	          }
-	          return _this.$input.blur();
-	        }
-	      };
-	    })(this));
-	    return this;
-	  };
-	
-	  SidebarTextfield.prototype.linkTextfieldToSubval = function(subval, type) {
-	    var updateVal;
-	    if (type == null) {
-	      type = "float";
-	    }
-	    this.$input.val(this.model.getValue()[subval]);
-	    if (this.options.type === "float") {
-	      this.slider = this.addTextfieldSlider();
-	    }
-	    this.model.on_value_update_hooks["update_sidebar_textfield_" + subval] = (function(_this) {
-	      return function(v) {
-	        return _this.$input.val(v[subval]);
-	      };
-	    })(this);
-	    updateVal = (function(_this) {
-	      return function() {
-	        var dval;
-	        dval = _this.$input.val();
-	        if (type === "float") {
-	          dval = parseFloat(dval);
-	        }
-	        if ($.type(_this.model.attributes.value) === "array") {
-	          return _this.model.attributes.value[0][subval] = dval;
-	        } else {
-	          return _this.model.attributes.value[subval] = dval;
-	        }
-	      };
-	    })(this);
-	    this.slider._options.changeCallback = (function(_this) {
-	      return function(new_val) {
-	        return updateVal();
-	      };
-	    })(this);
-	    this.$input.change((function(_this) {
-	      return function(e) {
-	        return updateVal();
-	      };
-	    })(this));
-	    this.$input.keypress((function(_this) {
-	      return function(e) {
-	        if (e.which === 13) {
-	          updateVal();
-	          return _this.$input.blur();
-	        }
-	      };
-	    })(this));
-	    return this;
-	  };
-	
-	  SidebarTextfield.prototype.addTextfieldSlider = function() {
-	    var slider;
-	    slider = new DraggableNumber(this.$input.get(0));
-	    return slider;
-	  };
-	
-	  return SidebarTextfield;
-	
-	})(Backbone.View);
-	
-	module.exports = SidebarTextfield;
-
-
-/***/ },
-/* 110 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = "<div class='input-container'>\n  <input type='text' class='field-<%= type %>' />\n</div>\n";
-
-/***/ },
-/* 111 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**!
-	 * draggable-number.js
-	 * Minimal numeric input widget
-	 *
-	 * @license Licensed under the MIT (http://www.opensource.org/licenses/mit-license.php) license.
-	 * @author David Mignot - http://idflood.com
-	 * @version 0.3.0
-	 **/
-	(function(root, factory) {
-	    if(true) {
-	        module.exports = factory();
-	    }
-	    else if(typeof define === 'function' && define.amd) {
-	        define([], factory);
-	    }
-	    else {
-	        root['DraggableNumber'] = factory();
-	    }
-	}(this, function() {
-	// Utility function to replace .bind(this) since it is not available in all browsers.
-	var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-	
-	/**
-	 * Define the DraggableNumber element.
-	 * @constructor
-	 * @param {DomElement} input - The input which will be converted to a draggableNumber.
-	 */
-	DraggableNumber = function (input, options) {
-	  this._options = options !== undefined ? options : {};
-	
-	  this._input = input;
-	  this._span = document.createElement("span");
-	  this._isDragging = false;
-	  this._lastMousePosition = {x: 0, y: 0};
-	  this._value = 0;
-	
-	  // Minimum mouse movement before a drag start.
-	  this._dragThreshold = this._setOption('dragThreshold', 10);
-	
-	  // Min/max value.
-	  this._min = this._setOption('min', -Infinity);
-	  this._max = this._setOption('max', Infinity);
-	
-	  // Store the original display style for the input and span.
-	  this._inputDisplayStyle = "";
-	  this._spanDisplayStyle = "";
-	
-	  this._init();
-	};
-	
-	/**
-	 * Constant used when there is no key modifier.
-	 * @constant
-	 * type {Number}
-	 */
-	DraggableNumber.MODIFIER_NONE = 0;
-	
-	/**
-	 * Constant used when there is a shift key modifier.
-	 * @constant
-	 * type {Number}
-	 */
-	DraggableNumber.MODIFIER_LARGE = 1;
-	
-	/**
-	 * Constant used when there is a control key modifier.
-	 * @constant
-	 * type {Number}
-	 */
-	DraggableNumber.MODIFIER_SMALL = 2;
-	
-	DraggableNumber.prototype = {
-	  constructor: DraggableNumber,
-	
-	  /**
-	   * Initialize the DraggableNumber.
-	   * @private
-	   */
-	  _init: function () {
-	    // Get the inital _value from the input.
-	    this._value = parseFloat(this._input.value, 10);
-	
-	    // Add a span containing the _value. Clicking on the span will show the
-	    // input. Dragging the span will change the _value.
-	    this._addSpan();
-	
-	    // Save the original display style of the input and span.
-	    this._inputDisplayStyle = this._input.style.display;
-	    this._spanDisplayStyle = this._span.style.display;
-	
-	    // Hide the input.
-	    this._input.style.display = 'none';
-	
-	    // Bind 'this' on event callbacks.
-	    this._onMouseUp = __bind(this._onMouseUp, this);
-	    this._onMouseMove = __bind(this._onMouseMove, this);
-	    this._onMouseDown = __bind(this._onMouseDown, this);
-	    this._onInputBlur = __bind(this._onInputBlur, this);
-	    this._onInputKeyDown = __bind(this._onInputKeyDown, this);
-	    this._onInputChange = __bind(this._onInputChange, this);
-	
-	    // Add mousedown event handler.
-	    this._span.addEventListener('mousedown', this._onMouseDown, false);
-	
-	    // Add key events on the input.
-	    this._input.addEventListener('blur', this._onInputBlur, false);
-	    this._input.addEventListener('keypress', this._onInputKeyDown, false);
-	
-	    // Directly assign the function instead of using addeventlistener.
-	    // To programatically change the _value of the draggableNumber you
-	    // could then do:
-	    // input._value = new_number;
-	    // input.onchange();
-	    this._input.onchange = this._onInputChange;
-	  },
-	
-	  /**
-	   * Set the DraggableNumber value.
-	   * @public
-	   * @param {Number} new_value - The new value.
-	   */
-	  set: function (new_value) {
-	    new_value = this._constraintValue(new_value);
-	    this._value = new_value;
-	    this._input.value = this._value;
-	    this._span.innerHTML = this._value;
-	  },
-	
-	  /**
-	   * Get the DraggableNumber value.
-	   * @public
-	   * @returns {Number}
-	   */
-	  get: function () {
-	    return this._value;
-	  },
-	
-	  /**
-	   * Set the minimum value.
-	   * @public
-	   * @param {Number} min - The minimum value.
-	   */
-	  setMin: function (min) {
-	    this._min = min;
-	    // Set the value with current value to automatically constrain it if needed.
-	    this.set(this._value);
-	  },
-	
-	  /**
-	   * Set the maximum value.
-	   * @public
-	   * @param {Number} min - The minimum value.
-	   */
-	  setMax: function (max) {
-	    this._max = max;
-	    // Set the value with current value to automatically constrain it if needed.
-	    this.set(this._value);
-	  },
-	
-	  /**
-	   * Remove the DraggableNumber.
-	   * @public
-	   */
-	  destroy: function () {
-	    // Remove event listeners.
-	    this._span.removeEventListener('mousedown', this._onMouseDown, false);
-	    this._input.removeEventListener('blur', this._onInputBlur, false);
-	    this._input.removeEventListener('keypress', this._onInputKeyDown, false);
-	    document.removeEventListener('mouseup', this._onMouseUp, false);
-	    document.removeEventListener('mousemove', this._onMouseMove, false);
-	
-	    // Remove the span element.
-	    if (this._span.parentNode) {
-	      this._span.parentNode.removeChild(this._span);
-	    }
-	
-	    // Delete variables.
-	    delete this._input;
-	    delete this._span;
-	    delete this._inputDisplayStyle;
-	    delete this._spanDisplayStyle;
-	  },
-	
-	  /**
-	   * Set an option value based on the option parameter and the data attribute.
-	   * @private
-	   * @param {String} name - The option name.
-	   * @param {Number} defaultValue - The default value.
-	   * @returns {Number}
-	   */
-	  _setOption: function (name, defaultValue) {
-	    // Return the option if it is defined.
-	    if (this._options[name] !== undefined) {
-	      return this._options[name];
-	    }
-	    // Return the data attribute if it is defined.
-	    if (this._input.hasAttribute("data-" + name)) {
-	      return parseFloat(this._input.getAttribute("data-" + name), 10);
-	    }
-	    // If there is no option and no attribute, return the default value.
-	    return defaultValue;
-	  },
-	
-	  /**
-	   * Prevent selection on the whole document.
-	   * @private
-	   * @param {Boolean} prevent - Should we prevent or not the selection.
-	   */
-	  _preventSelection: function (prevent) {
-	    var value = 'none';
-	    if (prevent === false) {
-	      value = 'all';
-	    }
-	
-	    document.body.style['-moz-user-select'] = value;
-	    document.body.style['-webkit-user-select'] = value;
-	    document.body.style['-ms-user-select'] = value;
-	    document.body.style['user-select'] = value;
-	  },
-	
-	  /**
-	   * Add a span element before the input.
-	   * @private
-	   */
-	  _addSpan: function () {
-	    var inputParent = this._input.parentNode;
-	    inputParent.insertBefore(this._span, this._input);
-	    this._span.innerHTML = this.get();
-	
-	    // Add resize cursor.
-	    this._span.style.cursor = "col-resize";
-	  },
-	
-	  /**
-	   * Display the input and hide the span element.
-	   * @private
-	   */
-	  _showInput: function () {
-	    this._input.style.display = this._inputDisplayStyle;
-	    this._span.style.display = 'none';
-	    this._input.focus();
-	  },
-	
-	  /**
-	   * Show the span element and hide the input.
-	   * @private
-	   */
-	  _showSpan: function () {
-	    this._input.style.display = 'none';
-	    this._span.style.display = this._spanDisplayStyle;
-	  },
-	
-	  /**
-	   * Called on input blur, set the new value and display span.
-	   * @private
-	   * @param {Object} e - Event.
-	   */
-	  _onInputBlur: function (e) {
-	    this._onInputChange();
-	    this._showSpan();
-	  },
-	
-	  /**
-	   * Called on input onchange event, set the value based on the input value.
-	   * @private
-	   */
-	  _onInputChange: function () {
-	    this.set(parseFloat(this._input.value, 10));
-	  },
-	
-	  /**
-	   * Called on input key down, blur on enter.
-	   * @private
-	   * @param {Object} e - Key event.
-	   */
-	  _onInputKeyDown: function (e) {
-	    var keyEnter = 13;
-	    if (e.charCode == keyEnter) {
-	      this._input.blur();
-	    }
-	  },
-	
-	  /**
-	   * Called on span mouse down, prevent selection and initalize logic for mouse drag.
-	   * @private
-	   * @param {Object} e - Mouse event.
-	   */
-	  _onMouseDown: function (e) {
-	    this._preventSelection(true);
-	    this._isDragging = false;
-	    this._lastMousePosition = {x: e.clientX, y: e.clientY};
-	
-	    document.addEventListener('mouseup', this._onMouseUp, false);
-	    document.addEventListener('mousemove', this._onMouseMove, false);
-	  },
-	
-	  /**
-	   * Called on span mouse up, show input if no drag.
-	   * @private
-	   * @param {Object} e - Mouse event.
-	   */
-	  _onMouseUp: function (e) {
-	    this._preventSelection(false);
-	    // If we didn't drag the span then we display the input.
-	    if (this._isDragging === false) {
-	      this._showInput();
-	    }
-	    this._isDragging = false;
-	
-	    document.removeEventListener('mouseup', this._onMouseUp, false);
-	    document.removeEventListener('mousemove', this._onMouseMove, false);
-	  },
-	
-	  /**
-	   * Check if difference bettween 2 positions is above minimum threshold.
-	   * @private
-	   * @param {Object} newMousePosition - the new mouse position.
-	   * @param {Object} lastMousePosition - the last mouse position.
-	   * @returns {Boolean}
-	   */
-	  _hasMovedEnough: function (newMousePosition, lastMousePosition) {
-	    if (Math.abs(newMousePosition.x - lastMousePosition.x) >= this._dragThreshold ||
-	      Math.abs(newMousePosition.y - lastMousePosition.y) >= this._dragThreshold) {
-	      return true;
-	    }
-	    return false;
-	  },
-	
-	  _onMouseMove: function (e) {
-	    // Get the new mouse position.
-	    var newMousePosition = {x: e.clientX, y: e.clientY};
-	
-	    if (this._hasMovedEnough(newMousePosition, this._lastMousePosition)) {
-	      this._isDragging = true;
-	    }
-	
-	    // If we are not dragging don't do anything.
-	    if (this._isDragging === false) {
-	      return;
-	    }
-	
-	    // Get the increment modifier. Small increment * 0.1, large increment * 10.
-	    var modifier = DraggableNumber.MODIFIER_NONE;
-	    if (e.shiftKey) {
-	      modifier = DraggableNumber.MODIFIER_LARGE;
-	    }
-	    else if (e.ctrlKey) {
-	      modifier = DraggableNumber.MODIFIER_SMALL;
-	    }
-	
-	    // Calculate the delta with previous mouse position.
-	    var delta = this._getLargestDelta(newMousePosition, this._lastMousePosition);
-	
-	    // Get the number offset.
-	    var offset = this._getNumberOffset(delta, modifier);
-	
-	    // Update the input number.
-	    var new_value = this.get() + offset;
-	    this.set(new_value);
-	
-	    // Call onchange callback if it exists.
-	    if ("changeCallback" in this._options) {
-	      this._options.changeCallback(new_value);
-	    }
-	
-	    // Save current mouse position.
-	    this._lastMousePosition = newMousePosition;
-	  },
-	
-	  /**
-	   * Return the number offset based on a delta and a modifier.
-	   * @private
-	   * @param {Number} delta - a positive or negative number.
-	   * @param {Number} modifier - the modifier type.
-	   * @returns {Number}
-	   */
-	  _getNumberOffset: function (delta, modifier) {
-	    var increment = 1;
-	    if (modifier == DraggableNumber.MODIFIER_SMALL) {
-	      increment *= 0.1;
-	    }
-	    else if (modifier == DraggableNumber.MODIFIER_LARGE) {
-	      increment *= 10;
-	    }
-	    // Negative increment if delta is negative.
-	    if (delta < 0) {
-	      increment *= -1;
-	    }
-	    return increment;
-	  },
-	
-	  /**
-	   * Return the largest difference between two positions, either x or y.
-	   * @private
-	   * @param {Object} newMousePosition - the new mouse position.
-	   * @param {Object} lastMousePosition - the last mouse position.
-	   * @returns {Number}
-	   */
-	  _getLargestDelta: function (newPosition, oldPosition) {
-	    var result = 0;
-	    var delta = {
-	      x: newPosition.x - oldPosition.x,
-	      y: newPosition.y - oldPosition.y,
+	  Group.prototype.toJSON = function() {
+	    var res;
+	    res = {
+	      nid: this.get('nid'),
+	      name: this.get('name'),
+	      type: this.typename(),
+	      anim: this.getAnimationData(),
+	      x: this.get('x'),
+	      y: this.get('y'),
+	      nodes: jQuery.map(this.nodes.models, function(n, i) {
+	        return n.toJSON();
+	      }),
+	      definition_id: this.definition.get("gid")
 	    };
+	    return res;
+	  };
 	
-	    if (Math.abs(delta.x) > Math.abs(delta.y)) {
-	      return delta.x;
+	  Group.prototype.getFields = function() {
+	    return false;
+	  };
+	
+	  Group.prototype.remove = function() {
+	    if (this.nodes) {
+	      this.nodes.destroy();
+	      delete this.nodes;
 	    }
-	    else {
-	      // Inverse the position.y since mouse move to up should increase the _value.
-	      return delta.y * -1;
-	    }
-	  },
+	    delete this.definition;
+	    return Group.__super__.remove.apply(this, arguments);
+	  };
 	
-	  /**
-	   * Constrain a value between min and max.
-	   * @private
-	   * @param {Number} value - The value to constrain.
-	   * @returns {Number}
-	   */
-	  _constraintValue: function (value) {
-	    value = Math.min(value, this._max);
-	    value = Math.max(value, this._min);
-	    return value;
-	  }
-	};
+	  Group.prototype.compute = function() {
+	    return this;
+	  };
 	
-	    return DraggableNumber;
-	}));
+	  return Group;
 	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('Group', Group);
 
 
-/***/ }
+/***/ })
 /******/ ])
 });
-
+;
 //# sourceMappingURL=ThreeNodes.NodeTypes.js.map
