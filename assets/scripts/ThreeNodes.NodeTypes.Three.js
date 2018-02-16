@@ -7,7 +7,7 @@
 		exports["NodeTypes.Three"] = factory(require("_"), require("Backbone"), require("jQuery"), require("Blob"), require("FileSaver"), require("Three"));
 	else
 		root["ThreeNodes"] = root["ThreeNodes"] || {}, root["ThreeNodes"]["NodeTypes.Three"] = factory(root["_"], root["Backbone"], root["jQuery"], root["Blob"], root["FileSaver"], root["Three"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_40__, __WEBPACK_EXTERNAL_MODULE_79__, __WEBPACK_EXTERNAL_MODULE_80__, __WEBPACK_EXTERNAL_MODULE_83__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_32__, __WEBPACK_EXTERNAL_MODULE_80__, __WEBPACK_EXTERNAL_MODULE_81__, __WEBPACK_EXTERNAL_MODULE_84__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -54,19 +54,19 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	__webpack_require__(56);
-	
 	__webpack_require__(57);
 	
 	__webpack_require__(58);
 	
-	__webpack_require__(60);
+	__webpack_require__(59);
 	
-	__webpack_require__(70);
+	__webpack_require__(61);
 	
-	__webpack_require__(82);
+	__webpack_require__(71);
 	
-	__webpack_require__(86);
+	__webpack_require__(83);
+	
+	__webpack_require__(87);
 
 
 /***/ }),
@@ -2785,7 +2785,12 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 29 */,
 /* 30 */,
 /* 31 */,
-/* 32 */,
+/* 32 */
+/***/ (function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_32__;
+
+/***/ }),
 /* 33 */,
 /* 34 */,
 /* 35 */,
@@ -2793,12 +2798,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 37 */,
 /* 38 */,
 /* 39 */,
-/* 40 */
-/***/ (function(module, exports) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_40__;
-
-/***/ }),
+/* 40 */,
 /* 41 */,
 /* 42 */,
 /* 43 */,
@@ -2814,7 +2814,8 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 53 */,
 /* 54 */,
 /* 55 */,
-/* 56 */
+/* 56 */,
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, CubeGeometry, CylinderGeometry, Node, OctahedronGeometry, PlaneGeometry, SphereGeometry, TextGeometry, TorusGeometry, TorusKnotGeometry, Utils, _,
@@ -3425,7 +3426,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var AmbientLight, Backbone, DirectionalLight, Node, PointLight, SpotLight, _,
@@ -3706,7 +3707,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 58 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, LineBasicMaterial, MeshBasicMaterial, MeshLambertMaterial, MeshPhongMaterial, Node, NodeMaterialBase, _,
@@ -3720,7 +3721,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Node = __webpack_require__(28);
 	
-	NodeMaterialBase = __webpack_require__(59);
+	NodeMaterialBase = __webpack_require__(60);
 	
 	MeshBasicMaterial = (function(superClass) {
 	  extend(MeshBasicMaterial, superClass);
@@ -3963,7 +3964,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 59 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Node, NodeMaterialBase,
@@ -4085,7 +4086,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 60 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, BleachPass, BloomPass, DotScreenPass, FilmPass, HorizontalBlurPass, Node, Utils, VerticalBlurPass, VignettePass, _,
@@ -4100,8 +4101,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	Utils = __webpack_require__(9);
 	
 	Node = __webpack_require__(28);
-	
-	__webpack_require__(61);
 	
 	__webpack_require__(62);
 	
@@ -4118,6 +4117,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	__webpack_require__(68);
 	
 	__webpack_require__(69);
+	
+	__webpack_require__(70);
 	
 	BloomPass = (function(superClass) {
 	  extend(BloomPass, superClass);
@@ -4560,7 +4561,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 61 */
+/* 62 */
 /***/ (function(module, exports) {
 
 	/**
@@ -4629,7 +4630,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 62 */
+/* 63 */
 /***/ (function(module, exports) {
 
 	/**
@@ -4697,7 +4698,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 63 */
+/* 64 */
 /***/ (function(module, exports) {
 
 	/**
@@ -4765,7 +4766,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 64 */
+/* 65 */
 /***/ (function(module, exports) {
 
 	/**
@@ -4835,7 +4836,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 65 */
+/* 66 */
 /***/ (function(module, exports) {
 
 	/**
@@ -4894,7 +4895,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 66 */
+/* 67 */
 /***/ (function(module, exports) {
 
 	/**
@@ -5001,7 +5002,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 67 */
+/* 68 */
 /***/ (function(module, exports) {
 
 	/**
@@ -5115,7 +5116,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 68 */
+/* 69 */
 /***/ (function(module, exports) {
 
 	/**
@@ -5225,7 +5226,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 69 */
+/* 70 */
 /***/ (function(module, exports) {
 
 	/**
@@ -5285,7 +5286,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 70 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Camera, ColladaLoader, Fog, FogExp2, Node, Object3D, Object3DwithMeshAndMaterial, Scene, Texture, ThreeLine, ThreeMesh, WebGLRenderer, WebglBase, _, jQuery,
@@ -5293,7 +5294,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	jQuery = __webpack_require__(40);
+	jQuery = __webpack_require__(32);
 	
 	_ = __webpack_require__(2);
 	
@@ -5301,11 +5302,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Node = __webpack_require__(28);
 	
-	__webpack_require__(71);
+	__webpack_require__(72);
 	
-	Object3D = __webpack_require__(72);
+	Object3D = __webpack_require__(73);
 	
-	WebglBase = __webpack_require__(73);
+	WebglBase = __webpack_require__(74);
 	
 	Scene = (function(superClass) {
 	  extend(Scene, superClass);
@@ -6179,7 +6180,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 71 */
+/* 72 */
 /***/ (function(module, exports) {
 
 	/**
@@ -11097,7 +11098,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 72 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Node, Object3D,
@@ -11281,7 +11282,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 73 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, WebglBase, _,
@@ -11290,8 +11291,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	_ = __webpack_require__(2);
 	
 	Backbone = __webpack_require__(3);
-	
-	__webpack_require__(74);
 	
 	__webpack_require__(75);
 	
@@ -11306,6 +11305,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	__webpack_require__(80);
 	
 	__webpack_require__(81);
+	
+	__webpack_require__(82);
 	
 	WebglBase = (function() {
 	  WebglBase.instance = false;
@@ -11353,7 +11354,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 74 */
+/* 75 */
 /***/ (function(module, exports) {
 
 	/**
@@ -11503,7 +11504,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 75 */
+/* 76 */
 /***/ (function(module, exports) {
 
 	/**
@@ -11595,7 +11596,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 76 */
+/* 77 */
 /***/ (function(module, exports) {
 
 	/**
@@ -11652,7 +11653,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 77 */
+/* 78 */
 /***/ (function(module, exports) {
 
 	/**
@@ -11709,7 +11710,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 78 */
+/* 79 */
 /***/ (function(module, exports) {
 
 	/**
@@ -11761,12 +11762,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 79 */
-/***/ (function(module, exports) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_79__;
-
-/***/ }),
 /* 80 */
 /***/ (function(module, exports) {
 
@@ -11774,6 +11769,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 81 */
+/***/ (function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_81__;
+
+/***/ }),
+/* 82 */
 /***/ (function(module, exports) {
 
 	/* canvas-toBlob.js
@@ -11886,7 +11887,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 82 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, CsgIntersect, CsgSubtract, CsgUnion, Node, NodeCSG, Utils, _,
@@ -11902,11 +11903,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Node = __webpack_require__(28);
 	
-	__webpack_require__(83);
-	
 	__webpack_require__(84);
 	
 	__webpack_require__(85);
+	
+	__webpack_require__(86);
 	
 	NodeCSG = (function(superClass) {
 	  extend(NodeCSG, superClass);
@@ -12074,13 +12075,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 83 */
+/* 84 */
 /***/ (function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_83__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_84__;
 
 /***/ }),
-/* 84 */
+/* 85 */
 /***/ (function(module, exports) {
 
 	// Constructive Solid Geometry (CSG) is a modeling technique that uses Boolean
@@ -12681,7 +12682,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 85 */
+/* 86 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -13231,7 +13232,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	})();
 
 /***/ }),
-/* 86 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Node, NodeMaterialBase, Object3D, ParticleBasicMaterial, ParticlePool, ParticleSystem, RandomCloudGeometry, SparksAccelerate, SparksAccelerateFactor, SparksAccelerateVelocity, SparksAge, SparksCubeZone, SparksEmitter, SparksLifetime, SparksLineZone, SparksMove, SparksPointZone, SparksPosition, SparksRandomDrift, SparksSteadyCounter, Utils, _,
@@ -13247,17 +13248,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Node = __webpack_require__(28);
 	
-	Object3D = __webpack_require__(72);
+	Object3D = __webpack_require__(73);
 	
-	NodeMaterialBase = __webpack_require__(59);
+	NodeMaterialBase = __webpack_require__(60);
 	
-	__webpack_require__(70);
+	__webpack_require__(71);
 	
-	__webpack_require__(58);
-	
-	__webpack_require__(87);
+	__webpack_require__(59);
 	
 	__webpack_require__(88);
+	
+	__webpack_require__(89);
 	
 	ParticleSystem = (function(superClass) {
 	  extend(ParticleSystem, superClass);
@@ -14429,7 +14430,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 87 */
+/* 88 */
 /***/ (function(module, exports) {
 
 	// tween.js r5 - http://github.com/sole/tween.js
@@ -14448,7 +14449,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 88 */
+/* 89 */
 /***/ (function(module, exports) {
 
 	/*

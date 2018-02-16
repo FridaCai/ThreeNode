@@ -7,7 +7,7 @@
 		exports["NodeTypes"] = factory(require("_"), require("Backbone"), require("jQuery"), require("libs/jshint"));
 	else
 		root["ThreeNodes"] = root["ThreeNodes"] || {}, root["ThreeNodes"]["NodeTypes"] = factory(root["_"], root["Backbone"], root["jQuery"], root["libs/jshint"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_40__, __WEBPACK_EXTERNAL_MODULE_47__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_32__, __WEBPACK_EXTERNAL_MODULE_48__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -56,19 +56,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	__webpack_require__(10);
 	
-	__webpack_require__(29);
-	
-	__webpack_require__(43);
+	__webpack_require__(33);
 	
 	__webpack_require__(44);
 	
-	__webpack_require__(51);
+	__webpack_require__(45);
 	
 	__webpack_require__(52);
 	
 	__webpack_require__(53);
 	
-	__webpack_require__(55);
+	__webpack_require__(54);
+	
+	__webpack_require__(56);
 
 
 /***/ }),
@@ -678,28 +678,43 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var NodeNumberSimple, Shape,
+	var NodeNumberSimple, Rectangle, ShapeView,
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
 	NodeNumberSimple = __webpack_require__(11);
 	
-	Shape = (function(superClass) {
-	  extend(Shape, superClass);
+	ShapeView = __webpack_require__(29);
 	
-	  function Shape() {
-	    return Shape.__super__.constructor.apply(this, arguments);
+	Rectangle = (function(superClass) {
+	  extend(Rectangle, superClass);
+	
+	  function Rectangle() {
+	    return Rectangle.__super__.constructor.apply(this, arguments);
 	  }
 	
-	  Shape.node_name = 'Shape';
+	  Rectangle.node_name = 'Rectangle';
 	
-	  Shape.group_name = 'Shape';
+	  Rectangle.group_name = 'Shape';
 	
-	  return Shape;
+	  return Rectangle;
 	
 	})(NodeNumberSimple);
 	
-	ThreeNodes.Core.addNodeType('Shape', Shape);
+	ThreeNodes.Core.addNodeType('Rectangle', Rectangle);
+	
+	Rectangle = (function(superClass) {
+	  extend(Rectangle, superClass);
+	
+	  function Rectangle() {
+	    return Rectangle.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  return Rectangle;
+	
+	})(ShapeView);
+	
+	ThreeNodes.Core.addNodeView('Rectangle', Rectangle);
 
 
 /***/ }),
@@ -3439,6 +3454,389 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
+	var Backbone, ShapeView, _, _view_node_template, namespace,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	_view_node_template = __webpack_require__(30);
+	
+	namespace = __webpack_require__(14).namespace;
+	
+	__webpack_require__(31);
+	
+	__webpack_require__(32);
+	
+	
+	/* Node View */
+	
+	ShapeView = (function(superClass) {
+	  extend(ShapeView, superClass);
+	
+	  function ShapeView() {
+	    this.makeDraggable = bind(this.makeDraggable, this);
+	    this.remove = bind(this.remove, this);
+	    this.computeNodePosition = bind(this.computeNodePosition, this);
+	    this.renderConnections = bind(this.renderConnections, this);
+	    this.render = bind(this.render, this);
+	    this.makeElement = bind(this.makeElement, this);
+	    return ShapeView.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  ShapeView.prototype.className = "node";
+	
+	  ShapeView.prototype.initialize = function(options) {
+	    this.makeElement();
+	    return this.render();
+	  };
+	
+	  ShapeView.prototype.makeElement = function() {
+	    this.template = _.template(_view_node_template, this.model);
+	    this.$el.html(this.template);
+	    this.$el.addClass("type-" + this.model.constructor.group_name);
+	    return this.$el.addClass("node-" + this.model.typename());
+	  };
+	
+	  ShapeView.prototype.render = function() {
+	    this.$el.css({
+	      left: parseInt(this.model.get("x")),
+	      top: parseInt(this.model.get("y"))
+	    });
+	    this.$el.find("> .head span").text('FridaTest:' + this.model.get("name"));
+	    return this.$el.find("> .head span").show();
+	  };
+	
+	  ShapeView.prototype.renderConnections = function() {
+	    this.model.fields.renderConnections();
+	    if (this.model.nodes) {
+	      return _.each(this.model.nodes.models, function(n) {
+	        return n.fields.renderConnections();
+	      });
+	    }
+	  };
+	
+	  ShapeView.prototype.computeNodePosition = function() {
+	    var offset, pos;
+	    pos = $(this.el).position();
+	    offset = $("#container-wrapper").offset();
+	    return this.model.set({
+	      x: pos.left + $("#container-wrapper").scrollLeft(),
+	      y: pos.top + $("#container-wrapper").scrollTop()
+	    });
+	  };
+	
+	  ShapeView.prototype.remove = function() {
+	    $(".field", this.el).destroyContextMenu();
+	    if (this.$el.data("draggable")) {
+	      this.$el.draggable("destroy");
+	    }
+	    $(this.el).unbind();
+	    this.undelegateEvents();
+	    if (this.fields_view) {
+	      this.fields_view.remove();
+	    }
+	    delete this.fields_view;
+	    return ShapeView.__super__.remove.apply(this, arguments);
+	  };
+	
+	  ShapeView.prototype.makeDraggable = function() {
+	    var nodes_offset, selected_nodes, self;
+	    self = this;
+	    nodes_offset = {
+	      top: 0,
+	      left: 0
+	    };
+	    selected_nodes = $([]);
+	    $(this.el).draggable({
+	      start: function(ev, ui) {
+	        if ($(this).hasClass("ui-selected")) {
+	          selected_nodes = $(".ui-selected").each(function() {
+	            return $(this).data("offset", $(this).offset());
+	          });
+	        } else {
+	          selected_nodes = $([]);
+	          $(".node").removeClass("ui-selected");
+	        }
+	        return nodes_offset = $(this).offset();
+	      },
+	      drag: function(ev, ui) {
+	        var dl, dt;
+	        dt = ui.position.top - nodes_offset.top;
+	        dl = ui.position.left - nodes_offset.left;
+	        selected_nodes.not(this).each(function() {
+	          var dx, dy, el, offset;
+	          el = $(this);
+	          offset = el.data("offset");
+	          dx = offset.top + dt;
+	          dy = offset.left + dl;
+	          el.css({
+	            top: dx,
+	            left: dy
+	          });
+	          el.data("object").trigger("node:computePosition");
+	          return el.data("object").trigger("node:renderConnections");
+	        });
+	        return self.renderConnections();
+	      },
+	      stop: function() {
+	        selected_nodes.not(this).each(function() {
+	          var el;
+	          el = $(this).data("object");
+	          return el.trigger("node:renderConnections");
+	        });
+	        self.computeNodePosition();
+	        return self.renderConnections();
+	      }
+	    });
+	    return this;
+	  };
+	
+	  return ShapeView;
+	
+	})(Backbone.View);
+	
+	ThreeNodes.Core.addNodeView('ShapeView', ShapeView);
+	
+	module.exports = ShapeView;
+
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports) {
+
+	module.exports = "<div class='head'><span><%= get(\"name\") %></span></div>\n<div class='options'>\n  <div class='inputs'></div>\n  <div class='center'></div>\n  <div class='outputs'></div>\n</div>\n";
+
+/***/ }),
+/* 31 */
+/***/ (function(module, exports) {
+
+	// jQuery Context Menu Plugin
+	//
+	// Version 1.01
+	//
+	// Cory S.N. LaViska
+	// A Beautiful Site (http://abeautifulsite.net/)
+	//
+	// More info: http://abeautifulsite.net/2008/09/jquery-context-menu-plugin/
+	//
+	// Terms of Use
+	//
+	// This plugin is dual-licensed under the GNU General Public License
+	//   and the MIT License and is copyright A Beautiful Site, LLC.
+	//
+	if(jQuery)( function() {
+		$.extend($.fn, {
+	
+			contextMenu: function(o, callback) {
+				// Defaults
+				if( o.menu == undefined ) return false;
+				if( o.inSpeed == undefined ) o.inSpeed = 150;
+				if( o.outSpeed == undefined ) o.outSpeed = 75;
+				// 0 needs to be -1 for expected results (no fade)
+				if( o.inSpeed == 0 ) o.inSpeed = -1;
+				if( o.outSpeed == 0 ) o.outSpeed = -1;
+				// Loop each context menu
+				$(this).each( function() {
+					var el = $(this);
+					var offset = $(el).offset();
+					// Add contextMenu class
+					$('#' + o.menu).addClass('contextMenu');
+					// Simulate a true right click
+					$(this).mousedown( function(e) {
+						var evt = e;
+						evt.preventDefault();
+						$(this).mouseup( function(e) {
+							e.preventDefault();
+							var srcElement = $(this);
+							$(this).unbind('mouseup');
+							if( evt.button == 2 ) {
+								// Hide context menus that may be showing
+								$(".contextMenu").hide();
+								// Get this context menu
+								var menu = $('#' + o.menu);
+	
+								if( $(el).hasClass('disabled') ) return false;
+	
+								// Detect mouse position
+								var d = {}, x, y;
+								if( self.innerHeight ) {
+									d.pageYOffset = self.pageYOffset;
+									d.pageXOffset = self.pageXOffset;
+									d.innerHeight = self.innerHeight;
+									d.innerWidth = self.innerWidth;
+								} else if( document.documentElement &&
+									document.documentElement.clientHeight ) {
+									d.pageYOffset = document.documentElement.scrollTop;
+									d.pageXOffset = document.documentElement.scrollLeft;
+									d.innerHeight = document.documentElement.clientHeight;
+									d.innerWidth = document.documentElement.clientWidth;
+								} else if( document.body ) {
+									d.pageYOffset = document.body.scrollTop;
+									d.pageXOffset = document.body.scrollLeft;
+									d.innerHeight = document.body.clientHeight;
+									d.innerWidth = document.body.clientWidth;
+								}
+								(e.pageX) ? x = e.pageX : x = e.clientX + d.scrollLeft;
+								(e.pageY) ? y = e.pageY : y = e.clientY + d.scrollTop;
+	
+								// Show the menu
+								$(document).unbind('click');
+								$(menu).css({ top: y, left: x }).fadeIn(o.inSpeed);
+								// Hover events
+								$(menu).find('A').mouseover( function() {
+									$(menu).find('LI.hover').removeClass('hover');
+									$(this).parent().addClass('hover');
+								}).mouseout( function() {
+									$(menu).find('LI.hover').removeClass('hover');
+								});
+	
+								// Keyboard
+								$(document).keypress( function(e) {
+									switch( e.keyCode ) {
+										case 38: // up
+											if( $(menu).find('LI.hover').size() == 0 ) {
+												$(menu).find('LI:last').addClass('hover');
+											} else {
+												$(menu).find('LI.hover').removeClass('hover').prevAll('LI:not(.disabled)').eq(0).addClass('hover');
+												if( $(menu).find('LI.hover').size() == 0 ) $(menu).find('LI:last').addClass('hover');
+											}
+										break;
+										case 40: // down
+											if( $(menu).find('LI.hover').size() == 0 ) {
+												$(menu).find('LI:first').addClass('hover');
+											} else {
+												$(menu).find('LI.hover').removeClass('hover').nextAll('LI:not(.disabled)').eq(0).addClass('hover');
+												if( $(menu).find('LI.hover').size() == 0 ) $(menu).find('LI:first').addClass('hover');
+											}
+										break;
+										case 13: // enter
+											$(menu).find('LI.hover A').trigger('click');
+										break;
+										case 27: // esc
+											$(document).trigger('click');
+										break
+									}
+								});
+	
+								// When items are selected
+								$('#' + o.menu).find('A').unbind('click');
+								$('#' + o.menu).find('LI:not(.disabled) A').click( function() {
+									$(document).unbind('click').unbind('keypress');
+									$(".contextMenu").hide();
+									// Callback
+									if( callback ) callback( $(this).attr('href').substr(1), $(srcElement), {x: x - offset.left, y: y - offset.top, docX: x, docY: y} );
+									return false;
+								});
+	
+								// Hide bindings
+								setTimeout( function() { // Delay for Mozilla
+									$(document).click( function() {
+										$(document).unbind('click').unbind('keypress');
+										$(menu).fadeOut(o.outSpeed);
+										return false;
+									});
+								}, 0);
+							}
+						});
+					});
+	
+					// Disable text selection
+					/*if( $.browser.mozilla ) {
+						$('#' + o.menu).each( function() { $(this).css({ 'MozUserSelect' : 'none' }); });
+					} else if( $.browser.msie ) {
+						$('#' + o.menu).each( function() { $(this).bind('selectstart.disableTextSelect', function() { return false; }); });
+					} else {*/
+						$('#' + o.menu).each(function() { $(this).bind('mousedown.disableTextSelect', function() { return false; }); });
+					//}
+					// Disable browser context menu (requires both selectors to work in IE/Safari + FF/Chrome)
+					$(el).add($('UL.contextMenu')).bind('contextmenu', function() { return false; });
+	
+				});
+				return $(this);
+			},
+	
+			// Disable context menu items on the fly
+			disableContextMenuItems: function(o) {
+				if( o == undefined ) {
+					// Disable all
+					$(this).find('LI').addClass('disabled');
+					return( $(this) );
+				}
+				$(this).each( function() {
+					if( o != undefined ) {
+						var d = o.split(',');
+						for( var i = 0; i < d.length; i++ ) {
+							$(this).find('A[href="' + d[i] + '"]').parent().addClass('disabled');
+	
+						}
+					}
+				});
+				return( $(this) );
+			},
+	
+			// Enable context menu items on the fly
+			enableContextMenuItems: function(o) {
+				if( o == undefined ) {
+					// Enable all
+					$(this).find('LI.disabled').removeClass('disabled');
+					return( $(this) );
+				}
+				$(this).each( function() {
+					if( o != undefined ) {
+						var d = o.split(',');
+						for( var i = 0; i < d.length; i++ ) {
+							$(this).find('A[href="' + d[i] + '"]').parent().removeClass('disabled');
+	
+						}
+					}
+				});
+				return( $(this) );
+			},
+	
+			// Disable context menu(s)
+			disableContextMenu: function() {
+				$(this).each( function() {
+					$(this).addClass('disabled');
+				});
+				return( $(this) );
+			},
+	
+			// Enable context menu(s)
+			enableContextMenu: function() {
+				$(this).each( function() {
+					$(this).removeClass('disabled');
+				});
+				return( $(this) );
+			},
+	
+			// Destroy context menu(s)
+			destroyContextMenu: function() {
+				// Destroy specified context menus
+				$(this).each( function() {
+					// Disable action
+					$(this).unbind('mousedown').unbind('mouseup');
+				});
+				return( $(this) );
+			}
+	
+		});
+	})(jQuery);
+
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_32__;
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
 	var Backbone, Boolean, Color, Euler, Node, NodeColorView, NodeNumberSimple, NodeWithCenterTextfield, Number, Quaternion, String, Vector2, Vector3, _,
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty,
@@ -3452,9 +3850,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	NodeNumberSimple = __webpack_require__(11);
 	
-	NodeWithCenterTextfield = __webpack_require__(30);
+	NodeWithCenterTextfield = __webpack_require__(34);
 	
-	NodeColorView = __webpack_require__(41);
+	NodeColorView = __webpack_require__(42);
 	
 	Number = (function(superClass) {
 	  extend(Number, superClass);
@@ -3927,7 +4325,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 30 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, NodeView, NodeWithCenterTextfield, _,
@@ -3941,7 +4339,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	__webpack_require__(28);
 	
-	NodeView = __webpack_require__(31);
+	NodeView = __webpack_require__(35);
 	
 	NodeWithCenterTextfield = (function(superClass) {
 	  extend(NodeWithCenterTextfield, superClass);
@@ -3989,7 +4387,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 31 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, FieldsView, NodeView, _, _view_node_context_menu, _view_node_template, namespace,
@@ -4001,17 +4399,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	_view_node_template = __webpack_require__(32);
+	_view_node_template = __webpack_require__(30);
 	
-	_view_node_context_menu = __webpack_require__(33);
+	_view_node_context_menu = __webpack_require__(36);
 	
-	FieldsView = __webpack_require__(34);
+	FieldsView = __webpack_require__(37);
 	
 	namespace = __webpack_require__(14).namespace;
 	
-	__webpack_require__(39);
+	__webpack_require__(31);
 	
-	__webpack_require__(40);
+	__webpack_require__(32);
 	
 	
 	/* Node View */
@@ -4273,19 +4671,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 32 */
-/***/ (function(module, exports) {
-
-	module.exports = "<div class='head'><span><%= get(\"name\") %></span></div>\n<div class='options'>\n  <div class='inputs'></div>\n  <div class='center'></div>\n  <div class='outputs'></div>\n</div>\n";
-
-/***/ }),
-/* 33 */
+/* 36 */
 /***/ (function(module, exports) {
 
 	module.exports = "<ul id=\"node-context-menu\" class=\"context-menu\">\n  <li><a href=\"#remove_node\">Remove node</a></li>\n</ul>";
 
 /***/ }),
-/* 34 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, FieldButton, FieldsView, _,
@@ -4297,9 +4689,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	FieldButton = __webpack_require__(35);
+	FieldButton = __webpack_require__(38);
 	
-	__webpack_require__(40);
+	__webpack_require__(32);
 	
 	
 	/* Fields View */
@@ -4369,7 +4761,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 35 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, FieldButton, _, _view_field_context_menu, _view_node_field_in, _view_node_field_out,
@@ -4381,15 +4773,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	_view_node_field_in = __webpack_require__(36);
+	_view_node_field_in = __webpack_require__(39);
 	
-	_view_node_field_out = __webpack_require__(37);
+	_view_node_field_out = __webpack_require__(40);
 	
-	_view_field_context_menu = __webpack_require__(38);
+	_view_field_context_menu = __webpack_require__(41);
 	
 	__webpack_require__(9);
 	
-	__webpack_require__(39);
+	__webpack_require__(31);
 	
 	
 	/* FieldButton View */
@@ -4557,248 +4949,25 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 36 */
+/* 39 */
 /***/ (function(module, exports) {
 
 	module.exports = "<span class=\"inner-field\"><span></span><%= name %></span>";
 
 /***/ }),
-/* 37 */
+/* 40 */
 /***/ (function(module, exports) {
 
 	module.exports = "<span class=\"inner-field\"><%= name %><span></span></span>";
 
 /***/ }),
-/* 38 */
+/* 41 */
 /***/ (function(module, exports) {
 
 	module.exports = "<ul id=\"field-context-menu\" class=\"context-menu\">\n  <li><a href=\"#removeConnection\">Remove connection(s)</a></li>\n</ul>";
 
 /***/ }),
-/* 39 */
-/***/ (function(module, exports) {
-
-	// jQuery Context Menu Plugin
-	//
-	// Version 1.01
-	//
-	// Cory S.N. LaViska
-	// A Beautiful Site (http://abeautifulsite.net/)
-	//
-	// More info: http://abeautifulsite.net/2008/09/jquery-context-menu-plugin/
-	//
-	// Terms of Use
-	//
-	// This plugin is dual-licensed under the GNU General Public License
-	//   and the MIT License and is copyright A Beautiful Site, LLC.
-	//
-	if(jQuery)( function() {
-		$.extend($.fn, {
-	
-			contextMenu: function(o, callback) {
-				// Defaults
-				if( o.menu == undefined ) return false;
-				if( o.inSpeed == undefined ) o.inSpeed = 150;
-				if( o.outSpeed == undefined ) o.outSpeed = 75;
-				// 0 needs to be -1 for expected results (no fade)
-				if( o.inSpeed == 0 ) o.inSpeed = -1;
-				if( o.outSpeed == 0 ) o.outSpeed = -1;
-				// Loop each context menu
-				$(this).each( function() {
-					var el = $(this);
-					var offset = $(el).offset();
-					// Add contextMenu class
-					$('#' + o.menu).addClass('contextMenu');
-					// Simulate a true right click
-					$(this).mousedown( function(e) {
-						var evt = e;
-						evt.preventDefault();
-						$(this).mouseup( function(e) {
-							e.preventDefault();
-							var srcElement = $(this);
-							$(this).unbind('mouseup');
-							if( evt.button == 2 ) {
-								// Hide context menus that may be showing
-								$(".contextMenu").hide();
-								// Get this context menu
-								var menu = $('#' + o.menu);
-	
-								if( $(el).hasClass('disabled') ) return false;
-	
-								// Detect mouse position
-								var d = {}, x, y;
-								if( self.innerHeight ) {
-									d.pageYOffset = self.pageYOffset;
-									d.pageXOffset = self.pageXOffset;
-									d.innerHeight = self.innerHeight;
-									d.innerWidth = self.innerWidth;
-								} else if( document.documentElement &&
-									document.documentElement.clientHeight ) {
-									d.pageYOffset = document.documentElement.scrollTop;
-									d.pageXOffset = document.documentElement.scrollLeft;
-									d.innerHeight = document.documentElement.clientHeight;
-									d.innerWidth = document.documentElement.clientWidth;
-								} else if( document.body ) {
-									d.pageYOffset = document.body.scrollTop;
-									d.pageXOffset = document.body.scrollLeft;
-									d.innerHeight = document.body.clientHeight;
-									d.innerWidth = document.body.clientWidth;
-								}
-								(e.pageX) ? x = e.pageX : x = e.clientX + d.scrollLeft;
-								(e.pageY) ? y = e.pageY : y = e.clientY + d.scrollTop;
-	
-								// Show the menu
-								$(document).unbind('click');
-								$(menu).css({ top: y, left: x }).fadeIn(o.inSpeed);
-								// Hover events
-								$(menu).find('A').mouseover( function() {
-									$(menu).find('LI.hover').removeClass('hover');
-									$(this).parent().addClass('hover');
-								}).mouseout( function() {
-									$(menu).find('LI.hover').removeClass('hover');
-								});
-	
-								// Keyboard
-								$(document).keypress( function(e) {
-									switch( e.keyCode ) {
-										case 38: // up
-											if( $(menu).find('LI.hover').size() == 0 ) {
-												$(menu).find('LI:last').addClass('hover');
-											} else {
-												$(menu).find('LI.hover').removeClass('hover').prevAll('LI:not(.disabled)').eq(0).addClass('hover');
-												if( $(menu).find('LI.hover').size() == 0 ) $(menu).find('LI:last').addClass('hover');
-											}
-										break;
-										case 40: // down
-											if( $(menu).find('LI.hover').size() == 0 ) {
-												$(menu).find('LI:first').addClass('hover');
-											} else {
-												$(menu).find('LI.hover').removeClass('hover').nextAll('LI:not(.disabled)').eq(0).addClass('hover');
-												if( $(menu).find('LI.hover').size() == 0 ) $(menu).find('LI:first').addClass('hover');
-											}
-										break;
-										case 13: // enter
-											$(menu).find('LI.hover A').trigger('click');
-										break;
-										case 27: // esc
-											$(document).trigger('click');
-										break
-									}
-								});
-	
-								// When items are selected
-								$('#' + o.menu).find('A').unbind('click');
-								$('#' + o.menu).find('LI:not(.disabled) A').click( function() {
-									$(document).unbind('click').unbind('keypress');
-									$(".contextMenu").hide();
-									// Callback
-									if( callback ) callback( $(this).attr('href').substr(1), $(srcElement), {x: x - offset.left, y: y - offset.top, docX: x, docY: y} );
-									return false;
-								});
-	
-								// Hide bindings
-								setTimeout( function() { // Delay for Mozilla
-									$(document).click( function() {
-										$(document).unbind('click').unbind('keypress');
-										$(menu).fadeOut(o.outSpeed);
-										return false;
-									});
-								}, 0);
-							}
-						});
-					});
-	
-					// Disable text selection
-					/*if( $.browser.mozilla ) {
-						$('#' + o.menu).each( function() { $(this).css({ 'MozUserSelect' : 'none' }); });
-					} else if( $.browser.msie ) {
-						$('#' + o.menu).each( function() { $(this).bind('selectstart.disableTextSelect', function() { return false; }); });
-					} else {*/
-						$('#' + o.menu).each(function() { $(this).bind('mousedown.disableTextSelect', function() { return false; }); });
-					//}
-					// Disable browser context menu (requires both selectors to work in IE/Safari + FF/Chrome)
-					$(el).add($('UL.contextMenu')).bind('contextmenu', function() { return false; });
-	
-				});
-				return $(this);
-			},
-	
-			// Disable context menu items on the fly
-			disableContextMenuItems: function(o) {
-				if( o == undefined ) {
-					// Disable all
-					$(this).find('LI').addClass('disabled');
-					return( $(this) );
-				}
-				$(this).each( function() {
-					if( o != undefined ) {
-						var d = o.split(',');
-						for( var i = 0; i < d.length; i++ ) {
-							$(this).find('A[href="' + d[i] + '"]').parent().addClass('disabled');
-	
-						}
-					}
-				});
-				return( $(this) );
-			},
-	
-			// Enable context menu items on the fly
-			enableContextMenuItems: function(o) {
-				if( o == undefined ) {
-					// Enable all
-					$(this).find('LI.disabled').removeClass('disabled');
-					return( $(this) );
-				}
-				$(this).each( function() {
-					if( o != undefined ) {
-						var d = o.split(',');
-						for( var i = 0; i < d.length; i++ ) {
-							$(this).find('A[href="' + d[i] + '"]').parent().removeClass('disabled');
-	
-						}
-					}
-				});
-				return( $(this) );
-			},
-	
-			// Disable context menu(s)
-			disableContextMenu: function() {
-				$(this).each( function() {
-					$(this).addClass('disabled');
-				});
-				return( $(this) );
-			},
-	
-			// Enable context menu(s)
-			enableContextMenu: function() {
-				$(this).each( function() {
-					$(this).removeClass('disabled');
-				});
-				return( $(this) );
-			},
-	
-			// Destroy context menu(s)
-			destroyContextMenu: function() {
-				// Destroy specified context menus
-				$(this).each( function() {
-					// Disable action
-					$(this).unbind('mousedown').unbind('mouseup');
-				});
-				return( $(this) );
-			}
-	
-		});
-	})(jQuery);
-
-
-/***/ }),
-/* 40 */
-/***/ (function(module, exports) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_40__;
-
-/***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Color, NodeView, _, namespace,
@@ -4814,9 +4983,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	__webpack_require__(28);
 	
-	NodeView = __webpack_require__(31);
+	NodeView = __webpack_require__(35);
 	
-	__webpack_require__(42);
+	__webpack_require__(43);
 	
 	Color = (function(superClass) {
 	  extend(Color, superClass);
@@ -4890,7 +5059,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports) {
 
 	/**
@@ -5380,7 +5549,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(jQuery)
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var And, Backbone, Equal, Greater, IfElse, Node, Or, Smaller, _, jQuery,
@@ -5388,7 +5557,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	jQuery = __webpack_require__(40);
+	jQuery = __webpack_require__(32);
 	
 	_ = __webpack_require__(2);
 	
@@ -5671,7 +5840,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Code, CodeView, Expression, ExpressionView, Node, NodeCodeView, _,
@@ -5685,7 +5854,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Node = __webpack_require__(28);
 	
-	NodeCodeView = __webpack_require__(45);
+	NodeCodeView = __webpack_require__(46);
 	
 	CodeView = (function(superClass) {
 	  extend(CodeView, superClass);
@@ -5869,7 +6038,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, CodeMirror, NodeCodeView, NodeView, _,
@@ -5881,9 +6050,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	CodeMirror = __webpack_require__(46);
-	
-	__webpack_require__(47);
+	CodeMirror = __webpack_require__(47);
 	
 	__webpack_require__(48);
 	
@@ -5891,9 +6058,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	__webpack_require__(50);
 	
+	__webpack_require__(51);
+	
 	__webpack_require__(28);
 	
-	NodeView = __webpack_require__(31);
+	NodeView = __webpack_require__(35);
 	
 	NodeCodeView = (function(superClass) {
 	  extend(NodeCodeView, superClass);
@@ -5984,7 +6153,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -13591,13 +13760,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_47__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_48__;
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -13607,7 +13776,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	(function(mod) {
 	  if (true) // CommonJS
-	    mod(__webpack_require__(46));
+	    mod(__webpack_require__(47));
 	  else if (typeof define == "function" && define.amd) // AMD
 	    define(["../../lib/codemirror"], mod);
 	  else // Plain browser env
@@ -14266,7 +14435,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -14274,7 +14443,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	(function(mod) {
 	  if (true) // CommonJS
-	    mod(__webpack_require__(46));
+	    mod(__webpack_require__(47));
 	  else if (typeof define == "function" && define.amd) // AMD
 	    define(["../../lib/codemirror"], mod);
 	  else // Plain browser env
@@ -14482,7 +14651,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -14490,7 +14659,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	(function(mod) {
 	  if (true) // CommonJS
-	    mod(__webpack_require__(46));
+	    mod(__webpack_require__(47));
 	  else if (typeof define == "function" && define.amd) // AMD
 	    define(["../../lib/codemirror"], mod);
 	  else // Plain browser env
@@ -14624,7 +14793,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, MathAdd, MathAttenuation, MathCeil, MathCos, MathDivide, MathFloor, MathMax, MathMin, MathMod, MathMult, MathRound, MathSin, MathSubtract, MathTan, Node, NodeNumberParam1, NodeNumberSimple, _,
@@ -15222,7 +15391,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Font, Get, LFO, Merge, Mouse, Mp3Input, Node, NodeWithCenterTextfield, Random, Screen, Timer, _,
@@ -15236,7 +15405,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Node = __webpack_require__(28);
 	
-	NodeWithCenterTextfield = __webpack_require__(30);
+	NodeWithCenterTextfield = __webpack_require__(34);
 	
 	Random = (function(superClass) {
 	  extend(Random, superClass);
@@ -16100,7 +16269,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, LinearSpread, Node, RandomSpread, Rc4Random, _,
@@ -16112,7 +16281,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	Rc4Random = __webpack_require__(54);
+	Rc4Random = __webpack_require__(55);
 	
 	Node = __webpack_require__(28);
 	
@@ -16270,7 +16439,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, exports) {
 
 	var Rc4Random,
@@ -16325,7 +16494,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Group, Node, Nodes, _,
