@@ -1,5 +1,6 @@
 # Require node types here to avoid circular dependency between
 # Node, Group and Nodes collection.
+require 'threenodes/nodes/models/components/Shape'
 require 'threenodes/nodes/models/components/Base'
 require 'threenodes/nodes/models/components/Conditional'
 require 'threenodes/nodes/models/components/Code'

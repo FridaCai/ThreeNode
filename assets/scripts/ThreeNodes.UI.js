@@ -7,7 +7,7 @@
 		exports["UI"] = factory(require("_"), require("Backbone"), require("jQuery"), require("Blob"), require("FileSaver"), require("Raphael"));
 	else
 		root["ThreeNodes"] = root["ThreeNodes"] || {}, root["ThreeNodes"]["UI"] = factory(root["_"], root["Backbone"], root["jQuery"], root["Blob"], root["FileSaver"], root["Raphael"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_39__, __WEBPACK_EXTERNAL_MODULE_78__, __WEBPACK_EXTERNAL_MODULE_79__, __WEBPACK_EXTERNAL_MODULE_98__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_40__, __WEBPACK_EXTERNAL_MODULE_79__, __WEBPACK_EXTERNAL_MODULE_80__, __WEBPACK_EXTERNAL_MODULE_99__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -57,31 +57,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	var AppTimeline, Backbone, FileHandler, GroupDefinitionView, NodeView, NodeViewColor, NodeViewGroup, NodeViewWebgl, UI, UIView, UrlHandler, Workspace, _,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 	
-	__webpack_require__(39);
+	__webpack_require__(40);
 	
 	_ = __webpack_require__(2);
 	
 	Backbone = __webpack_require__(3);
 	
-	UIView = __webpack_require__(88);
+	UIView = __webpack_require__(89);
 	
-	Workspace = __webpack_require__(101);
+	Workspace = __webpack_require__(102);
 	
-	AppTimeline = __webpack_require__(103);
+	AppTimeline = __webpack_require__(104);
 	
-	GroupDefinitionView = __webpack_require__(104);
+	GroupDefinitionView = __webpack_require__(105);
 	
-	UrlHandler = __webpack_require__(107);
+	UrlHandler = __webpack_require__(108);
 	
-	FileHandler = __webpack_require__(108);
+	FileHandler = __webpack_require__(109);
 	
-	NodeView = __webpack_require__(30);
+	NodeView = __webpack_require__(31);
 	
-	NodeViewColor = __webpack_require__(40);
+	NodeViewColor = __webpack_require__(41);
 	
-	NodeViewWebgl = __webpack_require__(110);
+	NodeViewWebgl = __webpack_require__(111);
 	
-	NodeViewGroup = __webpack_require__(111);
+	NodeViewGroup = __webpack_require__(112);
 	
 	UI = (function() {
 	  function UI(core) {
@@ -314,326 +314,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 10 */,
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	var Backbone, Fields, Node, Utils, _,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	Utils = __webpack_require__(9);
-	
-	Fields = __webpack_require__(12);
-	
-	
-	/* Node model */
-	
-	Node = (function(superClass) {
-	  extend(Node, superClass);
-	
-	  function Node() {
-	    this.createAnimContainer = bind(this.createAnimContainer, this);
-	    this.enablePropertyAnim = bind(this.enablePropertyAnim, this);
-	    this.disablePropertyAnim = bind(this.disablePropertyAnim, this);
-	    this.removeConnection = bind(this.removeConnection, this);
-	    this.addOutConnection = bind(this.addOutConnection, this);
-	    this.applyFieldsToVal = bind(this.applyFieldsToVal, this);
-	    this.toJSON = bind(this.toJSON, this);
-	    this.getAnimationData = bind(this.getAnimationData, this);
-	    this.hasPropertyTrackAnim = bind(this.hasPropertyTrackAnim, this);
-	    this.getDownstreamNodes = bind(this.getDownstreamNodes, this);
-	    this.getUpstreamNodes = bind(this.getUpstreamNodes, this);
-	    this.hasOutConnection = bind(this.hasOutConnection, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.inputValueHasChanged = bind(this.inputValueHasChanged, this);
-	    this.createCacheObject = bind(this.createCacheObject, this);
-	    this.addCountInput = bind(this.addCountInput, this);
-	    this.createConnection = bind(this.createConnection, this);
-	    this.loadAnimation = bind(this.loadAnimation, this);
-	    this.remove = bind(this.remove, this);
-	    this.onFieldsCreated = bind(this.onFieldsCreated, this);
-	    this.typename = bind(this.typename, this);
-	    this.initialize = bind(this.initialize, this);
-	    return Node.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Node.node_name = '';
-	
-	  Node.group_name = '';
-	
-	  Node.prototype.defaults = {
-	    nid: -1,
-	    gid: -1,
-	    x: 0,
-	    y: 0,
-	    width: null,
-	    height: null,
-	    name: ""
-	  };
-	
-	  Node.prototype.initialize = function(options) {
-	    Node.__super__.initialize.apply(this, arguments);
-	    this.auto_evaluate = false;
-	    this.delays_output = false;
-	    this.dirty = true;
-	    this.is_animated = false;
-	    this.out_connections = [];
-	    this.apptimeline = options.timeline;
-	    this.settings = options.settings;
-	    this.indexer = options.indexer;
-	    this.options = options;
-	    this.parent = options.parent;
-	    if (this.get('name') === '') {
-	      this.set('name', this.typename());
-	    }
-	    if (this.get('nid') === -1) {
-	      this.set('nid', this.indexer.getUID());
-	    } else {
-	      this.indexer.uid = this.get('nid');
-	    }
-	    this.fields = new Fields(false, {
-	      node: this,
-	      indexer: this.indexer
-	    });
-	    this.onFieldsCreated();
-	    this.fields.load(this.options.fields);
-	    this.anim = this.createAnimContainer();
-	    if (this.options.anim !== false) {
-	      this.loadAnimation();
-	    }
-	    return this;
-	  };
-	
-	  Node.prototype.typename = function() {
-	    return String(this.constructor.name);
-	  };
-	
-	  Node.prototype.onFieldsCreated = function() {};
-	
-	  Node.prototype.remove = function() {
-	    if (this.anim) {
-	      this.anim.destroy();
-	    }
-	    if (this.fields) {
-	      this.fields.destroy();
-	    }
-	    delete this.fields;
-	    delete this.apptimeline;
-	    delete this.anim;
-	    delete this.options;
-	    delete this.settings;
-	    delete this.indexer;
-	    delete this.fully_inited;
-	    return this.destroy();
-	  };
-	
-	  Node.prototype.loadAnimation = function() {
-	    var anims, i, len, propKey, propLabel, ref, track;
-	    ref = this.options.anim;
-	    for (propLabel in ref) {
-	      anims = ref[propLabel];
-	      track = this.anim.getPropertyTrack(propLabel);
-	      for (i = 0, len = anims.length; i < len; i++) {
-	        propKey = anims[i];
-	        track.keys.push({
-	          time: propKey.time,
-	          value: propKey.value,
-	          easing: Timeline.stringToEasingFunction(propKey.easing),
-	          track: track
-	        });
-	      }
-	      this.anim.timeline.rebuildTrackAnimsFromKeys(track);
-	    }
-	    return true;
-	  };
-	
-	  Node.prototype.createConnection = function(field1, field2) {
-	    return this.trigger("createConnection", field1, field2);
-	  };
-	
-	  Node.prototype.addCountInput = function() {
-	    return this.fields.addFields({
-	      inputs: {
-	        "count": 1
-	      }
-	    });
-	  };
-	
-	  Node.prototype.createCacheObject = function(values) {
-	    var field, i, len, res, v;
-	    res = {};
-	    for (i = 0, len = values.length; i < len; i++) {
-	      v = values[i];
-	      field = this.fields.getField(v);
-	      res[v] = !field ? false : field.attributes["value"];
-	    }
-	    return res;
-	  };
-	
-	  Node.prototype.inputValueHasChanged = function(values, cache) {
-	    var field, i, len, v, v2;
-	    if (cache == null) {
-	      cache = this.material_cache;
-	    }
-	    for (i = 0, len = values.length; i < len; i++) {
-	      v = values[i];
-	      field = this.fields.getField(v);
-	      if (!field) {
-	        return false;
-	      } else {
-	        v2 = field.attributes["value"];
-	        if (v2 !== cache[v]) {
-	          return true;
-	        }
-	      }
-	    }
-	    return false;
-	  };
-	
-	  Node.prototype.getFields = function() {
-	    return {};
-	  };
-	
-	  Node.prototype.hasOutConnection = function() {
-	    return this.out_connections.length !== 0;
-	  };
-	
-	  Node.prototype.getUpstreamNodes = function() {
-	    return this.fields.getUpstreamNodes();
-	  };
-	
-	  Node.prototype.getDownstreamNodes = function() {
-	    return this.fields.getDownstreamNodes();
-	  };
-	
-	  Node.prototype.hasPropertyTrackAnim = function() {
-	    var i, len, propTrack, ref;
-	    ref = this.anim.objectTrack.propertyTracks;
-	    for (i = 0, len = ref.length; i < len; i++) {
-	      propTrack = ref[i];
-	      if (propTrack.anims.length > 0) {
-	        return true;
-	      }
-	    }
-	    return false;
-	  };
-	
-	  Node.prototype.getAnimationData = function() {
-	    var anim, i, j, k, len, len1, propTrack, ref, ref1, res;
-	    if (!this.anim || !this.anim.objectTrack || !this.anim.objectTrack.propertyTracks || this.hasPropertyTrackAnim() === false) {
-	      return false;
-	    }
-	    if (this.anim !== false) {
-	      res = {};
-	      ref = this.anim.objectTrack.propertyTracks;
-	      for (i = 0, len = ref.length; i < len; i++) {
-	        propTrack = ref[i];
-	        res[propTrack.propertyName] = [];
-	        ref1 = propTrack.keys;
-	        for (j = 0, len1 = ref1.length; j < len1; j++) {
-	          anim = ref1[j];
-	          k = {
-	            time: anim.time,
-	            value: anim.value,
-	            easing: Timeline.easingFunctionToString(anim.easing)
-	          };
-	          res[propTrack.propertyName].push(k);
-	        }
-	      }
-	    }
-	    return res;
-	  };
-	
-	  Node.prototype.toJSON = function() {
-	    var res;
-	    res = {
-	      nid: this.get('nid'),
-	      name: this.get('name'),
-	      type: this.typename(),
-	      anim: this.getAnimationData(),
-	      x: this.get('x'),
-	      y: this.get('y'),
-	      width: this.get('width'),
-	      height: this.get('height'),
-	      fields: this.fields.toJSON()
-	    };
-	    return res;
-	  };
-	
-	  Node.prototype.applyFieldsToVal = function(afields, target, exceptions, index) {
-	    var f, field_name, nf, results;
-	    if (exceptions == null) {
-	      exceptions = [];
-	    }
-	    results = [];
-	    for (f in afields) {
-	      nf = afields[f];
-	      field_name = nf.get("name");
-	      if (exceptions.indexOf(field_name) === -1) {
-	        results.push(target[field_name] = this.fields.getField(field_name).getValue(index));
-	      } else {
-	        results.push(void 0);
-	      }
-	    }
-	    return results;
-	  };
-	
-	  Node.prototype.addOutConnection = function(c, field) {
-	    if (this.out_connections.indexOf(c) === -1) {
-	      this.out_connections.push(c);
-	    }
-	    return c;
-	  };
-	
-	  Node.prototype.removeConnection = function(c) {
-	    var c_index;
-	    c_index = this.out_connections.indexOf(c);
-	    if (c_index !== -1) {
-	      this.out_connections.splice(c_index, 1);
-	    }
-	    return c;
-	  };
-	
-	  Node.prototype.disablePropertyAnim = function(field) {
-	    if (this.anim && field.get("is_output") === false) {
-	      return this.anim.disableProperty(field.get("name"));
-	    }
-	  };
-	
-	  Node.prototype.enablePropertyAnim = function(field) {
-	    if (field.get("is_output") === true || !this.anim) {
-	      return false;
-	    }
-	    if (field.isAnimationProperty()) {
-	      return this.anim.enableProperty(field.get("name"));
-	    }
-	  };
-	
-	  Node.prototype.createAnimContainer = function() {
-	    var f, field, res;
-	    res = anim("nid-" + this.get("nid"), this.fields.inputs);
-	    for (f in this.fields.inputs) {
-	      field = this.fields.inputs[f];
-	      if (field.isAnimationProperty() === false) {
-	        this.disablePropertyAnim(field);
-	      }
-	    }
-	    return res;
-	  };
-	
-	  return Node;
-	
-	})(Backbone.Model);
-	
-	module.exports = Node;
-
-
-/***/ }),
+/* 11 */,
 /* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2944,9 +2625,329 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 28 */,
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, Fields, Node, Utils, _,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	Utils = __webpack_require__(9);
+	
+	Fields = __webpack_require__(12);
+	
+	
+	/* Node model */
+	
+	Node = (function(superClass) {
+	  extend(Node, superClass);
+	
+	  function Node() {
+	    this.createAnimContainer = bind(this.createAnimContainer, this);
+	    this.enablePropertyAnim = bind(this.enablePropertyAnim, this);
+	    this.disablePropertyAnim = bind(this.disablePropertyAnim, this);
+	    this.removeConnection = bind(this.removeConnection, this);
+	    this.addOutConnection = bind(this.addOutConnection, this);
+	    this.applyFieldsToVal = bind(this.applyFieldsToVal, this);
+	    this.toJSON = bind(this.toJSON, this);
+	    this.getAnimationData = bind(this.getAnimationData, this);
+	    this.hasPropertyTrackAnim = bind(this.hasPropertyTrackAnim, this);
+	    this.getDownstreamNodes = bind(this.getDownstreamNodes, this);
+	    this.getUpstreamNodes = bind(this.getUpstreamNodes, this);
+	    this.hasOutConnection = bind(this.hasOutConnection, this);
+	    this.getFields = bind(this.getFields, this);
+	    this.inputValueHasChanged = bind(this.inputValueHasChanged, this);
+	    this.createCacheObject = bind(this.createCacheObject, this);
+	    this.addCountInput = bind(this.addCountInput, this);
+	    this.createConnection = bind(this.createConnection, this);
+	    this.loadAnimation = bind(this.loadAnimation, this);
+	    this.remove = bind(this.remove, this);
+	    this.onFieldsCreated = bind(this.onFieldsCreated, this);
+	    this.typename = bind(this.typename, this);
+	    this.initialize = bind(this.initialize, this);
+	    return Node.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Node.node_name = '';
+	
+	  Node.group_name = '';
+	
+	  Node.prototype.defaults = {
+	    nid: -1,
+	    gid: -1,
+	    x: 0,
+	    y: 0,
+	    width: null,
+	    height: null,
+	    name: ""
+	  };
+	
+	  Node.prototype.initialize = function(options) {
+	    Node.__super__.initialize.apply(this, arguments);
+	    this.auto_evaluate = false;
+	    this.delays_output = false;
+	    this.dirty = true;
+	    this.is_animated = false;
+	    this.out_connections = [];
+	    this.apptimeline = options.timeline;
+	    this.settings = options.settings;
+	    this.indexer = options.indexer;
+	    this.options = options;
+	    this.parent = options.parent;
+	    if (this.get('name') === '') {
+	      this.set('name', this.typename());
+	    }
+	    if (this.get('nid') === -1) {
+	      this.set('nid', this.indexer.getUID());
+	    } else {
+	      this.indexer.uid = this.get('nid');
+	    }
+	    this.fields = new Fields(false, {
+	      node: this,
+	      indexer: this.indexer
+	    });
+	    this.onFieldsCreated();
+	    this.fields.load(this.options.fields);
+	    this.anim = this.createAnimContainer();
+	    if (this.options.anim !== false) {
+	      this.loadAnimation();
+	    }
+	    return this;
+	  };
+	
+	  Node.prototype.typename = function() {
+	    return String(this.constructor.name);
+	  };
+	
+	  Node.prototype.onFieldsCreated = function() {};
+	
+	  Node.prototype.remove = function() {
+	    if (this.anim) {
+	      this.anim.destroy();
+	    }
+	    if (this.fields) {
+	      this.fields.destroy();
+	    }
+	    delete this.fields;
+	    delete this.apptimeline;
+	    delete this.anim;
+	    delete this.options;
+	    delete this.settings;
+	    delete this.indexer;
+	    delete this.fully_inited;
+	    return this.destroy();
+	  };
+	
+	  Node.prototype.loadAnimation = function() {
+	    var anims, i, len, propKey, propLabel, ref, track;
+	    ref = this.options.anim;
+	    for (propLabel in ref) {
+	      anims = ref[propLabel];
+	      track = this.anim.getPropertyTrack(propLabel);
+	      for (i = 0, len = anims.length; i < len; i++) {
+	        propKey = anims[i];
+	        track.keys.push({
+	          time: propKey.time,
+	          value: propKey.value,
+	          easing: Timeline.stringToEasingFunction(propKey.easing),
+	          track: track
+	        });
+	      }
+	      this.anim.timeline.rebuildTrackAnimsFromKeys(track);
+	    }
+	    return true;
+	  };
+	
+	  Node.prototype.createConnection = function(field1, field2) {
+	    return this.trigger("createConnection", field1, field2);
+	  };
+	
+	  Node.prototype.addCountInput = function() {
+	    return this.fields.addFields({
+	      inputs: {
+	        "count": 1
+	      }
+	    });
+	  };
+	
+	  Node.prototype.createCacheObject = function(values) {
+	    var field, i, len, res, v;
+	    res = {};
+	    for (i = 0, len = values.length; i < len; i++) {
+	      v = values[i];
+	      field = this.fields.getField(v);
+	      res[v] = !field ? false : field.attributes["value"];
+	    }
+	    return res;
+	  };
+	
+	  Node.prototype.inputValueHasChanged = function(values, cache) {
+	    var field, i, len, v, v2;
+	    if (cache == null) {
+	      cache = this.material_cache;
+	    }
+	    for (i = 0, len = values.length; i < len; i++) {
+	      v = values[i];
+	      field = this.fields.getField(v);
+	      if (!field) {
+	        return false;
+	      } else {
+	        v2 = field.attributes["value"];
+	        if (v2 !== cache[v]) {
+	          return true;
+	        }
+	      }
+	    }
+	    return false;
+	  };
+	
+	  Node.prototype.getFields = function() {
+	    return {};
+	  };
+	
+	  Node.prototype.hasOutConnection = function() {
+	    return this.out_connections.length !== 0;
+	  };
+	
+	  Node.prototype.getUpstreamNodes = function() {
+	    return this.fields.getUpstreamNodes();
+	  };
+	
+	  Node.prototype.getDownstreamNodes = function() {
+	    return this.fields.getDownstreamNodes();
+	  };
+	
+	  Node.prototype.hasPropertyTrackAnim = function() {
+	    var i, len, propTrack, ref;
+	    ref = this.anim.objectTrack.propertyTracks;
+	    for (i = 0, len = ref.length; i < len; i++) {
+	      propTrack = ref[i];
+	      if (propTrack.anims.length > 0) {
+	        return true;
+	      }
+	    }
+	    return false;
+	  };
+	
+	  Node.prototype.getAnimationData = function() {
+	    var anim, i, j, k, len, len1, propTrack, ref, ref1, res;
+	    if (!this.anim || !this.anim.objectTrack || !this.anim.objectTrack.propertyTracks || this.hasPropertyTrackAnim() === false) {
+	      return false;
+	    }
+	    if (this.anim !== false) {
+	      res = {};
+	      ref = this.anim.objectTrack.propertyTracks;
+	      for (i = 0, len = ref.length; i < len; i++) {
+	        propTrack = ref[i];
+	        res[propTrack.propertyName] = [];
+	        ref1 = propTrack.keys;
+	        for (j = 0, len1 = ref1.length; j < len1; j++) {
+	          anim = ref1[j];
+	          k = {
+	            time: anim.time,
+	            value: anim.value,
+	            easing: Timeline.easingFunctionToString(anim.easing)
+	          };
+	          res[propTrack.propertyName].push(k);
+	        }
+	      }
+	    }
+	    return res;
+	  };
+	
+	  Node.prototype.toJSON = function() {
+	    var res;
+	    res = {
+	      nid: this.get('nid'),
+	      name: this.get('name'),
+	      type: this.typename(),
+	      anim: this.getAnimationData(),
+	      x: this.get('x'),
+	      y: this.get('y'),
+	      width: this.get('width'),
+	      height: this.get('height'),
+	      fields: this.fields.toJSON()
+	    };
+	    return res;
+	  };
+	
+	  Node.prototype.applyFieldsToVal = function(afields, target, exceptions, index) {
+	    var f, field_name, nf, results;
+	    if (exceptions == null) {
+	      exceptions = [];
+	    }
+	    results = [];
+	    for (f in afields) {
+	      nf = afields[f];
+	      field_name = nf.get("name");
+	      if (exceptions.indexOf(field_name) === -1) {
+	        results.push(target[field_name] = this.fields.getField(field_name).getValue(index));
+	      } else {
+	        results.push(void 0);
+	      }
+	    }
+	    return results;
+	  };
+	
+	  Node.prototype.addOutConnection = function(c, field) {
+	    if (this.out_connections.indexOf(c) === -1) {
+	      this.out_connections.push(c);
+	    }
+	    return c;
+	  };
+	
+	  Node.prototype.removeConnection = function(c) {
+	    var c_index;
+	    c_index = this.out_connections.indexOf(c);
+	    if (c_index !== -1) {
+	      this.out_connections.splice(c_index, 1);
+	    }
+	    return c;
+	  };
+	
+	  Node.prototype.disablePropertyAnim = function(field) {
+	    if (this.anim && field.get("is_output") === false) {
+	      return this.anim.disableProperty(field.get("name"));
+	    }
+	  };
+	
+	  Node.prototype.enablePropertyAnim = function(field) {
+	    if (field.get("is_output") === true || !this.anim) {
+	      return false;
+	    }
+	    if (field.isAnimationProperty()) {
+	      return this.anim.enableProperty(field.get("name"));
+	    }
+	  };
+	
+	  Node.prototype.createAnimContainer = function() {
+	    var f, field, res;
+	    res = anim("nid-" + this.get("nid"), this.fields.inputs);
+	    for (f in this.fields.inputs) {
+	      field = this.fields.inputs[f];
+	      if (field.isAnimationProperty() === false) {
+	        this.disablePropertyAnim(field);
+	      }
+	    }
+	    return res;
+	  };
+	
+	  return Node;
+	
+	})(Backbone.Model);
+	
+	module.exports = Node;
+
+
+/***/ }),
 /* 29 */,
-/* 30 */
+/* 30 */,
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, FieldsView, NodeView, _, _view_node_context_menu, _view_node_template, namespace,
@@ -2958,17 +2959,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	_view_node_template = __webpack_require__(31);
+	_view_node_template = __webpack_require__(32);
 	
-	_view_node_context_menu = __webpack_require__(32);
+	_view_node_context_menu = __webpack_require__(33);
 	
-	FieldsView = __webpack_require__(33);
+	FieldsView = __webpack_require__(34);
 	
 	namespace = __webpack_require__(14).namespace;
 	
-	__webpack_require__(38);
-	
 	__webpack_require__(39);
+	
+	__webpack_require__(40);
 	
 	
 	/* Node View */
@@ -3230,19 +3231,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div class='head'><span><%= get(\"name\") %></span></div>\n<div class='options'>\n  <div class='inputs'></div>\n  <div class='center'></div>\n  <div class='outputs'></div>\n</div>\n";
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports) {
 
 	module.exports = "<ul id=\"node-context-menu\" class=\"context-menu\">\n  <li><a href=\"#remove_node\">Remove node</a></li>\n</ul>";
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, FieldButton, FieldsView, _,
@@ -3254,9 +3255,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	FieldButton = __webpack_require__(34);
+	FieldButton = __webpack_require__(35);
 	
-	__webpack_require__(39);
+	__webpack_require__(40);
 	
 	
 	/* Fields View */
@@ -3326,7 +3327,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, FieldButton, _, _view_field_context_menu, _view_node_field_in, _view_node_field_out,
@@ -3338,15 +3339,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	_view_node_field_in = __webpack_require__(35);
+	_view_node_field_in = __webpack_require__(36);
 	
-	_view_node_field_out = __webpack_require__(36);
+	_view_node_field_out = __webpack_require__(37);
 	
-	_view_field_context_menu = __webpack_require__(37);
+	_view_field_context_menu = __webpack_require__(38);
 	
 	__webpack_require__(9);
 	
-	__webpack_require__(38);
+	__webpack_require__(39);
 	
 	
 	/* FieldButton View */
@@ -3514,25 +3515,25 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports) {
 
 	module.exports = "<span class=\"inner-field\"><span></span><%= name %></span>";
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports) {
 
 	module.exports = "<span class=\"inner-field\"><%= name %><span></span></span>";
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports) {
 
 	module.exports = "<ul id=\"field-context-menu\" class=\"context-menu\">\n  <li><a href=\"#removeConnection\">Remove connection(s)</a></li>\n</ul>";
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports) {
 
 	// jQuery Context Menu Plugin
@@ -3749,13 +3750,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_39__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_40__;
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Color, NodeView, _, namespace,
@@ -3769,11 +3770,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	namespace = __webpack_require__(14).namespace;
 	
-	__webpack_require__(11);
+	__webpack_require__(28);
 	
-	NodeView = __webpack_require__(30);
+	NodeView = __webpack_require__(31);
 	
-	__webpack_require__(41);
+	__webpack_require__(42);
 	
 	Color = (function(superClass) {
 	  extend(Color, superClass);
@@ -3847,7 +3848,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports) {
 
 	/**
@@ -4337,7 +4338,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(jQuery)
 
 /***/ }),
-/* 42 */,
 /* 43 */,
 /* 44 */,
 /* 45 */,
@@ -4373,19 +4373,19 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 75 */,
 /* 76 */,
 /* 77 */,
-/* 78 */
-/***/ (function(module, exports) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_78__;
-
-/***/ }),
+/* 78 */,
 /* 79 */
 /***/ (function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_79__;
 
 /***/ }),
-/* 80 */,
+/* 80 */
+/***/ (function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_80__;
+
+/***/ }),
 /* 81 */,
 /* 82 */,
 /* 83 */,
@@ -4393,7 +4393,8 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 85 */,
 /* 86 */,
 /* 87 */,
-/* 88 */
+/* 88 */,
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	
@@ -4407,25 +4408,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	_view_app_ui = __webpack_require__(89);
+	_view_app_ui = __webpack_require__(90);
 	
-	Sidebar = __webpack_require__(90);
+	Sidebar = __webpack_require__(91);
 	
-	Breadcrumb = __webpack_require__(93);
+	Breadcrumb = __webpack_require__(94);
 	
-	MenuBar = __webpack_require__(94);
-	
-	__webpack_require__(97);
+	MenuBar = __webpack_require__(95);
 	
 	__webpack_require__(98);
 	
-	__webpack_require__(39);
-	
 	__webpack_require__(99);
+	
+	__webpack_require__(40);
 	
 	__webpack_require__(100);
 	
-	__webpack_require__(39);
+	__webpack_require__(101);
+	
+	__webpack_require__(40);
 	
 	UIView = (function(superClass) {
 	  extend(UIView, superClass);
@@ -4792,13 +4793,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 89 */
+/* 90 */
 /***/ (function(module, exports) {
 
-	module.exports = "<div id='container-wrapper' class=\"ui-layout-center\">\n  <div id='container'>\n    <div id='graph'></div>\n  </div>\n  <div id=\"breadcrumb\"></div>\n</div>\n<div id='sidebar' class=\"ui-layout-west\">\n  <ul class=\"ui-layout-north\">\n    <li><a href='#tab-new'>New</a></li>\n    <li><a href='#tab-attribute'>Attributes</a></li>\n    <li><a href='#tab-list'>List</a></li>\n  </ul>\n  <div class=\"container ui-layout-center\">\n    <div id='tab-attribute'></div>\n    <div id='tab-new'>\n      <input id='node_filter' name='search-node' placeholder='Search' type='input' />\n    </div>\n    <div id='tab-list'></div>\n  </div>\n</div>\n<div id=\"library\" class=\"ui-layout-east\"></div>\n<div id=\"timeline\" class=\"ui-layout-south\"></div>\n<input id='main_file_input_open' multiple='false' type='file' />\n";
+	module.exports = "<div id='container-wrapper' class=\"ui-layout-center\">\n  <div id='container'>\n    <div id='graph'></div>\n  </div>\n  <div id=\"breadcrumb\"></div>\n</div>\n<div id='sidebar' class=\"ui-layout-west\">\n  <ul class=\"ui-layout-north\">\n    <li><a href='#tab-new'>New</a></li>\n    <li><a href='#tab-attribute'>Attributes</a></li>\n    <!-- <li><a href='#tab-list'>List</a></li> -->\n  </ul>\n  <div class=\"container ui-layout-center\">\n    <div id='tab-attribute'></div>\n    <div id='tab-new'>\n      <!-- <input id='node_filter' name='search-node' placeholder='Search' type='input' /> -->\n    </div>\n    <!-- <div id='tab-list'></div> -->\n  </div>\n</div>\n<div id=\"library\" class=\"ui-layout-east\"></div>\n<div id=\"timeline\" class=\"ui-layout-south\"></div>\n<input id='main_file_input_open' multiple='false' type='file' />\n";
 
 /***/ }),
-/* 90 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, NodeSidebarView, Sidebar, TreeView, _,
@@ -4810,11 +4811,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	NodeSidebarView = __webpack_require__(91);
+	NodeSidebarView = __webpack_require__(92);
 	
-	TreeView = __webpack_require__(92);
+	TreeView = __webpack_require__(93);
 	
-	__webpack_require__(39);
+	__webpack_require__(40);
 	
 	
 	/* Sidebar View */
@@ -4976,6 +4977,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    $container = $("#tab-new");
 	    result = [];
 	    nodes_by_group = {
+	      Shape: [],
 	      Base: [],
 	      Conditional: [],
 	      Math: [],
@@ -5030,7 +5032,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 91 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, NodeSidebarView, _,
@@ -5119,7 +5121,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 92 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, TreeView, _,
@@ -5131,7 +5133,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	__webpack_require__(39);
+	__webpack_require__(40);
 	
 	TreeView = (function(superClass) {
 	  extend(TreeView, superClass);
@@ -5209,7 +5211,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 93 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Breadcrumb, _,
@@ -5271,7 +5273,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 94 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, MenuBar, _, _view_menubar,
@@ -5283,9 +5285,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	_view_menubar = __webpack_require__(95);
+	_view_menubar = __webpack_require__(96);
 	
-	__webpack_require__(96);
+	__webpack_require__(97);
 	
 	MenuBar = (function(superClass) {
 	  extend(MenuBar, superClass);
@@ -5342,13 +5344,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 95 */
+/* 96 */
 /***/ (function(module, exports) {
 
 	module.exports = "<ul id=\"main-menu-bar\" class=\"menubar ui-layout-north\">\n  <li>\n    <a href=\"#File\">File</a>\n    <ul>\n      <li><a href=\"#NewFile\" data-event=\"ClearWorkspace\">New</a></li>\n      <li><a href=\"#OpenFile\" data-event=\"OpenFile\">Open</a></li>\n      <li><a href=\"#SaveFile\" data-event=\"SaveFile\">Save</a></li>\n    </ul>\n  </li>\n  <li>\n    <a href=\"#Edit\">Edit</a>\n    <ul>\n      <li><a href=\"#Rotate\" data-event=\"Rotate\">Rotate</a></li>\n    </ul>\n  </li>\n  <li>\n    <a href=\"#View\">View</a>\n    <ul>\n      <li><a href=\"#Library\" data-event=\"ToggleLibrary\">Library</a></li>\n      <li><a href=\"#Attributes\" data-event=\"ToggleAttributes\">Attributes</a></li>\n    </ul>\n  </li>\n  <li class=\"expanded\">\n    <a href=\"#examples\">Examples</a>\n    <ul>\n      <li><a href=\"#example/rotating_cube1.json\">Eagle Eye</a></li>\n      <li><a href=\"#example/geometry_and_material1.json\">VVR</a></li>\n    </ul>\n  </li>\n</ul>\n";
 
 /***/ }),
-/* 96 */
+/* 97 */
 /***/ (function(module, exports) {
 
 	/*!
@@ -5836,7 +5838,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 97 */
+/* 98 */
 /***/ (function(module, exports) {
 
 	/**
@@ -5864,13 +5866,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 98 */
+/* 99 */
 /***/ (function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_98__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_99__;
 
 /***/ }),
-/* 99 */
+/* 100 */
 /***/ (function(module, exports) {
 
 	/*
@@ -6427,7 +6429,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 100 */
+/* 101 */
 /***/ (function(module, exports) {
 
 	/**
@@ -6539,7 +6541,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 101 */
+/* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, ConnectionView, Workspace, _,
@@ -6551,9 +6553,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	ConnectionView = __webpack_require__(102);
+	ConnectionView = __webpack_require__(103);
 	
-	__webpack_require__(39);
+	__webpack_require__(40);
 	
 	
 	/* Workspace View */
@@ -6671,7 +6673,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 102 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, ConnectionView, _,
@@ -6682,7 +6684,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	__webpack_require__(39);
+	__webpack_require__(40);
 	
 	
 	/* Connection View */
@@ -6785,7 +6787,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 103 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var AppTimeline, Backbone, _,
@@ -6932,7 +6934,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 104 */
+/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, GroupDefinitionView, _, _view_group_delete, _view_template,
@@ -6944,11 +6946,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	_view_template = __webpack_require__(105);
+	_view_template = __webpack_require__(106);
 	
-	_view_group_delete = __webpack_require__(106);
+	_view_group_delete = __webpack_require__(107);
 	
-	__webpack_require__(39);
+	__webpack_require__(40);
 	
 	
 	/* Node View */
@@ -7027,19 +7029,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 105 */
+/* 106 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div class='definition definition-<%= get(\"name\") %>'>\n  <div class='head'><span><%= get(\"name\") %></span></div>\n  <div class='options'>\n    <a href='#' class='edit'>edit</a>\n    <a href='#' class='remove'>remove</a>\n  </div>\n</div>";
 
 /***/ }),
-/* 106 */
+/* 107 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div id=\"confirm-groupdefinition-delete\" title=\"This will remove any existing group node using this group definition\">\n  <p class=\"found-items\"></p>\n  <p>Are you sure?</p>\n</div>\n";
 
 /***/ }),
-/* 107 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, UrlHandler,
@@ -7104,7 +7106,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 108 */
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, CodeExporter, FileHandler, Utils, _,
@@ -7118,11 +7120,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Utils = __webpack_require__(9);
 	
-	CodeExporter = __webpack_require__(109);
-	
-	__webpack_require__(78);
+	CodeExporter = __webpack_require__(110);
 	
 	__webpack_require__(79);
+	
+	__webpack_require__(80);
 	
 	FileHandler = (function(superClass) {
 	  extend(FileHandler, superClass);
@@ -7209,7 +7211,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 109 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, CodeExporter, _,
@@ -7325,7 +7327,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 110 */
+/* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, NodeView, WebGLRenderer, _,
@@ -7337,9 +7339,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	__webpack_require__(11);
+	__webpack_require__(28);
 	
-	NodeView = __webpack_require__(30);
+	NodeView = __webpack_require__(31);
 	
 	WebGLRenderer = (function(superClass) {
 	  extend(WebGLRenderer, superClass);
@@ -7512,7 +7514,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 111 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Group, NodeView, _, namespace,
@@ -7526,9 +7528,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	namespace = __webpack_require__(14).namespace;
 	
-	__webpack_require__(11);
+	__webpack_require__(28);
 	
-	NodeView = __webpack_require__(30);
+	NodeView = __webpack_require__(31);
 	
 	Group = (function(superClass) {
 	  extend(Group, superClass);

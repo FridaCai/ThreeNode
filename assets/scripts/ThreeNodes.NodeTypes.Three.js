@@ -7,7 +7,7 @@
 		exports["NodeTypes.Three"] = factory(require("_"), require("Backbone"), require("jQuery"), require("Blob"), require("FileSaver"), require("Three"));
 	else
 		root["ThreeNodes"] = root["ThreeNodes"] || {}, root["ThreeNodes"]["NodeTypes.Three"] = factory(root["_"], root["Backbone"], root["jQuery"], root["Blob"], root["FileSaver"], root["Three"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_39__, __WEBPACK_EXTERNAL_MODULE_78__, __WEBPACK_EXTERNAL_MODULE_79__, __WEBPACK_EXTERNAL_MODULE_82__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_40__, __WEBPACK_EXTERNAL_MODULE_79__, __WEBPACK_EXTERNAL_MODULE_80__, __WEBPACK_EXTERNAL_MODULE_83__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -54,19 +54,19 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	__webpack_require__(55);
-	
 	__webpack_require__(56);
 	
 	__webpack_require__(57);
 	
-	__webpack_require__(59);
+	__webpack_require__(58);
 	
-	__webpack_require__(69);
+	__webpack_require__(60);
 	
-	__webpack_require__(81);
+	__webpack_require__(70);
 	
-	__webpack_require__(85);
+	__webpack_require__(82);
+	
+	__webpack_require__(86);
 
 
 /***/ }),
@@ -151,326 +151,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 10 */,
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	var Backbone, Fields, Node, Utils, _,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	Utils = __webpack_require__(9);
-	
-	Fields = __webpack_require__(12);
-	
-	
-	/* Node model */
-	
-	Node = (function(superClass) {
-	  extend(Node, superClass);
-	
-	  function Node() {
-	    this.createAnimContainer = bind(this.createAnimContainer, this);
-	    this.enablePropertyAnim = bind(this.enablePropertyAnim, this);
-	    this.disablePropertyAnim = bind(this.disablePropertyAnim, this);
-	    this.removeConnection = bind(this.removeConnection, this);
-	    this.addOutConnection = bind(this.addOutConnection, this);
-	    this.applyFieldsToVal = bind(this.applyFieldsToVal, this);
-	    this.toJSON = bind(this.toJSON, this);
-	    this.getAnimationData = bind(this.getAnimationData, this);
-	    this.hasPropertyTrackAnim = bind(this.hasPropertyTrackAnim, this);
-	    this.getDownstreamNodes = bind(this.getDownstreamNodes, this);
-	    this.getUpstreamNodes = bind(this.getUpstreamNodes, this);
-	    this.hasOutConnection = bind(this.hasOutConnection, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.inputValueHasChanged = bind(this.inputValueHasChanged, this);
-	    this.createCacheObject = bind(this.createCacheObject, this);
-	    this.addCountInput = bind(this.addCountInput, this);
-	    this.createConnection = bind(this.createConnection, this);
-	    this.loadAnimation = bind(this.loadAnimation, this);
-	    this.remove = bind(this.remove, this);
-	    this.onFieldsCreated = bind(this.onFieldsCreated, this);
-	    this.typename = bind(this.typename, this);
-	    this.initialize = bind(this.initialize, this);
-	    return Node.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Node.node_name = '';
-	
-	  Node.group_name = '';
-	
-	  Node.prototype.defaults = {
-	    nid: -1,
-	    gid: -1,
-	    x: 0,
-	    y: 0,
-	    width: null,
-	    height: null,
-	    name: ""
-	  };
-	
-	  Node.prototype.initialize = function(options) {
-	    Node.__super__.initialize.apply(this, arguments);
-	    this.auto_evaluate = false;
-	    this.delays_output = false;
-	    this.dirty = true;
-	    this.is_animated = false;
-	    this.out_connections = [];
-	    this.apptimeline = options.timeline;
-	    this.settings = options.settings;
-	    this.indexer = options.indexer;
-	    this.options = options;
-	    this.parent = options.parent;
-	    if (this.get('name') === '') {
-	      this.set('name', this.typename());
-	    }
-	    if (this.get('nid') === -1) {
-	      this.set('nid', this.indexer.getUID());
-	    } else {
-	      this.indexer.uid = this.get('nid');
-	    }
-	    this.fields = new Fields(false, {
-	      node: this,
-	      indexer: this.indexer
-	    });
-	    this.onFieldsCreated();
-	    this.fields.load(this.options.fields);
-	    this.anim = this.createAnimContainer();
-	    if (this.options.anim !== false) {
-	      this.loadAnimation();
-	    }
-	    return this;
-	  };
-	
-	  Node.prototype.typename = function() {
-	    return String(this.constructor.name);
-	  };
-	
-	  Node.prototype.onFieldsCreated = function() {};
-	
-	  Node.prototype.remove = function() {
-	    if (this.anim) {
-	      this.anim.destroy();
-	    }
-	    if (this.fields) {
-	      this.fields.destroy();
-	    }
-	    delete this.fields;
-	    delete this.apptimeline;
-	    delete this.anim;
-	    delete this.options;
-	    delete this.settings;
-	    delete this.indexer;
-	    delete this.fully_inited;
-	    return this.destroy();
-	  };
-	
-	  Node.prototype.loadAnimation = function() {
-	    var anims, i, len, propKey, propLabel, ref, track;
-	    ref = this.options.anim;
-	    for (propLabel in ref) {
-	      anims = ref[propLabel];
-	      track = this.anim.getPropertyTrack(propLabel);
-	      for (i = 0, len = anims.length; i < len; i++) {
-	        propKey = anims[i];
-	        track.keys.push({
-	          time: propKey.time,
-	          value: propKey.value,
-	          easing: Timeline.stringToEasingFunction(propKey.easing),
-	          track: track
-	        });
-	      }
-	      this.anim.timeline.rebuildTrackAnimsFromKeys(track);
-	    }
-	    return true;
-	  };
-	
-	  Node.prototype.createConnection = function(field1, field2) {
-	    return this.trigger("createConnection", field1, field2);
-	  };
-	
-	  Node.prototype.addCountInput = function() {
-	    return this.fields.addFields({
-	      inputs: {
-	        "count": 1
-	      }
-	    });
-	  };
-	
-	  Node.prototype.createCacheObject = function(values) {
-	    var field, i, len, res, v;
-	    res = {};
-	    for (i = 0, len = values.length; i < len; i++) {
-	      v = values[i];
-	      field = this.fields.getField(v);
-	      res[v] = !field ? false : field.attributes["value"];
-	    }
-	    return res;
-	  };
-	
-	  Node.prototype.inputValueHasChanged = function(values, cache) {
-	    var field, i, len, v, v2;
-	    if (cache == null) {
-	      cache = this.material_cache;
-	    }
-	    for (i = 0, len = values.length; i < len; i++) {
-	      v = values[i];
-	      field = this.fields.getField(v);
-	      if (!field) {
-	        return false;
-	      } else {
-	        v2 = field.attributes["value"];
-	        if (v2 !== cache[v]) {
-	          return true;
-	        }
-	      }
-	    }
-	    return false;
-	  };
-	
-	  Node.prototype.getFields = function() {
-	    return {};
-	  };
-	
-	  Node.prototype.hasOutConnection = function() {
-	    return this.out_connections.length !== 0;
-	  };
-	
-	  Node.prototype.getUpstreamNodes = function() {
-	    return this.fields.getUpstreamNodes();
-	  };
-	
-	  Node.prototype.getDownstreamNodes = function() {
-	    return this.fields.getDownstreamNodes();
-	  };
-	
-	  Node.prototype.hasPropertyTrackAnim = function() {
-	    var i, len, propTrack, ref;
-	    ref = this.anim.objectTrack.propertyTracks;
-	    for (i = 0, len = ref.length; i < len; i++) {
-	      propTrack = ref[i];
-	      if (propTrack.anims.length > 0) {
-	        return true;
-	      }
-	    }
-	    return false;
-	  };
-	
-	  Node.prototype.getAnimationData = function() {
-	    var anim, i, j, k, len, len1, propTrack, ref, ref1, res;
-	    if (!this.anim || !this.anim.objectTrack || !this.anim.objectTrack.propertyTracks || this.hasPropertyTrackAnim() === false) {
-	      return false;
-	    }
-	    if (this.anim !== false) {
-	      res = {};
-	      ref = this.anim.objectTrack.propertyTracks;
-	      for (i = 0, len = ref.length; i < len; i++) {
-	        propTrack = ref[i];
-	        res[propTrack.propertyName] = [];
-	        ref1 = propTrack.keys;
-	        for (j = 0, len1 = ref1.length; j < len1; j++) {
-	          anim = ref1[j];
-	          k = {
-	            time: anim.time,
-	            value: anim.value,
-	            easing: Timeline.easingFunctionToString(anim.easing)
-	          };
-	          res[propTrack.propertyName].push(k);
-	        }
-	      }
-	    }
-	    return res;
-	  };
-	
-	  Node.prototype.toJSON = function() {
-	    var res;
-	    res = {
-	      nid: this.get('nid'),
-	      name: this.get('name'),
-	      type: this.typename(),
-	      anim: this.getAnimationData(),
-	      x: this.get('x'),
-	      y: this.get('y'),
-	      width: this.get('width'),
-	      height: this.get('height'),
-	      fields: this.fields.toJSON()
-	    };
-	    return res;
-	  };
-	
-	  Node.prototype.applyFieldsToVal = function(afields, target, exceptions, index) {
-	    var f, field_name, nf, results;
-	    if (exceptions == null) {
-	      exceptions = [];
-	    }
-	    results = [];
-	    for (f in afields) {
-	      nf = afields[f];
-	      field_name = nf.get("name");
-	      if (exceptions.indexOf(field_name) === -1) {
-	        results.push(target[field_name] = this.fields.getField(field_name).getValue(index));
-	      } else {
-	        results.push(void 0);
-	      }
-	    }
-	    return results;
-	  };
-	
-	  Node.prototype.addOutConnection = function(c, field) {
-	    if (this.out_connections.indexOf(c) === -1) {
-	      this.out_connections.push(c);
-	    }
-	    return c;
-	  };
-	
-	  Node.prototype.removeConnection = function(c) {
-	    var c_index;
-	    c_index = this.out_connections.indexOf(c);
-	    if (c_index !== -1) {
-	      this.out_connections.splice(c_index, 1);
-	    }
-	    return c;
-	  };
-	
-	  Node.prototype.disablePropertyAnim = function(field) {
-	    if (this.anim && field.get("is_output") === false) {
-	      return this.anim.disableProperty(field.get("name"));
-	    }
-	  };
-	
-	  Node.prototype.enablePropertyAnim = function(field) {
-	    if (field.get("is_output") === true || !this.anim) {
-	      return false;
-	    }
-	    if (field.isAnimationProperty()) {
-	      return this.anim.enableProperty(field.get("name"));
-	    }
-	  };
-	
-	  Node.prototype.createAnimContainer = function() {
-	    var f, field, res;
-	    res = anim("nid-" + this.get("nid"), this.fields.inputs);
-	    for (f in this.fields.inputs) {
-	      field = this.fields.inputs[f];
-	      if (field.isAnimationProperty() === false) {
-	        this.disablePropertyAnim(field);
-	      }
-	    }
-	    return res;
-	  };
-	
-	  return Node;
-	
-	})(Backbone.Model);
-	
-	module.exports = Node;
-
-
-/***/ }),
+/* 11 */,
 /* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2781,7 +2462,326 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 28 */,
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, Fields, Node, Utils, _,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	Utils = __webpack_require__(9);
+	
+	Fields = __webpack_require__(12);
+	
+	
+	/* Node model */
+	
+	Node = (function(superClass) {
+	  extend(Node, superClass);
+	
+	  function Node() {
+	    this.createAnimContainer = bind(this.createAnimContainer, this);
+	    this.enablePropertyAnim = bind(this.enablePropertyAnim, this);
+	    this.disablePropertyAnim = bind(this.disablePropertyAnim, this);
+	    this.removeConnection = bind(this.removeConnection, this);
+	    this.addOutConnection = bind(this.addOutConnection, this);
+	    this.applyFieldsToVal = bind(this.applyFieldsToVal, this);
+	    this.toJSON = bind(this.toJSON, this);
+	    this.getAnimationData = bind(this.getAnimationData, this);
+	    this.hasPropertyTrackAnim = bind(this.hasPropertyTrackAnim, this);
+	    this.getDownstreamNodes = bind(this.getDownstreamNodes, this);
+	    this.getUpstreamNodes = bind(this.getUpstreamNodes, this);
+	    this.hasOutConnection = bind(this.hasOutConnection, this);
+	    this.getFields = bind(this.getFields, this);
+	    this.inputValueHasChanged = bind(this.inputValueHasChanged, this);
+	    this.createCacheObject = bind(this.createCacheObject, this);
+	    this.addCountInput = bind(this.addCountInput, this);
+	    this.createConnection = bind(this.createConnection, this);
+	    this.loadAnimation = bind(this.loadAnimation, this);
+	    this.remove = bind(this.remove, this);
+	    this.onFieldsCreated = bind(this.onFieldsCreated, this);
+	    this.typename = bind(this.typename, this);
+	    this.initialize = bind(this.initialize, this);
+	    return Node.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Node.node_name = '';
+	
+	  Node.group_name = '';
+	
+	  Node.prototype.defaults = {
+	    nid: -1,
+	    gid: -1,
+	    x: 0,
+	    y: 0,
+	    width: null,
+	    height: null,
+	    name: ""
+	  };
+	
+	  Node.prototype.initialize = function(options) {
+	    Node.__super__.initialize.apply(this, arguments);
+	    this.auto_evaluate = false;
+	    this.delays_output = false;
+	    this.dirty = true;
+	    this.is_animated = false;
+	    this.out_connections = [];
+	    this.apptimeline = options.timeline;
+	    this.settings = options.settings;
+	    this.indexer = options.indexer;
+	    this.options = options;
+	    this.parent = options.parent;
+	    if (this.get('name') === '') {
+	      this.set('name', this.typename());
+	    }
+	    if (this.get('nid') === -1) {
+	      this.set('nid', this.indexer.getUID());
+	    } else {
+	      this.indexer.uid = this.get('nid');
+	    }
+	    this.fields = new Fields(false, {
+	      node: this,
+	      indexer: this.indexer
+	    });
+	    this.onFieldsCreated();
+	    this.fields.load(this.options.fields);
+	    this.anim = this.createAnimContainer();
+	    if (this.options.anim !== false) {
+	      this.loadAnimation();
+	    }
+	    return this;
+	  };
+	
+	  Node.prototype.typename = function() {
+	    return String(this.constructor.name);
+	  };
+	
+	  Node.prototype.onFieldsCreated = function() {};
+	
+	  Node.prototype.remove = function() {
+	    if (this.anim) {
+	      this.anim.destroy();
+	    }
+	    if (this.fields) {
+	      this.fields.destroy();
+	    }
+	    delete this.fields;
+	    delete this.apptimeline;
+	    delete this.anim;
+	    delete this.options;
+	    delete this.settings;
+	    delete this.indexer;
+	    delete this.fully_inited;
+	    return this.destroy();
+	  };
+	
+	  Node.prototype.loadAnimation = function() {
+	    var anims, i, len, propKey, propLabel, ref, track;
+	    ref = this.options.anim;
+	    for (propLabel in ref) {
+	      anims = ref[propLabel];
+	      track = this.anim.getPropertyTrack(propLabel);
+	      for (i = 0, len = anims.length; i < len; i++) {
+	        propKey = anims[i];
+	        track.keys.push({
+	          time: propKey.time,
+	          value: propKey.value,
+	          easing: Timeline.stringToEasingFunction(propKey.easing),
+	          track: track
+	        });
+	      }
+	      this.anim.timeline.rebuildTrackAnimsFromKeys(track);
+	    }
+	    return true;
+	  };
+	
+	  Node.prototype.createConnection = function(field1, field2) {
+	    return this.trigger("createConnection", field1, field2);
+	  };
+	
+	  Node.prototype.addCountInput = function() {
+	    return this.fields.addFields({
+	      inputs: {
+	        "count": 1
+	      }
+	    });
+	  };
+	
+	  Node.prototype.createCacheObject = function(values) {
+	    var field, i, len, res, v;
+	    res = {};
+	    for (i = 0, len = values.length; i < len; i++) {
+	      v = values[i];
+	      field = this.fields.getField(v);
+	      res[v] = !field ? false : field.attributes["value"];
+	    }
+	    return res;
+	  };
+	
+	  Node.prototype.inputValueHasChanged = function(values, cache) {
+	    var field, i, len, v, v2;
+	    if (cache == null) {
+	      cache = this.material_cache;
+	    }
+	    for (i = 0, len = values.length; i < len; i++) {
+	      v = values[i];
+	      field = this.fields.getField(v);
+	      if (!field) {
+	        return false;
+	      } else {
+	        v2 = field.attributes["value"];
+	        if (v2 !== cache[v]) {
+	          return true;
+	        }
+	      }
+	    }
+	    return false;
+	  };
+	
+	  Node.prototype.getFields = function() {
+	    return {};
+	  };
+	
+	  Node.prototype.hasOutConnection = function() {
+	    return this.out_connections.length !== 0;
+	  };
+	
+	  Node.prototype.getUpstreamNodes = function() {
+	    return this.fields.getUpstreamNodes();
+	  };
+	
+	  Node.prototype.getDownstreamNodes = function() {
+	    return this.fields.getDownstreamNodes();
+	  };
+	
+	  Node.prototype.hasPropertyTrackAnim = function() {
+	    var i, len, propTrack, ref;
+	    ref = this.anim.objectTrack.propertyTracks;
+	    for (i = 0, len = ref.length; i < len; i++) {
+	      propTrack = ref[i];
+	      if (propTrack.anims.length > 0) {
+	        return true;
+	      }
+	    }
+	    return false;
+	  };
+	
+	  Node.prototype.getAnimationData = function() {
+	    var anim, i, j, k, len, len1, propTrack, ref, ref1, res;
+	    if (!this.anim || !this.anim.objectTrack || !this.anim.objectTrack.propertyTracks || this.hasPropertyTrackAnim() === false) {
+	      return false;
+	    }
+	    if (this.anim !== false) {
+	      res = {};
+	      ref = this.anim.objectTrack.propertyTracks;
+	      for (i = 0, len = ref.length; i < len; i++) {
+	        propTrack = ref[i];
+	        res[propTrack.propertyName] = [];
+	        ref1 = propTrack.keys;
+	        for (j = 0, len1 = ref1.length; j < len1; j++) {
+	          anim = ref1[j];
+	          k = {
+	            time: anim.time,
+	            value: anim.value,
+	            easing: Timeline.easingFunctionToString(anim.easing)
+	          };
+	          res[propTrack.propertyName].push(k);
+	        }
+	      }
+	    }
+	    return res;
+	  };
+	
+	  Node.prototype.toJSON = function() {
+	    var res;
+	    res = {
+	      nid: this.get('nid'),
+	      name: this.get('name'),
+	      type: this.typename(),
+	      anim: this.getAnimationData(),
+	      x: this.get('x'),
+	      y: this.get('y'),
+	      width: this.get('width'),
+	      height: this.get('height'),
+	      fields: this.fields.toJSON()
+	    };
+	    return res;
+	  };
+	
+	  Node.prototype.applyFieldsToVal = function(afields, target, exceptions, index) {
+	    var f, field_name, nf, results;
+	    if (exceptions == null) {
+	      exceptions = [];
+	    }
+	    results = [];
+	    for (f in afields) {
+	      nf = afields[f];
+	      field_name = nf.get("name");
+	      if (exceptions.indexOf(field_name) === -1) {
+	        results.push(target[field_name] = this.fields.getField(field_name).getValue(index));
+	      } else {
+	        results.push(void 0);
+	      }
+	    }
+	    return results;
+	  };
+	
+	  Node.prototype.addOutConnection = function(c, field) {
+	    if (this.out_connections.indexOf(c) === -1) {
+	      this.out_connections.push(c);
+	    }
+	    return c;
+	  };
+	
+	  Node.prototype.removeConnection = function(c) {
+	    var c_index;
+	    c_index = this.out_connections.indexOf(c);
+	    if (c_index !== -1) {
+	      this.out_connections.splice(c_index, 1);
+	    }
+	    return c;
+	  };
+	
+	  Node.prototype.disablePropertyAnim = function(field) {
+	    if (this.anim && field.get("is_output") === false) {
+	      return this.anim.disableProperty(field.get("name"));
+	    }
+	  };
+	
+	  Node.prototype.enablePropertyAnim = function(field) {
+	    if (field.get("is_output") === true || !this.anim) {
+	      return false;
+	    }
+	    if (field.isAnimationProperty()) {
+	      return this.anim.enableProperty(field.get("name"));
+	    }
+	  };
+	
+	  Node.prototype.createAnimContainer = function() {
+	    var f, field, res;
+	    res = anim("nid-" + this.get("nid"), this.fields.inputs);
+	    for (f in this.fields.inputs) {
+	      field = this.fields.inputs[f];
+	      if (field.isAnimationProperty() === false) {
+	        this.disablePropertyAnim(field);
+	      }
+	    }
+	    return res;
+	  };
+	
+	  return Node;
+	
+	})(Backbone.Model);
+	
+	module.exports = Node;
+
+
+/***/ }),
 /* 29 */,
 /* 30 */,
 /* 31 */,
@@ -2792,13 +2792,13 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 36 */,
 /* 37 */,
 /* 38 */,
-/* 39 */
+/* 39 */,
+/* 40 */
 /***/ (function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_39__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_40__;
 
 /***/ }),
-/* 40 */,
 /* 41 */,
 /* 42 */,
 /* 43 */,
@@ -2813,7 +2813,8 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 52 */,
 /* 53 */,
 /* 54 */,
-/* 55 */
+/* 55 */,
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, CubeGeometry, CylinderGeometry, Node, OctahedronGeometry, PlaneGeometry, SphereGeometry, TextGeometry, TorusGeometry, TorusKnotGeometry, Utils, _,
@@ -2827,7 +2828,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Utils = __webpack_require__(9);
 	
-	Node = __webpack_require__(11);
+	Node = __webpack_require__(28);
 	
 	PlaneGeometry = (function(superClass) {
 	  extend(PlaneGeometry, superClass);
@@ -3424,7 +3425,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var AmbientLight, Backbone, DirectionalLight, Node, PointLight, SpotLight, _,
@@ -3436,7 +3437,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	Node = __webpack_require__(11);
+	Node = __webpack_require__(28);
 	
 	PointLight = (function(superClass) {
 	  extend(PointLight, superClass);
@@ -3705,7 +3706,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, LineBasicMaterial, MeshBasicMaterial, MeshLambertMaterial, MeshPhongMaterial, Node, NodeMaterialBase, _,
@@ -3717,9 +3718,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	Node = __webpack_require__(11);
+	Node = __webpack_require__(28);
 	
-	NodeMaterialBase = __webpack_require__(58);
+	NodeMaterialBase = __webpack_require__(59);
 	
 	MeshBasicMaterial = (function(superClass) {
 	  extend(MeshBasicMaterial, superClass);
@@ -3962,7 +3963,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 58 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Node, NodeMaterialBase,
@@ -3970,7 +3971,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	Node = __webpack_require__(11);
+	Node = __webpack_require__(28);
 	
 	NodeMaterialBase = (function(superClass) {
 	  extend(NodeMaterialBase, superClass);
@@ -4084,7 +4085,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 59 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, BleachPass, BloomPass, DotScreenPass, FilmPass, HorizontalBlurPass, Node, Utils, VerticalBlurPass, VignettePass, _,
@@ -4098,9 +4099,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Utils = __webpack_require__(9);
 	
-	Node = __webpack_require__(11);
-	
-	__webpack_require__(60);
+	Node = __webpack_require__(28);
 	
 	__webpack_require__(61);
 	
@@ -4117,6 +4116,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	__webpack_require__(67);
 	
 	__webpack_require__(68);
+	
+	__webpack_require__(69);
 	
 	BloomPass = (function(superClass) {
 	  extend(BloomPass, superClass);
@@ -4559,7 +4560,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 60 */
+/* 61 */
 /***/ (function(module, exports) {
 
 	/**
@@ -4628,7 +4629,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 61 */
+/* 62 */
 /***/ (function(module, exports) {
 
 	/**
@@ -4696,7 +4697,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 62 */
+/* 63 */
 /***/ (function(module, exports) {
 
 	/**
@@ -4764,7 +4765,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 63 */
+/* 64 */
 /***/ (function(module, exports) {
 
 	/**
@@ -4834,7 +4835,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 64 */
+/* 65 */
 /***/ (function(module, exports) {
 
 	/**
@@ -4893,7 +4894,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 65 */
+/* 66 */
 /***/ (function(module, exports) {
 
 	/**
@@ -5000,7 +5001,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 66 */
+/* 67 */
 /***/ (function(module, exports) {
 
 	/**
@@ -5114,7 +5115,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 67 */
+/* 68 */
 /***/ (function(module, exports) {
 
 	/**
@@ -5224,7 +5225,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 68 */
+/* 69 */
 /***/ (function(module, exports) {
 
 	/**
@@ -5284,7 +5285,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 69 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Camera, ColladaLoader, Fog, FogExp2, Node, Object3D, Object3DwithMeshAndMaterial, Scene, Texture, ThreeLine, ThreeMesh, WebGLRenderer, WebglBase, _, jQuery,
@@ -5292,19 +5293,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	jQuery = __webpack_require__(39);
+	jQuery = __webpack_require__(40);
 	
 	_ = __webpack_require__(2);
 	
 	Backbone = __webpack_require__(3);
 	
-	Node = __webpack_require__(11);
+	Node = __webpack_require__(28);
 	
-	__webpack_require__(70);
+	__webpack_require__(71);
 	
-	Object3D = __webpack_require__(71);
+	Object3D = __webpack_require__(72);
 	
-	WebglBase = __webpack_require__(72);
+	WebglBase = __webpack_require__(73);
 	
 	Scene = (function(superClass) {
 	  extend(Scene, superClass);
@@ -6178,7 +6179,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 70 */
+/* 71 */
 /***/ (function(module, exports) {
 
 	/**
@@ -11096,7 +11097,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 71 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Node, Object3D,
@@ -11104,7 +11105,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	Node = __webpack_require__(11);
+	Node = __webpack_require__(28);
 	
 	Object3D = (function(superClass) {
 	  extend(Object3D, superClass);
@@ -11280,7 +11281,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 72 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, WebglBase, _,
@@ -11289,8 +11290,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	_ = __webpack_require__(2);
 	
 	Backbone = __webpack_require__(3);
-	
-	__webpack_require__(73);
 	
 	__webpack_require__(74);
 	
@@ -11305,6 +11304,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	__webpack_require__(79);
 	
 	__webpack_require__(80);
+	
+	__webpack_require__(81);
 	
 	WebglBase = (function() {
 	  WebglBase.instance = false;
@@ -11352,7 +11353,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 73 */
+/* 74 */
 /***/ (function(module, exports) {
 
 	/**
@@ -11502,7 +11503,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 74 */
+/* 75 */
 /***/ (function(module, exports) {
 
 	/**
@@ -11594,7 +11595,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 75 */
+/* 76 */
 /***/ (function(module, exports) {
 
 	/**
@@ -11651,7 +11652,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 76 */
+/* 77 */
 /***/ (function(module, exports) {
 
 	/**
@@ -11708,7 +11709,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 77 */
+/* 78 */
 /***/ (function(module, exports) {
 
 	/**
@@ -11760,12 +11761,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 78 */
-/***/ (function(module, exports) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_78__;
-
-/***/ }),
 /* 79 */
 /***/ (function(module, exports) {
 
@@ -11773,6 +11768,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 80 */
+/***/ (function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_80__;
+
+/***/ }),
+/* 81 */
 /***/ (function(module, exports) {
 
 	/* canvas-toBlob.js
@@ -11885,7 +11886,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 81 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, CsgIntersect, CsgSubtract, CsgUnion, Node, NodeCSG, Utils, _,
@@ -11899,13 +11900,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Utils = __webpack_require__(9);
 	
-	Node = __webpack_require__(11);
-	
-	__webpack_require__(82);
+	Node = __webpack_require__(28);
 	
 	__webpack_require__(83);
 	
 	__webpack_require__(84);
+	
+	__webpack_require__(85);
 	
 	NodeCSG = (function(superClass) {
 	  extend(NodeCSG, superClass);
@@ -12073,13 +12074,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 82 */
+/* 83 */
 /***/ (function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_82__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_83__;
 
 /***/ }),
-/* 83 */
+/* 84 */
 /***/ (function(module, exports) {
 
 	// Constructive Solid Geometry (CSG) is a modeling technique that uses Boolean
@@ -12680,7 +12681,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 84 */
+/* 85 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -13230,7 +13231,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	})();
 
 /***/ }),
-/* 85 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Node, NodeMaterialBase, Object3D, ParticleBasicMaterial, ParticlePool, ParticleSystem, RandomCloudGeometry, SparksAccelerate, SparksAccelerateFactor, SparksAccelerateVelocity, SparksAge, SparksCubeZone, SparksEmitter, SparksLifetime, SparksLineZone, SparksMove, SparksPointZone, SparksPosition, SparksRandomDrift, SparksSteadyCounter, Utils, _,
@@ -13244,19 +13245,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Utils = __webpack_require__(9);
 	
-	Node = __webpack_require__(11);
+	Node = __webpack_require__(28);
 	
-	Object3D = __webpack_require__(71);
+	Object3D = __webpack_require__(72);
 	
-	NodeMaterialBase = __webpack_require__(58);
+	NodeMaterialBase = __webpack_require__(59);
 	
-	__webpack_require__(69);
+	__webpack_require__(70);
 	
-	__webpack_require__(57);
-	
-	__webpack_require__(86);
+	__webpack_require__(58);
 	
 	__webpack_require__(87);
+	
+	__webpack_require__(88);
 	
 	ParticleSystem = (function(superClass) {
 	  extend(ParticleSystem, superClass);
@@ -14428,7 +14429,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 86 */
+/* 87 */
 /***/ (function(module, exports) {
 
 	// tween.js r5 - http://github.com/sole/tween.js
@@ -14447,7 +14448,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 87 */
+/* 88 */
 /***/ (function(module, exports) {
 
 	/*

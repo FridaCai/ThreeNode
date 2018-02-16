@@ -120,6 +120,7 @@ class Sidebar extends Backbone.View
     # nodes_by_group could be an empty object but we define
     # inital groups to have a coherent ordering in sidebar
     nodes_by_group =
+      Shape:[]
       Base: []
       Conditional: []
       Math: []

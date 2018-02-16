@@ -7,7 +7,7 @@
 		exports["NodeTypes"] = factory(require("_"), require("Backbone"), require("jQuery"), require("libs/jshint"));
 	else
 		root["ThreeNodes"] = root["ThreeNodes"] || {}, root["ThreeNodes"]["NodeTypes"] = factory(root["_"], root["Backbone"], root["jQuery"], root["libs/jshint"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_39__, __WEBPACK_EXTERNAL_MODULE_46__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_40__, __WEBPACK_EXTERNAL_MODULE_47__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -56,17 +56,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	__webpack_require__(10);
 	
-	__webpack_require__(42);
+	__webpack_require__(29);
 	
 	__webpack_require__(43);
 	
-	__webpack_require__(50);
+	__webpack_require__(44);
 	
 	__webpack_require__(51);
 	
 	__webpack_require__(52);
 	
-	__webpack_require__(54);
+	__webpack_require__(53);
+	
+	__webpack_require__(55);
 
 
 /***/ }),
@@ -676,498 +678,35 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var Backbone, Boolean, Color, Euler, Node, NodeColorView, NodeNumberSimple, NodeWithCenterTextfield, Number, Quaternion, String, Vector2, Vector3, _,
+	var NodeNumberSimple, Shape,
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(2);
+	NodeNumberSimple = __webpack_require__(11);
 	
-	Backbone = __webpack_require__(3);
+	Shape = (function(superClass) {
+	  extend(Shape, superClass);
 	
-	Node = __webpack_require__(11);
-	
-	NodeNumberSimple = __webpack_require__(28);
-	
-	NodeWithCenterTextfield = __webpack_require__(29);
-	
-	NodeColorView = __webpack_require__(40);
-	
-	Number = (function(superClass) {
-	  extend(Number, superClass);
-	
-	  function Number() {
-	    return Number.__super__.constructor.apply(this, arguments);
+	  function Shape() {
+	    return Shape.__super__.constructor.apply(this, arguments);
 	  }
 	
-	  return Number;
+	  Shape.node_name = 'Shape';
 	
-	})(NodeWithCenterTextfield);
+	  Shape.group_name = 'Shape';
 	
-	ThreeNodes.Core.addNodeView('Number', Number);
-	
-	String = (function(superClass) {
-	  extend(String, superClass);
-	
-	  function String() {
-	    this.getCenterField = bind(this.getCenterField, this);
-	    return String.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  String.prototype.getCenterField = function() {
-	    return this.model.fields.getField("string");
-	  };
-	
-	  return String;
-	
-	})(NodeWithCenterTextfield);
-	
-	ThreeNodes.Core.addNodeView('String', String);
-	
-	Color = (function(superClass) {
-	  extend(Color, superClass);
-	
-	  function Color() {
-	    return Color.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  return Color;
-	
-	})(NodeColorView);
-	
-	ThreeNodes.Core.addNodeView('Color', Color);
-	
-	Number = (function(superClass) {
-	  extend(Number, superClass);
-	
-	  function Number() {
-	    return Number.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Number.node_name = 'Number';
-	
-	  Number.group_name = 'Base';
-	
-	  return Number;
+	  return Shape;
 	
 	})(NodeNumberSimple);
 	
-	ThreeNodes.Core.addNodeType('Number', Number);
-	
-	Boolean = (function(superClass) {
-	  extend(Boolean, superClass);
-	
-	  function Boolean() {
-	    this.compute = bind(this.compute, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.initialize = bind(this.initialize, this);
-	    return Boolean.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Boolean.node_name = 'Boolean';
-	
-	  Boolean.group_name = 'Base';
-	
-	  Boolean.prototype.initialize = function(options) {
-	    Boolean.__super__.initialize.apply(this, arguments);
-	    return this.value = true;
-	  };
-	
-	  Boolean.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = Boolean.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "bool": true
-	      },
-	      outputs: {
-	        "out": {
-	          type: "Bool",
-	          val: this.value
-	        }
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  Boolean.prototype.compute = function() {
-	    return this.fields.setField("out", this.fields.getField("bool").getValue());
-	  };
-	
-	  return Boolean;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('Boolean', Boolean);
-	
-	String = (function(superClass) {
-	  extend(String, superClass);
-	
-	  function String() {
-	    this.compute = bind(this.compute, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.initialize = bind(this.initialize, this);
-	    return String.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  String.node_name = 'String';
-	
-	  String.group_name = 'Base';
-	
-	  String.prototype.initialize = function(options) {
-	    String.__super__.initialize.apply(this, arguments);
-	    return this.value = "";
-	  };
-	
-	  String.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = String.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "string": ""
-	      },
-	      outputs: {
-	        "out": {
-	          type: "Any",
-	          val: this.value
-	        }
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  String.prototype.compute = function() {
-	    return this.fields.setField("out", this.fields.getField("string").getValue());
-	  };
-	
-	  return String;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('String', String);
-	
-	Vector2 = (function(superClass) {
-	  extend(Vector2, superClass);
-	
-	  function Vector2() {
-	    this.compute = bind(this.compute, this);
-	    this.getFields = bind(this.getFields, this);
-	    return Vector2.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Vector2.node_name = 'Vector2';
-	
-	  Vector2.group_name = 'Base';
-	
-	  Vector2.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = Vector2.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "x": 0,
-	        "y": 0
-	      },
-	      outputs: {
-	        "xy": {
-	          type: "Vector2",
-	          val: false
-	        },
-	        "x": 0,
-	        "y": 0
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  Vector2.prototype.compute = function() {
-	    var i, j, numItems, ref, res, resx, resy;
-	    res = [];
-	    resx = [];
-	    resy = [];
-	    numItems = this.fields.getMaxInputSliceCount();
-	    for (i = j = 0, ref = numItems; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
-	      resx[i] = this.fields.getField("x").getValue(i);
-	      resy[i] = this.fields.getField("y").getValue(i);
-	      res[i] = new THREE.Vector3(resx[i], resy[i]);
-	    }
-	    this.fields.setField("xy", res);
-	    this.fields.setField("x", resx);
-	    return this.fields.setField("y", resy);
-	  };
-	
-	  return Vector2;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('Vector2', Vector2);
-	
-	Vector3 = (function(superClass) {
-	  extend(Vector3, superClass);
-	
-	  function Vector3() {
-	    this.compute = bind(this.compute, this);
-	    this.getFields = bind(this.getFields, this);
-	    return Vector3.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Vector3.node_name = 'Vector3';
-	
-	  Vector3.group_name = 'Base';
-	
-	  Vector3.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = Vector3.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "x": 0,
-	        "y": 0,
-	        "z": 0
-	      },
-	      outputs: {
-	        "xyz": {
-	          type: "Vector3",
-	          val: false
-	        },
-	        "x": 0,
-	        "y": 0,
-	        "z": 0
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  Vector3.prototype.compute = function() {
-	    var i, j, numItems, ref, res, resx, resy, resz;
-	    res = [];
-	    resx = [];
-	    resy = [];
-	    resz = [];
-	    numItems = this.fields.getMaxInputSliceCount();
-	    for (i = j = 0, ref = numItems; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
-	      resx[i] = this.fields.getField("x").getValue(i);
-	      resy[i] = this.fields.getField("y").getValue(i);
-	      resz[i] = this.fields.getField("z").getValue(i);
-	      res[i] = new THREE.Vector3(resx[i], resy[i], resz[i]);
-	    }
-	    this.fields.setField("xyz", res);
-	    this.fields.setField("x", resx);
-	    this.fields.setField("y", resy);
-	    return this.fields.setField("z", resz);
-	  };
-	
-	  return Vector3;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('Vector3', Vector3);
-	
-	Quaternion = (function(superClass) {
-	  extend(Quaternion, superClass);
-	
-	  function Quaternion() {
-	    this.compute = bind(this.compute, this);
-	    this.getFields = bind(this.getFields, this);
-	    return Quaternion.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Quaternion.node_name = 'Quaternion';
-	
-	  Quaternion.group_name = 'Base';
-	
-	  Quaternion.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = Quaternion.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "x": 0,
-	        "y": 0,
-	        "z": 0,
-	        "w": 1
-	      },
-	      outputs: {
-	        "xyzw": {
-	          type: "Quaternion",
-	          val: false
-	        },
-	        "x": 0,
-	        "y": 0,
-	        "z": 0,
-	        "w": 1
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  Quaternion.prototype.compute = function() {
-	    var i, j, numItems, ref, res, resw, resx, resy, resz;
-	    res = [];
-	    resx = [];
-	    resy = [];
-	    resz = [];
-	    resw = [];
-	    numItems = this.fields.getMaxInputSliceCount();
-	    for (i = j = 0, ref = numItems; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
-	      resx[i] = this.fields.getField("x").getValue(i);
-	      resy[i] = this.fields.getField("y").getValue(i);
-	      resz[i] = this.fields.getField("z").getValue(i);
-	      resw[i] = this.fields.getField("w").getValue(i);
-	      res[i] = new THREE.Quaternion(resx[i], resy[i], resz[i], resw[i]);
-	    }
-	    this.fields.setField("xyzw", res);
-	    this.fields.setField("x", resx);
-	    this.fields.setField("y", resy);
-	    this.fields.setField("z", resz);
-	    return this.fields.setField("w", resw);
-	  };
-	
-	  return Quaternion;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('Quaternion', Quaternion);
-	
-	Euler = (function(superClass) {
-	  extend(Euler, superClass);
-	
-	  function Euler() {
-	    this.compute = bind(this.compute, this);
-	    this.getFields = bind(this.getFields, this);
-	    return Euler.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Euler.node_name = 'Euler';
-	
-	  Euler.group_name = 'Base';
-	
-	  Euler.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = Euler.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "x": 0,
-	        "y": 0,
-	        "z": 0,
-	        "order": {
-	          type: "String",
-	          val: "XYZ",
-	          values: {
-	            "XYZ": "XYZ",
-	            "YZX": "YZX",
-	            "ZXY": "ZXY",
-	            "XZY": "XZY",
-	            "YXZ": "YXZ",
-	            "ZYX": "ZYX"
-	          }
-	        }
-	      },
-	      outputs: {
-	        "euler": {
-	          type: "Euler",
-	          val: false
-	        },
-	        "x": 0,
-	        "y": 0,
-	        "z": 0,
-	        "order": "XYZ"
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  Euler.prototype.compute = function() {
-	    var i, j, numItems, ref, res, resorder, resx, resy, resz;
-	    res = [];
-	    resx = [];
-	    resy = [];
-	    resz = [];
-	    resorder = [];
-	    numItems = this.fields.getMaxInputSliceCount();
-	    for (i = j = 0, ref = numItems; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
-	      resx[i] = this.fields.getField("x").getValue(i);
-	      resy[i] = this.fields.getField("y").getValue(i);
-	      resz[i] = this.fields.getField("z").getValue(i);
-	      resorder[i] = this.fields.getField("order").getValue(i);
-	      res[i] = new THREE.Euler(resx[i], resy[i], resz[i], resorder[i]);
-	    }
-	    this.fields.setField("euler", res);
-	    this.fields.setField("x", resx);
-	    this.fields.setField("y", resy);
-	    this.fields.setField("z", resz);
-	    return this.fields.setField("order", resorder);
-	  };
-	
-	  return Euler;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('Euler', Euler);
-	
-	Color = (function(superClass) {
-	  extend(Color, superClass);
-	
-	  function Color() {
-	    this.compute = bind(this.compute, this);
-	    this.getFields = bind(this.getFields, this);
-	    return Color.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Color.node_name = 'Color';
-	
-	  Color.group_name = 'Base';
-	
-	  Color.prototype.getFields = function() {
-	    var base_fields, fields;
-	    base_fields = Color.__super__.getFields.apply(this, arguments);
-	    fields = {
-	      inputs: {
-	        "r": 0,
-	        "g": 0,
-	        "b": 0
-	      },
-	      outputs: {
-	        "rgb": {
-	          type: "Color",
-	          val: false
-	        },
-	        "r": 0,
-	        "g": 0,
-	        "b": 0
-	      }
-	    };
-	    return $.extend(true, base_fields, fields);
-	  };
-	
-	  Color.prototype.compute = function() {
-	    var i, j, numItems, ref, res, resb, resg, resr;
-	    res = [];
-	    resr = [];
-	    resg = [];
-	    resb = [];
-	    numItems = this.fields.getMaxInputSliceCount();
-	    for (i = j = 0, ref = numItems; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
-	      resr[i] = this.fields.getField("r").getValue(i);
-	      resg[i] = this.fields.getField("g").getValue(i);
-	      resb[i] = this.fields.getField("b").getValue(i);
-	      res[i] = new THREE.Color().setRGB(resr[i], resg[i], resb[i]);
-	    }
-	    this.fields.setField("rgb", res);
-	    this.fields.setField("r", resr);
-	    this.fields.setField("g", resg);
-	    return this.fields.setField("b", resb);
-	  };
-	
-	  return Color;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('Color', Color);
+	ThreeNodes.Core.addNodeType('Shape', Shape);
 
 
 /***/ }),
 /* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var Backbone, Fields, Node, Utils, _,
+	var Backbone, Fields, Node, NodeNumberSimple, Utils, _,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
@@ -1180,307 +719,90 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Fields = __webpack_require__(12);
 	
+	Node = __webpack_require__(28);
 	
-	/* Node model */
 	
-	Node = (function(superClass) {
-	  extend(Node, superClass);
+	/* NodeNumberSimple model */
 	
-	  function Node() {
-	    this.createAnimContainer = bind(this.createAnimContainer, this);
-	    this.enablePropertyAnim = bind(this.enablePropertyAnim, this);
-	    this.disablePropertyAnim = bind(this.disablePropertyAnim, this);
-	    this.removeConnection = bind(this.removeConnection, this);
-	    this.addOutConnection = bind(this.addOutConnection, this);
-	    this.applyFieldsToVal = bind(this.applyFieldsToVal, this);
-	    this.toJSON = bind(this.toJSON, this);
-	    this.getAnimationData = bind(this.getAnimationData, this);
-	    this.hasPropertyTrackAnim = bind(this.hasPropertyTrackAnim, this);
-	    this.getDownstreamNodes = bind(this.getDownstreamNodes, this);
-	    this.getUpstreamNodes = bind(this.getUpstreamNodes, this);
-	    this.hasOutConnection = bind(this.hasOutConnection, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.inputValueHasChanged = bind(this.inputValueHasChanged, this);
-	    this.createCacheObject = bind(this.createCacheObject, this);
-	    this.addCountInput = bind(this.addCountInput, this);
-	    this.createConnection = bind(this.createConnection, this);
-	    this.loadAnimation = bind(this.loadAnimation, this);
+	NodeNumberSimple = (function(superClass) {
+	  extend(NodeNumberSimple, superClass);
+	
+	  function NodeNumberSimple() {
+	    this.compute = bind(this.compute, this);
 	    this.remove = bind(this.remove, this);
+	    this.process_val = bind(this.process_val, this);
 	    this.onFieldsCreated = bind(this.onFieldsCreated, this);
-	    this.typename = bind(this.typename, this);
-	    this.initialize = bind(this.initialize, this);
-	    return Node.__super__.constructor.apply(this, arguments);
+	    this.getFields = bind(this.getFields, this);
+	    return NodeNumberSimple.__super__.constructor.apply(this, arguments);
 	  }
 	
-	  Node.node_name = '';
-	
-	  Node.group_name = '';
-	
-	  Node.prototype.defaults = {
-	    nid: -1,
-	    gid: -1,
-	    x: 0,
-	    y: 0,
-	    width: null,
-	    height: null,
-	    name: ""
-	  };
-	
-	  Node.prototype.initialize = function(options) {
-	    Node.__super__.initialize.apply(this, arguments);
-	    this.auto_evaluate = false;
-	    this.delays_output = false;
-	    this.dirty = true;
-	    this.is_animated = false;
-	    this.out_connections = [];
-	    this.apptimeline = options.timeline;
-	    this.settings = options.settings;
-	    this.indexer = options.indexer;
-	    this.options = options;
-	    this.parent = options.parent;
-	    if (this.get('name') === '') {
-	      this.set('name', this.typename());
-	    }
-	    if (this.get('nid') === -1) {
-	      this.set('nid', this.indexer.getUID());
-	    } else {
-	      this.indexer.uid = this.get('nid');
-	    }
-	    this.fields = new Fields(false, {
-	      node: this,
-	      indexer: this.indexer
-	    });
-	    this.onFieldsCreated();
-	    this.fields.load(this.options.fields);
-	    this.anim = this.createAnimContainer();
-	    if (this.options.anim !== false) {
-	      this.loadAnimation();
-	    }
-	    return this;
-	  };
-	
-	  Node.prototype.typename = function() {
-	    return String(this.constructor.name);
-	  };
-	
-	  Node.prototype.onFieldsCreated = function() {};
-	
-	  Node.prototype.remove = function() {
-	    if (this.anim) {
-	      this.anim.destroy();
-	    }
-	    if (this.fields) {
-	      this.fields.destroy();
-	    }
-	    delete this.fields;
-	    delete this.apptimeline;
-	    delete this.anim;
-	    delete this.options;
-	    delete this.settings;
-	    delete this.indexer;
-	    delete this.fully_inited;
-	    return this.destroy();
-	  };
-	
-	  Node.prototype.loadAnimation = function() {
-	    var anims, i, len, propKey, propLabel, ref, track;
-	    ref = this.options.anim;
-	    for (propLabel in ref) {
-	      anims = ref[propLabel];
-	      track = this.anim.getPropertyTrack(propLabel);
-	      for (i = 0, len = anims.length; i < len; i++) {
-	        propKey = anims[i];
-	        track.keys.push({
-	          time: propKey.time,
-	          value: propKey.value,
-	          easing: Timeline.stringToEasingFunction(propKey.easing),
-	          track: track
-	        });
+	  NodeNumberSimple.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = NodeNumberSimple.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "in": {
+	          type: "Float",
+	          val: 0
+	        }
+	      },
+	      outputs: {
+	        "out": {
+	          type: "Float",
+	          val: 0
+	        }
 	      }
-	      this.anim.timeline.rebuildTrackAnimsFromKeys(track);
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  NodeNumberSimple.prototype.onFieldsCreated = function() {
+	    this.v_in = this.fields.getField("in");
+	    return this.v_out = this.fields.getField("out", true);
+	  };
+	
+	  NodeNumberSimple.prototype.process_val = function(num, i) {
+	    return num;
+	  };
+	
+	  NodeNumberSimple.prototype.remove = function() {
+	    delete this.v_in;
+	    delete this.v_out;
+	    return NodeNumberSimple.__super__.remove.apply(this, arguments);
+	  };
+	
+	  NodeNumberSimple.prototype.compute = function() {
+	    var i, j, numItems, ref, ref1, res;
+	    res = [];
+	    numItems = this.fields.getMaxInputSliceCount();
+	    for (i = j = 0, ref1 = numItems; 0 <= ref1 ? j <= ref1 : j >= ref1; i = 0 <= ref1 ? ++j : --j) {
+	      ref = this.v_in.getValue(i);
+	      switch ($.type(ref)) {
+	        case "number":
+	          res[i] = this.process_val(ref, i);
+	          break;
+	        case "object":
+	          switch (ref.constructor) {
+	            case THREE.Vector2:
+	              res[i].x = this.process_val(ref.x, i);
+	              res[i].y = this.process_val(ref.y, i);
+	              break;
+	            case THREE.Vector3:
+	              res[i].x = this.process_val(ref.x, i);
+	              res[i].y = this.process_val(ref.y, i);
+	              res[i].z = this.process_val(ref.z, i);
+	          }
+	      }
 	    }
+	    this.v_out.setValue(res);
 	    return true;
 	  };
 	
-	  Node.prototype.createConnection = function(field1, field2) {
-	    return this.trigger("createConnection", field1, field2);
-	  };
+	  return NodeNumberSimple;
 	
-	  Node.prototype.addCountInput = function() {
-	    return this.fields.addFields({
-	      inputs: {
-	        "count": 1
-	      }
-	    });
-	  };
+	})(Node);
 	
-	  Node.prototype.createCacheObject = function(values) {
-	    var field, i, len, res, v;
-	    res = {};
-	    for (i = 0, len = values.length; i < len; i++) {
-	      v = values[i];
-	      field = this.fields.getField(v);
-	      res[v] = !field ? false : field.attributes["value"];
-	    }
-	    return res;
-	  };
-	
-	  Node.prototype.inputValueHasChanged = function(values, cache) {
-	    var field, i, len, v, v2;
-	    if (cache == null) {
-	      cache = this.material_cache;
-	    }
-	    for (i = 0, len = values.length; i < len; i++) {
-	      v = values[i];
-	      field = this.fields.getField(v);
-	      if (!field) {
-	        return false;
-	      } else {
-	        v2 = field.attributes["value"];
-	        if (v2 !== cache[v]) {
-	          return true;
-	        }
-	      }
-	    }
-	    return false;
-	  };
-	
-	  Node.prototype.getFields = function() {
-	    return {};
-	  };
-	
-	  Node.prototype.hasOutConnection = function() {
-	    return this.out_connections.length !== 0;
-	  };
-	
-	  Node.prototype.getUpstreamNodes = function() {
-	    return this.fields.getUpstreamNodes();
-	  };
-	
-	  Node.prototype.getDownstreamNodes = function() {
-	    return this.fields.getDownstreamNodes();
-	  };
-	
-	  Node.prototype.hasPropertyTrackAnim = function() {
-	    var i, len, propTrack, ref;
-	    ref = this.anim.objectTrack.propertyTracks;
-	    for (i = 0, len = ref.length; i < len; i++) {
-	      propTrack = ref[i];
-	      if (propTrack.anims.length > 0) {
-	        return true;
-	      }
-	    }
-	    return false;
-	  };
-	
-	  Node.prototype.getAnimationData = function() {
-	    var anim, i, j, k, len, len1, propTrack, ref, ref1, res;
-	    if (!this.anim || !this.anim.objectTrack || !this.anim.objectTrack.propertyTracks || this.hasPropertyTrackAnim() === false) {
-	      return false;
-	    }
-	    if (this.anim !== false) {
-	      res = {};
-	      ref = this.anim.objectTrack.propertyTracks;
-	      for (i = 0, len = ref.length; i < len; i++) {
-	        propTrack = ref[i];
-	        res[propTrack.propertyName] = [];
-	        ref1 = propTrack.keys;
-	        for (j = 0, len1 = ref1.length; j < len1; j++) {
-	          anim = ref1[j];
-	          k = {
-	            time: anim.time,
-	            value: anim.value,
-	            easing: Timeline.easingFunctionToString(anim.easing)
-	          };
-	          res[propTrack.propertyName].push(k);
-	        }
-	      }
-	    }
-	    return res;
-	  };
-	
-	  Node.prototype.toJSON = function() {
-	    var res;
-	    res = {
-	      nid: this.get('nid'),
-	      name: this.get('name'),
-	      type: this.typename(),
-	      anim: this.getAnimationData(),
-	      x: this.get('x'),
-	      y: this.get('y'),
-	      width: this.get('width'),
-	      height: this.get('height'),
-	      fields: this.fields.toJSON()
-	    };
-	    return res;
-	  };
-	
-	  Node.prototype.applyFieldsToVal = function(afields, target, exceptions, index) {
-	    var f, field_name, nf, results;
-	    if (exceptions == null) {
-	      exceptions = [];
-	    }
-	    results = [];
-	    for (f in afields) {
-	      nf = afields[f];
-	      field_name = nf.get("name");
-	      if (exceptions.indexOf(field_name) === -1) {
-	        results.push(target[field_name] = this.fields.getField(field_name).getValue(index));
-	      } else {
-	        results.push(void 0);
-	      }
-	    }
-	    return results;
-	  };
-	
-	  Node.prototype.addOutConnection = function(c, field) {
-	    if (this.out_connections.indexOf(c) === -1) {
-	      this.out_connections.push(c);
-	    }
-	    return c;
-	  };
-	
-	  Node.prototype.removeConnection = function(c) {
-	    var c_index;
-	    c_index = this.out_connections.indexOf(c);
-	    if (c_index !== -1) {
-	      this.out_connections.splice(c_index, 1);
-	    }
-	    return c;
-	  };
-	
-	  Node.prototype.disablePropertyAnim = function(field) {
-	    if (this.anim && field.get("is_output") === false) {
-	      return this.anim.disableProperty(field.get("name"));
-	    }
-	  };
-	
-	  Node.prototype.enablePropertyAnim = function(field) {
-	    if (field.get("is_output") === true || !this.anim) {
-	      return false;
-	    }
-	    if (field.isAnimationProperty()) {
-	      return this.anim.enableProperty(field.get("name"));
-	    }
-	  };
-	
-	  Node.prototype.createAnimContainer = function() {
-	    var f, field, res;
-	    res = anim("nid-" + this.get("nid"), this.fields.inputs);
-	    for (f in this.fields.inputs) {
-	      field = this.fields.inputs[f];
-	      if (field.isAnimationProperty() === false) {
-	        this.disablePropertyAnim(field);
-	      }
-	    }
-	    return res;
-	  };
-	
-	  return Node;
-	
-	})(Backbone.Model);
-	
-	module.exports = Node;
+	module.exports = NodeNumberSimple;
 
 
 /***/ }),
@@ -3797,7 +3119,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var Backbone, Fields, Node, NodeNumberSimple, Utils, _,
+	var Backbone, Fields, Node, Utils, _,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
@@ -3810,94 +3132,802 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Fields = __webpack_require__(12);
 	
-	Node = __webpack_require__(11);
 	
+	/* Node model */
 	
-	/* NodeNumberSimple model */
+	Node = (function(superClass) {
+	  extend(Node, superClass);
 	
-	NodeNumberSimple = (function(superClass) {
-	  extend(NodeNumberSimple, superClass);
-	
-	  function NodeNumberSimple() {
-	    this.compute = bind(this.compute, this);
-	    this.remove = bind(this.remove, this);
-	    this.process_val = bind(this.process_val, this);
-	    this.onFieldsCreated = bind(this.onFieldsCreated, this);
+	  function Node() {
+	    this.createAnimContainer = bind(this.createAnimContainer, this);
+	    this.enablePropertyAnim = bind(this.enablePropertyAnim, this);
+	    this.disablePropertyAnim = bind(this.disablePropertyAnim, this);
+	    this.removeConnection = bind(this.removeConnection, this);
+	    this.addOutConnection = bind(this.addOutConnection, this);
+	    this.applyFieldsToVal = bind(this.applyFieldsToVal, this);
+	    this.toJSON = bind(this.toJSON, this);
+	    this.getAnimationData = bind(this.getAnimationData, this);
+	    this.hasPropertyTrackAnim = bind(this.hasPropertyTrackAnim, this);
+	    this.getDownstreamNodes = bind(this.getDownstreamNodes, this);
+	    this.getUpstreamNodes = bind(this.getUpstreamNodes, this);
+	    this.hasOutConnection = bind(this.hasOutConnection, this);
 	    this.getFields = bind(this.getFields, this);
-	    return NodeNumberSimple.__super__.constructor.apply(this, arguments);
+	    this.inputValueHasChanged = bind(this.inputValueHasChanged, this);
+	    this.createCacheObject = bind(this.createCacheObject, this);
+	    this.addCountInput = bind(this.addCountInput, this);
+	    this.createConnection = bind(this.createConnection, this);
+	    this.loadAnimation = bind(this.loadAnimation, this);
+	    this.remove = bind(this.remove, this);
+	    this.onFieldsCreated = bind(this.onFieldsCreated, this);
+	    this.typename = bind(this.typename, this);
+	    this.initialize = bind(this.initialize, this);
+	    return Node.__super__.constructor.apply(this, arguments);
 	  }
 	
-	  NodeNumberSimple.prototype.getFields = function() {
+	  Node.node_name = '';
+	
+	  Node.group_name = '';
+	
+	  Node.prototype.defaults = {
+	    nid: -1,
+	    gid: -1,
+	    x: 0,
+	    y: 0,
+	    width: null,
+	    height: null,
+	    name: ""
+	  };
+	
+	  Node.prototype.initialize = function(options) {
+	    Node.__super__.initialize.apply(this, arguments);
+	    this.auto_evaluate = false;
+	    this.delays_output = false;
+	    this.dirty = true;
+	    this.is_animated = false;
+	    this.out_connections = [];
+	    this.apptimeline = options.timeline;
+	    this.settings = options.settings;
+	    this.indexer = options.indexer;
+	    this.options = options;
+	    this.parent = options.parent;
+	    if (this.get('name') === '') {
+	      this.set('name', this.typename());
+	    }
+	    if (this.get('nid') === -1) {
+	      this.set('nid', this.indexer.getUID());
+	    } else {
+	      this.indexer.uid = this.get('nid');
+	    }
+	    this.fields = new Fields(false, {
+	      node: this,
+	      indexer: this.indexer
+	    });
+	    this.onFieldsCreated();
+	    this.fields.load(this.options.fields);
+	    this.anim = this.createAnimContainer();
+	    if (this.options.anim !== false) {
+	      this.loadAnimation();
+	    }
+	    return this;
+	  };
+	
+	  Node.prototype.typename = function() {
+	    return String(this.constructor.name);
+	  };
+	
+	  Node.prototype.onFieldsCreated = function() {};
+	
+	  Node.prototype.remove = function() {
+	    if (this.anim) {
+	      this.anim.destroy();
+	    }
+	    if (this.fields) {
+	      this.fields.destroy();
+	    }
+	    delete this.fields;
+	    delete this.apptimeline;
+	    delete this.anim;
+	    delete this.options;
+	    delete this.settings;
+	    delete this.indexer;
+	    delete this.fully_inited;
+	    return this.destroy();
+	  };
+	
+	  Node.prototype.loadAnimation = function() {
+	    var anims, i, len, propKey, propLabel, ref, track;
+	    ref = this.options.anim;
+	    for (propLabel in ref) {
+	      anims = ref[propLabel];
+	      track = this.anim.getPropertyTrack(propLabel);
+	      for (i = 0, len = anims.length; i < len; i++) {
+	        propKey = anims[i];
+	        track.keys.push({
+	          time: propKey.time,
+	          value: propKey.value,
+	          easing: Timeline.stringToEasingFunction(propKey.easing),
+	          track: track
+	        });
+	      }
+	      this.anim.timeline.rebuildTrackAnimsFromKeys(track);
+	    }
+	    return true;
+	  };
+	
+	  Node.prototype.createConnection = function(field1, field2) {
+	    return this.trigger("createConnection", field1, field2);
+	  };
+	
+	  Node.prototype.addCountInput = function() {
+	    return this.fields.addFields({
+	      inputs: {
+	        "count": 1
+	      }
+	    });
+	  };
+	
+	  Node.prototype.createCacheObject = function(values) {
+	    var field, i, len, res, v;
+	    res = {};
+	    for (i = 0, len = values.length; i < len; i++) {
+	      v = values[i];
+	      field = this.fields.getField(v);
+	      res[v] = !field ? false : field.attributes["value"];
+	    }
+	    return res;
+	  };
+	
+	  Node.prototype.inputValueHasChanged = function(values, cache) {
+	    var field, i, len, v, v2;
+	    if (cache == null) {
+	      cache = this.material_cache;
+	    }
+	    for (i = 0, len = values.length; i < len; i++) {
+	      v = values[i];
+	      field = this.fields.getField(v);
+	      if (!field) {
+	        return false;
+	      } else {
+	        v2 = field.attributes["value"];
+	        if (v2 !== cache[v]) {
+	          return true;
+	        }
+	      }
+	    }
+	    return false;
+	  };
+	
+	  Node.prototype.getFields = function() {
+	    return {};
+	  };
+	
+	  Node.prototype.hasOutConnection = function() {
+	    return this.out_connections.length !== 0;
+	  };
+	
+	  Node.prototype.getUpstreamNodes = function() {
+	    return this.fields.getUpstreamNodes();
+	  };
+	
+	  Node.prototype.getDownstreamNodes = function() {
+	    return this.fields.getDownstreamNodes();
+	  };
+	
+	  Node.prototype.hasPropertyTrackAnim = function() {
+	    var i, len, propTrack, ref;
+	    ref = this.anim.objectTrack.propertyTracks;
+	    for (i = 0, len = ref.length; i < len; i++) {
+	      propTrack = ref[i];
+	      if (propTrack.anims.length > 0) {
+	        return true;
+	      }
+	    }
+	    return false;
+	  };
+	
+	  Node.prototype.getAnimationData = function() {
+	    var anim, i, j, k, len, len1, propTrack, ref, ref1, res;
+	    if (!this.anim || !this.anim.objectTrack || !this.anim.objectTrack.propertyTracks || this.hasPropertyTrackAnim() === false) {
+	      return false;
+	    }
+	    if (this.anim !== false) {
+	      res = {};
+	      ref = this.anim.objectTrack.propertyTracks;
+	      for (i = 0, len = ref.length; i < len; i++) {
+	        propTrack = ref[i];
+	        res[propTrack.propertyName] = [];
+	        ref1 = propTrack.keys;
+	        for (j = 0, len1 = ref1.length; j < len1; j++) {
+	          anim = ref1[j];
+	          k = {
+	            time: anim.time,
+	            value: anim.value,
+	            easing: Timeline.easingFunctionToString(anim.easing)
+	          };
+	          res[propTrack.propertyName].push(k);
+	        }
+	      }
+	    }
+	    return res;
+	  };
+	
+	  Node.prototype.toJSON = function() {
+	    var res;
+	    res = {
+	      nid: this.get('nid'),
+	      name: this.get('name'),
+	      type: this.typename(),
+	      anim: this.getAnimationData(),
+	      x: this.get('x'),
+	      y: this.get('y'),
+	      width: this.get('width'),
+	      height: this.get('height'),
+	      fields: this.fields.toJSON()
+	    };
+	    return res;
+	  };
+	
+	  Node.prototype.applyFieldsToVal = function(afields, target, exceptions, index) {
+	    var f, field_name, nf, results;
+	    if (exceptions == null) {
+	      exceptions = [];
+	    }
+	    results = [];
+	    for (f in afields) {
+	      nf = afields[f];
+	      field_name = nf.get("name");
+	      if (exceptions.indexOf(field_name) === -1) {
+	        results.push(target[field_name] = this.fields.getField(field_name).getValue(index));
+	      } else {
+	        results.push(void 0);
+	      }
+	    }
+	    return results;
+	  };
+	
+	  Node.prototype.addOutConnection = function(c, field) {
+	    if (this.out_connections.indexOf(c) === -1) {
+	      this.out_connections.push(c);
+	    }
+	    return c;
+	  };
+	
+	  Node.prototype.removeConnection = function(c) {
+	    var c_index;
+	    c_index = this.out_connections.indexOf(c);
+	    if (c_index !== -1) {
+	      this.out_connections.splice(c_index, 1);
+	    }
+	    return c;
+	  };
+	
+	  Node.prototype.disablePropertyAnim = function(field) {
+	    if (this.anim && field.get("is_output") === false) {
+	      return this.anim.disableProperty(field.get("name"));
+	    }
+	  };
+	
+	  Node.prototype.enablePropertyAnim = function(field) {
+	    if (field.get("is_output") === true || !this.anim) {
+	      return false;
+	    }
+	    if (field.isAnimationProperty()) {
+	      return this.anim.enableProperty(field.get("name"));
+	    }
+	  };
+	
+	  Node.prototype.createAnimContainer = function() {
+	    var f, field, res;
+	    res = anim("nid-" + this.get("nid"), this.fields.inputs);
+	    for (f in this.fields.inputs) {
+	      field = this.fields.inputs[f];
+	      if (field.isAnimationProperty() === false) {
+	        this.disablePropertyAnim(field);
+	      }
+	    }
+	    return res;
+	  };
+	
+	  return Node;
+	
+	})(Backbone.Model);
+	
+	module.exports = Node;
+
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, Boolean, Color, Euler, Node, NodeColorView, NodeNumberSimple, NodeWithCenterTextfield, Number, Quaternion, String, Vector2, Vector3, _,
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	Node = __webpack_require__(28);
+	
+	NodeNumberSimple = __webpack_require__(11);
+	
+	NodeWithCenterTextfield = __webpack_require__(30);
+	
+	NodeColorView = __webpack_require__(41);
+	
+	Number = (function(superClass) {
+	  extend(Number, superClass);
+	
+	  function Number() {
+	    return Number.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  return Number;
+	
+	})(NodeWithCenterTextfield);
+	
+	ThreeNodes.Core.addNodeView('Number', Number);
+	
+	String = (function(superClass) {
+	  extend(String, superClass);
+	
+	  function String() {
+	    this.getCenterField = bind(this.getCenterField, this);
+	    return String.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  String.prototype.getCenterField = function() {
+	    return this.model.fields.getField("string");
+	  };
+	
+	  return String;
+	
+	})(NodeWithCenterTextfield);
+	
+	ThreeNodes.Core.addNodeView('String', String);
+	
+	Color = (function(superClass) {
+	  extend(Color, superClass);
+	
+	  function Color() {
+	    return Color.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  return Color;
+	
+	})(NodeColorView);
+	
+	ThreeNodes.Core.addNodeView('Color', Color);
+	
+	Number = (function(superClass) {
+	  extend(Number, superClass);
+	
+	  function Number() {
+	    return Number.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Number.node_name = 'Number';
+	
+	  Number.group_name = 'Base';
+	
+	  return Number;
+	
+	})(NodeNumberSimple);
+	
+	ThreeNodes.Core.addNodeType('Number', Number);
+	
+	Boolean = (function(superClass) {
+	  extend(Boolean, superClass);
+	
+	  function Boolean() {
+	    this.compute = bind(this.compute, this);
+	    this.getFields = bind(this.getFields, this);
+	    this.initialize = bind(this.initialize, this);
+	    return Boolean.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Boolean.node_name = 'Boolean';
+	
+	  Boolean.group_name = 'Base';
+	
+	  Boolean.prototype.initialize = function(options) {
+	    Boolean.__super__.initialize.apply(this, arguments);
+	    return this.value = true;
+	  };
+	
+	  Boolean.prototype.getFields = function() {
 	    var base_fields, fields;
-	    base_fields = NodeNumberSimple.__super__.getFields.apply(this, arguments);
+	    base_fields = Boolean.__super__.getFields.apply(this, arguments);
 	    fields = {
 	      inputs: {
-	        "in": {
-	          type: "Float",
-	          val: 0
-	        }
+	        "bool": true
 	      },
 	      outputs: {
 	        "out": {
-	          type: "Float",
-	          val: 0
+	          type: "Bool",
+	          val: this.value
 	        }
 	      }
 	    };
 	    return $.extend(true, base_fields, fields);
 	  };
 	
-	  NodeNumberSimple.prototype.onFieldsCreated = function() {
-	    this.v_in = this.fields.getField("in");
-	    return this.v_out = this.fields.getField("out", true);
+	  Boolean.prototype.compute = function() {
+	    return this.fields.setField("out", this.fields.getField("bool").getValue());
 	  };
 	
-	  NodeNumberSimple.prototype.process_val = function(num, i) {
-	    return num;
-	  };
-	
-	  NodeNumberSimple.prototype.remove = function() {
-	    delete this.v_in;
-	    delete this.v_out;
-	    return NodeNumberSimple.__super__.remove.apply(this, arguments);
-	  };
-	
-	  NodeNumberSimple.prototype.compute = function() {
-	    var i, j, numItems, ref, ref1, res;
-	    res = [];
-	    numItems = this.fields.getMaxInputSliceCount();
-	    for (i = j = 0, ref1 = numItems; 0 <= ref1 ? j <= ref1 : j >= ref1; i = 0 <= ref1 ? ++j : --j) {
-	      ref = this.v_in.getValue(i);
-	      switch ($.type(ref)) {
-	        case "number":
-	          res[i] = this.process_val(ref, i);
-	          break;
-	        case "object":
-	          switch (ref.constructor) {
-	            case THREE.Vector2:
-	              res[i].x = this.process_val(ref.x, i);
-	              res[i].y = this.process_val(ref.y, i);
-	              break;
-	            case THREE.Vector3:
-	              res[i].x = this.process_val(ref.x, i);
-	              res[i].y = this.process_val(ref.y, i);
-	              res[i].z = this.process_val(ref.z, i);
-	          }
-	      }
-	    }
-	    this.v_out.setValue(res);
-	    return true;
-	  };
-	
-	  return NodeNumberSimple;
+	  return Boolean;
 	
 	})(Node);
 	
-	module.exports = NodeNumberSimple;
+	ThreeNodes.Core.addNodeType('Boolean', Boolean);
+	
+	String = (function(superClass) {
+	  extend(String, superClass);
+	
+	  function String() {
+	    this.compute = bind(this.compute, this);
+	    this.getFields = bind(this.getFields, this);
+	    this.initialize = bind(this.initialize, this);
+	    return String.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  String.node_name = 'String';
+	
+	  String.group_name = 'Base';
+	
+	  String.prototype.initialize = function(options) {
+	    String.__super__.initialize.apply(this, arguments);
+	    return this.value = "";
+	  };
+	
+	  String.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = String.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "string": ""
+	      },
+	      outputs: {
+	        "out": {
+	          type: "Any",
+	          val: this.value
+	        }
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  String.prototype.compute = function() {
+	    return this.fields.setField("out", this.fields.getField("string").getValue());
+	  };
+	
+	  return String;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('String', String);
+	
+	Vector2 = (function(superClass) {
+	  extend(Vector2, superClass);
+	
+	  function Vector2() {
+	    this.compute = bind(this.compute, this);
+	    this.getFields = bind(this.getFields, this);
+	    return Vector2.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Vector2.node_name = 'Vector2';
+	
+	  Vector2.group_name = 'Base';
+	
+	  Vector2.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = Vector2.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "x": 0,
+	        "y": 0
+	      },
+	      outputs: {
+	        "xy": {
+	          type: "Vector2",
+	          val: false
+	        },
+	        "x": 0,
+	        "y": 0
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  Vector2.prototype.compute = function() {
+	    var i, j, numItems, ref, res, resx, resy;
+	    res = [];
+	    resx = [];
+	    resy = [];
+	    numItems = this.fields.getMaxInputSliceCount();
+	    for (i = j = 0, ref = numItems; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
+	      resx[i] = this.fields.getField("x").getValue(i);
+	      resy[i] = this.fields.getField("y").getValue(i);
+	      res[i] = new THREE.Vector3(resx[i], resy[i]);
+	    }
+	    this.fields.setField("xy", res);
+	    this.fields.setField("x", resx);
+	    return this.fields.setField("y", resy);
+	  };
+	
+	  return Vector2;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('Vector2', Vector2);
+	
+	Vector3 = (function(superClass) {
+	  extend(Vector3, superClass);
+	
+	  function Vector3() {
+	    this.compute = bind(this.compute, this);
+	    this.getFields = bind(this.getFields, this);
+	    return Vector3.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Vector3.node_name = 'Vector3';
+	
+	  Vector3.group_name = 'Base';
+	
+	  Vector3.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = Vector3.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "x": 0,
+	        "y": 0,
+	        "z": 0
+	      },
+	      outputs: {
+	        "xyz": {
+	          type: "Vector3",
+	          val: false
+	        },
+	        "x": 0,
+	        "y": 0,
+	        "z": 0
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  Vector3.prototype.compute = function() {
+	    var i, j, numItems, ref, res, resx, resy, resz;
+	    res = [];
+	    resx = [];
+	    resy = [];
+	    resz = [];
+	    numItems = this.fields.getMaxInputSliceCount();
+	    for (i = j = 0, ref = numItems; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
+	      resx[i] = this.fields.getField("x").getValue(i);
+	      resy[i] = this.fields.getField("y").getValue(i);
+	      resz[i] = this.fields.getField("z").getValue(i);
+	      res[i] = new THREE.Vector3(resx[i], resy[i], resz[i]);
+	    }
+	    this.fields.setField("xyz", res);
+	    this.fields.setField("x", resx);
+	    this.fields.setField("y", resy);
+	    return this.fields.setField("z", resz);
+	  };
+	
+	  return Vector3;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('Vector3', Vector3);
+	
+	Quaternion = (function(superClass) {
+	  extend(Quaternion, superClass);
+	
+	  function Quaternion() {
+	    this.compute = bind(this.compute, this);
+	    this.getFields = bind(this.getFields, this);
+	    return Quaternion.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Quaternion.node_name = 'Quaternion';
+	
+	  Quaternion.group_name = 'Base';
+	
+	  Quaternion.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = Quaternion.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "x": 0,
+	        "y": 0,
+	        "z": 0,
+	        "w": 1
+	      },
+	      outputs: {
+	        "xyzw": {
+	          type: "Quaternion",
+	          val: false
+	        },
+	        "x": 0,
+	        "y": 0,
+	        "z": 0,
+	        "w": 1
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  Quaternion.prototype.compute = function() {
+	    var i, j, numItems, ref, res, resw, resx, resy, resz;
+	    res = [];
+	    resx = [];
+	    resy = [];
+	    resz = [];
+	    resw = [];
+	    numItems = this.fields.getMaxInputSliceCount();
+	    for (i = j = 0, ref = numItems; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
+	      resx[i] = this.fields.getField("x").getValue(i);
+	      resy[i] = this.fields.getField("y").getValue(i);
+	      resz[i] = this.fields.getField("z").getValue(i);
+	      resw[i] = this.fields.getField("w").getValue(i);
+	      res[i] = new THREE.Quaternion(resx[i], resy[i], resz[i], resw[i]);
+	    }
+	    this.fields.setField("xyzw", res);
+	    this.fields.setField("x", resx);
+	    this.fields.setField("y", resy);
+	    this.fields.setField("z", resz);
+	    return this.fields.setField("w", resw);
+	  };
+	
+	  return Quaternion;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('Quaternion', Quaternion);
+	
+	Euler = (function(superClass) {
+	  extend(Euler, superClass);
+	
+	  function Euler() {
+	    this.compute = bind(this.compute, this);
+	    this.getFields = bind(this.getFields, this);
+	    return Euler.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Euler.node_name = 'Euler';
+	
+	  Euler.group_name = 'Base';
+	
+	  Euler.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = Euler.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "x": 0,
+	        "y": 0,
+	        "z": 0,
+	        "order": {
+	          type: "String",
+	          val: "XYZ",
+	          values: {
+	            "XYZ": "XYZ",
+	            "YZX": "YZX",
+	            "ZXY": "ZXY",
+	            "XZY": "XZY",
+	            "YXZ": "YXZ",
+	            "ZYX": "ZYX"
+	          }
+	        }
+	      },
+	      outputs: {
+	        "euler": {
+	          type: "Euler",
+	          val: false
+	        },
+	        "x": 0,
+	        "y": 0,
+	        "z": 0,
+	        "order": "XYZ"
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  Euler.prototype.compute = function() {
+	    var i, j, numItems, ref, res, resorder, resx, resy, resz;
+	    res = [];
+	    resx = [];
+	    resy = [];
+	    resz = [];
+	    resorder = [];
+	    numItems = this.fields.getMaxInputSliceCount();
+	    for (i = j = 0, ref = numItems; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
+	      resx[i] = this.fields.getField("x").getValue(i);
+	      resy[i] = this.fields.getField("y").getValue(i);
+	      resz[i] = this.fields.getField("z").getValue(i);
+	      resorder[i] = this.fields.getField("order").getValue(i);
+	      res[i] = new THREE.Euler(resx[i], resy[i], resz[i], resorder[i]);
+	    }
+	    this.fields.setField("euler", res);
+	    this.fields.setField("x", resx);
+	    this.fields.setField("y", resy);
+	    this.fields.setField("z", resz);
+	    return this.fields.setField("order", resorder);
+	  };
+	
+	  return Euler;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('Euler', Euler);
+	
+	Color = (function(superClass) {
+	  extend(Color, superClass);
+	
+	  function Color() {
+	    this.compute = bind(this.compute, this);
+	    this.getFields = bind(this.getFields, this);
+	    return Color.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Color.node_name = 'Color';
+	
+	  Color.group_name = 'Base';
+	
+	  Color.prototype.getFields = function() {
+	    var base_fields, fields;
+	    base_fields = Color.__super__.getFields.apply(this, arguments);
+	    fields = {
+	      inputs: {
+	        "r": 0,
+	        "g": 0,
+	        "b": 0
+	      },
+	      outputs: {
+	        "rgb": {
+	          type: "Color",
+	          val: false
+	        },
+	        "r": 0,
+	        "g": 0,
+	        "b": 0
+	      }
+	    };
+	    return $.extend(true, base_fields, fields);
+	  };
+	
+	  Color.prototype.compute = function() {
+	    var i, j, numItems, ref, res, resb, resg, resr;
+	    res = [];
+	    resr = [];
+	    resg = [];
+	    resb = [];
+	    numItems = this.fields.getMaxInputSliceCount();
+	    for (i = j = 0, ref = numItems; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
+	      resr[i] = this.fields.getField("r").getValue(i);
+	      resg[i] = this.fields.getField("g").getValue(i);
+	      resb[i] = this.fields.getField("b").getValue(i);
+	      res[i] = new THREE.Color().setRGB(resr[i], resg[i], resb[i]);
+	    }
+	    this.fields.setField("rgb", res);
+	    this.fields.setField("r", resr);
+	    this.fields.setField("g", resg);
+	    return this.fields.setField("b", resb);
+	  };
+	
+	  return Color;
+	
+	})(Node);
+	
+	ThreeNodes.Core.addNodeType('Color', Color);
 
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, NodeView, NodeWithCenterTextfield, _,
@@ -3909,9 +3939,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	__webpack_require__(11);
+	__webpack_require__(28);
 	
-	NodeView = __webpack_require__(30);
+	NodeView = __webpack_require__(31);
 	
 	NodeWithCenterTextfield = (function(superClass) {
 	  extend(NodeWithCenterTextfield, superClass);
@@ -3959,7 +3989,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, FieldsView, NodeView, _, _view_node_context_menu, _view_node_template, namespace,
@@ -3971,17 +4001,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	_view_node_template = __webpack_require__(31);
+	_view_node_template = __webpack_require__(32);
 	
-	_view_node_context_menu = __webpack_require__(32);
+	_view_node_context_menu = __webpack_require__(33);
 	
-	FieldsView = __webpack_require__(33);
+	FieldsView = __webpack_require__(34);
 	
 	namespace = __webpack_require__(14).namespace;
 	
-	__webpack_require__(38);
-	
 	__webpack_require__(39);
+	
+	__webpack_require__(40);
 	
 	
 	/* Node View */
@@ -4243,19 +4273,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div class='head'><span><%= get(\"name\") %></span></div>\n<div class='options'>\n  <div class='inputs'></div>\n  <div class='center'></div>\n  <div class='outputs'></div>\n</div>\n";
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports) {
 
 	module.exports = "<ul id=\"node-context-menu\" class=\"context-menu\">\n  <li><a href=\"#remove_node\">Remove node</a></li>\n</ul>";
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, FieldButton, FieldsView, _,
@@ -4267,9 +4297,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	FieldButton = __webpack_require__(34);
+	FieldButton = __webpack_require__(35);
 	
-	__webpack_require__(39);
+	__webpack_require__(40);
 	
 	
 	/* Fields View */
@@ -4339,7 +4369,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, FieldButton, _, _view_field_context_menu, _view_node_field_in, _view_node_field_out,
@@ -4351,15 +4381,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	_view_node_field_in = __webpack_require__(35);
+	_view_node_field_in = __webpack_require__(36);
 	
-	_view_node_field_out = __webpack_require__(36);
+	_view_node_field_out = __webpack_require__(37);
 	
-	_view_field_context_menu = __webpack_require__(37);
+	_view_field_context_menu = __webpack_require__(38);
 	
 	__webpack_require__(9);
 	
-	__webpack_require__(38);
+	__webpack_require__(39);
 	
 	
 	/* FieldButton View */
@@ -4527,25 +4557,25 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports) {
 
 	module.exports = "<span class=\"inner-field\"><span></span><%= name %></span>";
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports) {
 
 	module.exports = "<span class=\"inner-field\"><%= name %><span></span></span>";
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports) {
 
 	module.exports = "<ul id=\"field-context-menu\" class=\"context-menu\">\n  <li><a href=\"#removeConnection\">Remove connection(s)</a></li>\n</ul>";
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports) {
 
 	// jQuery Context Menu Plugin
@@ -4762,13 +4792,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_39__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_40__;
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Color, NodeView, _, namespace,
@@ -4782,11 +4812,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	namespace = __webpack_require__(14).namespace;
 	
-	__webpack_require__(11);
+	__webpack_require__(28);
 	
-	NodeView = __webpack_require__(30);
+	NodeView = __webpack_require__(31);
 	
-	__webpack_require__(41);
+	__webpack_require__(42);
 	
 	Color = (function(superClass) {
 	  extend(Color, superClass);
@@ -4860,7 +4890,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports) {
 
 	/**
@@ -5350,7 +5380,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(jQuery)
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var And, Backbone, Equal, Greater, IfElse, Node, Or, Smaller, _, jQuery,
@@ -5358,13 +5388,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	jQuery = __webpack_require__(39);
+	jQuery = __webpack_require__(40);
 	
 	_ = __webpack_require__(2);
 	
 	Backbone = __webpack_require__(3);
 	
-	Node = __webpack_require__(11);
+	Node = __webpack_require__(28);
 	
 	IfElse = (function(superClass) {
 	  extend(IfElse, superClass);
@@ -5641,7 +5671,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Code, CodeView, Expression, ExpressionView, Node, NodeCodeView, _,
@@ -5653,9 +5683,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	Node = __webpack_require__(11);
+	Node = __webpack_require__(28);
 	
-	NodeCodeView = __webpack_require__(44);
+	NodeCodeView = __webpack_require__(45);
 	
 	CodeView = (function(superClass) {
 	  extend(CodeView, superClass);
@@ -5839,7 +5869,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, CodeMirror, NodeCodeView, NodeView, _,
@@ -5851,9 +5881,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	CodeMirror = __webpack_require__(45);
-	
-	__webpack_require__(46);
+	CodeMirror = __webpack_require__(46);
 	
 	__webpack_require__(47);
 	
@@ -5861,9 +5889,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	__webpack_require__(49);
 	
-	__webpack_require__(11);
+	__webpack_require__(50);
 	
-	NodeView = __webpack_require__(30);
+	__webpack_require__(28);
+	
+	NodeView = __webpack_require__(31);
 	
 	NodeCodeView = (function(superClass) {
 	  extend(NodeCodeView, superClass);
@@ -5954,7 +5984,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -13561,13 +13591,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_46__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_47__;
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -13577,7 +13607,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	(function(mod) {
 	  if (true) // CommonJS
-	    mod(__webpack_require__(45));
+	    mod(__webpack_require__(46));
 	  else if (typeof define == "function" && define.amd) // AMD
 	    define(["../../lib/codemirror"], mod);
 	  else // Plain browser env
@@ -14236,7 +14266,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -14244,7 +14274,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	(function(mod) {
 	  if (true) // CommonJS
-	    mod(__webpack_require__(45));
+	    mod(__webpack_require__(46));
 	  else if (typeof define == "function" && define.amd) // AMD
 	    define(["../../lib/codemirror"], mod);
 	  else // Plain browser env
@@ -14452,7 +14482,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -14460,7 +14490,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	(function(mod) {
 	  if (true) // CommonJS
-	    mod(__webpack_require__(45));
+	    mod(__webpack_require__(46));
 	  else if (typeof define == "function" && define.amd) // AMD
 	    define(["../../lib/codemirror"], mod);
 	  else // Plain browser env
@@ -14594,7 +14624,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, MathAdd, MathAttenuation, MathCeil, MathCos, MathDivide, MathFloor, MathMax, MathMin, MathMod, MathMult, MathRound, MathSin, MathSubtract, MathTan, Node, NodeNumberParam1, NodeNumberSimple, _,
@@ -14606,9 +14636,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	Node = __webpack_require__(11);
+	Node = __webpack_require__(28);
 	
-	NodeNumberSimple = __webpack_require__(28);
+	NodeNumberSimple = __webpack_require__(11);
 	
 	MathSin = (function(superClass) {
 	  extend(MathSin, superClass);
@@ -15192,7 +15222,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Font, Get, LFO, Merge, Mouse, Mp3Input, Node, NodeWithCenterTextfield, Random, Screen, Timer, _,
@@ -15204,9 +15234,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	Node = __webpack_require__(11);
+	Node = __webpack_require__(28);
 	
-	NodeWithCenterTextfield = __webpack_require__(29);
+	NodeWithCenterTextfield = __webpack_require__(30);
 	
 	Random = (function(superClass) {
 	  extend(Random, superClass);
@@ -16070,7 +16100,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, LinearSpread, Node, RandomSpread, Rc4Random, _,
@@ -16082,9 +16112,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	Rc4Random = __webpack_require__(53);
+	Rc4Random = __webpack_require__(54);
 	
-	Node = __webpack_require__(11);
+	Node = __webpack_require__(28);
 	
 	RandomSpread = (function(superClass) {
 	  extend(RandomSpread, superClass);
@@ -16240,7 +16270,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports) {
 
 	var Rc4Random,
@@ -16295,7 +16325,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Group, Node, Nodes, _,
@@ -16309,7 +16339,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Nodes = __webpack_require__(1);
 	
-	Node = __webpack_require__(11);
+	Node = __webpack_require__(28);
 	
 	Group = (function(superClass) {
 	  extend(Group, superClass);
