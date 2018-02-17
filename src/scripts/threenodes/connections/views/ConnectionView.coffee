@@ -8,25 +8,30 @@ class ConnectionView extends Backbone.View
   initialize: (options) ->
     super
     @container = $("#graph")
-    @line = ThreeNodes.UI.UIView.svg.path().attr
-      stroke: "#555"
-      fill: "none"
+    
+    # @svg = ThreeNodes.UI.UIView.svg.path().attr
+    #   stroke: "#555"
+    #   fill: "none"
+    @svg = ThreeNodes.UI.UIView.svg;
+    @curve = ThreeNodes.UI.UIView.curve;
+    @triangle = ThreeNodes.UI.UIView.triangle;
+
     # set the dom element
-    @el = @line.node
+    @el = @svg.node
     @model.bind("render", () => @render())
     @model.bind("destroy", () => @remove())
     @render()
 
   remove: ->
-    if ThreeNodes.UI.UIView.svg && @line
-      @line.remove()
-      delete @line
+    if @svg
+      @svg.remove()
+      delete @svg
     return true
 
   render: () ->
-    if ThreeNodes.UI.UIView.svg && @line && @line.attrs
-      @line.attr
-        path: @getPath()
+    if @svg 
+      @renderCurve();
+      @renderTriangle();
     @
 
   getFieldPosition: (field) ->
@@ -44,9 +49,21 @@ class ConnectionView extends Backbone.View
     o1.left += diff
     return o1
 
-  getPath: () ->
+  renderTriangle: ()->
+    obj = @curve.getPointAtLength(15);
+    console.log('frida test', obj.alpha);
+    @triangle.attr
+      path: ["M", 0, 0, "L", 1.732, -1, "L", 1.732, 1].join(',')
+    .transform('t' + obj.x + ',' + obj.y + 's5, 5' + 'r' + obj.alpha)
+
+    
+
+
+  renderCurve: () ->
     f1 = @getFieldPosition(@model.from_field)
     f2 = @getFieldPosition(@model.to_field)
+
+    console.log('frida test', f1, f2)
 
     offset = $("#container-wrapper").offset()
     ofx = $("#container-wrapper").scrollLeft() - offset.left
@@ -63,7 +80,7 @@ class ConnectionView extends Backbone.View
     y2 = y1
     x3 = x4 - diffx * 0.5
     y3 = y4
-
-    ["M", x1.toFixed(3), y1.toFixed(3), "C", x2, y2, x3, y3, x4.toFixed(3), y4.toFixed(3)].join(",")
+    @curve.attr
+      path: ["M", x1.toFixed(3), y1.toFixed(3), "C", x2, y2, x3, y3, x4.toFixed(3), y4.toFixed(3)].join(",")
 
 module.exports = ConnectionView

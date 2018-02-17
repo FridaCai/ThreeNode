@@ -7,7 +7,7 @@
 		exports["UI"] = factory(require("_"), require("Backbone"), require("jQuery"), require("Blob"), require("FileSaver"), require("Raphael"));
 	else
 		root["ThreeNodes"] = root["ThreeNodes"] || {}, root["ThreeNodes"]["UI"] = factory(root["_"], root["Backbone"], root["jQuery"], root["Blob"], root["FileSaver"], root["Raphael"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_32__, __WEBPACK_EXTERNAL_MODULE_80__, __WEBPACK_EXTERNAL_MODULE_81__, __WEBPACK_EXTERNAL_MODULE_100__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_38__, __WEBPACK_EXTERNAL_MODULE_80__, __WEBPACK_EXTERNAL_MODULE_81__, __WEBPACK_EXTERNAL_MODULE_100__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -57,7 +57,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var AppTimeline, Backbone, FileHandler, GroupDefinitionView, NodeView, NodeViewColor, NodeViewGroup, NodeViewWebgl, UI, UIView, UrlHandler, Workspace, _,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 	
-	__webpack_require__(32);
+	__webpack_require__(38);
 	
 	_ = __webpack_require__(2);
 	
@@ -75,7 +75,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	FileHandler = __webpack_require__(110);
 	
-	NodeView = __webpack_require__(35);
+	NodeView = __webpack_require__(41);
 	
 	NodeViewColor = __webpack_require__(42);
 	
@@ -2955,6 +2955,302 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 31 */
 /***/ (function(module, exports) {
 
+	module.exports = "<ul id=\"node-context-menu\" class=\"context-menu\">\n  <li><a href=\"#remove_node\">Remove node</a></li>\n</ul>";
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, FieldButton, FieldsView, _,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	FieldButton = __webpack_require__(33);
+	
+	__webpack_require__(38);
+	
+	
+	/* Fields View */
+	
+	FieldsView = (function(superClass) {
+	  extend(FieldsView, superClass);
+	
+	  function FieldsView() {
+	    this.remove = bind(this.remove, this);
+	    this.onFieldCreated = bind(this.onFieldCreated, this);
+	    return FieldsView.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  FieldsView.prototype.initialize = function(options) {
+	    FieldsView.__super__.initialize.apply(this, arguments);
+	    this.node = options.node;
+	    this.subviews = [];
+	    this.collection.on("add", this.onFieldCreated);
+	    return this.collection.each(this.onFieldCreated);
+	  };
+	
+	  FieldsView.prototype.onFieldCreated = function(field) {
+	    var $node, connection, from_gid, isInsideAnotherDOMnode, target, to_gid, view;
+	    target = field.get("is_output") === false ? ".inputs" : ".outputs";
+	    if (field.get("is_output") === false && field.isConnected()) {
+	      connection = field.connections[0];
+	      $node = this.$el.parent();
+	      isInsideAnotherDOMnode = function() {
+	        return $node.parent().closest(".node").length > 0;
+	      };
+	      if (isInsideAnotherDOMnode()) {
+	        from_gid = connection.from_field.node.get("gid");
+	        to_gid = connection.to_field.node.get("gid");
+	        if (from_gid !== "-1" && to_gid !== "-1" && from_gid === to_gid) {
+	          return;
+	        }
+	      }
+	    }
+	    view = new FieldButton({
+	      model: field
+	    });
+	    view.$el.appendTo($(target, this.$el));
+	    field.button = view.$el;
+	    return this.subviews.push(view);
+	  };
+	
+	  FieldsView.prototype.remove = function() {
+	    var views;
+	    this.undelegateEvents();
+	    this.collection.off("add", this.onFieldCreated);
+	    views = this.subviews.concat();
+	    _.each(views, function(view) {
+	      return view.remove();
+	    });
+	    $("input", $(this.el)).remove();
+	    delete this.collection;
+	    delete this.node;
+	    delete this.subviews;
+	    return FieldsView.__super__.remove.apply(this, arguments);
+	  };
+	
+	  return FieldsView;
+	
+	})(Backbone.View);
+	
+	module.exports = FieldsView;
+
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, FieldButton, _, _view_field_context_menu, _view_node_field_in, _view_node_field_out,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	_view_node_field_in = __webpack_require__(34);
+	
+	_view_node_field_out = __webpack_require__(35);
+	
+	_view_field_context_menu = __webpack_require__(36);
+	
+	__webpack_require__(9);
+	
+	__webpack_require__(37);
+	
+	
+	/* FieldButton View */
+	
+	FieldButton = (function(superClass) {
+	  extend(FieldButton, superClass);
+	
+	  function FieldButton() {
+	    this.render = bind(this.render, this);
+	    this.makeElement = bind(this.makeElement, this);
+	    this.remove = bind(this.remove, this);
+	    return FieldButton.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  FieldButton.prototype.className = "field";
+	
+	  FieldButton.prototype.initialize = function(options) {
+	    FieldButton.__super__.initialize.apply(this, arguments);
+	    this.makeElement();
+	    return this.render();
+	  };
+	
+	  FieldButton.prototype.remove = function() {
+	    var $inner;
+	    $inner = $(".inner-field", this.$el);
+	    if ($inner.data("droppable")) {
+	      $inner.droppable("destroy");
+	    }
+	    if ($inner.data("draggable")) {
+	      $inner.draggable("destroy");
+	    }
+	    $inner.remove();
+	    return FieldButton.__super__.remove.apply(this, arguments);
+	  };
+	
+	  FieldButton.prototype.makeElement = function() {
+	    var bt, layout;
+	    layout = this.model.get("is_output") ? _view_node_field_out : _view_node_field_in;
+	    bt = _.template(layout, {
+	      fid: this.model.get("fid"),
+	      name: this.model.get("name")
+	    });
+	    return this.$el.html(bt);
+	  };
+	
+	  FieldButton.prototype.render = function() {
+	    this.$el.attr("rel", this.model.get("name"));
+	    this.$el.addClass("field-" + this.model.get("name"));
+	    this.$el.data("object", this.model);
+	    this.$el.data("fid", this.model.get("fid"));
+	    this.initContextMenu();
+	    return this.addFieldListener();
+	  };
+	
+	  FieldButton.prototype.initContextMenu = function() {
+	    var menu_field_menu;
+	    if ($("#field-context-menu").length < 1) {
+	      menu_field_menu = _.template(_view_field_context_menu, {});
+	      $("body").append(menu_field_menu);
+	    }
+	    this.$el.contextMenu({
+	      menu: "field-context-menu"
+	    }, (function(_this) {
+	      return function(action, el, pos) {
+	        if (action === "removeConnection") {
+	          return _this.model.removeConnections();
+	        }
+	      };
+	    })(this));
+	    return this;
+	  };
+	
+	  FieldButton.prototype.addFieldListener = function() {
+	    var accept_class, field, getPath, highlight_possible_targets, self, start_offset_x, start_offset_y;
+	    self = this;
+	    field = this.model;
+	    start_offset_x = 0;
+	    start_offset_y = 0;
+	    getPath = function(start, end, offset) {
+	      var ofx, ofy;
+	      ofx = $("#container-wrapper").scrollLeft();
+	      ofy = $("#container-wrapper").scrollTop();
+	      return "M" + (start.left + offset.left + 2) + " " + (start.top + offset.top + 2) + " L" + (end.left + offset.left + ofx - start_offset_x) + " " + (end.top + offset.top + ofy - start_offset_y);
+	    };
+	    highlight_possible_targets = function() {
+	      var target;
+	      target = ".outputs .field";
+	      if (field.get("is_output") === true) {
+	        target = ".inputs .field";
+	      }
+	      return $(target).filter(function() {
+	        return $(this).parent().parent().parent().data("nid") !== field.node.get("nid");
+	      }).addClass("field-possible-target");
+	    };
+	    $(".inner-field", this.$el).draggable({
+	      helper: function() {
+	        return $("<div class='ui-widget-drag-helper'></div>");
+	      },
+	      scroll: true,
+	      cursor: 'pointer',
+	      cursorAt: {
+	        left: 0,
+	        top: 0
+	      },
+	      start: function(event, ui) {
+	        start_offset_x = $("#container-wrapper").scrollLeft();
+	        start_offset_y = $("#container-wrapper").scrollTop();
+	        highlight_possible_targets();
+	        if (ThreeNodes.UI.UIView.connecting_line) {
+	          return ThreeNodes.UI.UIView.connecting_line.attr({
+	            opacity: 1
+	          });
+	        }
+	      },
+	      stop: function(event, ui) {
+	        $(".field").removeClass("field-possible-target");
+	        if (ThreeNodes.UI.UIView.connecting_line) {
+	          return ThreeNodes.UI.UIView.connecting_line.attr({
+	            opacity: 0
+	          });
+	        }
+	      },
+	      drag: function(event, ui) {
+	        var node_pos, pos;
+	        if (ThreeNodes.UI.UIView.connecting_line) {
+	          pos = $(this).position();
+	          node_pos = {
+	            left: field.node.get("x"),
+	            top: field.node.get("y")
+	          };
+	          ThreeNodes.UI.UIView.connecting_line.attr({
+	            path: getPath(pos, ui.position, node_pos)
+	          });
+	          return true;
+	        }
+	      }
+	    });
+	    accept_class = ".outputs .inner-field";
+	    if (field && field.get("is_output") === true) {
+	      accept_class = ".inputs .inner-field";
+	    }
+	    $(".inner-field", this.$el).droppable({
+	      accept: accept_class,
+	      activeClass: "ui-state-active",
+	      hoverClass: "ui-state-hover",
+	      drop: function(event, ui) {
+	        var field2, origin;
+	        origin = $(ui.draggable).parent();
+	        field2 = origin.data("object");
+	        if (field.node.parent) {
+	          return field2.node.createConnection(field, field2);
+	        } else {
+	          return field.node.createConnection(field, field2);
+	        }
+	      }
+	    });
+	    return this;
+	  };
+	
+	  return FieldButton;
+	
+	})(Backbone.View);
+	
+	module.exports = FieldButton;
+
+
+/***/ }),
+/* 34 */
+/***/ (function(module, exports) {
+
+	module.exports = "<span class=\"inner-field\"><span></span><%= name %></span>";
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports) {
+
+	module.exports = "<span class=\"inner-field\"><%= name %><span></span></span>";
+
+/***/ }),
+/* 36 */
+/***/ (function(module, exports) {
+
+	module.exports = "<ul id=\"field-context-menu\" class=\"context-menu\">\n  <li><a href=\"#removeConnection\">Remove connection(s)</a></li>\n</ul>";
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports) {
+
 	// jQuery Context Menu Plugin
 	//
 	// Version 1.01
@@ -3169,15 +3465,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 32 */
+/* 38 */
 /***/ (function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_32__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_38__;
 
 /***/ }),
-/* 33 */,
-/* 34 */,
-/* 35 */
+/* 39 */,
+/* 40 */,
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, FieldsView, NodeView, _, _view_node_context_menu, _view_node_template, namespace,
@@ -3191,15 +3487,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	_view_node_template = __webpack_require__(30);
 	
-	_view_node_context_menu = __webpack_require__(36);
+	_view_node_context_menu = __webpack_require__(31);
 	
-	FieldsView = __webpack_require__(37);
+	FieldsView = __webpack_require__(32);
 	
 	namespace = __webpack_require__(14).namespace;
 	
-	__webpack_require__(31);
+	__webpack_require__(37);
 	
-	__webpack_require__(32);
+	__webpack_require__(38);
 	
 	
 	/* Node View */
@@ -3461,302 +3757,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 36 */
-/***/ (function(module, exports) {
-
-	module.exports = "<ul id=\"node-context-menu\" class=\"context-menu\">\n  <li><a href=\"#remove_node\">Remove node</a></li>\n</ul>";
-
-/***/ }),
-/* 37 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	var Backbone, FieldButton, FieldsView, _,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	FieldButton = __webpack_require__(38);
-	
-	__webpack_require__(32);
-	
-	
-	/* Fields View */
-	
-	FieldsView = (function(superClass) {
-	  extend(FieldsView, superClass);
-	
-	  function FieldsView() {
-	    this.remove = bind(this.remove, this);
-	    this.onFieldCreated = bind(this.onFieldCreated, this);
-	    return FieldsView.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  FieldsView.prototype.initialize = function(options) {
-	    FieldsView.__super__.initialize.apply(this, arguments);
-	    this.node = options.node;
-	    this.subviews = [];
-	    this.collection.on("add", this.onFieldCreated);
-	    return this.collection.each(this.onFieldCreated);
-	  };
-	
-	  FieldsView.prototype.onFieldCreated = function(field) {
-	    var $node, connection, from_gid, isInsideAnotherDOMnode, target, to_gid, view;
-	    target = field.get("is_output") === false ? ".inputs" : ".outputs";
-	    if (field.get("is_output") === false && field.isConnected()) {
-	      connection = field.connections[0];
-	      $node = this.$el.parent();
-	      isInsideAnotherDOMnode = function() {
-	        return $node.parent().closest(".node").length > 0;
-	      };
-	      if (isInsideAnotherDOMnode()) {
-	        from_gid = connection.from_field.node.get("gid");
-	        to_gid = connection.to_field.node.get("gid");
-	        if (from_gid !== "-1" && to_gid !== "-1" && from_gid === to_gid) {
-	          return;
-	        }
-	      }
-	    }
-	    view = new FieldButton({
-	      model: field
-	    });
-	    view.$el.appendTo($(target, this.$el));
-	    field.button = view.$el;
-	    return this.subviews.push(view);
-	  };
-	
-	  FieldsView.prototype.remove = function() {
-	    var views;
-	    this.undelegateEvents();
-	    this.collection.off("add", this.onFieldCreated);
-	    views = this.subviews.concat();
-	    _.each(views, function(view) {
-	      return view.remove();
-	    });
-	    $("input", $(this.el)).remove();
-	    delete this.collection;
-	    delete this.node;
-	    delete this.subviews;
-	    return FieldsView.__super__.remove.apply(this, arguments);
-	  };
-	
-	  return FieldsView;
-	
-	})(Backbone.View);
-	
-	module.exports = FieldsView;
-
-
-/***/ }),
-/* 38 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	var Backbone, FieldButton, _, _view_field_context_menu, _view_node_field_in, _view_node_field_out,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	_view_node_field_in = __webpack_require__(39);
-	
-	_view_node_field_out = __webpack_require__(40);
-	
-	_view_field_context_menu = __webpack_require__(41);
-	
-	__webpack_require__(9);
-	
-	__webpack_require__(31);
-	
-	
-	/* FieldButton View */
-	
-	FieldButton = (function(superClass) {
-	  extend(FieldButton, superClass);
-	
-	  function FieldButton() {
-	    this.render = bind(this.render, this);
-	    this.makeElement = bind(this.makeElement, this);
-	    this.remove = bind(this.remove, this);
-	    return FieldButton.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  FieldButton.prototype.className = "field";
-	
-	  FieldButton.prototype.initialize = function(options) {
-	    FieldButton.__super__.initialize.apply(this, arguments);
-	    this.makeElement();
-	    return this.render();
-	  };
-	
-	  FieldButton.prototype.remove = function() {
-	    var $inner;
-	    $inner = $(".inner-field", this.$el);
-	    if ($inner.data("droppable")) {
-	      $inner.droppable("destroy");
-	    }
-	    if ($inner.data("draggable")) {
-	      $inner.draggable("destroy");
-	    }
-	    $inner.remove();
-	    return FieldButton.__super__.remove.apply(this, arguments);
-	  };
-	
-	  FieldButton.prototype.makeElement = function() {
-	    var bt, layout;
-	    layout = this.model.get("is_output") ? _view_node_field_out : _view_node_field_in;
-	    bt = _.template(layout, {
-	      fid: this.model.get("fid"),
-	      name: this.model.get("name")
-	    });
-	    return this.$el.html(bt);
-	  };
-	
-	  FieldButton.prototype.render = function() {
-	    this.$el.attr("rel", this.model.get("name"));
-	    this.$el.addClass("field-" + this.model.get("name"));
-	    this.$el.data("object", this.model);
-	    this.$el.data("fid", this.model.get("fid"));
-	    this.initContextMenu();
-	    return this.addFieldListener();
-	  };
-	
-	  FieldButton.prototype.initContextMenu = function() {
-	    var menu_field_menu;
-	    if ($("#field-context-menu").length < 1) {
-	      menu_field_menu = _.template(_view_field_context_menu, {});
-	      $("body").append(menu_field_menu);
-	    }
-	    this.$el.contextMenu({
-	      menu: "field-context-menu"
-	    }, (function(_this) {
-	      return function(action, el, pos) {
-	        if (action === "removeConnection") {
-	          return _this.model.removeConnections();
-	        }
-	      };
-	    })(this));
-	    return this;
-	  };
-	
-	  FieldButton.prototype.addFieldListener = function() {
-	    var accept_class, field, getPath, highlight_possible_targets, self, start_offset_x, start_offset_y;
-	    self = this;
-	    field = this.model;
-	    start_offset_x = 0;
-	    start_offset_y = 0;
-	    getPath = function(start, end, offset) {
-	      var ofx, ofy;
-	      ofx = $("#container-wrapper").scrollLeft();
-	      ofy = $("#container-wrapper").scrollTop();
-	      return "M" + (start.left + offset.left + 2) + " " + (start.top + offset.top + 2) + " L" + (end.left + offset.left + ofx - start_offset_x) + " " + (end.top + offset.top + ofy - start_offset_y);
-	    };
-	    highlight_possible_targets = function() {
-	      var target;
-	      target = ".outputs .field";
-	      if (field.get("is_output") === true) {
-	        target = ".inputs .field";
-	      }
-	      return $(target).filter(function() {
-	        return $(this).parent().parent().parent().data("nid") !== field.node.get("nid");
-	      }).addClass("field-possible-target");
-	    };
-	    $(".inner-field", this.$el).draggable({
-	      helper: function() {
-	        return $("<div class='ui-widget-drag-helper'></div>");
-	      },
-	      scroll: true,
-	      cursor: 'pointer',
-	      cursorAt: {
-	        left: 0,
-	        top: 0
-	      },
-	      start: function(event, ui) {
-	        start_offset_x = $("#container-wrapper").scrollLeft();
-	        start_offset_y = $("#container-wrapper").scrollTop();
-	        highlight_possible_targets();
-	        if (ThreeNodes.UI.UIView.connecting_line) {
-	          return ThreeNodes.UI.UIView.connecting_line.attr({
-	            opacity: 1
-	          });
-	        }
-	      },
-	      stop: function(event, ui) {
-	        $(".field").removeClass("field-possible-target");
-	        if (ThreeNodes.UI.UIView.connecting_line) {
-	          return ThreeNodes.UI.UIView.connecting_line.attr({
-	            opacity: 0
-	          });
-	        }
-	      },
-	      drag: function(event, ui) {
-	        var node_pos, pos;
-	        if (ThreeNodes.UI.UIView.connecting_line) {
-	          pos = $(this).position();
-	          node_pos = {
-	            left: field.node.get("x"),
-	            top: field.node.get("y")
-	          };
-	          ThreeNodes.UI.UIView.connecting_line.attr({
-	            path: getPath(pos, ui.position, node_pos)
-	          });
-	          return true;
-	        }
-	      }
-	    });
-	    accept_class = ".outputs .inner-field";
-	    if (field && field.get("is_output") === true) {
-	      accept_class = ".inputs .inner-field";
-	    }
-	    $(".inner-field", this.$el).droppable({
-	      accept: accept_class,
-	      activeClass: "ui-state-active",
-	      hoverClass: "ui-state-hover",
-	      drop: function(event, ui) {
-	        var field2, origin;
-	        origin = $(ui.draggable).parent();
-	        field2 = origin.data("object");
-	        if (field.node.parent) {
-	          return field2.node.createConnection(field, field2);
-	        } else {
-	          return field.node.createConnection(field, field2);
-	        }
-	      }
-	    });
-	    return this;
-	  };
-	
-	  return FieldButton;
-	
-	})(Backbone.View);
-	
-	module.exports = FieldButton;
-
-
-/***/ }),
-/* 39 */
-/***/ (function(module, exports) {
-
-	module.exports = "<span class=\"inner-field\"><span></span><%= name %></span>";
-
-/***/ }),
-/* 40 */
-/***/ (function(module, exports) {
-
-	module.exports = "<span class=\"inner-field\"><%= name %><span></span></span>";
-
-/***/ }),
-/* 41 */
-/***/ (function(module, exports) {
-
-	module.exports = "<ul id=\"field-context-menu\" class=\"context-menu\">\n  <li><a href=\"#removeConnection\">Remove connection(s)</a></li>\n</ul>";
-
-/***/ }),
 /* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3773,7 +3773,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	__webpack_require__(28);
 	
-	NodeView = __webpack_require__(35);
+	NodeView = __webpack_require__(41);
 	
 	__webpack_require__(43);
 	
@@ -4421,13 +4421,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	__webpack_require__(100);
 	
-	__webpack_require__(32);
+	__webpack_require__(38);
 	
 	__webpack_require__(101);
 	
 	__webpack_require__(102);
 	
-	__webpack_require__(32);
+	__webpack_require__(38);
 	
 	UIView = (function(superClass) {
 	  extend(UIView, superClass);
@@ -4466,11 +4466,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	      el: $("#breadcrumb")
 	    });
 	    UIView.svg = Raphael("graph", 4000, 4000);
+	    UIView.curve = UIView.svg.path("M0 0 L0 0").attr({
+	      stroke: "#fff"
+	    });
+	    UIView.triangle = UIView.svg.path("M0 0 L0 0").attr({
+	      stroke: "#fff",
+	      fill: "#fff"
+	    });
 	    UIView.connecting_line = UIView.svg.path("M0 -20 L0 -20").attr({
 	      stroke: "#fff",
 	      'stroke-dasharray': "-",
 	      fill: "none",
-	      opacity: 0
+	      opacity: 1
 	    });
 	    this.sidebar = new Sidebar({
 	      el: $("#sidebar")
@@ -4816,7 +4823,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	TreeView = __webpack_require__(94);
 	
-	__webpack_require__(32);
+	__webpack_require__(38);
 	
 	
 	/* Sidebar View */
@@ -5134,7 +5141,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	__webpack_require__(32);
+	__webpack_require__(38);
 	
 	TreeView = (function(superClass) {
 	  extend(TreeView, superClass);
@@ -6556,7 +6563,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	ConnectionView = __webpack_require__(104);
 	
-	__webpack_require__(32);
+	__webpack_require__(38);
 	
 	
 	/* Workspace View */
@@ -6685,7 +6692,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	__webpack_require__(32);
+	__webpack_require__(38);
 	
 	
 	/* Connection View */
@@ -6700,11 +6707,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  ConnectionView.prototype.initialize = function(options) {
 	    ConnectionView.__super__.initialize.apply(this, arguments);
 	    this.container = $("#graph");
-	    this.line = ThreeNodes.UI.UIView.svg.path().attr({
-	      stroke: "#555",
-	      fill: "none"
-	    });
-	    this.el = this.line.node;
+	    this.svg = ThreeNodes.UI.UIView.svg;
+	    this.curve = ThreeNodes.UI.UIView.curve;
+	    this.triangle = ThreeNodes.UI.UIView.triangle;
+	    this.el = this.svg.node;
 	    this.model.bind("render", (function(_this) {
 	      return function() {
 	        return _this.render();
@@ -6719,18 +6725,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  ConnectionView.prototype.remove = function() {
-	    if (ThreeNodes.UI.UIView.svg && this.line) {
-	      this.line.remove();
-	      delete this.line;
+	    if (this.svg) {
+	      this.svg.remove();
+	      delete this.svg;
 	    }
 	    return true;
 	  };
 	
 	  ConnectionView.prototype.render = function() {
-	    if (ThreeNodes.UI.UIView.svg && this.line && this.line.attrs) {
-	      this.line.attr({
-	        path: this.getPath()
-	      });
+	    if (this.svg) {
+	      this.renderCurve();
+	      this.renderTriangle();
 	    }
 	    return this;
 	  };
@@ -6759,10 +6764,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return o1;
 	  };
 	
-	  ConnectionView.prototype.getPath = function() {
+	  ConnectionView.prototype.renderTriangle = function() {
+	    var obj;
+	    obj = this.curve.getPointAtLength(15);
+	    console.log('frida test', obj.alpha);
+	    return this.triangle.attr({
+	      path: ["M", 0, 0, "L", 1.732, -1, "L", 1.732, 1].join(',')
+	    }).transform('t' + obj.x + ',' + obj.y + 's5, 5' + 'r' + obj.alpha);
+	  };
+	
+	  ConnectionView.prototype.renderCurve = function() {
 	    var diffx, diffy, f1, f2, min_diff, offset, ofx, ofy, x1, x2, x3, x4, y1, y2, y3, y4;
 	    f1 = this.getFieldPosition(this.model.from_field);
 	    f2 = this.getFieldPosition(this.model.to_field);
+	    console.log('frida test', f1, f2);
 	    offset = $("#container-wrapper").offset();
 	    ofx = $("#container-wrapper").scrollLeft() - offset.left;
 	    ofy = $("#container-wrapper").scrollTop() - offset.top;
@@ -6777,7 +6792,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    y2 = y1;
 	    x3 = x4 - diffx * 0.5;
 	    y3 = y4;
-	    return ["M", x1.toFixed(3), y1.toFixed(3), "C", x2, y2, x3, y3, x4.toFixed(3), y4.toFixed(3)].join(",");
+	    return this.curve.attr({
+	      path: ["M", x1.toFixed(3), y1.toFixed(3), "C", x2, y2, x3, y3, x4.toFixed(3), y4.toFixed(3)].join(",")
+	    });
 	  };
 	
 	  return ConnectionView;
@@ -6951,7 +6968,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	_view_group_delete = __webpack_require__(108);
 	
-	__webpack_require__(32);
+	__webpack_require__(38);
 	
 	
 	/* Node View */
@@ -7342,7 +7359,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	__webpack_require__(28);
 	
-	NodeView = __webpack_require__(35);
+	NodeView = __webpack_require__(41);
 	
 	WebGLRenderer = (function(superClass) {
 	  extend(WebGLRenderer, superClass);
@@ -7531,7 +7548,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	__webpack_require__(28);
 	
-	NodeView = __webpack_require__(35);
+	NodeView = __webpack_require__(41);
 	
 	Group = (function(superClass) {
 	  extend(Group, superClass);

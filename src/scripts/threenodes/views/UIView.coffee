@@ -37,11 +37,18 @@ class UIView extends Backbone.View
 
     # Setup SVG for drawing connections
     UIView.svg = Raphael("graph", 4000, 4000)
+    UIView.curve = UIView.svg.path("M0 0 L0 0").attr
+      stroke: "#fff"
+    UIView.triangle = UIView.svg.path("M0 0 L0 0").attr
+      stroke: "#fff"
+      fill: "#fff"
     UIView.connecting_line = UIView.svg.path("M0 -20 L0 -20").attr
       stroke: "#fff"
       'stroke-dasharray': "-"
       fill: "none"
-      opacity: 0
+      opacity: 1
+
+   
 
     # Setup the sidebar and menu subviews
     @sidebar = new Sidebar({el: $("#sidebar")})
