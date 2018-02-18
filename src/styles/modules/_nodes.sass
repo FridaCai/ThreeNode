@@ -72,6 +72,34 @@ $c: 100
     .warning
       padding-top: 7px
 
+
+  .handler
+    position: absolute
+    width: 5px;
+    height: 5px;
+    cursor: crosshair
+    background: red
+    margin-left: -2.5px
+    margin-top: -2.5px
+
+    &.up
+      left: 50%
+      top: 0
+
+
+    &.down
+      left: 50%
+      top: 100%
+
+    &.left
+      top: 50%
+      left: 0
+
+    &.right
+      left: 100%
+      top: 50%
+
+
   .inner-field
     cursor: pointer
     display: inline-block

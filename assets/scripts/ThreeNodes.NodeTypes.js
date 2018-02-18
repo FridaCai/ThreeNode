@@ -3774,7 +3774,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 30 */
 /***/ (function(module, exports) {
 
-	module.exports = "<div class='head'><span><%= get(\"name\") %></span></div>\n<div class='options'>\n  <div class='inputs'></div>\n  <div class='center'></div>\n  <div class='outputs'></div>\n</div>\n";
+	module.exports = "<div class='head'><span><%= get(\"name\") %></span></div>\n<div class='options'>\n  <div class='inputs'></div>\n  <div class='center'></div>\n  <div class='outputs'></div>\n</div>\n\n<div class=\"up handler\"></div>\n<div class=\"down handler\"></div>\n<div class=\"left handler\"></div>\n<div class=\"right handler\"></div>\n";
 
 /***/ }),
 /* 31 */
