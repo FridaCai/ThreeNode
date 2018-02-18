@@ -7,7 +7,7 @@
 		exports["NodeTypes"] = factory(require("_"), require("Backbone"), require("jQuery"), require("libs/jshint"));
 	else
 		root["ThreeNodes"] = root["ThreeNodes"] || {}, root["ThreeNodes"]["NodeTypes"] = factory(root["_"], root["Backbone"], root["jQuery"], root["libs/jshint"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_38__, __WEBPACK_EXTERNAL_MODULE_48__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_38__, __WEBPACK_EXTERNAL_MODULE_49__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -58,17 +58,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	__webpack_require__(39);
 	
-	__webpack_require__(44);
+	__webpack_require__(40);
 	
 	__webpack_require__(45);
 	
-	__webpack_require__(52);
+	__webpack_require__(46);
 	
 	__webpack_require__(53);
 	
 	__webpack_require__(54);
 	
-	__webpack_require__(56);
+	__webpack_require__(55);
+	
+	__webpack_require__(57);
 
 
 /***/ }),
@@ -4297,6 +4299,51 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
+	var Direction, NoDirection, NodeNumberSimple,
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	NodeNumberSimple = __webpack_require__(11);
+	
+	Direction = (function(superClass) {
+	  extend(Direction, superClass);
+	
+	  function Direction() {
+	    return Direction.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Direction.node_name = 'Direction';
+	
+	  Direction.group_name = 'Arrow';
+	
+	  return Direction;
+	
+	})(NodeNumberSimple);
+	
+	ThreeNodes.Core.addNodeType('Direction', Direction);
+	
+	NoDirection = (function(superClass) {
+	  extend(NoDirection, superClass);
+	
+	  function NoDirection() {
+	    return NoDirection.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  NoDirection.node_name = 'NoDirection';
+	
+	  NoDirection.group_name = 'Arrow';
+	
+	  return NoDirection;
+	
+	})(NodeNumberSimple);
+	
+	ThreeNodes.Core.addNodeType('NoDirection', NoDirection);
+
+
+/***/ }),
+/* 40 */
+/***/ (function(module, exports, __webpack_require__) {
+
 	var Backbone, Boolean, Color, Euler, Node, NodeColorView, NodeNumberSimple, NodeWithCenterTextfield, Number, Quaternion, String, Vector2, Vector3, _,
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty,
@@ -4310,9 +4357,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	NodeNumberSimple = __webpack_require__(11);
 	
-	NodeWithCenterTextfield = __webpack_require__(40);
+	NodeWithCenterTextfield = __webpack_require__(41);
 	
-	NodeColorView = __webpack_require__(42);
+	NodeColorView = __webpack_require__(43);
 	
 	Number = (function(superClass) {
 	  extend(Number, superClass);
@@ -4785,7 +4832,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, NodeView, NodeWithCenterTextfield, _,
@@ -4799,7 +4846,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	__webpack_require__(28);
 	
-	NodeView = __webpack_require__(41);
+	NodeView = __webpack_require__(42);
 	
 	NodeWithCenterTextfield = (function(superClass) {
 	  extend(NodeWithCenterTextfield, superClass);
@@ -4847,7 +4894,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, FieldsView, NodeView, _, _view_node_context_menu, _view_node_template, namespace,
@@ -5131,7 +5178,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Color, NodeView, _, namespace,
@@ -5147,9 +5194,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	__webpack_require__(28);
 	
-	NodeView = __webpack_require__(41);
+	NodeView = __webpack_require__(42);
 	
-	__webpack_require__(43);
+	__webpack_require__(44);
 	
 	Color = (function(superClass) {
 	  extend(Color, superClass);
@@ -5223,7 +5270,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports) {
 
 	/**
@@ -5713,7 +5760,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(jQuery)
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var And, Backbone, Equal, Greater, IfElse, Node, Or, Smaller, _, jQuery,
@@ -6004,7 +6051,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Code, CodeView, Expression, ExpressionView, Node, NodeCodeView, _,
@@ -6018,7 +6065,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Node = __webpack_require__(28);
 	
-	NodeCodeView = __webpack_require__(46);
+	NodeCodeView = __webpack_require__(47);
 	
 	CodeView = (function(superClass) {
 	  extend(CodeView, superClass);
@@ -6202,7 +6249,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, CodeMirror, NodeCodeView, NodeView, _,
@@ -6214,9 +6261,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	CodeMirror = __webpack_require__(47);
-	
-	__webpack_require__(48);
+	CodeMirror = __webpack_require__(48);
 	
 	__webpack_require__(49);
 	
@@ -6224,9 +6269,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	__webpack_require__(51);
 	
+	__webpack_require__(52);
+	
 	__webpack_require__(28);
 	
-	NodeView = __webpack_require__(41);
+	NodeView = __webpack_require__(42);
 	
 	NodeCodeView = (function(superClass) {
 	  extend(NodeCodeView, superClass);
@@ -6317,7 +6364,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -13924,13 +13971,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_48__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_49__;
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -13940,7 +13987,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	(function(mod) {
 	  if (true) // CommonJS
-	    mod(__webpack_require__(47));
+	    mod(__webpack_require__(48));
 	  else if (typeof define == "function" && define.amd) // AMD
 	    define(["../../lib/codemirror"], mod);
 	  else // Plain browser env
@@ -14599,7 +14646,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -14607,7 +14654,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	(function(mod) {
 	  if (true) // CommonJS
-	    mod(__webpack_require__(47));
+	    mod(__webpack_require__(48));
 	  else if (typeof define == "function" && define.amd) // AMD
 	    define(["../../lib/codemirror"], mod);
 	  else // Plain browser env
@@ -14815,7 +14862,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -14823,7 +14870,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	(function(mod) {
 	  if (true) // CommonJS
-	    mod(__webpack_require__(47));
+	    mod(__webpack_require__(48));
 	  else if (typeof define == "function" && define.amd) // AMD
 	    define(["../../lib/codemirror"], mod);
 	  else // Plain browser env
@@ -14957,7 +15004,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, MathAdd, MathAttenuation, MathCeil, MathCos, MathDivide, MathFloor, MathMax, MathMin, MathMod, MathMult, MathRound, MathSin, MathSubtract, MathTan, Node, NodeNumberParam1, NodeNumberSimple, _,
@@ -15555,7 +15602,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Font, Get, LFO, Merge, Mouse, Mp3Input, Node, NodeWithCenterTextfield, Random, Screen, Timer, _,
@@ -15569,7 +15616,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Node = __webpack_require__(28);
 	
-	NodeWithCenterTextfield = __webpack_require__(40);
+	NodeWithCenterTextfield = __webpack_require__(41);
 	
 	Random = (function(superClass) {
 	  extend(Random, superClass);
@@ -16433,7 +16480,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, LinearSpread, Node, RandomSpread, Rc4Random, _,
@@ -16445,7 +16492,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	Rc4Random = __webpack_require__(55);
+	Rc4Random = __webpack_require__(56);
 	
 	Node = __webpack_require__(28);
 	
@@ -16603,7 +16650,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, exports) {
 
 	var Rc4Random,
@@ -16658,7 +16705,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Group, Node, Nodes, _,

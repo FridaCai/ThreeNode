@@ -75,7 +75,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var settings;
 	    settings = {
 	      test: false,
-	      player_mode: false
+	      player_mode: false,
+	      direction: true
 	    };
 	    this.settings = $.extend({}, settings, options);
 	    this.group_definitions = new GroupDefinitions([]);

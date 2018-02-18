@@ -14,6 +14,7 @@ class Core
     settings =
       test: false
       player_mode: false
+      direction: true
     @settings = $.extend({}, settings, options)
 
     # Initialize some core classes

@@ -7,7 +7,7 @@
 		exports["UI"] = factory(require("_"), require("Backbone"), require("jQuery"), require("Blob"), require("FileSaver"), require("Raphael"));
 	else
 		root["ThreeNodes"] = root["ThreeNodes"] || {}, root["ThreeNodes"]["UI"] = factory(root["_"], root["Backbone"], root["jQuery"], root["Blob"], root["FileSaver"], root["Raphael"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_38__, __WEBPACK_EXTERNAL_MODULE_80__, __WEBPACK_EXTERNAL_MODULE_81__, __WEBPACK_EXTERNAL_MODULE_100__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_38__, __WEBPACK_EXTERNAL_MODULE_81__, __WEBPACK_EXTERNAL_MODULE_82__, __WEBPACK_EXTERNAL_MODULE_101__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -63,25 +63,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	UIView = __webpack_require__(90);
+	UIView = __webpack_require__(91);
 	
-	Workspace = __webpack_require__(103);
+	Workspace = __webpack_require__(104);
 	
-	AppTimeline = __webpack_require__(105);
+	AppTimeline = __webpack_require__(106);
 	
-	GroupDefinitionView = __webpack_require__(106);
+	GroupDefinitionView = __webpack_require__(107);
 	
-	UrlHandler = __webpack_require__(109);
+	UrlHandler = __webpack_require__(110);
 	
-	FileHandler = __webpack_require__(110);
+	FileHandler = __webpack_require__(111);
 	
-	NodeView = __webpack_require__(41);
+	NodeView = __webpack_require__(42);
 	
-	NodeViewColor = __webpack_require__(42);
+	NodeViewColor = __webpack_require__(43);
 	
-	NodeViewWebgl = __webpack_require__(112);
+	NodeViewWebgl = __webpack_require__(113);
 	
-	NodeViewGroup = __webpack_require__(113);
+	NodeViewGroup = __webpack_require__(114);
 	
 	UI = (function() {
 	  function UI(core) {
@@ -3473,7 +3473,8 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ }),
 /* 39 */,
 /* 40 */,
-/* 41 */
+/* 41 */,
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, FieldsView, NodeView, _, _view_node_context_menu, _view_node_template, namespace,
@@ -3757,7 +3758,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Color, NodeView, _, namespace,
@@ -3773,9 +3774,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	__webpack_require__(28);
 	
-	NodeView = __webpack_require__(41);
+	NodeView = __webpack_require__(42);
 	
-	__webpack_require__(43);
+	__webpack_require__(44);
 	
 	Color = (function(superClass) {
 	  extend(Color, superClass);
@@ -3849,7 +3850,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports) {
 
 	/**
@@ -4339,7 +4340,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(jQuery)
 
 /***/ }),
-/* 44 */,
 /* 45 */,
 /* 46 */,
 /* 47 */,
@@ -4375,19 +4375,19 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 77 */,
 /* 78 */,
 /* 79 */,
-/* 80 */
-/***/ (function(module, exports) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_80__;
-
-/***/ }),
+/* 80 */,
 /* 81 */
 /***/ (function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_81__;
 
 /***/ }),
-/* 82 */,
+/* 82 */
+/***/ (function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_82__;
+
+/***/ }),
 /* 83 */,
 /* 84 */,
 /* 85 */,
@@ -4395,7 +4395,8 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 87 */,
 /* 88 */,
 /* 89 */,
-/* 90 */
+/* 90 */,
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	
@@ -4409,23 +4410,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	_view_app_ui = __webpack_require__(91);
+	_view_app_ui = __webpack_require__(92);
 	
-	Sidebar = __webpack_require__(92);
+	Sidebar = __webpack_require__(93);
 	
-	Breadcrumb = __webpack_require__(95);
+	Breadcrumb = __webpack_require__(96);
 	
-	MenuBar = __webpack_require__(96);
-	
-	__webpack_require__(99);
+	MenuBar = __webpack_require__(97);
 	
 	__webpack_require__(100);
 	
-	__webpack_require__(38);
-	
 	__webpack_require__(101);
 	
+	__webpack_require__(38);
+	
 	__webpack_require__(102);
+	
+	__webpack_require__(103);
 	
 	__webpack_require__(38);
 	
@@ -4466,13 +4467,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      el: $("#breadcrumb")
 	    });
 	    UIView.svg = Raphael("graph", 4000, 4000);
-	    UIView.curve = UIView.svg.path("M0 0 L0 0").attr({
-	      stroke: "#fff"
-	    });
-	    UIView.triangle = UIView.svg.path("M0 0 L0 0").attr({
-	      stroke: "#fff",
-	      fill: "#fff"
-	    });
 	    UIView.connecting_line = UIView.svg.path("M0 -20 L0 -20").attr({
 	      stroke: "#fff",
 	      'stroke-dasharray': "-",
@@ -4480,7 +4474,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      opacity: 1
 	    });
 	    this.sidebar = new Sidebar({
-	      el: $("#sidebar")
+	      el: $("#sidebar"),
+	      settings: this.settings
 	    });
 	    this.initMenubar();
 	    this.initLayout();
@@ -4801,13 +4796,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 91 */
+/* 92 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div id='container-wrapper' class=\"ui-layout-center\">\n  <div id='container'>\n    <div id='graph'></div>\n  </div>\n  <div id=\"breadcrumb\"></div>\n</div>\n<div id='sidebar' class=\"ui-layout-west\">\n  <ul class=\"ui-layout-north\">\n    <li><a href='#tab-new'>New</a></li>\n    <li><a href='#tab-attribute'>Attributes</a></li>\n    <!-- <li><a href='#tab-list'>List</a></li> -->\n  </ul>\n  <div class=\"container ui-layout-center\">\n    <div id='tab-attribute'></div>\n    <div id='tab-new'>\n      <!-- <input id='node_filter' name='search-node' placeholder='Search' type='input' /> -->\n    </div>\n    <!-- <div id='tab-list'></div> -->\n  </div>\n</div>\n<div id=\"library\" class=\"ui-layout-east\"></div>\n<div id=\"timeline\" class=\"ui-layout-south\"></div>\n<input id='main_file_input_open' multiple='false' type='file' />\n";
 
 /***/ }),
-/* 92 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, NodeSidebarView, Sidebar, TreeView, _,
@@ -4819,9 +4814,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	NodeSidebarView = __webpack_require__(93);
+	NodeSidebarView = __webpack_require__(94);
 	
-	TreeView = __webpack_require__(94);
+	TreeView = __webpack_require__(95);
 	
 	__webpack_require__(38);
 	
@@ -4832,7 +4827,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend(Sidebar, superClass);
 	
 	  function Sidebar() {
+	    this.renderArrow = bind(this.renderArrow, this);
 	    this.initNewNode = bind(this.initNewNode, this);
+	    this.nodeClick = bind(this.nodeClick, this);
 	    this.initSearch = bind(this.initSearch, this);
 	    this.filterList = bind(this.filterList, this);
 	    this.filterListItem = bind(this.filterListItem, this);
@@ -4845,8 +4842,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return Sidebar.__super__.constructor.apply(this, arguments);
 	  }
 	
-	  Sidebar.prototype.initialize = function() {
+	  Sidebar.prototype.initialize = function(options) {
 	    Sidebar.__super__.initialize.apply(this, arguments);
+	    this.settings = options.settings;
 	    this.node_views = [];
 	    this.initNewNode();
 	    this.initSearch();
@@ -4979,6 +4977,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return this;
 	  };
 	
+	  Sidebar.prototype.nodeClick = function(e) {
+	    var dir, rel;
+	    dir = true;
+	    rel = $(e.currentTarget).attr('rel');
+	    if (rel === 'Direction') {
+	      dir = true;
+	    } else if (rel === 'NoDirection') {
+	      dir = false;
+	    }
+	    this.settings.direction = dir;
+	    return this.renderArrow();
+	  };
+	
 	  Sidebar.prototype.initNewNode = function() {
 	    var $container, group, group_name, i, len, node, nodes_by_group, ref, result, self;
 	    self = this;
@@ -4986,6 +4997,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    result = [];
 	    nodes_by_group = {
 	      Shape: [],
+	      Arrow: [],
 	      Base: [],
 	      Conditional: [],
 	      Math: [],
@@ -5029,7 +5041,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	      scroll: false,
 	      containment: "document"
 	    });
+	    this.renderArrow();
+	    $("#nodetype-Arrow li a").bind('click', this.nodeClick);
 	    return this;
+	  };
+	
+	  Sidebar.prototype.renderArrow = function() {
+	    var rel;
+	    rel = '';
+	    if (this.settings.direction) {
+	      rel = 'Direction';
+	    } else {
+	      rel = 'NoDirection';
+	    }
+	    $("#nodetype-Arrow a.button").css({
+	      background: "#313638"
+	    });
+	    return $("#nodetype-Arrow a.button[rel='" + rel + "']").css({
+	      background: '#191c1d'
+	    });
 	  };
 	
 	  return Sidebar;
@@ -5040,7 +5070,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 93 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, NodeSidebarView, _,
@@ -5129,7 +5159,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 94 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, TreeView, _,
@@ -5219,7 +5249,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 95 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Breadcrumb, _,
@@ -5281,7 +5311,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 96 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, MenuBar, _, _view_menubar,
@@ -5293,9 +5323,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	_view_menubar = __webpack_require__(97);
+	_view_menubar = __webpack_require__(98);
 	
-	__webpack_require__(98);
+	__webpack_require__(99);
 	
 	MenuBar = (function(superClass) {
 	  extend(MenuBar, superClass);
@@ -5352,13 +5382,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 97 */
+/* 98 */
 /***/ (function(module, exports) {
 
 	module.exports = "<ul id=\"main-menu-bar\" class=\"menubar ui-layout-north\">\n  <li>\n    <a href=\"#File\">File</a>\n    <ul>\n      <li><a href=\"#NewFile\" data-event=\"ClearWorkspace\">New</a></li>\n      <li><a href=\"#OpenFile\" data-event=\"OpenFile\">Open</a></li>\n      <li><a href=\"#SaveFile\" data-event=\"SaveFile\">Save</a></li>\n    </ul>\n  </li>\n  <li>\n    <a href=\"#Edit\">Edit</a>\n    <ul>\n      <li><a href=\"#Rotate\" data-event=\"Rotate\">Rotate</a></li>\n    </ul>\n  </li>\n  <li>\n    <a href=\"#View\">View</a>\n    <ul>\n      <li><a href=\"#Library\" data-event=\"ToggleLibrary\">Library</a></li>\n      <li><a href=\"#Attributes\" data-event=\"ToggleAttributes\">Attributes</a></li>\n    </ul>\n  </li>\n  <li class=\"expanded\">\n    <a href=\"#examples\">Examples</a>\n    <ul>\n      <li><a href=\"#example/rotating_cube1.json\">Eagle Eye</a></li>\n      <li><a href=\"#example/geometry_and_material1.json\">VVR</a></li>\n    </ul>\n  </li>\n</ul>\n";
 
 /***/ }),
-/* 98 */
+/* 99 */
 /***/ (function(module, exports) {
 
 	/*!
@@ -5846,7 +5876,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 99 */
+/* 100 */
 /***/ (function(module, exports) {
 
 	/**
@@ -5874,13 +5904,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 100 */
+/* 101 */
 /***/ (function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_100__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_101__;
 
 /***/ }),
-/* 101 */
+/* 102 */
 /***/ (function(module, exports) {
 
 	/*
@@ -6437,7 +6467,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 102 */
+/* 103 */
 /***/ (function(module, exports) {
 
 	/**
@@ -6549,7 +6579,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 103 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, ConnectionView, Workspace, _,
@@ -6561,7 +6591,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	ConnectionView = __webpack_require__(104);
+	ConnectionView = __webpack_require__(105);
 	
 	__webpack_require__(38);
 	
@@ -6681,7 +6711,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 104 */
+/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, ConnectionView, _,
@@ -6708,8 +6738,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    ConnectionView.__super__.initialize.apply(this, arguments);
 	    this.container = $("#graph");
 	    this.svg = ThreeNodes.UI.UIView.svg;
-	    this.curve = ThreeNodes.UI.UIView.curve;
-	    this.triangle = ThreeNodes.UI.UIView.triangle;
+	    this.curve = this.svg.path().attr({
+	      stroke: "#fff"
+	    });
+	    this.triangle = this.svg.path().attr({
+	      stroke: "#fff",
+	      fill: "#fff"
+	    });
 	    this.el = this.svg.node;
 	    this.model.bind("render", (function(_this) {
 	      return function() {
@@ -6761,9 +6796,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  ConnectionView.prototype.renderTriangle = function() {
-	    var obj;
-	    obj = this.curve.getPointAtLength(150);
-	    console.log(obj.alpha);
+	    var len, obj;
+	    len = this.curve.getTotalLength();
+	    obj = this.curve.getPointAtLength(len - 15);
 	    return this.triangle.attr({
 	      path: ["M", 0, 0, "L", 1.732, -1, "L", 1.732, 1].join(',')
 	    }).transform('t' + obj.x + ',' + obj.y + 's5, 5' + 'r' + obj.alpha);
@@ -6800,7 +6835,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 105 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var AppTimeline, Backbone, _,
@@ -6947,7 +6982,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 106 */
+/* 107 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, GroupDefinitionView, _, _view_group_delete, _view_template,
@@ -6959,9 +6994,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	_view_template = __webpack_require__(107);
+	_view_template = __webpack_require__(108);
 	
-	_view_group_delete = __webpack_require__(108);
+	_view_group_delete = __webpack_require__(109);
 	
 	__webpack_require__(38);
 	
@@ -7042,19 +7077,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 107 */
+/* 108 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div class='definition definition-<%= get(\"name\") %>'>\n  <div class='head'><span><%= get(\"name\") %></span></div>\n  <div class='options'>\n    <a href='#' class='edit'>edit</a>\n    <a href='#' class='remove'>remove</a>\n  </div>\n</div>";
 
 /***/ }),
-/* 108 */
+/* 109 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div id=\"confirm-groupdefinition-delete\" title=\"This will remove any existing group node using this group definition\">\n  <p class=\"found-items\"></p>\n  <p>Are you sure?</p>\n</div>\n";
 
 /***/ }),
-/* 109 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, UrlHandler,
@@ -7119,7 +7154,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 110 */
+/* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, CodeExporter, FileHandler, Utils, _,
@@ -7133,11 +7168,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Utils = __webpack_require__(9);
 	
-	CodeExporter = __webpack_require__(111);
-	
-	__webpack_require__(80);
+	CodeExporter = __webpack_require__(112);
 	
 	__webpack_require__(81);
+	
+	__webpack_require__(82);
 	
 	FileHandler = (function(superClass) {
 	  extend(FileHandler, superClass);
@@ -7224,7 +7259,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 111 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, CodeExporter, _,
@@ -7340,7 +7375,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 112 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, NodeView, WebGLRenderer, _,
@@ -7354,7 +7389,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	__webpack_require__(28);
 	
-	NodeView = __webpack_require__(41);
+	NodeView = __webpack_require__(42);
 	
 	WebGLRenderer = (function(superClass) {
 	  extend(WebGLRenderer, superClass);
@@ -7527,7 +7562,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 113 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Group, NodeView, _, namespace,
@@ -7543,7 +7578,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	__webpack_require__(28);
 	
-	NodeView = __webpack_require__(41);
+	NodeView = __webpack_require__(42);
 	
 	Group = (function(superClass) {
 	  extend(Group, superClass);

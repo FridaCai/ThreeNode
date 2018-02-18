@@ -13,8 +13,11 @@ class ConnectionView extends Backbone.View
     #   stroke: "#555"
     #   fill: "none"
     @svg = ThreeNodes.UI.UIView.svg;
-    @curve = ThreeNodes.UI.UIView.curve;
-    @triangle = ThreeNodes.UI.UIView.triangle;
+    @curve = @svg.path().attr
+      stroke: "#fff"
+    @triangle = @svg.path().attr
+      stroke: "#fff"
+      fill: "#fff"
 
     # set the dom element
     @el = @svg.node
@@ -53,7 +56,8 @@ class ConnectionView extends Backbone.View
     return o1
 
   renderTriangle: ()->
-    obj = @curve.getPointAtLength(15);
+    len = @curve.getTotalLength()
+    obj = @curve.getPointAtLength(len-15)
     @triangle.attr
       path: ["M", 0, 0, "L", 1.732, -1, "L", 1.732, 1].join(',')
     .transform('t' + obj.x + ',' + obj.y + 's5, 5' + 'r' + obj.alpha)
