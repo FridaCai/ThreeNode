@@ -6662,7 +6662,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return false;
 	    }
 	    view = new ConnectionView({
-	      model: connection
+	      model: connection,
+	      settings: this.settings
 	    });
 	    return this.views.push(view);
 	  };
@@ -6736,6 +6737,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  ConnectionView.prototype.initialize = function(options) {
 	    ConnectionView.__super__.initialize.apply(this, arguments);
+	    this.settings = options.settings;
 	    this.container = $("#graph");
 	    this.svg = ThreeNodes.UI.UIView.svg;
 	    this.curve = this.svg.path().attr({
@@ -6797,8 +6799,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  ConnectionView.prototype.renderTriangle = function() {
 	    var len, obj;
+	    if (!this.settings.direction) {
+	      return;
+	    }
 	    len = this.curve.getTotalLength();
-	    obj = this.curve.getPointAtLength(len - 15);
+	    obj = this.curve.getPointAtLength(len - 13);
 	    return this.triangle.attr({
 	      path: ["M", 0, 0, "L", 1.732, -1, "L", 1.732, 1].join(',')
 	    }).transform('t' + obj.x + ',' + obj.y + 's5, 5' + 'r' + obj.alpha);

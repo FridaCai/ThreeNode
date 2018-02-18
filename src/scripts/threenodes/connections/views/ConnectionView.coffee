@@ -7,6 +7,7 @@ require 'jquery.ui'
 class ConnectionView extends Backbone.View
   initialize: (options) ->
     super
+    @settings = options.settings
     @container = $("#graph")
     
     # @svg = ThreeNodes.UI.UIView.svg.path().attr
@@ -56,8 +57,10 @@ class ConnectionView extends Backbone.View
     return o1
 
   renderTriangle: ()->
+    if(!@settings.direction)
+      return;
     len = @curve.getTotalLength()
-    obj = @curve.getPointAtLength(len-15)
+    obj = @curve.getPointAtLength(len-13)
     @triangle.attr
       path: ["M", 0, 0, "L", 1.732, -1, "L", 1.732, 1].join(',')
     .transform('t' + obj.x + ',' + obj.y + 's5, 5' + 'r' + obj.alpha)

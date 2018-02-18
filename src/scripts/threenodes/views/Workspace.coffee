@@ -71,6 +71,7 @@ class Workspace extends Backbone.View
       return false
     view = new ConnectionView
       model: connection
+      settings: @settings
     @views.push(view)
 
   initDrop: () =>
