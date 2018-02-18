@@ -6725,10 +6725,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  ConnectionView.prototype.remove = function() {
-	    if (this.svg) {
-	      this.svg.remove();
-	      delete this.svg;
-	    }
 	    return true;
 	  };
 	
@@ -6765,30 +6761,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  ConnectionView.prototype.renderTriangle = function() {
-	    var alpha, diffx, diffy, f1, f2, min_diff, obj, offset, ofx, ofy, x1, x2, x3, x4, y1, y2, y3, y4;
-	    f1 = this.getFieldPosition(this.model.from_field);
-	    f2 = this.getFieldPosition(this.model.to_field);
-	    offset = $("#container-wrapper").offset();
-	    ofx = $("#container-wrapper").scrollLeft() - offset.left;
-	    ofy = $("#container-wrapper").scrollTop() - offset.top;
-	    x1 = f1.left + ofx;
-	    y1 = f1.top + ofy;
-	    x4 = f2.left + ofx;
-	    y4 = f2.top + ofy;
-	    min_diff = 42;
-	    diffx = Math.max(min_diff, x4 - x1);
-	    diffy = Math.max(min_diff, y4 - y1);
-	    x2 = x1 + diffx * 0.5;
-	    y2 = y1;
-	    x3 = x4 - diffx * 0.5;
-	    y3 = y4;
-	    console.log('frida test x1, y1', x1, y1);
-	    console.log('frida test x4, y4', x4, y4);
+	    var obj;
 	    obj = this.curve.getPointAtLength(150);
-	    alpha = obj.alpha;
+	    console.log(obj.alpha);
 	    return this.triangle.attr({
 	      path: ["M", 0, 0, "L", 1.732, -1, "L", 1.732, 1].join(',')
-	    }).transform('t' + obj.x + ',' + obj.y + 's5, 5' + 'r' + alpha);
+	    }).transform('t' + obj.x + ',' + obj.y + 's5, 5' + 'r' + obj.alpha);
 	  };
 	
 	  ConnectionView.prototype.renderCurve = function() {

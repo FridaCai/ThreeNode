@@ -23,9 +23,12 @@ class ConnectionView extends Backbone.View
     @render()
 
   remove: ->
-    if @svg
-      @svg.remove()
-      delete @svg
+    # if @svg.curve
+    #   @svg.curve.remove()
+    #   delete @svg.curve
+    # if @svg.triangle
+    #   @svg.triangle.remove()
+    #   delete @svg.triangle
     return true
 
   render: () ->
@@ -53,7 +56,7 @@ class ConnectionView extends Backbone.View
     obj = @curve.getPointAtLength(15);
     @triangle.attr
       path: ["M", 0, 0, "L", 1.732, -1, "L", 1.732, 1].join(',')
-    .transform('t' + obj.x + ',' + obj.y + 's5, 5' + 'r' + obj.alpah)
+    .transform('t' + obj.x + ',' + obj.y + 's5, 5' + 'r' + obj.alpha)
 
   renderCurve: () ->
     f1 = @getFieldPosition(@model.from_field)

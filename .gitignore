@@ -11,3 +11,7 @@ output_static/**
 dist/
 dist/**
 Gemfile.lock
+assets/*
+assets/
+assets/**
+assets/scripts/*
