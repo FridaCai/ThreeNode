@@ -51,20 +51,13 @@ class ConnectionView extends Backbone.View
 
   renderTriangle: ()->
     obj = @curve.getPointAtLength(15);
-    console.log('frida test', obj.alpha);
     @triangle.attr
       path: ["M", 0, 0, "L", 1.732, -1, "L", 1.732, 1].join(',')
-    .transform('t' + obj.x + ',' + obj.y + 's5, 5' + 'r' + obj.alpha)
-
-    
-
+    .transform('t' + obj.x + ',' + obj.y + 's5, 5' + 'r' + obj.alpah)
 
   renderCurve: () ->
     f1 = @getFieldPosition(@model.from_field)
     f2 = @getFieldPosition(@model.to_field)
-
-    console.log('frida test', f1, f2)
-
     offset = $("#container-wrapper").offset()
     ofx = $("#container-wrapper").scrollLeft() - offset.left
     ofy = $("#container-wrapper").scrollTop() - offset.top
@@ -75,7 +68,6 @@ class ConnectionView extends Backbone.View
     min_diff = 42
     diffx = Math.max(min_diff, x4 - x1)
     diffy = Math.max(min_diff, y4 - y1)
-
     x2 = x1 + diffx * 0.5
     y2 = y1
     x3 = x4 - diffx * 0.5
