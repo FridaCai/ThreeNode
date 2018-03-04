@@ -12,6 +12,11 @@ class Connections extends Backbone.Collection
   render: () =>
     @each (c) -> c.render()
 
+  renderConnections: (node) =>
+    @each (c) ->
+      if(c.options.to_model == node or c.options.from_model == node)
+        c.render()
+
   create: (model, options) =>
     if !options then options = {}
     model.indexer = @indexer

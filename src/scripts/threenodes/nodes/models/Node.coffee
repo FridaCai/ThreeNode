@@ -15,8 +15,8 @@ class Node extends Backbone.Model
     gid: -1 # group id, set on subnodes of group == group.nid
     x: 0
     y: 0
-    width: null
-    height: null
+    width: 90
+    height: 26
     name: ""
 
   initialize: (options) =>

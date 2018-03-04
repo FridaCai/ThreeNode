@@ -42,10 +42,15 @@ class Nodes extends Backbone.Collection
 
       self.trigger "nodeslist:rebuild", self
 
-    @bind "createConnection", (field1, field2) =>
+    @bind "createConnection", (from_model, from_type, to_model, to_type) =>
       @connections.create
-        from_field: field1
-        to_field: field2
+        from_model: from_model
+        from_type: from_type
+        to_model: to_model
+        to_type: to_type
+
+    @bind "renderConnections", (node) =>
+      @connections.renderConnections(node)
 
   clearWorkspace: () =>
     @removeConnections()
@@ -103,6 +108,7 @@ class Nodes extends Backbone.Collection
     n
 
   render: () =>
+    return;
     # Define temporary objects to index the nodes
     invalidNodes = {}
     terminalNodes = {}

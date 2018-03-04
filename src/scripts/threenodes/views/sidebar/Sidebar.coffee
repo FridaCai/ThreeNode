@@ -16,7 +16,7 @@ class Sidebar extends Backbone.View
     @initNewNode()
     @initSearch()
     @initTabs()
-    @initTreeView()
+    # @initTreeView()
     @layout = @$el.layout
       scrollToBookmarkOnLoad: false
       north:

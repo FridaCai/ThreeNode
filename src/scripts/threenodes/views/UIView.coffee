@@ -142,27 +142,27 @@ class UIView extends Backbone.View
       stop: (event, ui) =>
         $selected = $(".node.ui-selected")
         nodes = []
-        anims = []
+        # anims = []
         # Add the nodes and their anims container to some arrays
         $selected.each () ->
           ob = $(this).data("object")
           if !ob.get("parent")
-            ob.anim.objectTrack.name = ob.get("name")
-            anims.push(ob.anim)
+            # ob.anim.objectTrack.name = ob.get("name")
+            # anims.push(ob.anim)
             nodes.push(ob)
           else
             # if this is a subnode we only select the group
             obgrp = ob.get("parent")
-            obgrp.anim.objectTrack.name = ob.get("name")
+            # obgrp.anim.objectTrack.name = ob.get("name")
             # add the object only once
             if !_.find(nodes, (n) -> n.cid == obgrp.cid)
-              anims.push(obgrp.anim)
+              # anims.push(obgrp.anim)
               nodes.push(obgrp)
         # Display the selected nodes attributes in the sidebar
         @sidebar.clearNodesAttributes()
         @sidebar.renderNodesAttributes(nodes)
         # Display the selected nodes in the timeline
-        @trigger("selectAnims", anims)
+        # @trigger("selectAnims", anims)
 
     # Quick fix for input blur.
     # Without this, after focusing an input in a node it was difficult

@@ -7,7 +7,7 @@
 		exports["NodeTypes"] = factory(require("_"), require("Backbone"), require("jQuery"), require("libs/jshint"));
 	else
 		root["ThreeNodes"] = root["ThreeNodes"] || {}, root["ThreeNodes"]["NodeTypes"] = factory(root["_"], root["Backbone"], root["jQuery"], root["libs/jshint"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_38__, __WEBPACK_EXTERNAL_MODULE_49__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_17__, __WEBPACK_EXTERNAL_MODULE_50__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -56,21 +56,21 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	__webpack_require__(10);
 	
-	__webpack_require__(39);
+	__webpack_require__(18);
 	
-	__webpack_require__(40);
-	
-	__webpack_require__(45);
+	__webpack_require__(36);
 	
 	__webpack_require__(46);
 	
-	__webpack_require__(53);
+	__webpack_require__(47);
 	
 	__webpack_require__(54);
 	
 	__webpack_require__(55);
 	
-	__webpack_require__(57);
+	__webpack_require__(56);
+	
+	__webpack_require__(58);
 
 
 /***/ }),
@@ -156,12 +156,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	      return self.trigger("nodeslist:rebuild", self);
 	    });
-	    return this.bind("createConnection", (function(_this) {
-	      return function(field1, field2) {
+	    this.bind("createConnection", (function(_this) {
+	      return function(from_model, from_type, to_model, to_type) {
 	        return _this.connections.create({
-	          from_field: field1,
-	          to_field: field2
+	          from_model: from_model,
+	          from_type: from_type,
+	          to_model: to_model,
+	          to_type: to_type
 	        });
+	      };
+	    })(this));
+	    return this.bind("renderConnections", (function(_this) {
+	      return function(node) {
+	        return _this.connections.renderConnections(node);
 	      };
 	    })(this));
 	  };
@@ -223,6 +230,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  Nodes.prototype.render = function() {
 	    var buildNodeArrays, evaluateSubGraph, invalidNodes, nid, terminalNodes;
+	    return;
 	    invalidNodes = {};
 	    terminalNodes = {};
 	    buildNodeArrays = function(nodes) {
@@ -478,6 +486,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function Connections() {
 	    this.removeAll = bind(this.removeAll, this);
 	    this.create = bind(this.create, this);
+	    this.renderConnections = bind(this.renderConnections, this);
 	    this.render = bind(this.render, this);
 	    this.initialize = bind(this.initialize, this);
 	    return Connections.__super__.constructor.apply(this, arguments);
@@ -498,6 +507,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  Connections.prototype.render = function() {
 	    return this.each(function(c) {
 	      return c.render();
+	    });
+	  };
+	
+	  Connections.prototype.renderConnections = function(node) {
+	    return this.each(function(c) {
+	      if (c.options.to_model === node || c.options.from_model === node) {
+	        return c.render();
+	      }
 	    });
 	  };
 	
@@ -545,7 +562,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend(Connection, superClass);
 	
 	  function Connection() {
-	    this.switchFieldsIfNeeded = bind(this.switchFieldsIfNeeded, this);
+	    this.validate_deprecated = bind(this.validate_deprecated, this);
 	    this.validate = bind(this.validate, this);
 	    this.render = bind(this.render, this);
 	    this.remove = bind(this.remove, this);
@@ -567,27 +584,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.options = options;
 	    indexer = options.indexer || Connection.STATIC_INDEXER;
 	    if (this.get("cid") === -1) {
-	      this.set({
+	      return this.set({
 	        "cid": indexer.getUID()
 	      });
-	    }
-	    if (this.isValid()) {
-	      this.to_field.removeConnections();
-	      this.from_field.addConnection(this);
-	      this.to_field.addConnection(this);
-	      this.to_field.setValue(this.from_field.get("value"));
-	      return this.from_field.node.dirty = true;
 	    }
 	  };
 	
 	  Connection.prototype.remove = function() {
-	    this.from_field.unregisterConnection(this);
-	    this.to_field.unregisterConnection(this);
-	    this.to_field.removeConnections();
-	    this.to_field.node.dirty = true;
-	    this.to_field.changed = true;
-	    delete this.from_field;
-	    delete this.to_field;
+	    delete this.from_model;
+	    delete this.from_type;
+	    delete this.to_model;
+	    delete this.to_type;
 	    this.trigger("connection:removed", this);
 	    this.destroy();
 	    return false;
@@ -597,30 +604,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return this.trigger("render", this, this);
 	  };
 	
-	  Connection.prototype.validate = function(attrs, options) {
+	  Connection.prototype.validate = function() {
+	    return false;
+	  };
+	
+	  Connection.prototype.validate_deprecated = function(attrs, options) {
 	    this.from_field = attrs.from_field;
 	    this.to_field = attrs.to_field;
 	    if (!this.from_field || !this.to_field) {
 	      return true;
 	    }
-	    if (this.from_field.get("is_output") === this.to_field.get("is_output")) {
-	      return true;
-	    }
-	    if (this.from_field.node.get('nid') === this.to_field.node.get('nid')) {
-	      return true;
-	    }
-	    this.switchFieldsIfNeeded();
 	    return false;
-	  };
-	
-	  Connection.prototype.switchFieldsIfNeeded = function() {
-	    var f_out;
-	    if (this.from_field.get("is_output") === false) {
-	      f_out = this.to_field;
-	      this.to_field = this.from_field;
-	      this.from_field = f_out;
-	    }
-	    return this;
 	  };
 	
 	  Connection.prototype.toJSON = function() {
@@ -680,13 +674,13 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var Circle, Ellipse, NodeNumberSimple, Rectangle, RectangleView,
+	var Circle, Ellipse, Rectangle, RectangleView, ShapeNode,
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	NodeNumberSimple = __webpack_require__(11);
+	ShapeNode = __webpack_require__(11);
 	
-	RectangleView = __webpack_require__(29);
+	RectangleView = __webpack_require__(12);
 	
 	Rectangle = (function(superClass) {
 	  extend(Rectangle, superClass);
@@ -714,7 +708,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  return Rectangle;
 	
-	})(NodeNumberSimple);
+	})(ShapeNode);
 	
 	ThreeNodes.Core.addNodeType('Rectangle', Rectangle);
 	
@@ -731,7 +725,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  return Circle;
 	
-	})(NodeNumberSimple);
+	})(ShapeNode);
 	
 	ThreeNodes.Core.addNodeType('Circle', Circle);
 	
@@ -748,13 +742,746 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  return Ellipse;
 	
-	})(NodeNumberSimple);
+	})(ShapeNode);
 	
 	ThreeNodes.Core.addNodeType('Ellipse', Ellipse);
 
 
 /***/ }),
 /* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, ShapeNode, _,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	
+	/* Node model */
+	
+	ShapeNode = (function(superClass) {
+	  extend(ShapeNode, superClass);
+	
+	  function ShapeNode() {
+	    this.toJSON = bind(this.toJSON, this);
+	    this.renderConnections = bind(this.renderConnections, this);
+	    this.createConnection = bind(this.createConnection, this);
+	    this.remove = bind(this.remove, this);
+	    this.typename = bind(this.typename, this);
+	    this.initialize = bind(this.initialize, this);
+	    return ShapeNode.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  ShapeNode.node_name = '';
+	
+	  ShapeNode.group_name = '';
+	
+	  ShapeNode.prototype.defaults = {
+	    nid: -1,
+	    gid: -1,
+	    x: 0,
+	    y: 0,
+	    width: null,
+	    height: null,
+	    name: ""
+	  };
+	
+	  ShapeNode.prototype.initialize = function(options) {
+	    ShapeNode.__super__.initialize.apply(this, arguments);
+	    this.settings = options.settings;
+	    this.indexer = options.indexer;
+	    this.options = options;
+	    this.parent = options.parent;
+	    if (this.get('name') === '') {
+	      this.set('name', this.typename());
+	    }
+	    if (this.get('nid') === -1) {
+	      this.set('nid', this.indexer.getUID());
+	    } else {
+	      this.indexer.uid = this.get('nid');
+	    }
+	    return this;
+	  };
+	
+	  ShapeNode.prototype.typename = function() {
+	    return String(this.constructor.name);
+	  };
+	
+	  ShapeNode.prototype.remove = function() {
+	    delete this.options;
+	    delete this.settings;
+	    delete this.indexer;
+	    delete this.fully_inited;
+	    return this.destroy();
+	  };
+	
+	  ShapeNode.prototype.createConnection = function(from_model, from_type, to_model, to_type) {
+	    return this.trigger("createConnection", from_model, from_type, to_model, to_type);
+	  };
+	
+	  ShapeNode.prototype.renderConnections = function() {
+	    return this.trigger("renderConnections", this);
+	  };
+	
+	  ShapeNode.prototype.toJSON = function() {
+	    var res;
+	    res = {
+	      nid: this.get('nid'),
+	      name: this.get('name'),
+	      type: this.typename(),
+	      x: this.get('x'),
+	      y: this.get('y'),
+	      width: this.get('width'),
+	      height: this.get('height')
+	    };
+	    return res;
+	  };
+	
+	  return ShapeNode;
+	
+	})(Backbone.Model);
+	
+	module.exports = ShapeNode;
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, RectangleView, _, _view_node_context_menu, _view_node_template, namespace,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	_view_node_template = __webpack_require__(13);
+	
+	_view_node_context_menu = __webpack_require__(14);
+	
+	namespace = __webpack_require__(15).namespace;
+	
+	__webpack_require__(16);
+	
+	__webpack_require__(17);
+	
+	
+	/* Node View */
+	
+	RectangleView = (function(superClass) {
+	  extend(RectangleView, superClass);
+	
+	  function RectangleView() {
+	    this.makeDraggable = bind(this.makeDraggable, this);
+	    this.remove = bind(this.remove, this);
+	    this.computeNodePosition = bind(this.computeNodePosition, this);
+	    this.renderConnections = bind(this.renderConnections, this);
+	    this.addSelectedClass = bind(this.addSelectedClass, this);
+	    this.render = bind(this.render, this);
+	    this.makeElement = bind(this.makeElement, this);
+	    this.initContextMenus = bind(this.initContextMenus, this);
+	    return RectangleView.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  RectangleView.prototype.className = "node";
+	
+	  RectangleView.prototype.initialize = function(options) {
+	    this.makeElement();
+	    if (!options.isSubNode) {
+	      this.makeDraggable();
+	    }
+	    this.initNodeClick();
+	    this.initTitleClick();
+	    this.model.on('change', this.render);
+	    this.model.on('remove', (function(_this) {
+	      return function() {
+	        return _this.remove();
+	      };
+	    })(this));
+	    this.model.on("node:computePosition", this.computeNodePosition);
+	    this.model.on("node:renderConnections", this.renderConnections);
+	    this.model.on("node:addSelectedClass", this.addSelectedClass);
+	    this.render();
+	    return this.initContextMenus();
+	  };
+	
+	  RectangleView.prototype.initContextMenus = function() {
+	    var node_menu;
+	    if ($("#node-context-menu").length < 1) {
+	      node_menu = _.template(_view_node_context_menu, {});
+	      $("body").append(node_menu);
+	    }
+	    this.$el.find(".head").contextMenu({
+	      menu: "node-context-menu"
+	    }, (function(_this) {
+	      return function(action, el, pos) {
+	        if (action === "remove_node") {
+	          return _this.model.remove();
+	        }
+	      };
+	    })(this));
+	    return this;
+	  };
+	
+	  RectangleView.prototype.makeElement = function() {
+	    this.template = _.template(_view_node_template, this.model);
+	    this.$el.html(this.template);
+	    this.$el.addClass("type-" + this.model.constructor.group_name);
+	    this.$el.addClass("node-" + this.model.typename());
+	    return this.addHandlerListener();
+	  };
+	
+	  RectangleView.prototype.addHandlerListener = function() {
+	    var getPath, self, start_offset_x, start_offset_y;
+	    self = this;
+	    start_offset_x = 0;
+	    start_offset_y = 0;
+	    getPath = function(start, end, offset) {
+	      var ofx, ofy;
+	      ofx = $("#container-wrapper").scrollLeft();
+	      ofy = $("#container-wrapper").scrollTop();
+	      return "M" + (start.left + offset.left + 2) + " " + (start.top + offset.top + 2) + " L" + (end.left + offset.left + ofx - start_offset_x) + " " + (end.top + offset.top + ofy - start_offset_y);
+	    };
+	    $('.handler', this.$el).draggable({
+	      helper: function() {
+	        return $("<div class='ui-widget-drag-helper'></div>");
+	      },
+	      scroll: true,
+	      cursor: 'pointer',
+	      cursorAt: {
+	        left: 0,
+	        top: 0
+	      },
+	      start: function(event, ui) {
+	        start_offset_x = $("#container-wrapper").scrollLeft();
+	        start_offset_y = $("#container-wrapper").scrollTop();
+	        if (ThreeNodes.UI.UIView.connecting_line) {
+	          return ThreeNodes.UI.UIView.connecting_line.attr({
+	            opacity: 1
+	          });
+	        }
+	      },
+	      stop: function(event, ui) {
+	        if (ThreeNodes.UI.UIView.connecting_line) {
+	          return ThreeNodes.UI.UIView.connecting_line.attr({
+	            opacity: 0
+	          });
+	        }
+	      },
+	      drag: function(event, ui) {
+	        var node_pos, pos;
+	        if (ThreeNodes.UI.UIView.connecting_line) {
+	          pos = $(this).position();
+	          node_pos = {
+	            left: self.model.get("x"),
+	            top: self.model.get("y")
+	          };
+	          ThreeNodes.UI.UIView.connecting_line.attr({
+	            path: getPath(pos, ui.position, node_pos)
+	          });
+	          return true;
+	        }
+	      }
+	    });
+	    return $(".handler", this.$el).droppable({
+	      accept: '.handler',
+	      activeClass: "ui-state-active",
+	      hoverClass: "ui-state-hover",
+	      drop: function(event, ui) {
+	        var from_model, from_type, to_model, to_type;
+	        from_model = $(ui.draggable).parent().data('object');
+	        from_type = $(ui.draggable).attr('data-attr');
+	        to_model = self.model;
+	        to_type = $(this).attr('data-attr');
+	        self.model.createConnection(from_model, from_type, to_model, to_type);
+	        return this;
+	      }
+	    });
+	  };
+	
+	  RectangleView.prototype.render = function() {
+	    this.$el.css({
+	      left: parseInt(this.model.get("x")),
+	      top: parseInt(this.model.get("y"))
+	    });
+	    this.$el.find("> .head span").text(this.model.get("name"));
+	    return this.$el.find("> .head span").show();
+	  };
+	
+	  RectangleView.prototype.addSelectedClass = function() {
+	    return this.$el.addClass("ui-selected");
+	  };
+	
+	  RectangleView.prototype.renderConnections = function() {
+	    return this.model.renderConnections();
+	  };
+	
+	  RectangleView.prototype.computeNodePosition = function() {
+	    var offset, pos;
+	    pos = $(this.el).position();
+	    offset = $("#container-wrapper").offset();
+	    return this.model.set({
+	      x: pos.left + $("#container-wrapper").scrollLeft(),
+	      y: pos.top + $("#container-wrapper").scrollTop()
+	    });
+	  };
+	
+	  RectangleView.prototype.remove = function() {
+	    $(".field", this.el).destroyContextMenu();
+	    if (this.$el.data("draggable")) {
+	      this.$el.draggable("destroy");
+	    }
+	    $(this.el).unbind();
+	    this.undelegateEvents();
+	    return RectangleView.__super__.remove.apply(this, arguments);
+	  };
+	
+	  RectangleView.prototype.initNodeClick = function() {
+	    var self;
+	    self = this;
+	    $(this.el).click(function(e) {
+	      var selectable;
+	      if (e.metaKey === false) {
+	        $(".node").removeClass("ui-selected");
+	        $(this).addClass("ui-selecting");
+	      } else {
+	        if ($(this).hasClass("ui-selected")) {
+	          $(this).removeClass("ui-selected");
+	        } else {
+	          $(this).addClass("ui-selecting");
+	        }
+	      }
+	      selectable = $("#container").data("ui-selectable");
+	      if (!selectable) {
+	        return;
+	      }
+	      selectable.refresh();
+	      return selectable._mouseStop(null);
+	    });
+	    return this;
+	  };
+	
+	  RectangleView.prototype.initTitleClick = function() {
+	    var $input, $title_span, self;
+	    self = this;
+	    $title_span = this.$el.find("> .head span");
+	    $input = $("<input type='text' />");
+	    this.$el.find("> .head").append($input);
+	    $input.hide();
+	    $input.on('mousedown', function(e) {
+	      return e.stopPropagation();
+	    });
+	    $title_span.dblclick(function(e) {
+	      var apply_input_result, prev;
+	      prev = $(this).html();
+	      $input.val(prev);
+	      $title_span.hide();
+	      $input.show();
+	      apply_input_result = function() {
+	        self.model.set('name', $input.val());
+	        $input.hide();
+	        return $title_span.show();
+	      };
+	      $input.blur(function(e) {
+	        return apply_input_result();
+	      });
+	      $("#graph").click(function(e) {
+	        return apply_input_result();
+	      });
+	      return $input.keydown(function(e) {
+	        if (e.keyCode === 13) {
+	          return apply_input_result();
+	        }
+	      });
+	    });
+	    return this;
+	  };
+	
+	  RectangleView.prototype.makeDraggable = function() {
+	    var nodes_offset, selected_nodes, self;
+	    self = this;
+	    nodes_offset = {
+	      top: 0,
+	      left: 0
+	    };
+	    selected_nodes = $([]);
+	    $(this.el).draggable({
+	      start: function(ev, ui) {
+	        if ($(this).hasClass("ui-selected")) {
+	          selected_nodes = $(".ui-selected").each(function() {
+	            return $(this).data("offset", $(this).offset());
+	          });
+	        } else {
+	          selected_nodes = $([]);
+	          $(".node").removeClass("ui-selected");
+	        }
+	        return nodes_offset = $(this).offset();
+	      },
+	      drag: function(ev, ui) {
+	        var dl, dt;
+	        dt = ui.position.top - nodes_offset.top;
+	        dl = ui.position.left - nodes_offset.left;
+	        selected_nodes.not(this).each(function() {
+	          var dx, dy, el, offset;
+	          el = $(this);
+	          offset = el.data("offset");
+	          dx = offset.top + dt;
+	          dy = offset.left + dl;
+	          el.css({
+	            top: dx,
+	            left: dy
+	          });
+	          el.data("object").trigger("node:computePosition");
+	          return el.data("object").trigger("node:renderConnections");
+	        });
+	        self.computeNodePosition();
+	        return self.renderConnections();
+	      },
+	      stop: function() {
+	        selected_nodes.not(this).each(function() {
+	          var el;
+	          el = $(this).data("object");
+	          return el.trigger("node:renderConnections");
+	        });
+	        self.computeNodePosition();
+	        return self.renderConnections();
+	      }
+	    });
+	    return this;
+	  };
+	
+	  return RectangleView;
+	
+	})(Backbone.View);
+	
+	ThreeNodes.Core.addNodeView('RectangleView', RectangleView);
+	
+	module.exports = RectangleView;
+
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports) {
+
+	module.exports = "<div class='head'><span><%= get(\"name\") %></span></div>\n<div class='options'>\n  <div class='inputs'></div>\n  <div class='center'></div>\n  <div class='outputs'></div>\n</div>\n\n<div class=\"up handler\" data-attr='up'></div>\n<div class=\"down handler\" data-attr='down'></div>\n<div class=\"left handler\" data-attr='left'></div>\n<div class=\"right handler\" data-attr='right'></div>\n";
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports) {
+
+	module.exports = "<ul id=\"node-context-menu\" class=\"context-menu\">\n  <li><a href=\"#remove_node\">Remove node</a></li>\n</ul>";
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports) {
+
+	/*
+	 * namespace.coffee v1.0.0
+	 * Copyright (c) 2011 CodeCatalyst, LLC.
+	 * Open source under the MIT License.
+	 */
+	(function() {
+	  var namespace;
+	  namespace = function(name, values) {
+	    var key, subpackage, target, value, _i, _len, _ref, _results;
+	    target = typeof exports !== "undefined" && exports !== null ? exports : window;
+	    //target = window;
+	    if (name.length > 0) {
+	      _ref = name.split('.');
+	      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+	        subpackage = _ref[_i];
+	        target = target[subpackage] || (target[subpackage] = {});
+	      }
+	    }
+	    _results = [];
+	    for (key in values) {
+	      value = values[key];
+	      _results.push(target[key] = value);
+	    }
+	    return _results;
+	  };
+	  namespace("", {
+	    namespace: namespace
+	  });
+	}).call(this);
+
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports) {
+
+	// jQuery Context Menu Plugin
+	//
+	// Version 1.01
+	//
+	// Cory S.N. LaViska
+	// A Beautiful Site (http://abeautifulsite.net/)
+	//
+	// More info: http://abeautifulsite.net/2008/09/jquery-context-menu-plugin/
+	//
+	// Terms of Use
+	//
+	// This plugin is dual-licensed under the GNU General Public License
+	//   and the MIT License and is copyright A Beautiful Site, LLC.
+	//
+	if(jQuery)( function() {
+		$.extend($.fn, {
+	
+			contextMenu: function(o, callback) {
+				// Defaults
+				if( o.menu == undefined ) return false;
+				if( o.inSpeed == undefined ) o.inSpeed = 150;
+				if( o.outSpeed == undefined ) o.outSpeed = 75;
+				// 0 needs to be -1 for expected results (no fade)
+				if( o.inSpeed == 0 ) o.inSpeed = -1;
+				if( o.outSpeed == 0 ) o.outSpeed = -1;
+				// Loop each context menu
+				$(this).each( function() {
+					var el = $(this);
+					var offset = $(el).offset();
+					// Add contextMenu class
+					$('#' + o.menu).addClass('contextMenu');
+					// Simulate a true right click
+					$(this).mousedown( function(e) {
+						var evt = e;
+						evt.preventDefault();
+						$(this).mouseup( function(e) {
+							e.preventDefault();
+							var srcElement = $(this);
+							$(this).unbind('mouseup');
+							if( evt.button == 2 ) {
+								// Hide context menus that may be showing
+								$(".contextMenu").hide();
+								// Get this context menu
+								var menu = $('#' + o.menu);
+	
+								if( $(el).hasClass('disabled') ) return false;
+	
+								// Detect mouse position
+								var d = {}, x, y;
+								if( self.innerHeight ) {
+									d.pageYOffset = self.pageYOffset;
+									d.pageXOffset = self.pageXOffset;
+									d.innerHeight = self.innerHeight;
+									d.innerWidth = self.innerWidth;
+								} else if( document.documentElement &&
+									document.documentElement.clientHeight ) {
+									d.pageYOffset = document.documentElement.scrollTop;
+									d.pageXOffset = document.documentElement.scrollLeft;
+									d.innerHeight = document.documentElement.clientHeight;
+									d.innerWidth = document.documentElement.clientWidth;
+								} else if( document.body ) {
+									d.pageYOffset = document.body.scrollTop;
+									d.pageXOffset = document.body.scrollLeft;
+									d.innerHeight = document.body.clientHeight;
+									d.innerWidth = document.body.clientWidth;
+								}
+								(e.pageX) ? x = e.pageX : x = e.clientX + d.scrollLeft;
+								(e.pageY) ? y = e.pageY : y = e.clientY + d.scrollTop;
+	
+								// Show the menu
+								$(document).unbind('click');
+								$(menu).css({ top: y, left: x }).fadeIn(o.inSpeed);
+								// Hover events
+								$(menu).find('A').mouseover( function() {
+									$(menu).find('LI.hover').removeClass('hover');
+									$(this).parent().addClass('hover');
+								}).mouseout( function() {
+									$(menu).find('LI.hover').removeClass('hover');
+								});
+	
+								// Keyboard
+								$(document).keypress( function(e) {
+									switch( e.keyCode ) {
+										case 38: // up
+											if( $(menu).find('LI.hover').size() == 0 ) {
+												$(menu).find('LI:last').addClass('hover');
+											} else {
+												$(menu).find('LI.hover').removeClass('hover').prevAll('LI:not(.disabled)').eq(0).addClass('hover');
+												if( $(menu).find('LI.hover').size() == 0 ) $(menu).find('LI:last').addClass('hover');
+											}
+										break;
+										case 40: // down
+											if( $(menu).find('LI.hover').size() == 0 ) {
+												$(menu).find('LI:first').addClass('hover');
+											} else {
+												$(menu).find('LI.hover').removeClass('hover').nextAll('LI:not(.disabled)').eq(0).addClass('hover');
+												if( $(menu).find('LI.hover').size() == 0 ) $(menu).find('LI:first').addClass('hover');
+											}
+										break;
+										case 13: // enter
+											$(menu).find('LI.hover A').trigger('click');
+										break;
+										case 27: // esc
+											$(document).trigger('click');
+										break
+									}
+								});
+	
+								// When items are selected
+								$('#' + o.menu).find('A').unbind('click');
+								$('#' + o.menu).find('LI:not(.disabled) A').click( function() {
+									$(document).unbind('click').unbind('keypress');
+									$(".contextMenu").hide();
+									// Callback
+									if( callback ) callback( $(this).attr('href').substr(1), $(srcElement), {x: x - offset.left, y: y - offset.top, docX: x, docY: y} );
+									return false;
+								});
+	
+								// Hide bindings
+								setTimeout( function() { // Delay for Mozilla
+									$(document).click( function() {
+										$(document).unbind('click').unbind('keypress');
+										$(menu).fadeOut(o.outSpeed);
+										return false;
+									});
+								}, 0);
+							}
+						});
+					});
+	
+					// Disable text selection
+					/*if( $.browser.mozilla ) {
+						$('#' + o.menu).each( function() { $(this).css({ 'MozUserSelect' : 'none' }); });
+					} else if( $.browser.msie ) {
+						$('#' + o.menu).each( function() { $(this).bind('selectstart.disableTextSelect', function() { return false; }); });
+					} else {*/
+						$('#' + o.menu).each(function() { $(this).bind('mousedown.disableTextSelect', function() { return false; }); });
+					//}
+					// Disable browser context menu (requires both selectors to work in IE/Safari + FF/Chrome)
+					$(el).add($('UL.contextMenu')).bind('contextmenu', function() { return false; });
+	
+				});
+				return $(this);
+			},
+	
+			// Disable context menu items on the fly
+			disableContextMenuItems: function(o) {
+				if( o == undefined ) {
+					// Disable all
+					$(this).find('LI').addClass('disabled');
+					return( $(this) );
+				}
+				$(this).each( function() {
+					if( o != undefined ) {
+						var d = o.split(',');
+						for( var i = 0; i < d.length; i++ ) {
+							$(this).find('A[href="' + d[i] + '"]').parent().addClass('disabled');
+	
+						}
+					}
+				});
+				return( $(this) );
+			},
+	
+			// Enable context menu items on the fly
+			enableContextMenuItems: function(o) {
+				if( o == undefined ) {
+					// Enable all
+					$(this).find('LI.disabled').removeClass('disabled');
+					return( $(this) );
+				}
+				$(this).each( function() {
+					if( o != undefined ) {
+						var d = o.split(',');
+						for( var i = 0; i < d.length; i++ ) {
+							$(this).find('A[href="' + d[i] + '"]').parent().removeClass('disabled');
+	
+						}
+					}
+				});
+				return( $(this) );
+			},
+	
+			// Disable context menu(s)
+			disableContextMenu: function() {
+				$(this).each( function() {
+					$(this).addClass('disabled');
+				});
+				return( $(this) );
+			},
+	
+			// Enable context menu(s)
+			enableContextMenu: function() {
+				$(this).each( function() {
+					$(this).removeClass('disabled');
+				});
+				return( $(this) );
+			},
+	
+			// Destroy context menu(s)
+			destroyContextMenu: function() {
+				// Destroy specified context menus
+				$(this).each( function() {
+					// Disable action
+					$(this).unbind('mousedown').unbind('mouseup');
+				});
+				return( $(this) );
+			}
+	
+		});
+	})(jQuery);
+
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_17__;
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Direction, NoDirection, NodeNumberSimple,
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	NodeNumberSimple = __webpack_require__(19);
+	
+	Direction = (function(superClass) {
+	  extend(Direction, superClass);
+	
+	  function Direction() {
+	    return Direction.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Direction.node_name = 'Direction';
+	
+	  Direction.group_name = 'Arrow';
+	
+	  return Direction;
+	
+	})(NodeNumberSimple);
+	
+	ThreeNodes.Core.addNodeType('Direction', Direction);
+	
+	NoDirection = (function(superClass) {
+	  extend(NoDirection, superClass);
+	
+	  function NoDirection() {
+	    return NoDirection.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  NoDirection.node_name = 'NoDirection';
+	
+	  NoDirection.group_name = 'Arrow';
+	
+	  return NoDirection;
+	
+	})(NodeNumberSimple);
+	
+	ThreeNodes.Core.addNodeType('NoDirection', NoDirection);
+
+
+/***/ }),
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Fields, Node, NodeNumberSimple, Utils, _,
@@ -768,9 +1495,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Utils = __webpack_require__(9);
 	
-	Fields = __webpack_require__(12);
+	Fields = __webpack_require__(20);
 	
-	Node = __webpack_require__(28);
+	Node = __webpack_require__(35);
 	
 	
 	/* NodeNumberSimple model */
@@ -857,7 +1584,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 12 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Fields, _,
@@ -869,7 +1596,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	__webpack_require__(13);
+	__webpack_require__(21);
 	
 	
 	/* Fields Collection */
@@ -1145,7 +1872,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 13 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Any, Array, Backbone, Bool, BoolField, Camera, Color, Euler, EulerField, Float, FloatField, Fog, Geometry, Indexer, Material, Mesh, NodeField, Object3D, Quaternion, QuaternionField, Scene, String, StringField, Texture, Vector2, Vector2Field, Vector3, Vector3Field, Vector4, Vector4Field, _, namespace,
@@ -1159,23 +1886,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Indexer = __webpack_require__(4);
 	
-	namespace = __webpack_require__(14).namespace;
+	namespace = __webpack_require__(15).namespace;
 	
-	BoolField = __webpack_require__(15);
+	BoolField = __webpack_require__(22);
 	
-	StringField = __webpack_require__(21);
+	StringField = __webpack_require__(28);
 	
-	FloatField = __webpack_require__(22);
+	FloatField = __webpack_require__(29);
 	
-	Vector2Field = __webpack_require__(23);
+	Vector2Field = __webpack_require__(30);
 	
-	Vector3Field = __webpack_require__(24);
+	Vector3Field = __webpack_require__(31);
 	
-	Vector4Field = __webpack_require__(25);
+	Vector4Field = __webpack_require__(32);
 	
-	QuaternionField = __webpack_require__(26);
+	QuaternionField = __webpack_require__(33);
 	
-	EulerField = __webpack_require__(27);
+	EulerField = __webpack_require__(34);
 	
 	
 	/* Field model */
@@ -1996,42 +2723,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 14 */
-/***/ (function(module, exports) {
-
-	/*
-	 * namespace.coffee v1.0.0
-	 * Copyright (c) 2011 CodeCatalyst, LLC.
-	 * Open source under the MIT License.
-	 */
-	(function() {
-	  var namespace;
-	  namespace = function(name, values) {
-	    var key, subpackage, target, value, _i, _len, _ref, _results;
-	    target = typeof exports !== "undefined" && exports !== null ? exports : window;
-	    //target = window;
-	    if (name.length > 0) {
-	      _ref = name.split('.');
-	      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	        subpackage = _ref[_i];
-	        target = target[subpackage] || (target[subpackage] = {});
-	      }
-	    }
-	    _results = [];
-	    for (key in values) {
-	      value = values[key];
-	      _results.push(target[key] = value);
-	    }
-	    return _results;
-	  };
-	  namespace("", {
-	    namespace: namespace
-	  });
-	}).call(this);
-
-
-/***/ }),
-/* 15 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, BaseField, BoolField, _, namespace,
@@ -2043,9 +2735,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	namespace = __webpack_require__(14).namespace;
+	namespace = __webpack_require__(15).namespace;
 	
-	BaseField = __webpack_require__(16);
+	BaseField = __webpack_require__(23);
 	
 	
 	/* SidebarField View */
@@ -2097,7 +2789,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 16 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, BaseField, SidebarTextfield, _, _view_field_sidebar_container,
@@ -2109,9 +2801,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	_view_field_sidebar_container = __webpack_require__(17);
+	_view_field_sidebar_container = __webpack_require__(24);
 	
-	SidebarTextfield = __webpack_require__(18);
+	SidebarTextfield = __webpack_require__(25);
 	
 	
 	/* BaseField View */
@@ -2202,13 +2894,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 17 */
+/* 24 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div data-fid=\"<%= fid %>\" class='field-wrapper'>\n  <h3><%= name %></h3>\n</div>\n";
 
 /***/ }),
-/* 18 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, DraggableNumber, SidebarTextfield, _, _view_field_textfield,
@@ -2220,9 +2912,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	_view_field_textfield = __webpack_require__(19);
+	_view_field_textfield = __webpack_require__(26);
 	
-	DraggableNumber = __webpack_require__(20);
+	DraggableNumber = __webpack_require__(27);
 	
 	
 	/* SidebarTextfield View */
@@ -2354,13 +3046,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 19 */
+/* 26 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div class='input-container'>\n  <input type='text' class='field-<%= type %>' />\n</div>\n";
 
 /***/ }),
-/* 20 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**!
@@ -2796,7 +3488,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 21 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, BaseField, StringField, _, namespace,
@@ -2808,9 +3500,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	namespace = __webpack_require__(14).namespace;
+	namespace = __webpack_require__(15).namespace;
 	
-	BaseField = __webpack_require__(16);
+	BaseField = __webpack_require__(23);
 	
 	
 	/* StringField View */
@@ -2871,7 +3563,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 22 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, BaseField, FloatField, _, namespace,
@@ -2883,9 +3575,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	namespace = __webpack_require__(14).namespace;
+	namespace = __webpack_require__(15).namespace;
 	
-	BaseField = __webpack_require__(16);
+	BaseField = __webpack_require__(23);
 	
 	
 	/* FloatField View */
@@ -2950,7 +3642,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 23 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, BaseField, Vector2Field, _, namespace,
@@ -2962,9 +3654,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	namespace = __webpack_require__(14).namespace;
+	namespace = __webpack_require__(15).namespace;
 	
-	BaseField = __webpack_require__(16);
+	BaseField = __webpack_require__(23);
 	
 	
 	/* Vector2Field View */
@@ -2992,7 +3684,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 24 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, BaseField, Vector3Field, _, namespace,
@@ -3004,9 +3696,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	namespace = __webpack_require__(14).namespace;
+	namespace = __webpack_require__(15).namespace;
 	
-	BaseField = __webpack_require__(16);
+	BaseField = __webpack_require__(23);
 	
 	
 	/* Vector3Field View */
@@ -3035,7 +3727,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 25 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, BaseField, Vector4Field, _, namespace,
@@ -3047,9 +3739,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	namespace = __webpack_require__(14).namespace;
+	namespace = __webpack_require__(15).namespace;
 	
-	BaseField = __webpack_require__(16);
+	BaseField = __webpack_require__(23);
 	
 	
 	/* Vector4Field View */
@@ -3079,7 +3771,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 26 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, BaseField, QuaternionField, _, namespace,
@@ -3091,9 +3783,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	namespace = __webpack_require__(14).namespace;
+	namespace = __webpack_require__(15).namespace;
 	
-	BaseField = __webpack_require__(16);
+	BaseField = __webpack_require__(23);
 	
 	
 	/* Vector3Field View */
@@ -3123,7 +3815,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 27 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, BaseField, EulerField, _, namespace,
@@ -3135,9 +3827,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	namespace = __webpack_require__(14).namespace;
+	namespace = __webpack_require__(15).namespace;
 	
-	BaseField = __webpack_require__(16);
+	BaseField = __webpack_require__(23);
 	
 	
 	/* Euler3Field View */
@@ -3167,7 +3859,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 28 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Fields, Node, Utils, _,
@@ -3181,7 +3873,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Utils = __webpack_require__(9);
 	
-	Fields = __webpack_require__(12);
+	Fields = __webpack_require__(20);
 	
 	
 	/* Node model */
@@ -3224,8 +3916,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    gid: -1,
 	    x: 0,
 	    y: 0,
-	    width: null,
-	    height: null,
+	    width: 90,
+	    height: 26,
 	    name: ""
 	  };
 	
@@ -3487,861 +4179,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 29 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	var Backbone, FieldsView, RectangleView, _, _view_node_context_menu, _view_node_template, namespace,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	_view_node_template = __webpack_require__(30);
-	
-	_view_node_context_menu = __webpack_require__(31);
-	
-	FieldsView = __webpack_require__(32);
-	
-	namespace = __webpack_require__(14).namespace;
-	
-	__webpack_require__(37);
-	
-	__webpack_require__(38);
-	
-	
-	/* Node View */
-	
-	RectangleView = (function(superClass) {
-	  extend(RectangleView, superClass);
-	
-	  function RectangleView() {
-	    this.makeDraggable = bind(this.makeDraggable, this);
-	    this.remove = bind(this.remove, this);
-	    this.computeNodePosition = bind(this.computeNodePosition, this);
-	    this.renderConnections = bind(this.renderConnections, this);
-	    this.addSelectedClass = bind(this.addSelectedClass, this);
-	    this.highlighAnimations = bind(this.highlighAnimations, this);
-	    this.render = bind(this.render, this);
-	    this.makeElement = bind(this.makeElement, this);
-	    this.initContextMenus = bind(this.initContextMenus, this);
-	    return RectangleView.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  RectangleView.prototype.className = "node";
-	
-	  RectangleView.prototype.initialize = function(options) {
-	    this.makeElement();
-	    if (!options.isSubNode) {
-	      this.makeDraggable();
-	    }
-	    this.initNodeClick();
-	    this.initTitleClick();
-	    this.fields_view = new FieldsView({
-	      node: this.model,
-	      collection: this.model.fields,
-	      el: $("> .options", this.$el)
-	    });
-	    this.model.on('change', this.render);
-	    this.model.on('remove', (function(_this) {
-	      return function() {
-	        return _this.remove();
-	      };
-	    })(this));
-	    this.model.on("node:computePosition", this.computeNodePosition);
-	    this.model.on("node:renderConnections", this.renderConnections);
-	    this.model.on("node:addSelectedClass", this.addSelectedClass);
-	    this.render();
-	    this.initContextMenus();
-	    return this.highlighAnimations();
-	  };
-	
-	  RectangleView.prototype.initContextMenus = function() {
-	    var node_menu;
-	    if ($("#node-context-menu").length < 1) {
-	      node_menu = _.template(_view_node_context_menu, {});
-	      $("body").append(node_menu);
-	    }
-	    this.$el.find(".head").contextMenu({
-	      menu: "node-context-menu"
-	    }, (function(_this) {
-	      return function(action, el, pos) {
-	        if (action === "remove_node") {
-	          return _this.model.remove();
-	        }
-	      };
-	    })(this));
-	    return this;
-	  };
-	
-	  RectangleView.prototype.makeElement = function() {
-	    this.template = _.template(_view_node_template, this.model);
-	    this.$el.html(this.template);
-	    this.$el.addClass("type-" + this.model.constructor.group_name);
-	    return this.$el.addClass("node-" + this.model.typename());
-	  };
-	
-	  RectangleView.prototype.render = function() {
-	    this.$el.css({
-	      left: parseInt(this.model.get("x")),
-	      top: parseInt(this.model.get("y"))
-	    });
-	    this.$el.find("> .head span").text(this.model.get("name"));
-	    return this.$el.find("> .head span").show();
-	  };
-	
-	  RectangleView.prototype.highlighAnimations = function() {
-	    var $target, i, len, nodeAnimation, propTrack, ref;
-	    nodeAnimation = false;
-	    ref = this.model.anim.objectTrack.propertyTracks;
-	    for (i = 0, len = ref.length; i < len; i++) {
-	      propTrack = ref[i];
-	      $target = $('.inputs .field-' + propTrack.name, this.$el);
-	      if (propTrack.anims.length > 0) {
-	        $target.addClass("has-animation");
-	        nodeAnimation = true;
-	      } else {
-	        $target.removeClass("has-animation");
-	      }
-	    }
-	    this.$el.toggleClass("node-has-animation", nodeAnimation);
-	    return true;
-	  };
-	
-	  RectangleView.prototype.addSelectedClass = function() {
-	    return this.$el.addClass("ui-selected");
-	  };
-	
-	  RectangleView.prototype.renderConnections = function() {
-	    this.model.fields.renderConnections();
-	    if (this.model.nodes) {
-	      return _.each(this.model.nodes.models, function(n) {
-	        return n.fields.renderConnections();
-	      });
-	    }
-	  };
-	
-	  RectangleView.prototype.computeNodePosition = function() {
-	    var offset, pos;
-	    pos = $(this.el).position();
-	    offset = $("#container-wrapper").offset();
-	    return this.model.set({
-	      x: pos.left + $("#container-wrapper").scrollLeft(),
-	      y: pos.top + $("#container-wrapper").scrollTop()
-	    });
-	  };
-	
-	  RectangleView.prototype.remove = function() {
-	    $(".field", this.el).destroyContextMenu();
-	    if (this.$el.data("draggable")) {
-	      this.$el.draggable("destroy");
-	    }
-	    $(this.el).unbind();
-	    this.undelegateEvents();
-	    if (this.fields_view) {
-	      this.fields_view.remove();
-	    }
-	    delete this.fields_view;
-	    return RectangleView.__super__.remove.apply(this, arguments);
-	  };
-	
-	  RectangleView.prototype.initNodeClick = function() {
-	    var self;
-	    self = this;
-	    $(this.el).click(function(e) {
-	      var selectable;
-	      if (e.metaKey === false) {
-	        $(".node").removeClass("ui-selected");
-	        $(this).addClass("ui-selecting");
-	      } else {
-	        if ($(this).hasClass("ui-selected")) {
-	          $(this).removeClass("ui-selected");
-	        } else {
-	          $(this).addClass("ui-selecting");
-	        }
-	      }
-	      selectable = $("#container").data("ui-selectable");
-	      if (!selectable) {
-	        return;
-	      }
-	      selectable.refresh();
-	      selectable._mouseStop(null);
-	      return self.model.fields.renderSidebar();
-	    });
-	    return this;
-	  };
-	
-	  RectangleView.prototype.initTitleClick = function() {
-	    var $input, $title_span, self;
-	    self = this;
-	    $title_span = this.$el.find("> .head span");
-	    $input = $("<input type='text' />");
-	    this.$el.find("> .head").append($input);
-	    $input.hide();
-	    $input.on('mousedown', function(e) {
-	      return e.stopPropagation();
-	    });
-	    $title_span.dblclick(function(e) {
-	      var apply_input_result, prev;
-	      prev = $(this).html();
-	      $input.val(prev);
-	      $title_span.hide();
-	      $input.show();
-	      apply_input_result = function() {
-	        self.model.set('name', $input.val());
-	        $input.hide();
-	        return $title_span.show();
-	      };
-	      $input.blur(function(e) {
-	        return apply_input_result();
-	      });
-	      $("#graph").click(function(e) {
-	        return apply_input_result();
-	      });
-	      return $input.keydown(function(e) {
-	        if (e.keyCode === 13) {
-	          return apply_input_result();
-	        }
-	      });
-	    });
-	    return this;
-	  };
-	
-	  RectangleView.prototype.makeDraggable = function() {
-	    var nodes_offset, selected_nodes, self;
-	    self = this;
-	    nodes_offset = {
-	      top: 0,
-	      left: 0
-	    };
-	    selected_nodes = $([]);
-	    $(this.el).draggable({
-	      start: function(ev, ui) {
-	        if ($(this).hasClass("ui-selected")) {
-	          selected_nodes = $(".ui-selected").each(function() {
-	            return $(this).data("offset", $(this).offset());
-	          });
-	        } else {
-	          selected_nodes = $([]);
-	          $(".node").removeClass("ui-selected");
-	        }
-	        return nodes_offset = $(this).offset();
-	      },
-	      drag: function(ev, ui) {
-	        var dl, dt;
-	        dt = ui.position.top - nodes_offset.top;
-	        dl = ui.position.left - nodes_offset.left;
-	        selected_nodes.not(this).each(function() {
-	          var dx, dy, el, offset;
-	          el = $(this);
-	          offset = el.data("offset");
-	          dx = offset.top + dt;
-	          dy = offset.left + dl;
-	          el.css({
-	            top: dx,
-	            left: dy
-	          });
-	          el.data("object").trigger("node:computePosition");
-	          return el.data("object").trigger("node:renderConnections");
-	        });
-	        return self.renderConnections();
-	      },
-	      stop: function() {
-	        selected_nodes.not(this).each(function() {
-	          var el;
-	          el = $(this).data("object");
-	          return el.trigger("node:renderConnections");
-	        });
-	        self.computeNodePosition();
-	        return self.renderConnections();
-	      }
-	    });
-	    return this;
-	  };
-	
-	  return RectangleView;
-	
-	})(Backbone.View);
-	
-	ThreeNodes.Core.addNodeView('RectangleView', RectangleView);
-	
-	module.exports = RectangleView;
-
-
-/***/ }),
-/* 30 */
-/***/ (function(module, exports) {
-
-	module.exports = "<div class='head'><span><%= get(\"name\") %></span></div>\n<div class='options'>\n  <div class='inputs'></div>\n  <div class='center'></div>\n  <div class='outputs'></div>\n</div>\n\n<div class=\"up handler\"></div>\n<div class=\"down handler\"></div>\n<div class=\"left handler\"></div>\n<div class=\"right handler\"></div>\n";
-
-/***/ }),
-/* 31 */
-/***/ (function(module, exports) {
-
-	module.exports = "<ul id=\"node-context-menu\" class=\"context-menu\">\n  <li><a href=\"#remove_node\">Remove node</a></li>\n</ul>";
-
-/***/ }),
-/* 32 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	var Backbone, FieldButton, FieldsView, _,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	FieldButton = __webpack_require__(33);
-	
-	__webpack_require__(38);
-	
-	
-	/* Fields View */
-	
-	FieldsView = (function(superClass) {
-	  extend(FieldsView, superClass);
-	
-	  function FieldsView() {
-	    this.remove = bind(this.remove, this);
-	    this.onFieldCreated = bind(this.onFieldCreated, this);
-	    return FieldsView.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  FieldsView.prototype.initialize = function(options) {
-	    FieldsView.__super__.initialize.apply(this, arguments);
-	    this.node = options.node;
-	    this.subviews = [];
-	    this.collection.on("add", this.onFieldCreated);
-	    return this.collection.each(this.onFieldCreated);
-	  };
-	
-	  FieldsView.prototype.onFieldCreated = function(field) {
-	    var $node, connection, from_gid, isInsideAnotherDOMnode, target, to_gid, view;
-	    target = field.get("is_output") === false ? ".inputs" : ".outputs";
-	    if (field.get("is_output") === false && field.isConnected()) {
-	      connection = field.connections[0];
-	      $node = this.$el.parent();
-	      isInsideAnotherDOMnode = function() {
-	        return $node.parent().closest(".node").length > 0;
-	      };
-	      if (isInsideAnotherDOMnode()) {
-	        from_gid = connection.from_field.node.get("gid");
-	        to_gid = connection.to_field.node.get("gid");
-	        if (from_gid !== "-1" && to_gid !== "-1" && from_gid === to_gid) {
-	          return;
-	        }
-	      }
-	    }
-	    view = new FieldButton({
-	      model: field
-	    });
-	    view.$el.appendTo($(target, this.$el));
-	    field.button = view.$el;
-	    return this.subviews.push(view);
-	  };
-	
-	  FieldsView.prototype.remove = function() {
-	    var views;
-	    this.undelegateEvents();
-	    this.collection.off("add", this.onFieldCreated);
-	    views = this.subviews.concat();
-	    _.each(views, function(view) {
-	      return view.remove();
-	    });
-	    $("input", $(this.el)).remove();
-	    delete this.collection;
-	    delete this.node;
-	    delete this.subviews;
-	    return FieldsView.__super__.remove.apply(this, arguments);
-	  };
-	
-	  return FieldsView;
-	
-	})(Backbone.View);
-	
-	module.exports = FieldsView;
-
-
-/***/ }),
-/* 33 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	var Backbone, FieldButton, _, _view_field_context_menu, _view_node_field_in, _view_node_field_out,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	_view_node_field_in = __webpack_require__(34);
-	
-	_view_node_field_out = __webpack_require__(35);
-	
-	_view_field_context_menu = __webpack_require__(36);
-	
-	__webpack_require__(9);
-	
-	__webpack_require__(37);
-	
-	
-	/* FieldButton View */
-	
-	FieldButton = (function(superClass) {
-	  extend(FieldButton, superClass);
-	
-	  function FieldButton() {
-	    this.render = bind(this.render, this);
-	    this.makeElement = bind(this.makeElement, this);
-	    this.remove = bind(this.remove, this);
-	    return FieldButton.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  FieldButton.prototype.className = "field";
-	
-	  FieldButton.prototype.initialize = function(options) {
-	    FieldButton.__super__.initialize.apply(this, arguments);
-	    this.makeElement();
-	    return this.render();
-	  };
-	
-	  FieldButton.prototype.remove = function() {
-	    var $inner;
-	    $inner = $(".inner-field", this.$el);
-	    if ($inner.data("droppable")) {
-	      $inner.droppable("destroy");
-	    }
-	    if ($inner.data("draggable")) {
-	      $inner.draggable("destroy");
-	    }
-	    $inner.remove();
-	    return FieldButton.__super__.remove.apply(this, arguments);
-	  };
-	
-	  FieldButton.prototype.makeElement = function() {
-	    var bt, layout;
-	    layout = this.model.get("is_output") ? _view_node_field_out : _view_node_field_in;
-	    bt = _.template(layout, {
-	      fid: this.model.get("fid"),
-	      name: this.model.get("name")
-	    });
-	    return this.$el.html(bt);
-	  };
-	
-	  FieldButton.prototype.render = function() {
-	    this.$el.attr("rel", this.model.get("name"));
-	    this.$el.addClass("field-" + this.model.get("name"));
-	    this.$el.data("object", this.model);
-	    this.$el.data("fid", this.model.get("fid"));
-	    this.initContextMenu();
-	    return this.addFieldListener();
-	  };
-	
-	  FieldButton.prototype.initContextMenu = function() {
-	    var menu_field_menu;
-	    if ($("#field-context-menu").length < 1) {
-	      menu_field_menu = _.template(_view_field_context_menu, {});
-	      $("body").append(menu_field_menu);
-	    }
-	    this.$el.contextMenu({
-	      menu: "field-context-menu"
-	    }, (function(_this) {
-	      return function(action, el, pos) {
-	        if (action === "removeConnection") {
-	          return _this.model.removeConnections();
-	        }
-	      };
-	    })(this));
-	    return this;
-	  };
-	
-	  FieldButton.prototype.addFieldListener = function() {
-	    var accept_class, field, getPath, highlight_possible_targets, self, start_offset_x, start_offset_y;
-	    self = this;
-	    field = this.model;
-	    start_offset_x = 0;
-	    start_offset_y = 0;
-	    getPath = function(start, end, offset) {
-	      var ofx, ofy;
-	      ofx = $("#container-wrapper").scrollLeft();
-	      ofy = $("#container-wrapper").scrollTop();
-	      return "M" + (start.left + offset.left + 2) + " " + (start.top + offset.top + 2) + " L" + (end.left + offset.left + ofx - start_offset_x) + " " + (end.top + offset.top + ofy - start_offset_y);
-	    };
-	    highlight_possible_targets = function() {
-	      var target;
-	      target = ".outputs .field";
-	      if (field.get("is_output") === true) {
-	        target = ".inputs .field";
-	      }
-	      return $(target).filter(function() {
-	        return $(this).parent().parent().parent().data("nid") !== field.node.get("nid");
-	      }).addClass("field-possible-target");
-	    };
-	    $(".inner-field", this.$el).draggable({
-	      helper: function() {
-	        return $("<div class='ui-widget-drag-helper'></div>");
-	      },
-	      scroll: true,
-	      cursor: 'pointer',
-	      cursorAt: {
-	        left: 0,
-	        top: 0
-	      },
-	      start: function(event, ui) {
-	        start_offset_x = $("#container-wrapper").scrollLeft();
-	        start_offset_y = $("#container-wrapper").scrollTop();
-	        highlight_possible_targets();
-	        if (ThreeNodes.UI.UIView.connecting_line) {
-	          return ThreeNodes.UI.UIView.connecting_line.attr({
-	            opacity: 1
-	          });
-	        }
-	      },
-	      stop: function(event, ui) {
-	        $(".field").removeClass("field-possible-target");
-	        if (ThreeNodes.UI.UIView.connecting_line) {
-	          return ThreeNodes.UI.UIView.connecting_line.attr({
-	            opacity: 0
-	          });
-	        }
-	      },
-	      drag: function(event, ui) {
-	        var node_pos, pos;
-	        if (ThreeNodes.UI.UIView.connecting_line) {
-	          pos = $(this).position();
-	          node_pos = {
-	            left: field.node.get("x"),
-	            top: field.node.get("y")
-	          };
-	          ThreeNodes.UI.UIView.connecting_line.attr({
-	            path: getPath(pos, ui.position, node_pos)
-	          });
-	          return true;
-	        }
-	      }
-	    });
-	    accept_class = ".outputs .inner-field";
-	    if (field && field.get("is_output") === true) {
-	      accept_class = ".inputs .inner-field";
-	    }
-	    $(".inner-field", this.$el).droppable({
-	      accept: accept_class,
-	      activeClass: "ui-state-active",
-	      hoverClass: "ui-state-hover",
-	      drop: function(event, ui) {
-	        var field2, origin;
-	        origin = $(ui.draggable).parent();
-	        field2 = origin.data("object");
-	        if (field.node.parent) {
-	          return field2.node.createConnection(field, field2);
-	        } else {
-	          return field.node.createConnection(field, field2);
-	        }
-	      }
-	    });
-	    return this;
-	  };
-	
-	  return FieldButton;
-	
-	})(Backbone.View);
-	
-	module.exports = FieldButton;
-
-
-/***/ }),
-/* 34 */
-/***/ (function(module, exports) {
-
-	module.exports = "<span class=\"inner-field\"><span></span><%= name %></span>";
-
-/***/ }),
-/* 35 */
-/***/ (function(module, exports) {
-
-	module.exports = "<span class=\"inner-field\"><%= name %><span></span></span>";
-
-/***/ }),
 /* 36 */
-/***/ (function(module, exports) {
-
-	module.exports = "<ul id=\"field-context-menu\" class=\"context-menu\">\n  <li><a href=\"#removeConnection\">Remove connection(s)</a></li>\n</ul>";
-
-/***/ }),
-/* 37 */
-/***/ (function(module, exports) {
-
-	// jQuery Context Menu Plugin
-	//
-	// Version 1.01
-	//
-	// Cory S.N. LaViska
-	// A Beautiful Site (http://abeautifulsite.net/)
-	//
-	// More info: http://abeautifulsite.net/2008/09/jquery-context-menu-plugin/
-	//
-	// Terms of Use
-	//
-	// This plugin is dual-licensed under the GNU General Public License
-	//   and the MIT License and is copyright A Beautiful Site, LLC.
-	//
-	if(jQuery)( function() {
-		$.extend($.fn, {
-	
-			contextMenu: function(o, callback) {
-				// Defaults
-				if( o.menu == undefined ) return false;
-				if( o.inSpeed == undefined ) o.inSpeed = 150;
-				if( o.outSpeed == undefined ) o.outSpeed = 75;
-				// 0 needs to be -1 for expected results (no fade)
-				if( o.inSpeed == 0 ) o.inSpeed = -1;
-				if( o.outSpeed == 0 ) o.outSpeed = -1;
-				// Loop each context menu
-				$(this).each( function() {
-					var el = $(this);
-					var offset = $(el).offset();
-					// Add contextMenu class
-					$('#' + o.menu).addClass('contextMenu');
-					// Simulate a true right click
-					$(this).mousedown( function(e) {
-						var evt = e;
-						evt.preventDefault();
-						$(this).mouseup( function(e) {
-							e.preventDefault();
-							var srcElement = $(this);
-							$(this).unbind('mouseup');
-							if( evt.button == 2 ) {
-								// Hide context menus that may be showing
-								$(".contextMenu").hide();
-								// Get this context menu
-								var menu = $('#' + o.menu);
-	
-								if( $(el).hasClass('disabled') ) return false;
-	
-								// Detect mouse position
-								var d = {}, x, y;
-								if( self.innerHeight ) {
-									d.pageYOffset = self.pageYOffset;
-									d.pageXOffset = self.pageXOffset;
-									d.innerHeight = self.innerHeight;
-									d.innerWidth = self.innerWidth;
-								} else if( document.documentElement &&
-									document.documentElement.clientHeight ) {
-									d.pageYOffset = document.documentElement.scrollTop;
-									d.pageXOffset = document.documentElement.scrollLeft;
-									d.innerHeight = document.documentElement.clientHeight;
-									d.innerWidth = document.documentElement.clientWidth;
-								} else if( document.body ) {
-									d.pageYOffset = document.body.scrollTop;
-									d.pageXOffset = document.body.scrollLeft;
-									d.innerHeight = document.body.clientHeight;
-									d.innerWidth = document.body.clientWidth;
-								}
-								(e.pageX) ? x = e.pageX : x = e.clientX + d.scrollLeft;
-								(e.pageY) ? y = e.pageY : y = e.clientY + d.scrollTop;
-	
-								// Show the menu
-								$(document).unbind('click');
-								$(menu).css({ top: y, left: x }).fadeIn(o.inSpeed);
-								// Hover events
-								$(menu).find('A').mouseover( function() {
-									$(menu).find('LI.hover').removeClass('hover');
-									$(this).parent().addClass('hover');
-								}).mouseout( function() {
-									$(menu).find('LI.hover').removeClass('hover');
-								});
-	
-								// Keyboard
-								$(document).keypress( function(e) {
-									switch( e.keyCode ) {
-										case 38: // up
-											if( $(menu).find('LI.hover').size() == 0 ) {
-												$(menu).find('LI:last').addClass('hover');
-											} else {
-												$(menu).find('LI.hover').removeClass('hover').prevAll('LI:not(.disabled)').eq(0).addClass('hover');
-												if( $(menu).find('LI.hover').size() == 0 ) $(menu).find('LI:last').addClass('hover');
-											}
-										break;
-										case 40: // down
-											if( $(menu).find('LI.hover').size() == 0 ) {
-												$(menu).find('LI:first').addClass('hover');
-											} else {
-												$(menu).find('LI.hover').removeClass('hover').nextAll('LI:not(.disabled)').eq(0).addClass('hover');
-												if( $(menu).find('LI.hover').size() == 0 ) $(menu).find('LI:first').addClass('hover');
-											}
-										break;
-										case 13: // enter
-											$(menu).find('LI.hover A').trigger('click');
-										break;
-										case 27: // esc
-											$(document).trigger('click');
-										break
-									}
-								});
-	
-								// When items are selected
-								$('#' + o.menu).find('A').unbind('click');
-								$('#' + o.menu).find('LI:not(.disabled) A').click( function() {
-									$(document).unbind('click').unbind('keypress');
-									$(".contextMenu").hide();
-									// Callback
-									if( callback ) callback( $(this).attr('href').substr(1), $(srcElement), {x: x - offset.left, y: y - offset.top, docX: x, docY: y} );
-									return false;
-								});
-	
-								// Hide bindings
-								setTimeout( function() { // Delay for Mozilla
-									$(document).click( function() {
-										$(document).unbind('click').unbind('keypress');
-										$(menu).fadeOut(o.outSpeed);
-										return false;
-									});
-								}, 0);
-							}
-						});
-					});
-	
-					// Disable text selection
-					/*if( $.browser.mozilla ) {
-						$('#' + o.menu).each( function() { $(this).css({ 'MozUserSelect' : 'none' }); });
-					} else if( $.browser.msie ) {
-						$('#' + o.menu).each( function() { $(this).bind('selectstart.disableTextSelect', function() { return false; }); });
-					} else {*/
-						$('#' + o.menu).each(function() { $(this).bind('mousedown.disableTextSelect', function() { return false; }); });
-					//}
-					// Disable browser context menu (requires both selectors to work in IE/Safari + FF/Chrome)
-					$(el).add($('UL.contextMenu')).bind('contextmenu', function() { return false; });
-	
-				});
-				return $(this);
-			},
-	
-			// Disable context menu items on the fly
-			disableContextMenuItems: function(o) {
-				if( o == undefined ) {
-					// Disable all
-					$(this).find('LI').addClass('disabled');
-					return( $(this) );
-				}
-				$(this).each( function() {
-					if( o != undefined ) {
-						var d = o.split(',');
-						for( var i = 0; i < d.length; i++ ) {
-							$(this).find('A[href="' + d[i] + '"]').parent().addClass('disabled');
-	
-						}
-					}
-				});
-				return( $(this) );
-			},
-	
-			// Enable context menu items on the fly
-			enableContextMenuItems: function(o) {
-				if( o == undefined ) {
-					// Enable all
-					$(this).find('LI.disabled').removeClass('disabled');
-					return( $(this) );
-				}
-				$(this).each( function() {
-					if( o != undefined ) {
-						var d = o.split(',');
-						for( var i = 0; i < d.length; i++ ) {
-							$(this).find('A[href="' + d[i] + '"]').parent().removeClass('disabled');
-	
-						}
-					}
-				});
-				return( $(this) );
-			},
-	
-			// Disable context menu(s)
-			disableContextMenu: function() {
-				$(this).each( function() {
-					$(this).addClass('disabled');
-				});
-				return( $(this) );
-			},
-	
-			// Enable context menu(s)
-			enableContextMenu: function() {
-				$(this).each( function() {
-					$(this).removeClass('disabled');
-				});
-				return( $(this) );
-			},
-	
-			// Destroy context menu(s)
-			destroyContextMenu: function() {
-				// Destroy specified context menus
-				$(this).each( function() {
-					// Disable action
-					$(this).unbind('mousedown').unbind('mouseup');
-				});
-				return( $(this) );
-			}
-	
-		});
-	})(jQuery);
-
-
-/***/ }),
-/* 38 */
-/***/ (function(module, exports) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_38__;
-
-/***/ }),
-/* 39 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	var Direction, NoDirection, NodeNumberSimple,
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	NodeNumberSimple = __webpack_require__(11);
-	
-	Direction = (function(superClass) {
-	  extend(Direction, superClass);
-	
-	  function Direction() {
-	    return Direction.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Direction.node_name = 'Direction';
-	
-	  Direction.group_name = 'Arrow';
-	
-	  return Direction;
-	
-	})(NodeNumberSimple);
-	
-	ThreeNodes.Core.addNodeType('Direction', Direction);
-	
-	NoDirection = (function(superClass) {
-	  extend(NoDirection, superClass);
-	
-	  function NoDirection() {
-	    return NoDirection.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  NoDirection.node_name = 'NoDirection';
-	
-	  NoDirection.group_name = 'Arrow';
-	
-	  return NoDirection;
-	
-	})(NodeNumberSimple);
-	
-	ThreeNodes.Core.addNodeType('NoDirection', NoDirection);
-
-
-/***/ }),
-/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Boolean, Color, Euler, Node, NodeColorView, NodeNumberSimple, NodeWithCenterTextfield, Number, Quaternion, String, Vector2, Vector3, _,
@@ -4353,13 +4191,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	Node = __webpack_require__(28);
+	Node = __webpack_require__(35);
 	
-	NodeNumberSimple = __webpack_require__(11);
+	NodeNumberSimple = __webpack_require__(19);
 	
-	NodeWithCenterTextfield = __webpack_require__(41);
+	NodeWithCenterTextfield = __webpack_require__(37);
 	
-	NodeColorView = __webpack_require__(43);
+	NodeColorView = __webpack_require__(44);
 	
 	Number = (function(superClass) {
 	  extend(Number, superClass);
@@ -4832,7 +4670,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 41 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, NodeView, NodeWithCenterTextfield, _,
@@ -4844,9 +4682,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	__webpack_require__(28);
+	__webpack_require__(35);
 	
-	NodeView = __webpack_require__(42);
+	NodeView = __webpack_require__(38);
 	
 	NodeWithCenterTextfield = (function(superClass) {
 	  extend(NodeWithCenterTextfield, superClass);
@@ -4894,7 +4732,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 42 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, FieldsView, NodeView, _, _view_node_context_menu, _view_node_template, namespace,
@@ -4906,17 +4744,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	_view_node_template = __webpack_require__(30);
+	_view_node_template = __webpack_require__(13);
 	
-	_view_node_context_menu = __webpack_require__(31);
+	_view_node_context_menu = __webpack_require__(14);
 	
-	FieldsView = __webpack_require__(32);
+	FieldsView = __webpack_require__(39);
 	
-	namespace = __webpack_require__(14).namespace;
+	namespace = __webpack_require__(15).namespace;
 	
-	__webpack_require__(37);
+	__webpack_require__(16);
 	
-	__webpack_require__(38);
+	__webpack_require__(17);
 	
 	
 	/* Node View */
@@ -5178,7 +5016,297 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
+/* 39 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, FieldButton, FieldsView, _,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	FieldButton = __webpack_require__(40);
+	
+	__webpack_require__(17);
+	
+	
+	/* Fields View */
+	
+	FieldsView = (function(superClass) {
+	  extend(FieldsView, superClass);
+	
+	  function FieldsView() {
+	    this.remove = bind(this.remove, this);
+	    this.onFieldCreated = bind(this.onFieldCreated, this);
+	    return FieldsView.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  FieldsView.prototype.initialize = function(options) {
+	    FieldsView.__super__.initialize.apply(this, arguments);
+	    this.node = options.node;
+	    this.subviews = [];
+	    this.collection.on("add", this.onFieldCreated);
+	    return this.collection.each(this.onFieldCreated);
+	  };
+	
+	  FieldsView.prototype.onFieldCreated = function(field) {
+	    var $node, connection, from_gid, isInsideAnotherDOMnode, target, to_gid, view;
+	    target = field.get("is_output") === false ? ".inputs" : ".outputs";
+	    if (field.get("is_output") === false && field.isConnected()) {
+	      connection = field.connections[0];
+	      $node = this.$el.parent();
+	      isInsideAnotherDOMnode = function() {
+	        return $node.parent().closest(".node").length > 0;
+	      };
+	      if (isInsideAnotherDOMnode()) {
+	        from_gid = connection.from_field.node.get("gid");
+	        to_gid = connection.to_field.node.get("gid");
+	        if (from_gid !== "-1" && to_gid !== "-1" && from_gid === to_gid) {
+	          return;
+	        }
+	      }
+	    }
+	    view = new FieldButton({
+	      model: field
+	    });
+	    view.$el.appendTo($(target, this.$el));
+	    field.button = view.$el;
+	    return this.subviews.push(view);
+	  };
+	
+	  FieldsView.prototype.remove = function() {
+	    var views;
+	    this.undelegateEvents();
+	    this.collection.off("add", this.onFieldCreated);
+	    views = this.subviews.concat();
+	    _.each(views, function(view) {
+	      return view.remove();
+	    });
+	    $("input", $(this.el)).remove();
+	    delete this.collection;
+	    delete this.node;
+	    delete this.subviews;
+	    return FieldsView.__super__.remove.apply(this, arguments);
+	  };
+	
+	  return FieldsView;
+	
+	})(Backbone.View);
+	
+	module.exports = FieldsView;
+
+
+/***/ }),
+/* 40 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, FieldButton, _, _view_field_context_menu, _view_node_field_in, _view_node_field_out,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(2);
+	
+	Backbone = __webpack_require__(3);
+	
+	_view_node_field_in = __webpack_require__(41);
+	
+	_view_node_field_out = __webpack_require__(42);
+	
+	_view_field_context_menu = __webpack_require__(43);
+	
+	__webpack_require__(9);
+	
+	__webpack_require__(16);
+	
+	
+	/* FieldButton View */
+	
+	FieldButton = (function(superClass) {
+	  extend(FieldButton, superClass);
+	
+	  function FieldButton() {
+	    this.render = bind(this.render, this);
+	    this.makeElement = bind(this.makeElement, this);
+	    this.remove = bind(this.remove, this);
+	    return FieldButton.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  FieldButton.prototype.className = "field";
+	
+	  FieldButton.prototype.initialize = function(options) {
+	    FieldButton.__super__.initialize.apply(this, arguments);
+	    this.makeElement();
+	    return this.render();
+	  };
+	
+	  FieldButton.prototype.remove = function() {
+	    var $inner;
+	    $inner = $(".inner-field", this.$el);
+	    if ($inner.data("droppable")) {
+	      $inner.droppable("destroy");
+	    }
+	    if ($inner.data("draggable")) {
+	      $inner.draggable("destroy");
+	    }
+	    $inner.remove();
+	    return FieldButton.__super__.remove.apply(this, arguments);
+	  };
+	
+	  FieldButton.prototype.makeElement = function() {
+	    var bt, layout;
+	    layout = this.model.get("is_output") ? _view_node_field_out : _view_node_field_in;
+	    bt = _.template(layout, {
+	      fid: this.model.get("fid"),
+	      name: this.model.get("name")
+	    });
+	    return this.$el.html(bt);
+	  };
+	
+	  FieldButton.prototype.render = function() {
+	    this.$el.attr("rel", this.model.get("name"));
+	    this.$el.addClass("field-" + this.model.get("name"));
+	    this.$el.data("object", this.model);
+	    this.$el.data("fid", this.model.get("fid"));
+	    this.initContextMenu();
+	    return this.addFieldListener();
+	  };
+	
+	  FieldButton.prototype.initContextMenu = function() {
+	    var menu_field_menu;
+	    if ($("#field-context-menu").length < 1) {
+	      menu_field_menu = _.template(_view_field_context_menu, {});
+	      $("body").append(menu_field_menu);
+	    }
+	    this.$el.contextMenu({
+	      menu: "field-context-menu"
+	    }, (function(_this) {
+	      return function(action, el, pos) {
+	        if (action === "removeConnection") {
+	          return _this.model.removeConnections();
+	        }
+	      };
+	    })(this));
+	    return this;
+	  };
+	
+	  FieldButton.prototype.addFieldListener = function() {
+	    var accept_class, field, getPath, highlight_possible_targets, self, start_offset_x, start_offset_y;
+	    self = this;
+	    field = this.model;
+	    start_offset_x = 0;
+	    start_offset_y = 0;
+	    getPath = function(start, end, offset) {
+	      var ofx, ofy;
+	      ofx = $("#container-wrapper").scrollLeft();
+	      ofy = $("#container-wrapper").scrollTop();
+	      return "M" + (start.left + offset.left + 2) + " " + (start.top + offset.top + 2) + " L" + (end.left + offset.left + ofx - start_offset_x) + " " + (end.top + offset.top + ofy - start_offset_y);
+	    };
+	    highlight_possible_targets = function() {
+	      var target;
+	      target = ".outputs .field";
+	      if (field.get("is_output") === true) {
+	        target = ".inputs .field";
+	      }
+	      return $(target).filter(function() {
+	        return $(this).parent().parent().parent().data("nid") !== field.node.get("nid");
+	      }).addClass("field-possible-target");
+	    };
+	    $(".inner-field", this.$el).draggable({
+	      helper: function() {
+	        return $("<div class='ui-widget-drag-helper'></div>");
+	      },
+	      scroll: true,
+	      cursor: 'pointer',
+	      cursorAt: {
+	        left: 0,
+	        top: 0
+	      },
+	      start: function(event, ui) {
+	        start_offset_x = $("#container-wrapper").scrollLeft();
+	        start_offset_y = $("#container-wrapper").scrollTop();
+	        highlight_possible_targets();
+	        if (ThreeNodes.UI.UIView.connecting_line) {
+	          return ThreeNodes.UI.UIView.connecting_line.attr({
+	            opacity: 1
+	          });
+	        }
+	      },
+	      stop: function(event, ui) {
+	        $(".field").removeClass("field-possible-target");
+	        if (ThreeNodes.UI.UIView.connecting_line) {
+	          return ThreeNodes.UI.UIView.connecting_line.attr({
+	            opacity: 0
+	          });
+	        }
+	      },
+	      drag: function(event, ui) {
+	        var node_pos, pos;
+	        if (ThreeNodes.UI.UIView.connecting_line) {
+	          pos = $(this).position();
+	          node_pos = {
+	            left: field.node.get("x"),
+	            top: field.node.get("y")
+	          };
+	          ThreeNodes.UI.UIView.connecting_line.attr({
+	            path: getPath(pos, ui.position, node_pos)
+	          });
+	          return true;
+	        }
+	      }
+	    });
+	    accept_class = ".outputs .inner-field";
+	    if (field && field.get("is_output") === true) {
+	      accept_class = ".inputs .inner-field";
+	    }
+	    $(".inner-field", this.$el).droppable({
+	      accept: accept_class,
+	      activeClass: "ui-state-active",
+	      hoverClass: "ui-state-hover",
+	      drop: function(event, ui) {
+	        var field2, origin;
+	        origin = $(ui.draggable).parent();
+	        field2 = origin.data("object");
+	        if (field.node.parent) {
+	          return field2.node.createConnection(field, field2);
+	        } else {
+	          return field.node.createConnection(field, field2);
+	        }
+	      }
+	    });
+	    return this;
+	  };
+	
+	  return FieldButton;
+	
+	})(Backbone.View);
+	
+	module.exports = FieldButton;
+
+
+/***/ }),
+/* 41 */
+/***/ (function(module, exports) {
+
+	module.exports = "<span class=\"inner-field\"><span></span><%= name %></span>";
+
+/***/ }),
+/* 42 */
+/***/ (function(module, exports) {
+
+	module.exports = "<span class=\"inner-field\"><%= name %><span></span></span>";
+
+/***/ }),
 /* 43 */
+/***/ (function(module, exports) {
+
+	module.exports = "<ul id=\"field-context-menu\" class=\"context-menu\">\n  <li><a href=\"#removeConnection\">Remove connection(s)</a></li>\n</ul>";
+
+/***/ }),
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Color, NodeView, _, namespace,
@@ -5190,13 +5318,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	namespace = __webpack_require__(14).namespace;
+	namespace = __webpack_require__(15).namespace;
 	
-	__webpack_require__(28);
+	__webpack_require__(35);
 	
-	NodeView = __webpack_require__(42);
+	NodeView = __webpack_require__(38);
 	
-	__webpack_require__(44);
+	__webpack_require__(45);
 	
 	Color = (function(superClass) {
 	  extend(Color, superClass);
@@ -5270,7 +5398,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports) {
 
 	/**
@@ -5760,7 +5888,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(jQuery)
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var And, Backbone, Equal, Greater, IfElse, Node, Or, Smaller, _, jQuery,
@@ -5768,13 +5896,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	jQuery = __webpack_require__(38);
+	jQuery = __webpack_require__(17);
 	
 	_ = __webpack_require__(2);
 	
 	Backbone = __webpack_require__(3);
 	
-	Node = __webpack_require__(28);
+	Node = __webpack_require__(35);
 	
 	IfElse = (function(superClass) {
 	  extend(IfElse, superClass);
@@ -6051,7 +6179,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Code, CodeView, Expression, ExpressionView, Node, NodeCodeView, _,
@@ -6063,9 +6191,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	Node = __webpack_require__(28);
+	Node = __webpack_require__(35);
 	
-	NodeCodeView = __webpack_require__(47);
+	NodeCodeView = __webpack_require__(48);
 	
 	CodeView = (function(superClass) {
 	  extend(CodeView, superClass);
@@ -6249,7 +6377,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, CodeMirror, NodeCodeView, NodeView, _,
@@ -6261,9 +6389,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	CodeMirror = __webpack_require__(48);
-	
-	__webpack_require__(49);
+	CodeMirror = __webpack_require__(49);
 	
 	__webpack_require__(50);
 	
@@ -6271,9 +6397,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	__webpack_require__(52);
 	
-	__webpack_require__(28);
+	__webpack_require__(53);
 	
-	NodeView = __webpack_require__(42);
+	__webpack_require__(35);
+	
+	NodeView = __webpack_require__(38);
 	
 	NodeCodeView = (function(superClass) {
 	  extend(NodeCodeView, superClass);
@@ -6364,7 +6492,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -13971,13 +14099,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_49__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_50__;
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -13987,7 +14115,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	(function(mod) {
 	  if (true) // CommonJS
-	    mod(__webpack_require__(48));
+	    mod(__webpack_require__(49));
 	  else if (typeof define == "function" && define.amd) // AMD
 	    define(["../../lib/codemirror"], mod);
 	  else // Plain browser env
@@ -14646,7 +14774,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -14654,7 +14782,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	(function(mod) {
 	  if (true) // CommonJS
-	    mod(__webpack_require__(48));
+	    mod(__webpack_require__(49));
 	  else if (typeof define == "function" && define.amd) // AMD
 	    define(["../../lib/codemirror"], mod);
 	  else // Plain browser env
@@ -14862,7 +14990,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -14870,7 +14998,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	(function(mod) {
 	  if (true) // CommonJS
-	    mod(__webpack_require__(48));
+	    mod(__webpack_require__(49));
 	  else if (typeof define == "function" && define.amd) // AMD
 	    define(["../../lib/codemirror"], mod);
 	  else // Plain browser env
@@ -15004,7 +15132,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, MathAdd, MathAttenuation, MathCeil, MathCos, MathDivide, MathFloor, MathMax, MathMin, MathMod, MathMult, MathRound, MathSin, MathSubtract, MathTan, Node, NodeNumberParam1, NodeNumberSimple, _,
@@ -15016,9 +15144,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	Node = __webpack_require__(28);
+	Node = __webpack_require__(35);
 	
-	NodeNumberSimple = __webpack_require__(11);
+	NodeNumberSimple = __webpack_require__(19);
 	
 	MathSin = (function(superClass) {
 	  extend(MathSin, superClass);
@@ -15602,7 +15730,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Font, Get, LFO, Merge, Mouse, Mp3Input, Node, NodeWithCenterTextfield, Random, Screen, Timer, _,
@@ -15614,9 +15742,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	Node = __webpack_require__(28);
+	Node = __webpack_require__(35);
 	
-	NodeWithCenterTextfield = __webpack_require__(41);
+	NodeWithCenterTextfield = __webpack_require__(37);
 	
 	Random = (function(superClass) {
 	  extend(Random, superClass);
@@ -16480,7 +16608,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, LinearSpread, Node, RandomSpread, Rc4Random, _,
@@ -16492,9 +16620,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	Rc4Random = __webpack_require__(56);
+	Rc4Random = __webpack_require__(57);
 	
-	Node = __webpack_require__(28);
+	Node = __webpack_require__(35);
 	
 	RandomSpread = (function(superClass) {
 	  extend(RandomSpread, superClass);
@@ -16650,7 +16778,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ (function(module, exports) {
 
 	var Rc4Random,
@@ -16705,7 +16833,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Group, Node, Nodes, _,
@@ -16719,7 +16847,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Nodes = __webpack_require__(1);
 	
-	Node = __webpack_require__(28);
+	Node = __webpack_require__(35);
 	
 	Group = (function(superClass) {
 	  extend(Group, superClass);

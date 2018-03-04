@@ -2,11 +2,13 @@ _ = require 'Underscore'
 Backbone = require 'Backbone'
 _view_node_template = require '../templates/node.tmpl.html'
 _view_node_context_menu = require '../templates/node_context_menu.tmpl.html'
-FieldsView = require 'threenodes/fields/views/FieldsView'
+# FieldsView = require 'threenodes/fields/views/FieldsView'
+
 namespace = require('libs/namespace').namespace
 
 require 'libs/jquery.contextMenu'
 require 'jquery.ui'
+
 
 ### Node View ###
 class RectangleView extends Backbone.View
@@ -23,10 +25,10 @@ class RectangleView extends Backbone.View
     @initTitleClick()
 
     # Initialize the fields view
-    @fields_view = new FieldsView
-      node: @model
-      collection: @model.fields
-      el: $("> .options", @$el)
+    # @fields_view = new FieldsView
+    #   node: @model
+    #   collection: @model.fields
+    #   el: $("> .options", @$el)
 
     # Bind events
     @model.on('change', @render)
@@ -39,7 +41,7 @@ class RectangleView extends Backbone.View
     # Render the node and "post init" the model
     @render()
     @initContextMenus()
-    @highlighAnimations()
+    # @highlighAnimations()
     #@model.postInit()
 
   initContextMenus: () =>
@@ -60,6 +62,80 @@ class RectangleView extends Backbone.View
 
     # Add other dynamic classes
     @$el.addClass("node-" + @model.typename())
+    @addHandlerListener()
+
+
+
+
+
+
+
+
+
+
+
+
+  addHandlerListener: ()->
+    self = this
+    start_offset_x = 0
+    start_offset_y = 0
+    getPath = (start, end, offset) ->
+      ofx = $("#container-wrapper").scrollLeft()
+      ofy = $("#container-wrapper").scrollTop()
+      "M#{start.left + offset.left + 2} #{start.top + offset.top + 2} L#{end.left + offset.left + ofx - start_offset_x} #{end.top + offset.top + ofy - start_offset_y}"
+
+    $('.handler', @$el).draggable
+      helper: () ->
+        $("<div class='ui-widget-drag-helper'></div>")
+      scroll: true
+      cursor: 'pointer'
+      cursorAt:
+        left: 0
+        top: 0
+      start: (event, ui) ->
+        start_offset_x = $("#container-wrapper").scrollLeft()
+        start_offset_y = $("#container-wrapper").scrollTop()
+        # highlight_possible_targets()
+        if ThreeNodes.UI.UIView.connecting_line then ThreeNodes.UI.UIView.connecting_line.attr({opacity: 1})
+      stop: (event, ui) ->
+        # $(".field").removeClass "field-possible-target"
+        if ThreeNodes.UI.UIView.connecting_line then ThreeNodes.UI.UIView.connecting_line.attr({opacity: 0})
+      drag: (event, ui) ->
+        if ThreeNodes.UI.UIView.connecting_line
+          pos = $(this).position()
+          node_pos =
+            left: self.model.get("x")
+            top: self.model.get("y")
+          ThreeNodes.UI.UIView.connecting_line.attr
+            path: getPath(pos, ui.position, node_pos)
+          return true
+
+    $(".handler", @$el).droppable
+      accept: '.handler'
+      activeClass: "ui-state-active"
+      hoverClass: "ui-state-hover"
+      drop: (event, ui) ->
+        from_model = $(ui.draggable).parent().data('object') 
+        from_type = $(ui.draggable).attr('data-attr')
+
+        to_model = self.model
+        to_type = $(@).attr('data-attr')
+        
+        self.model.createConnection(from_model, from_type, to_model, to_type)
+        return this
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   render: () =>
     @$el.css
@@ -68,27 +144,15 @@ class RectangleView extends Backbone.View
     @$el.find("> .head span").text(@model.get("name"))
     @$el.find("> .head span").show()
 
-  highlighAnimations: () =>
-    nodeAnimation = false
-    for propTrack in @model.anim.objectTrack.propertyTracks
-      $target = $('.inputs .field-' + propTrack.name , @$el)
-      if propTrack.anims.length > 0
-        $target.addClass "has-animation"
-        nodeAnimation = true
-      else
-        $target.removeClass "has-animation"
-
-    @$el.toggleClass "node-has-animation", nodeAnimation
-    true
-
   addSelectedClass: () =>
     @$el.addClass("ui-selected")
 
   renderConnections: () =>
-    @model.fields.renderConnections()
-    if @model.nodes
-      _.each @model.nodes.models, (n) ->
-        n.fields.renderConnections()
+    @model.renderConnections()
+    ## for group
+    # if @model.nodes
+    #   _.each @model.nodes.models, (n) ->
+    #     n.fields.renderConnections()
 
   computeNodePosition: () =>
     pos = $(@el).position()
@@ -102,8 +166,8 @@ class RectangleView extends Backbone.View
     if @$el.data("draggable") then @$el.draggable("destroy")
     $(this.el).unbind()
     @undelegateEvents()
-    if @fields_view then @fields_view.remove()
-    delete @fields_view
+    # if @fields_view then @fields_view.remove()
+    # delete @fields_view
     super
 
   initNodeClick: () ->
@@ -121,7 +185,7 @@ class RectangleView extends Backbone.View
       if !selectable then return
       selectable.refresh()
       selectable._mouseStop(null)
-      self.model.fields.renderSidebar()
+      # self.model.fields.renderSidebar()
     return @
 
   initTitleClick: () ->
@@ -175,7 +239,6 @@ class RectangleView extends Backbone.View
           $(".node").removeClass("ui-selected")
         nodes_offset = $(this).offset()
       drag: (ev, ui) ->
-
         dt = ui.position.top - nodes_offset.top
         dl = ui.position.left - nodes_offset.left
         selected_nodes.not(this).each () ->
@@ -188,7 +251,7 @@ class RectangleView extends Backbone.View
             left: dy
           el.data("object").trigger("node:computePosition")
           el.data("object").trigger("node:renderConnections")
-
+        self.computeNodePosition()
         self.renderConnections()
       stop: () ->
         selected_nodes.not(this).each () ->

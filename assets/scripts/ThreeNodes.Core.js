@@ -238,12 +238,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	      return self.trigger("nodeslist:rebuild", self);
 	    });
-	    return this.bind("createConnection", (function(_this) {
-	      return function(field1, field2) {
+	    this.bind("createConnection", (function(_this) {
+	      return function(from_model, from_type, to_model, to_type) {
 	        return _this.connections.create({
-	          from_field: field1,
-	          to_field: field2
+	          from_model: from_model,
+	          from_type: from_type,
+	          to_model: to_model,
+	          to_type: to_type
 	        });
+	      };
+	    })(this));
+	    return this.bind("renderConnections", (function(_this) {
+	      return function(node) {
+	        return _this.connections.renderConnections(node);
 	      };
 	    })(this));
 	  };
@@ -305,6 +312,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  Nodes.prototype.render = function() {
 	    var buildNodeArrays, evaluateSubGraph, invalidNodes, nid, terminalNodes;
+	    return;
 	    invalidNodes = {};
 	    terminalNodes = {};
 	    buildNodeArrays = function(nodes) {
@@ -560,6 +568,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function Connections() {
 	    this.removeAll = bind(this.removeAll, this);
 	    this.create = bind(this.create, this);
+	    this.renderConnections = bind(this.renderConnections, this);
 	    this.render = bind(this.render, this);
 	    this.initialize = bind(this.initialize, this);
 	    return Connections.__super__.constructor.apply(this, arguments);
@@ -580,6 +589,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  Connections.prototype.render = function() {
 	    return this.each(function(c) {
 	      return c.render();
+	    });
+	  };
+	
+	  Connections.prototype.renderConnections = function(node) {
+	    return this.each(function(c) {
+	      if (c.options.to_model === node || c.options.from_model === node) {
+	        return c.render();
+	      }
 	    });
 	  };
 	
@@ -627,7 +644,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend(Connection, superClass);
 	
 	  function Connection() {
-	    this.switchFieldsIfNeeded = bind(this.switchFieldsIfNeeded, this);
+	    this.validate_deprecated = bind(this.validate_deprecated, this);
 	    this.validate = bind(this.validate, this);
 	    this.render = bind(this.render, this);
 	    this.remove = bind(this.remove, this);
@@ -649,27 +666,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.options = options;
 	    indexer = options.indexer || Connection.STATIC_INDEXER;
 	    if (this.get("cid") === -1) {
-	      this.set({
+	      return this.set({
 	        "cid": indexer.getUID()
 	      });
-	    }
-	    if (this.isValid()) {
-	      this.to_field.removeConnections();
-	      this.from_field.addConnection(this);
-	      this.to_field.addConnection(this);
-	      this.to_field.setValue(this.from_field.get("value"));
-	      return this.from_field.node.dirty = true;
 	    }
 	  };
 	
 	  Connection.prototype.remove = function() {
-	    this.from_field.unregisterConnection(this);
-	    this.to_field.unregisterConnection(this);
-	    this.to_field.removeConnections();
-	    this.to_field.node.dirty = true;
-	    this.to_field.changed = true;
-	    delete this.from_field;
-	    delete this.to_field;
+	    delete this.from_model;
+	    delete this.from_type;
+	    delete this.to_model;
+	    delete this.to_type;
 	    this.trigger("connection:removed", this);
 	    this.destroy();
 	    return false;
@@ -679,30 +686,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return this.trigger("render", this, this);
 	  };
 	
-	  Connection.prototype.validate = function(attrs, options) {
+	  Connection.prototype.validate = function() {
+	    return false;
+	  };
+	
+	  Connection.prototype.validate_deprecated = function(attrs, options) {
 	    this.from_field = attrs.from_field;
 	    this.to_field = attrs.to_field;
 	    if (!this.from_field || !this.to_field) {
 	      return true;
 	    }
-	    if (this.from_field.get("is_output") === this.to_field.get("is_output")) {
-	      return true;
-	    }
-	    if (this.from_field.node.get('nid') === this.to_field.node.get('nid')) {
-	      return true;
-	    }
-	    this.switchFieldsIfNeeded();
 	    return false;
-	  };
-	
-	  Connection.prototype.switchFieldsIfNeeded = function() {
-	    var f_out;
-	    if (this.from_field.get("is_output") === false) {
-	      f_out = this.to_field;
-	      this.to_field = this.from_field;
-	      this.from_field = f_out;
-	    }
-	    return this;
 	  };
 	
 	  Connection.prototype.toJSON = function() {
