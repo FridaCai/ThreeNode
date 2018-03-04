@@ -993,6 +993,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      accept: '.handler',
 	      activeClass: "ui-state-active",
 	      hoverClass: "ui-state-hover",
+	      tolerance: "pointer",
 	      drop: function(event, ui) {
 	        var from_model, from_type, to_model, to_type;
 	        from_model = $(ui.draggable).parent().data('object');

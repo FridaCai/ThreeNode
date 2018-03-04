@@ -114,6 +114,7 @@ class RectangleView extends Backbone.View
       accept: '.handler'
       activeClass: "ui-state-active"
       hoverClass: "ui-state-hover"
+      tolerance: "pointer"
       drop: (event, ui) ->
         from_model = $(ui.draggable).parent().data('object') 
         from_type = $(ui.draggable).attr('data-attr')
