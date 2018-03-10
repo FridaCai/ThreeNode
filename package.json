@@ -12,12 +12,13 @@
     "grunt-contrib-coffee": ">= 0.7.0",
     "grunt-contrib-copy": ">= 0.4.1",
     "grunt-contrib-imagemin": ">= 0.3.0",
+    "grunt-contrib-requirejs": "^1.0.0",
     "grunt-contrib-uglify": ">= 0.2.4",
     "grunt-contrib-watch": ">= 0.5.3",
     "grunt-notify": ">= 0.2.13",
     "grunt-postcss": "^0.8.0",
     "grunt-sass": "^1.1.0",
-    "phantom": "0.5.2",
+    "node-sass": "^4.7.2",
     "sty": "0.6.1"
   },
   "engine": "node >= 0.8.x",
@@ -26,7 +27,6 @@
     "coffee-loader": "^0.7.2",
     "webpack": "^1.6.0",
     "html-loader": "^0.2.3",
-    "grunt-contrib-clean": "^0.6.0",
     "webpack-dev-server": "^1.7.0"
   }
 }
