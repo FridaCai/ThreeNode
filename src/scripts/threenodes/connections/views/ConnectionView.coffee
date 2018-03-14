@@ -45,8 +45,9 @@ class ConnectionView extends Backbone.View
   getNodePosition: (model, type) ->
     x = model.get('x')
     y = model.get('y')
-    width = 90 # why cannot obtain model.get('width')?
-    height = 26 # why cannot obtain model.get('height')?
+
+    width = model.get('width')
+    height = model.get('height')
 
     switch type
       when 'left' then o1 = {left: x, top: y + height/2}

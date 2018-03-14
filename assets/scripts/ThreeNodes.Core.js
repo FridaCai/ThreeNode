@@ -373,7 +373,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      from = from_node.fields.outputs[connection.to.toString()];
 	      to = to_node.fields.inputs[connection.from.toString()];
 	    }
-	    debugger;
 	    c = this.connections.create({
 	      from_node: from_node,
 	      to_node: to_node,
@@ -617,7 +616,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  Connections.prototype.removeAll = function() {
-	    debugger;
 	    return this.remove(this.models);
 	  };
 	

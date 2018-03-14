@@ -11,7 +11,7 @@ require 'jquery.ui'
 
 
 ### Node View ###
-class RectangleView extends Backbone.View
+class ShapeNodeView extends Backbone.View
   className: "node"
 
   initialize: (options) ->
@@ -64,17 +64,6 @@ class RectangleView extends Backbone.View
     @$el.addClass("node-" + @model.typename())
     @addHandlerListener()
 
-
-
-
-
-
-
-
-
-
-
-
   addHandlerListener: ()->
     self = this
     start_offset_x = 0
@@ -124,20 +113,6 @@ class RectangleView extends Backbone.View
         
         self.model.createConnection(from_node, from_type, to_node, to_type)
         return this
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   render: () =>
     @$el.css
       left: parseInt @model.get("x")
@@ -262,6 +237,6 @@ class RectangleView extends Backbone.View
         self.renderConnections()
     return @
 
-ThreeNodes.Core.addNodeView('RectangleView', RectangleView)
+ThreeNodes.Core.addNodeView('ShapeNodeView', ShapeNodeView)
 
-module.exports = RectangleView
+module.exports = ShapeNodeView

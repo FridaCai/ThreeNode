@@ -6779,8 +6779,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var diff, height, o1, width, x, y;
 	    x = model.get('x');
 	    y = model.get('y');
-	    width = 90;
-	    height = 26;
+	    debugger;
+	    width = model.get('width');
+	    height = model.get('height');
 	    switch (type) {
 	      case 'left':
 	        o1 = {

@@ -291,7 +291,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      from = from_node.fields.outputs[connection.to.toString()];
 	      to = to_node.fields.inputs[connection.from.toString()];
 	    }
-	    debugger;
 	    c = this.connections.create({
 	      from_node: from_node,
 	      to_node: to_node,
@@ -535,7 +534,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  Connections.prototype.removeAll = function() {
-	    debugger;
 	    return this.remove(this.models);
 	  };
 	
@@ -682,13 +680,14 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var Circle, Ellipse, Rectangle, RectangleView, ShapeNode,
+	var Circle, Ellipse, Rectangle, ShapeNode, ShapeNodeView,
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
+	  hasProp = {}.hasOwnProperty,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 	
 	ShapeNode = __webpack_require__(11);
 	
-	RectangleView = __webpack_require__(12);
+	ShapeNodeView = __webpack_require__(12);
 	
 	Rectangle = (function(superClass) {
 	  extend(Rectangle, superClass);
@@ -699,7 +698,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  return Rectangle;
 	
-	})(RectangleView);
+	})(ShapeNodeView);
 	
 	ThreeNodes.Core.addNodeView('Rectangle', Rectangle);
 	
@@ -707,12 +706,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend(Rectangle, superClass);
 	
 	  function Rectangle() {
+	    this.initialize = bind(this.initialize, this);
 	    return Rectangle.__super__.constructor.apply(this, arguments);
 	  }
 	
 	  Rectangle.node_name = 'Rectangle';
 	
 	  Rectangle.group_name = 'Shape';
+	
+	  Rectangle.prototype.initialize = function(options) {
+	    Rectangle.__super__.initialize.apply(this, arguments);
+	    return this.set({
+	      width: 90,
+	      height: 26
+	    });
+	  };
 	
 	  return Rectangle;
 	
@@ -727,9 +735,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return Circle.__super__.constructor.apply(this, arguments);
 	  }
 	
+	  return Circle;
+	
+	})(ShapeNodeView);
+	
+	ThreeNodes.Core.addNodeView('Circle', Circle);
+	
+	Circle = (function(superClass) {
+	  extend(Circle, superClass);
+	
+	  function Circle() {
+	    this.initialize = bind(this.initialize, this);
+	    return Circle.__super__.constructor.apply(this, arguments);
+	  }
+	
 	  Circle.node_name = 'Circle';
 	
 	  Circle.group_name = 'Shape';
+	
+	  Circle.prototype.initialize = function(options) {
+	    Circle.__super__.initialize.apply(this, arguments);
+	    return this.set({
+	      width: 90,
+	      height: 90
+	    });
+	  };
 	
 	  return Circle;
 	
@@ -744,9 +774,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return Ellipse.__super__.constructor.apply(this, arguments);
 	  }
 	
+	  return Ellipse;
+	
+	})(ShapeNodeView);
+	
+	ThreeNodes.Core.addNodeView('Ellipse', Ellipse);
+	
+	Ellipse = (function(superClass) {
+	  extend(Ellipse, superClass);
+	
+	  function Ellipse() {
+	    this.initialize = bind(this.initialize, this);
+	    return Ellipse.__super__.constructor.apply(this, arguments);
+	  }
+	
 	  Ellipse.node_name = 'Ellipse';
 	
 	  Ellipse.group_name = 'Shape';
+	
+	  Ellipse.prototype.initialize = function(options) {
+	    Ellipse.__super__.initialize.apply(this, arguments);
+	    return this.set({
+	      width: 90,
+	      height: 50
+	    });
+	  };
 	
 	  return Ellipse;
 	
@@ -860,7 +912,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var Backbone, RectangleView, _, _view_node_context_menu, _view_node_template, namespace,
+	var Backbone, ShapeNodeView, _, _view_node_context_menu, _view_node_template, namespace,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
@@ -882,10 +934,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	/* Node View */
 	
-	RectangleView = (function(superClass) {
-	  extend(RectangleView, superClass);
+	ShapeNodeView = (function(superClass) {
+	  extend(ShapeNodeView, superClass);
 	
-	  function RectangleView() {
+	  function ShapeNodeView() {
 	    this.makeDraggable = bind(this.makeDraggable, this);
 	    this.remove = bind(this.remove, this);
 	    this.computeNodePosition = bind(this.computeNodePosition, this);
@@ -894,12 +946,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.render = bind(this.render, this);
 	    this.makeElement = bind(this.makeElement, this);
 	    this.initContextMenus = bind(this.initContextMenus, this);
-	    return RectangleView.__super__.constructor.apply(this, arguments);
+	    return ShapeNodeView.__super__.constructor.apply(this, arguments);
 	  }
 	
-	  RectangleView.prototype.className = "node";
+	  ShapeNodeView.prototype.className = "node";
 	
-	  RectangleView.prototype.initialize = function(options) {
+	  ShapeNodeView.prototype.initialize = function(options) {
 	    this.makeElement();
 	    if (!options.isSubNode) {
 	      this.makeDraggable();
@@ -919,7 +971,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return this.initContextMenus();
 	  };
 	
-	  RectangleView.prototype.initContextMenus = function() {
+	  ShapeNodeView.prototype.initContextMenus = function() {
 	    var node_menu;
 	    if ($("#node-context-menu").length < 1) {
 	      node_menu = _.template(_view_node_context_menu, {});
@@ -937,7 +989,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return this;
 	  };
 	
-	  RectangleView.prototype.makeElement = function() {
+	  ShapeNodeView.prototype.makeElement = function() {
 	    this.template = _.template(_view_node_template, this.model);
 	    this.$el.html(this.template);
 	    this.$el.addClass("type-" + this.model.constructor.group_name);
@@ -945,7 +997,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return this.addHandlerListener();
 	  };
 	
-	  RectangleView.prototype.addHandlerListener = function() {
+	  ShapeNodeView.prototype.addHandlerListener = function() {
 	    var getPath, self, start_offset_x, start_offset_y;
 	    self = this;
 	    start_offset_x = 0;
@@ -1014,7 +1066,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 	  };
 	
-	  RectangleView.prototype.render = function() {
+	  ShapeNodeView.prototype.render = function() {
 	    this.$el.css({
 	      left: parseInt(this.model.get("x")),
 	      top: parseInt(this.model.get("y"))
@@ -1023,15 +1075,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return this.$el.find("> .head span").show();
 	  };
 	
-	  RectangleView.prototype.addSelectedClass = function() {
+	  ShapeNodeView.prototype.addSelectedClass = function() {
 	    return this.$el.addClass("ui-selected");
 	  };
 	
-	  RectangleView.prototype.renderConnections = function() {
+	  ShapeNodeView.prototype.renderConnections = function() {
 	    return this.model.renderConnections();
 	  };
 	
-	  RectangleView.prototype.computeNodePosition = function() {
+	  ShapeNodeView.prototype.computeNodePosition = function() {
 	    var offset, pos;
 	    pos = $(this.el).position();
 	    offset = $("#container-wrapper").offset();
@@ -1041,17 +1093,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 	  };
 	
-	  RectangleView.prototype.remove = function() {
+	  ShapeNodeView.prototype.remove = function() {
 	    $(".field", this.el).destroyContextMenu();
 	    if (this.$el.data("draggable")) {
 	      this.$el.draggable("destroy");
 	    }
 	    $(this.el).unbind();
 	    this.undelegateEvents();
-	    return RectangleView.__super__.remove.apply(this, arguments);
+	    return ShapeNodeView.__super__.remove.apply(this, arguments);
 	  };
 	
-	  RectangleView.prototype.initNodeClick = function() {
+	  ShapeNodeView.prototype.initNodeClick = function() {
 	    var self;
 	    self = this;
 	    $(this.el).click(function(e) {
@@ -1076,7 +1128,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return this;
 	  };
 	
-	  RectangleView.prototype.initTitleClick = function() {
+	  ShapeNodeView.prototype.initTitleClick = function() {
 	    var $input, $title_span, self;
 	    self = this;
 	    $title_span = this.$el.find("> .head span");
@@ -1112,7 +1164,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return this;
 	  };
 	
-	  RectangleView.prototype.makeDraggable = function() {
+	  ShapeNodeView.prototype.makeDraggable = function() {
 	    var nodes_offset, selected_nodes, self;
 	    self = this;
 	    nodes_offset = {
@@ -1165,13 +1217,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return this;
 	  };
 	
-	  return RectangleView;
+	  return ShapeNodeView;
 	
 	})(Backbone.View);
 	
-	ThreeNodes.Core.addNodeView('RectangleView', RectangleView);
+	ThreeNodes.Core.addNodeView('ShapeNodeView', ShapeNodeView);
 	
-	module.exports = RectangleView;
+	module.exports = ShapeNodeView;
 
 
 /***/ }),

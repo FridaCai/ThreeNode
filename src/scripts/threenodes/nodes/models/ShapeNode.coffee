@@ -31,11 +31,8 @@ class ShapeNode extends Backbone.Model
     if @get('name') == '' then @set('name', @typename())
 
     if @get('nid') == -1
-      # If this a new node assign a unique id to it
       @set('nid', @indexer.getUID())
     else
-      # If the node is loaded set the indexer uid to the node.nid.
-      # With this, the following created nodes will have a unique nid
       @indexer.uid = @get('nid')
     return this
 
