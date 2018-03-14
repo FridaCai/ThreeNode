@@ -24,15 +24,16 @@ class ConnectionView extends Backbone.View
     @el = @svg.node
     @model.bind("render", () => @render())
     @model.bind("destroy", () => @remove())
+    @model.bind("remove", () => @remove())
     @render()
 
   remove: ->
-    # if @svg.curve
-    #   @svg.curve.remove()
-    #   delete @svg.curve
-    # if @svg.triangle
-    #   @svg.triangle.remove()
-    #   delete @svg.triangle
+    @curve.remove()
+    delete @curve
+    
+    @triangle.remove()
+    delete @triangle
+
     return true
 
   render: () ->
@@ -84,8 +85,8 @@ class ConnectionView extends Backbone.View
   renderCurve: () ->
     # f1 = @getFieldPosition(@model.from_field)
     # f2 = @getFieldPosition(@model.to_field)
-    f1 = @getNodePosition(@model.options.from_model, @model.options.from_type)
-    f2 = @getNodePosition(@model.options.to_model, @model.options.to_type)
+    f1 = @getNodePosition(@model.options.from_node, @model.options.from_type)
+    f2 = @getNodePosition(@model.options.to_node, @model.options.to_type)
 
     offset = $("#container-wrapper").offset()
     ofx = $("#container-wrapper").scrollLeft() - offset.left

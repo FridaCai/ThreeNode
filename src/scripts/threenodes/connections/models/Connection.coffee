@@ -13,6 +13,12 @@ class Connection extends Backbone.Model
 
   initialize: (options) =>
     @options = options
+
+    @from_node = options.from_node;
+    @from_type = options.from_type;
+    @to_node = options.to_node;
+    @to_type = options.to_type;
+
     indexer = options.indexer || Connection.STATIC_INDEXER
 
     # Set a unique connection id
@@ -20,9 +26,9 @@ class Connection extends Backbone.Model
 
   remove: =>
     # Delete variable reference for garbage collection
-    delete @from_model
+    delete @from_node
     delete @from_type
-    delete @to_model
+    delete @to_node
     delete @to_type
 
     # Trigger the removed event and call destroy()
@@ -58,12 +64,12 @@ class Connection extends Backbone.Model
   toJSON: () ->
     res =
       id: @get("cid")
-      from_node: @from_field.node.get("nid")
-      from_node_gid: @from_field.node.get("gid")
-      from: @from_field.get("machine_name")
-      to_node: @to_field.node.get("nid")
-      to_node_gid: @to_field.node.get("gid")
-      to: @to_field.get("machine_name")
+      from_node: @from_node.get("nid")
+      from_node_gid: @from_node.get("gid")
+      from: @from_type
+      to_node: @to_node.get("nid")
+      to_node_gid: @to_node.get("gid")
+      to: @to_type
     res
 
 module.exports = Connection

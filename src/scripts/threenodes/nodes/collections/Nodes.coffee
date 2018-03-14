@@ -42,11 +42,11 @@ class Nodes extends Backbone.Collection
 
       self.trigger "nodeslist:rebuild", self
 
-    @bind "createConnection", (from_model, from_type, to_model, to_type) =>
+    @bind "createConnection", (from_node, from_type, to_node, to_type) =>
       @connections.create
-        from_model: from_model
+        from_node: from_node
         from_type: from_type
-        to_model: to_model
+        to_node: to_node
         to_type: to_type
 
     @bind "renderConnections", (node) =>
@@ -149,10 +149,10 @@ class Nodes extends Backbone.Collection
     # Get variables from their id
     from_gid = if connection.from_node_gid then connection.from_node_gid.toString() else "-1"
     from_node = @getNodeByNid(connection.from_node.toString(), from_gid)
-    from = from_node.fields.outputs[connection.from.toString()]
+    from = connection.from
     to_gid = if connection.to_node_gid then connection.to_node_gid.toString() else "-1"
     to_node = @getNodeByNid(connection.to_node.toString(), to_gid)
-    to = to_node.fields.inputs[connection.to.toString()]
+    to = connection.to
 
     # If a field is missing try to switch from/to
     if !from || !to
@@ -163,8 +163,10 @@ class Nodes extends Backbone.Collection
       to = to_node.fields.inputs[connection.from.toString()]
 
     c = @connections.create
-        from_field: from
-        to_field: to
+        from_node: from_node
+        to_node: to_node
+        from_type: connection.from
+        to_type: connection.to
         cid: connection.id
 
     c

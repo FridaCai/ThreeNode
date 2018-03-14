@@ -14,7 +14,7 @@ class Connections extends Backbone.Collection
 
   renderConnections: (node) =>
     @each (c) ->
-      if(c.options.to_model == node or c.options.from_model == node)
+      if(c.options.to_node == node or c.options.from_node == node)
         c.render()
 
   create: (model, options) =>

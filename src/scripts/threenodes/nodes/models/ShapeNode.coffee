@@ -50,8 +50,8 @@ class ShapeNode extends Backbone.Model
     @destroy()
 
  
-  createConnection: (from_model, from_type, to_model, to_type) =>
-    @trigger("createConnection", from_model, from_type, to_model, to_type)
+  createConnection: (from_node, from_type, to_node, to_type) =>
+    @trigger("createConnection", from_node, from_type, to_node, to_type)
   
   renderConnections:()=>
     @trigger("renderConnections", @)

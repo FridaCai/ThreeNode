@@ -116,13 +116,13 @@ class RectangleView extends Backbone.View
       hoverClass: "ui-state-hover"
       tolerance: "pointer"
       drop: (event, ui) ->
-        from_model = $(ui.draggable).parent().data('object') 
+        from_node = $(ui.draggable).parent().data('object') 
         from_type = $(ui.draggable).attr('data-attr')
 
-        to_model = self.model
+        to_node = self.model
         to_type = $(@).attr('data-attr')
         
-        self.model.createConnection(from_model, from_type, to_model, to_type)
+        self.model.createConnection(from_node, from_type, to_node, to_type)
         return this
 
 

@@ -157,11 +157,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return self.trigger("nodeslist:rebuild", self);
 	    });
 	    this.bind("createConnection", (function(_this) {
-	      return function(from_model, from_type, to_model, to_type) {
+	      return function(from_node, from_type, to_node, to_type) {
 	        return _this.connections.create({
-	          from_model: from_model,
+	          from_node: from_node,
 	          from_type: from_type,
-	          to_model: to_model,
+	          to_node: to_node,
 	          to_type: to_type
 	        });
 	      };
@@ -280,10 +280,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var c, from, from_gid, from_node, tmp, to, to_gid, to_node;
 	    from_gid = connection.from_node_gid ? connection.from_node_gid.toString() : "-1";
 	    from_node = this.getNodeByNid(connection.from_node.toString(), from_gid);
-	    from = from_node.fields.outputs[connection.from.toString()];
+	    from = connection.from;
 	    to_gid = connection.to_node_gid ? connection.to_node_gid.toString() : "-1";
 	    to_node = this.getNodeByNid(connection.to_node.toString(), to_gid);
-	    to = to_node.fields.inputs[connection.to.toString()];
+	    to = connection.to;
 	    if (!from || !to) {
 	      tmp = from_node;
 	      from_node = to_node;
@@ -291,9 +291,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      from = from_node.fields.outputs[connection.to.toString()];
 	      to = to_node.fields.inputs[connection.from.toString()];
 	    }
+	    debugger;
 	    c = this.connections.create({
-	      from_field: from,
-	      to_field: to,
+	      from_node: from_node,
+	      to_node: to_node,
+	      from_type: connection.from,
+	      to_type: connection.to,
 	      cid: connection.id
 	    });
 	    return c;
@@ -512,7 +515,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  Connections.prototype.renderConnections = function(node) {
 	    return this.each(function(c) {
-	      if (c.options.to_model === node || c.options.from_model === node) {
+	      if (c.options.to_node === node || c.options.from_node === node) {
 	        return c.render();
 	      }
 	    });
@@ -532,6 +535,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  Connections.prototype.removeAll = function() {
+	    debugger;
 	    return this.remove(this.models);
 	  };
 	
@@ -582,6 +586,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  Connection.prototype.initialize = function(options) {
 	    var indexer;
 	    this.options = options;
+	    this.from_node = options.from_node;
+	    this.from_type = options.from_type;
+	    this.to_node = options.to_node;
+	    this.to_type = options.to_type;
 	    indexer = options.indexer || Connection.STATIC_INDEXER;
 	    if (this.get("cid") === -1) {
 	      return this.set({
@@ -591,9 +599,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  Connection.prototype.remove = function() {
-	    delete this.from_model;
+	    delete this.from_node;
 	    delete this.from_type;
-	    delete this.to_model;
+	    delete this.to_node;
 	    delete this.to_type;
 	    this.trigger("connection:removed", this);
 	    this.destroy();
@@ -621,12 +629,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var res;
 	    res = {
 	      id: this.get("cid"),
-	      from_node: this.from_field.node.get("nid"),
-	      from_node_gid: this.from_field.node.get("gid"),
-	      from: this.from_field.get("machine_name"),
-	      to_node: this.to_field.node.get("nid"),
-	      to_node_gid: this.to_field.node.get("gid"),
-	      to: this.to_field.get("machine_name")
+	      from_node: this.from_node.get("nid"),
+	      from_node_gid: this.from_node.get("gid"),
+	      from: this.from_type,
+	      to_node: this.to_node.get("nid"),
+	      to_node_gid: this.to_node.get("gid"),
+	      to: this.to_type
 	    };
 	    return res;
 	  };
@@ -819,8 +827,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return this.destroy();
 	  };
 	
-	  ShapeNode.prototype.createConnection = function(from_model, from_type, to_model, to_type) {
-	    return this.trigger("createConnection", from_model, from_type, to_model, to_type);
+	  ShapeNode.prototype.createConnection = function(from_node, from_type, to_node, to_type) {
+	    return this.trigger("createConnection", from_node, from_type, to_node, to_type);
 	  };
 	
 	  ShapeNode.prototype.renderConnections = function() {
@@ -995,12 +1003,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      hoverClass: "ui-state-hover",
 	      tolerance: "pointer",
 	      drop: function(event, ui) {
-	        var from_model, from_type, to_model, to_type;
-	        from_model = $(ui.draggable).parent().data('object');
+	        var from_node, from_type, to_node, to_type;
+	        from_node = $(ui.draggable).parent().data('object');
 	        from_type = $(ui.draggable).attr('data-attr');
-	        to_model = self.model;
+	        to_node = self.model;
 	        to_type = $(this).attr('data-attr');
-	        self.model.createConnection(from_model, from_type, to_model, to_type);
+	        self.model.createConnection(from_node, from_type, to_node, to_type);
 	        return this;
 	      }
 	    });

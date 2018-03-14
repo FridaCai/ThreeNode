@@ -39,7 +39,7 @@ class Sidebar extends Backbone.View
     if @treeview then @treeview.render(nodes)
 
   clearWorkspace: () =>
-    @treeview.render(false)
+    # @treeview.render(false)
 
   initTabs: () =>
     @$el.tabs

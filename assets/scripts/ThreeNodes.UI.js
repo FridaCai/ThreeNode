@@ -4873,9 +4873,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  };
 	
-	  Sidebar.prototype.clearWorkspace = function() {
-	    return this.treeview.render(false);
-	  };
+	  Sidebar.prototype.clearWorkspace = function() {};
 	
 	  Sidebar.prototype.initTabs = function() {
 	    this.$el.tabs({
@@ -6753,10 +6751,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return _this.remove();
 	      };
 	    })(this));
+	    this.model.bind("remove", (function(_this) {
+	      return function() {
+	        return _this.remove();
+	      };
+	    })(this));
 	    return this.render();
 	  };
 	
 	  ConnectionView.prototype.remove = function() {
+	    this.curve.remove();
+	    delete this.curve;
+	    this.triangle.remove();
+	    delete this.triangle;
 	    return true;
 	  };
 	
@@ -6827,8 +6834,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  ConnectionView.prototype.renderCurve = function() {
 	    var diffx, diffy, f1, f2, min_diff, offset, ofx, ofy, x1, x2, x3, x4, y1, y2, y3, y4;
-	    f1 = this.getNodePosition(this.model.options.from_model, this.model.options.from_type);
-	    f2 = this.getNodePosition(this.model.options.to_model, this.model.options.to_type);
+	    f1 = this.getNodePosition(this.model.options.from_node, this.model.options.from_type);
+	    f2 = this.getNodePosition(this.model.options.to_node, this.model.options.to_type);
 	    offset = $("#container-wrapper").offset();
 	    ofx = $("#container-wrapper").scrollLeft() - offset.left;
 	    ofy = $("#container-wrapper").scrollTop() - offset.top;
