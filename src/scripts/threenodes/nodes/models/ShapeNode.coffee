@@ -44,8 +44,12 @@ class ShapeNode extends Backbone.Model
     delete @indexer
     # todo : remove when @model.postInit is removed in NodeView
     delete @fully_inited
+    
+    @removeConnection()
     @destroy()
 
+  removeConnection: () =>
+    @trigger("removeConnection", @)
  
   createConnection: (from_node, from_type, to_node, to_type) =>
     @trigger("createConnection", from_node, from_type, to_node, to_type)

@@ -52,6 +52,11 @@ class Nodes extends Backbone.Collection
     @bind "renderConnections", (node) =>
       @connections.renderConnections(node)
 
+    @bind "removeConnection", (node) =>
+      @connections.map (c) ->
+        if c.from_node == node || c.to_node == node
+          self.removeConnection(c)
+
   clearWorkspace: () =>
     @removeConnections()
     @removeAll()

@@ -142,8 +142,6 @@ class ShapeNodeView extends Backbone.View
     if @$el.data("draggable") then @$el.draggable("destroy")
     $(this.el).unbind()
     @undelegateEvents()
-    # if @fields_view then @fields_view.remove()
-    # delete @fields_view
     super
 
   initNodeClick: () ->
