@@ -53,24 +53,39 @@ class GroupDefinitions extends Backbone.Collection
 
     # Save the connection going out or in the group of nodes
     # the connections have one extenal node linked to one selected node
-    external_connections = []
+    # external_connections = []
+    # external_objects = []
+    # for node in selected_nodes
+    #   # check each node fields
+    #   for field in node.fields.models
+    #     # loop each connections since we can have multiple out connections
+    #     for connection in field.connections
+    #       indx1 = selected_nodes.indexOf(connection.from_field.node)
+    #       indx2 = selected_nodes.indexOf(connection.to_field.node)
+    #       # if "from" OR "out" is external add it
+    #       if indx1 == -1 || indx2 == -1
+    #         # don't add it twice
+    #         already_exists = external_connections.indexOf(connection)
+    #         if already_exists == -1
+    #           external_connections.push(connection)
+    #           connection_description = connection.toJSON()
+    #           connection_description.to_subfield = (indx1 == -1)
+    #           external_objects.push(connection_description)
+
     external_objects = []
-    for node in selected_nodes
-      # check each node fields
-      for field in node.fields.models
-        # loop each connections since we can have multiple out connections
-        for connection in field.connections
-          indx1 = selected_nodes.indexOf(connection.from_field.node)
-          indx2 = selected_nodes.indexOf(connection.to_field.node)
-          # if "from" OR "out" is external add it
-          if indx1 == -1 || indx2 == -1
-            # don't add it twice
-            already_exists = external_connections.indexOf(connection)
-            if already_exists == -1
-              external_connections.push(connection)
-              connection_description = connection.toJSON()
-              connection_description.to_subfield = (indx1 == -1)
-              external_objects.push(connection_description)
+    if selected_nodes.length != 0
+      connections = selected_nodes[0].collection.connections
+      connections.map (connection) ->
+        isFrom = (selected_nodes.indexOf(connection.from_node) != -1)
+        isTo = (selected_nodes.indexOf(connection.to_node) != -1)
+        if isFrom && !isTo
+          connection_description = connection.toJSON()
+          connection_description.to_subfield = false
+          external_objects.push(connection_description)
+        else if !isFrom && isTo
+          connection_description = connection.toJSON()
+          connection_description.to_subfield = true
+          external_objects.push(connection_description)
 
     # remove the nodes
     for node in selected_nodes

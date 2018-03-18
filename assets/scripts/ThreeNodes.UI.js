@@ -3313,12 +3313,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  NodeView.prototype.renderConnections = function() {
-	    this.model.fields.renderConnections();
-	    if (this.model.nodes) {
-	      return _.each(this.model.nodes.models, function(n) {
-	        return n.fields.renderConnections();
-	      });
-	    }
+	    return this.model.renderConnections();
 	  };
 	
 	  NodeView.prototype.computeNodePosition = function() {
@@ -6779,7 +6774,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var diff, height, o1, width, x, y;
 	    x = model.get('x');
 	    y = model.get('y');
-	    debugger;
 	    width = model.get('width');
 	    height = model.get('height');
 	    switch (type) {
@@ -7652,6 +7646,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return Group;
 	
 	})(NodeView);
+	
+	ThreeNodes.Core.addNodeView('Group', Group);
 	
 	module.exports = Group;
 

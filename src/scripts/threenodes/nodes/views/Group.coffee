@@ -38,5 +38,6 @@ class Group extends NodeView
 
   remove: () =>
     super
-
+    
+ThreeNodes.Core.addNodeView('Group', Group)
 module.exports = Group

@@ -302,31 +302,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  Nodes.prototype.createGroup = function(model, external_objects) {
-	    var c, connection, from, grp, i, len, target_node, to;
+	    var c, connection, from, grp, i, len, to;
 	    if (external_objects == null) {
 	      external_objects = [];
 	    }
 	    grp = this.createNode(model);
 	    for (i = 0, len = external_objects.length; i < len; i++) {
 	      connection = external_objects[i];
-	      from = false;
-	      to = false;
-	      if (connection.to_subfield) {
-	        from = this.getNodeByNid(connection.from_node).fields.getField(connection.from, true);
-	        target_node = this.getNodeByNid(connection.to_node);
-	        if (target_node) {
-	          to = target_node.fields.getField(connection.to, false);
-	        }
-	      } else {
-	        target_node = this.getNodeByNid(connection.from_node);
-	        if (target_node) {
-	          from = target_node.fields.getField(connection.from, true);
-	        }
-	        to = this.getNodeByNid(connection.to_node).fields.getField(connection.to);
-	      }
+	      from = this.getNodeByNid(connection.from_node);
+	      to = this.getNodeByNid(connection.to_node);
+	      debugger;
 	      c = this.connections.create({
-	        from_field: from,
-	        to_field: to
+	        from_node: from,
+	        from_type: connection.from,
+	        to_node: to,
+	        to_type: connection.to
 	      });
 	    }
 	    return grp;
@@ -4921,12 +4911,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  NodeView.prototype.renderConnections = function() {
-	    this.model.fields.renderConnections();
-	    if (this.model.nodes) {
-	      return _.each(this.model.nodes.models, function(n) {
-	        return n.fields.renderConnections();
-	      });
-	    }
+	    return this.model.renderConnections();
 	  };
 	
 	  NodeView.prototype.computeNodePosition = function() {
@@ -16914,6 +16899,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend(Group, superClass);
 	
 	  function Group() {
+	    this.renderConnections = bind(this.renderConnections, this);
 	    this.compute = bind(this.compute, this);
 	    this.remove = bind(this.remove, this);
 	    this.getFields = bind(this.getFields, this);
@@ -16993,6 +16979,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  Group.prototype.compute = function() {
 	    return this;
+	  };
+	
+	  Group.prototype.renderConnections = function() {
+	    return this.trigger("renderConnections", this);
 	  };
 	
 	  return Group;

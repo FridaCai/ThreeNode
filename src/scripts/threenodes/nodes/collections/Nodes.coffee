@@ -177,22 +177,15 @@ class Nodes extends Backbone.Collection
 
     # Recreate the external connections
     for connection in external_objects
-      from = false
-      to = false
-      if connection.to_subfield
-        from = @getNodeByNid(connection.from_node).fields.getField(connection.from, true)
-        target_node = @getNodeByNid(connection.to_node)
-        if target_node
-          to = target_node.fields.getField(connection.to, false)
-      else
-        target_node = @getNodeByNid(connection.from_node)
-        if target_node
-          from = target_node.fields.getField(connection.from, true)
-        to = @getNodeByNid(connection.to_node).fields.getField(connection.to)
+      from = @getNodeByNid(connection.from_node)
+      to = @getNodeByNid(connection.to_node)
 
+      debugger;
       c = @connections.create
-        from_field: from
-        to_field: to
+        from_node: from
+        from_type: connection.from
+        to_node: to
+        to_type: connection.to
 
     return grp
 

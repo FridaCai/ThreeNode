@@ -384,31 +384,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  Nodes.prototype.createGroup = function(model, external_objects) {
-	    var c, connection, from, grp, i, len, target_node, to;
+	    var c, connection, from, grp, i, len, to;
 	    if (external_objects == null) {
 	      external_objects = [];
 	    }
 	    grp = this.createNode(model);
 	    for (i = 0, len = external_objects.length; i < len; i++) {
 	      connection = external_objects[i];
-	      from = false;
-	      to = false;
-	      if (connection.to_subfield) {
-	        from = this.getNodeByNid(connection.from_node).fields.getField(connection.from, true);
-	        target_node = this.getNodeByNid(connection.to_node);
-	        if (target_node) {
-	          to = target_node.fields.getField(connection.to, false);
-	        }
-	      } else {
-	        target_node = this.getNodeByNid(connection.from_node);
-	        if (target_node) {
-	          from = target_node.fields.getField(connection.from, true);
-	        }
-	        to = this.getNodeByNid(connection.to_node).fields.getField(connection.to);
-	      }
+	      from = this.getNodeByNid(connection.from_node);
+	      to = this.getNodeByNid(connection.to_node);
+	      debugger;
 	      c = this.connections.create({
-	        from_field: from,
-	        to_field: to
+	        from_node: from,
+	        from_type: connection.from,
+	        to_node: to,
+	        to_type: connection.to
 	      });
 	    }
 	    return grp;
@@ -802,7 +792,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  GroupDefinitions.prototype.groupSelectedNodes = function(selected_nodes) {
-	    var already_exists, average_position, connection, connection_description, dx, dy, external_connections, external_objects, field, group_def, i, indx1, indx2, j, k, l, len, len1, len2, len3, model, node, ref, ref1;
+	    var average_position, connections, dx, dy, external_objects, group_def, i, len, model, node;
 	    if (selected_nodes == null) {
 	      selected_nodes = false;
 	    }
@@ -817,32 +807,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	      indexer: this.indexer
 	    });
 	    this.add(group_def);
-	    external_connections = [];
 	    external_objects = [];
+	    if (selected_nodes.length !== 0) {
+	      connections = selected_nodes[0].collection.connections;
+	      connections.map(function(connection) {
+	        var connection_description, isFrom, isTo;
+	        isFrom = selected_nodes.indexOf(connection.from_node) !== -1;
+	        isTo = selected_nodes.indexOf(connection.to_node) !== -1;
+	        if (isFrom && !isTo) {
+	          connection_description = connection.toJSON();
+	          connection_description.to_subfield = false;
+	          return external_objects.push(connection_description);
+	        } else if (!isFrom && isTo) {
+	          connection_description = connection.toJSON();
+	          connection_description.to_subfield = true;
+	          return external_objects.push(connection_description);
+	        }
+	      });
+	    }
 	    for (i = 0, len = selected_nodes.length; i < len; i++) {
 	      node = selected_nodes[i];
-	      ref = node.fields.models;
-	      for (j = 0, len1 = ref.length; j < len1; j++) {
-	        field = ref[j];
-	        ref1 = field.connections;
-	        for (k = 0, len2 = ref1.length; k < len2; k++) {
-	          connection = ref1[k];
-	          indx1 = selected_nodes.indexOf(connection.from_field.node);
-	          indx2 = selected_nodes.indexOf(connection.to_field.node);
-	          if (indx1 === -1 || indx2 === -1) {
-	            already_exists = external_connections.indexOf(connection);
-	            if (already_exists === -1) {
-	              external_connections.push(connection);
-	              connection_description = connection.toJSON();
-	              connection_description.to_subfield = indx1 === -1;
-	              external_objects.push(connection_description);
-	            }
-	          }
-	        }
-	      }
-	    }
-	    for (l = 0, len3 = selected_nodes.length; l < len3; l++) {
-	      node = selected_nodes[l];
 	      node.remove();
 	    }
 	    model = {
@@ -926,6 +910,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  function GroupDefinition() {
 	    this.fromSelectedNodes = bind(this.fromSelectedNodes, this);
+	    this.isInternalConnection = bind(this.isInternalConnection, this);
 	    this.initialize = bind(this.initialize, this);
 	    this.getUID = bind(this.getUID, this);
 	    this.sync = bind(this.sync, this);
@@ -959,27 +944,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  };
 	
+	  GroupDefinition.prototype.isInternalConnection = function(connection, selected_nodes) {
+	    return selected_nodes.indexOf(connection.from_node) !== -1 && selected_nodes.indexOf(connection.to_node) !== -1;
+	  };
+	
 	  GroupDefinition.prototype.fromSelectedNodes = function(selected_nodes) {
-	    var already_exists, connection, field, indx1, indx2, internal_connections, j, k, l, len, len1, len2, node, ref, ref1;
+	    var connections, internal_connections, self;
 	    internal_connections = [];
-	    for (j = 0, len = selected_nodes.length; j < len; j++) {
-	      node = selected_nodes[j];
-	      ref = node.fields.models;
-	      for (k = 0, len1 = ref.length; k < len1; k++) {
-	        field = ref[k];
-	        ref1 = field.connections;
-	        for (l = 0, len2 = ref1.length; l < len2; l++) {
-	          connection = ref1[l];
-	          indx1 = selected_nodes.indexOf(connection.from_field.node);
-	          indx2 = selected_nodes.indexOf(connection.to_field.node);
-	          if (indx1 !== -1 && indx2 !== -1) {
-	            already_exists = internal_connections.indexOf(connection);
-	            if (already_exists === -1) {
-	              internal_connections.push(connection);
-	            }
-	          }
+	    self = this;
+	    if (selected_nodes.length !== 0) {
+	      connections = selected_nodes[0].collection.connections;
+	      connections.map(function(connection) {
+	        if (self.isInternalConnection(connection, selected_nodes)) {
+	          return internal_connections.push(connection);
 	        }
-	      }
+	      });
 	    }
 	    this.attributes.nodes = jQuery.map(selected_nodes, function(n, i) {
 	      return n.toJSON();

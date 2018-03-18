@@ -85,10 +85,11 @@ class NodeView extends Backbone.View
     @$el.addClass("ui-selected")
 
   renderConnections: () =>
-    @model.fields.renderConnections()
-    if @model.nodes
-      _.each @model.nodes.models, (n) ->
-        n.fields.renderConnections()
+    @model.renderConnections()
+    # @model.fields.renderConnections()
+    # if @model.nodes
+    #   _.each @model.nodes.models, (n) ->
+    #     n.fields.renderConnections()
 
   computeNodePosition: () =>
     pos = $(@el).position()

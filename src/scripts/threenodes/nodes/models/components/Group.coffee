@@ -6,7 +6,8 @@ Node = require 'threenodes/nodes/models/Node'
 class Group extends Node
   @node_name = 'Group'
   @group_name = false
-
+  
+  
   initialize: (options) =>
     # First create the subnodes so that when the group node is inited
     # the fields are accessible
@@ -67,5 +68,8 @@ class Group extends Node
     # no need to do special things since the subnodes are
     # "merged in the main arrays" in nodes.render
     return this
+
+  renderConnections:()=>
+    @trigger("renderConnections", @)
 
 ThreeNodes.Core.addNodeType('Group', Group)
