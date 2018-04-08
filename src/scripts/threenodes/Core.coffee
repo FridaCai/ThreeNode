@@ -33,11 +33,17 @@ class Core
     @nodes = new Nodes([], {settings: @settings, indexer:indexer})
     @connections = new Connections()
 
+    @nodes.bind('node:renderConnections', @renderConnections.bind(@))
+
     # Create a group node when selected nodes are grouped
     # @group_definitions.bind("definition:created", @nodes.createGroup)
 
     # When a group definition is removed delete all goup nodes using this definition
     # @group_definitions.bind("remove", @nodes.removeGroupsByDefinition)
+
+  renderConnections: (node) ->
+    @connections.renderConnections(node)
+
 
   @addFieldType: (fieldName, field) ->
     Core.fields.models[fieldName] = field
@@ -70,15 +76,13 @@ class Core
   setNodes: (json_object) ->
     @nodes.removeAll()
     @db = json_object
-
-    # nodes
     self = @
 
     @db.nodes.map (obj) ->
       if !self.getGroupByNode(obj.id, self.db.groups)
-        node = new Node(obj)
+        nodeClass = Core.nodes.models[obj.type]
+        node = new nodeClass(obj)
         self.nodes.push(node)
-
 
     # group
     @db.groups.map (obj) ->
@@ -92,31 +96,20 @@ class Core
       }
 
       obj.nodes.map (nodeId) ->
-        node = self.nodes.getNodeById(nodeId)
-        groupObj.nodes.push(node)        
+        nodeObj = self.getNodeById(nodeId)
+        node = new Core.nodes.models[nodeObj.type](nodeObj)
+        groupObj.nodes.push(node)
       
       group = new Group(groupObj)
       self.groups.push(group)
 
       
-    return;
-
     # connections
-    @db.connections.map (c)->
-      fromNodeId = c.from
-      fromNodeObj = self.getNodeById(fromNodeId)
-      fromNode = new Node(fromNodeObj)
-      fromGroupObj = self.getGroupByNode(fromNodeId, self.db.groups)
-      if fromGroupObj
-        fromGroup = new Group(fromGroupObj)
-
-      toNodeId = c.to
-      toNodeObj = self.getNodeById(toNodeId)
-      toNode = new Node(toNodeObj)
-      toGroupObj = self.getGroupByNode(toNodeId, self.db.groups)
-      if toGroupObj
-        toGroup = new Group(toGroupObj)
-
+    @db.connections.map (c) ->
+      fromNode = self.nodes.getById(c.from)
+      fromGroup = self.groups.getByNodeId(c.from)
+      toNode = self.nodes.getById(c.to)
+      toGroup = self.groups.getByNodeId(c.to)
       obj = {
         id: c.id,
         fromType: c.fromType,
@@ -130,44 +123,5 @@ class Core
         obj.to = toGroup || toNode
         connection = new Connection(obj)
         self.connections.push(connection)
-
-
-
-
-
-
-
-    
-
-
-
-
-
-    # First recreate the group definitions
-    # if json_object.groups
-    #   for grp_def in json_object.groups
-    #     @group_definitions.create(grp_def)
-
-    # Create the nodes
-    # for node in json_object.nodes
-    #   if node.type != "Group"
-    #     # Create a simple node
-    #     @nodes.createNode(node)
-    #   else
-        # If the node is a group we first need to get the previously created group definition
-        # def = @group_definitions.getByGid(node.definition_id)
-        # if def
-        #   node.definition = def
-        #   grp = @nodes.createGroup(node)
-        # else
-        #   console.log "can't find the GroupDefinition: #{node.definition_id}"
-
-    # Create the connections
-    # for connection in json_object.connections
-    #   @nodes.createConnectionFromObject(connection)
-
-    # @nodes.indexer.uid = json_object.uid
-    # delay = (ms, func) -> setTimeout func, ms
-    # delay 1, => @nodes.renderAllConnections()
 
 module.exports = Core

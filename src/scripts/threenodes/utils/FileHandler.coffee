@@ -2,6 +2,7 @@ _ = require 'Underscore'
 Backbone = require 'Backbone'
 Utils = require 'threenodes/utils/Utils'
 CodeExporter = require 'threenodes/utils/CodeExporter'
+Indexer = require './Indexer'
 
 require 'Blob'
 require 'FileSaver'
@@ -27,10 +28,10 @@ class FileHandler extends Backbone.Events
 
   getLocalJson: (stringify = true) =>
     res =
-      uid: @core.nodes.indexer.getUID(false)
+      uid: Indexer.getInstance().getUID()
       nodes: jQuery.map(@core.nodes.models, (n, i) -> n.toJSON())
-      connections: jQuery.map(@core.nodes.connections.models, (c, i) -> c.toJSON())
-      groups: jQuery.map(@core.group_definitions.models, (g, i) -> g.toJSON())
+      connections: jQuery.map(@core.connections.models, (c, i) -> c.toJSON())
+      groups: jQuery.map(@core.groups.models, (g, i) -> g.toJSON())
 
     if stringify
       return JSON.stringify(res, null, 2)

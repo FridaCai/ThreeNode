@@ -13,7 +13,6 @@ class Group extends Backbone.View
   className: "group"
 
   initialize: (model) ->
-    debugger;
     @makeElement()
     @render()
     # @initContextMenus()

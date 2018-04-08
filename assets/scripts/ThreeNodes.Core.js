@@ -103,7 +103,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      indexer: indexer
 	    });
 	    this.connections = new Connections();
+	    this.nodes.bind('node:renderConnections', this.renderConnections.bind(this));
 	  }
+	
+	  Core.prototype.renderConnections = function(node) {
+	    return this.connections.renderConnections(node);
+	  };
 	
 	  Core.addFieldType = function(fieldName, field) {
 	    Core.fields.models[fieldName] = field;
@@ -153,9 +158,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.db = json_object;
 	    self = this;
 	    this.db.nodes.map(function(obj) {
-	      var node;
+	      var node, nodeClass;
 	      if (!self.getGroupByNode(obj.id, self.db.groups)) {
-	        node = new Node(obj);
+	        nodeClass = Core.nodes.models[obj.type];
+	        node = new nodeClass(obj);
 	        return self.nodes.push(node);
 	      }
 	    });
@@ -170,30 +176,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	        nodes: []
 	      };
 	      obj.nodes.map(function(nodeId) {
-	        var node;
-	        node = self.nodes.getNodeById(nodeId);
+	        var node, nodeObj;
+	        nodeObj = self.getNodeById(nodeId);
+	        node = new Core.nodes.models[nodeObj.type](nodeObj);
 	        return groupObj.nodes.push(node);
 	      });
 	      group = new Group(groupObj);
 	      return self.groups.push(group);
 	    });
-	    return;
 	    return this.db.connections.map(function(c) {
-	      var connection, fromGroup, fromGroupObj, fromNode, fromNodeId, fromNodeObj, obj, toGroup, toGroupObj, toNode, toNodeId, toNodeObj;
-	      fromNodeId = c.from;
-	      fromNodeObj = self.getNodeById(fromNodeId);
-	      fromNode = new Node(fromNodeObj);
-	      fromGroupObj = self.getGroupByNode(fromNodeId, self.db.groups);
-	      if (fromGroupObj) {
-	        fromGroup = new Group(fromGroupObj);
-	      }
-	      toNodeId = c.to;
-	      toNodeObj = self.getNodeById(toNodeId);
-	      toNode = new Node(toNodeObj);
-	      toGroupObj = self.getGroupByNode(toNodeId, self.db.groups);
-	      if (toGroupObj) {
-	        toGroup = new Group(toGroupObj);
-	      }
+	      var connection, fromGroup, fromNode, obj, toGroup, toNode;
+	      fromNode = self.nodes.getById(c.from);
+	      fromGroup = self.groups.getByNodeId(c.from);
+	      toNode = self.nodes.getById(c.to);
+	      toGroup = self.groups.getByNodeId(c.to);
 	      obj = {
 	        id: c.id,
 	        fromType: c.fromType,
@@ -405,7 +401,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return this.connections.remove(c);
 	  };
 	
-	  Nodes.prototype.getNodeById = function(id) {
+	  Nodes.prototype.getById = function(id) {
 	    return this.models.find(function(n) {
 	      return n.get('id') === id;
 	    });
@@ -517,7 +513,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  Connections.prototype.renderConnections = function(node) {
 	    return this.each(function(c) {
-	      if (c.options.to_node === node || c.options.from_node === node) {
+	      if (c.to === node || c.from === node) {
 	        return c.render();
 	      }
 	    });
@@ -726,6 +722,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return this.add(n);
 	  };
 	
+	  Groups.prototype.getById = function(id) {
+	    return this.models.find(function(g) {
+	      return g.get('id') === id;
+	    });
+	  };
+	
+	  Groups.prototype.getByNodeId = function(id) {
+	    return this.models.find(function(g) {
+	      var nodes;
+	      nodes = g.get('nodes');
+	      return nodes.find(function(n) {
+	        return n.id === id;
+	      });
+	    });
+	  };
+	
 	  Groups.prototype.getSelectedNodes = function() {
 	    var $selected, selected_nodes;
 	    selected_nodes = [];
@@ -749,7 +761,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var Backbone, Group, _,
+	var Backbone, Group, Node, _,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
@@ -757,6 +769,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	_ = __webpack_require__(3);
 	
 	Backbone = __webpack_require__(4);
+	
+	Node = __webpack_require__(7);
 	
 	Group = (function(superClass) {
 	  extend(Group, superClass);
@@ -781,7 +795,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.set('name', obj.name || this.typename());
 	    this.set('id', obj.id || Indexer.getInstance().getUID());
 	    this.set('x', obj.x);
-	    return this.set('y', obj.y);
+	    this.set('y', obj.y);
+	    return this.set('nodes', obj.nodes);
 	  };
 	
 	  Group.prototype.typename = function() {

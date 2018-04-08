@@ -2,9 +2,6 @@ _ = require 'Underscore'
 Backbone = require 'Backbone'
 Utils = require 'threenodes/utils/Utils'
 
-
-
-
 class Node extends Backbone.Model
   defaults:
     id: -1

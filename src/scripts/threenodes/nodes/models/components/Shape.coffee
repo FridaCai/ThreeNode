@@ -1,10 +1,10 @@
-ShapeNode = require 'threenodes/nodes/models/ShapeNode'
+Node = require 'threenodes/nodes/models/Node'
 ShapeNodeView = require 'threenodes/nodes/views/ShapeNodeView'
 
 class Rectangle extends ShapeNodeView
 ThreeNodes.Core.addNodeView('Rectangle', Rectangle)
 
-class Rectangle extends ShapeNode
+class Rectangle extends Node
   @node_name = 'Rectangle'
   @group_name = 'Shape'
   initialize: (options) =>
@@ -17,7 +17,7 @@ ThreeNodes.Core.addNodeType('Rectangle', Rectangle)
 class Circle extends ShapeNodeView
 ThreeNodes.Core.addNodeView('Circle', Circle)
 
-class Circle extends ShapeNode
+class Circle extends Node
   @node_name = 'Circle'
   @group_name = 'Shape'
   initialize: (options) =>
@@ -30,7 +30,7 @@ ThreeNodes.Core.addNodeType('Circle', Circle)
 class Ellipse extends ShapeNodeView
 ThreeNodes.Core.addNodeView('Ellipse', Ellipse)
 
-class Ellipse extends ShapeNode
+class Ellipse extends Node
   @node_name = 'Ellipse'
   @group_name = 'Shape'
 

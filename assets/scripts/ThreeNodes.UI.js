@@ -7,7 +7,7 @@
 		exports["UI"] = factory(require("_"), require("Backbone"), require("jQuery"), require("Blob"), require("FileSaver"), require("Raphael"));
 	else
 		root["ThreeNodes"] = root["ThreeNodes"] || {}, root["ThreeNodes"]["UI"] = factory(root["_"], root["Backbone"], root["jQuery"], root["Blob"], root["FileSaver"], root["Raphael"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_4__, __WEBPACK_EXTERNAL_MODULE_18__, __WEBPACK_EXTERNAL_MODULE_81__, __WEBPACK_EXTERNAL_MODULE_82__, __WEBPACK_EXTERNAL_MODULE_101__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_4__, __WEBPACK_EXTERNAL_MODULE_17__, __WEBPACK_EXTERNAL_MODULE_80__, __WEBPACK_EXTERNAL_MODULE_81__, __WEBPACK_EXTERNAL_MODULE_100__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -80,27 +80,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	var AppTimeline, Backbone, FileHandler, NodeView, NodeViewColor, NodeViewWebgl, UI, UIView, UrlHandler, Workspace, _,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 	
-	__webpack_require__(18);
+	__webpack_require__(17);
 	
 	_ = __webpack_require__(3);
 	
 	Backbone = __webpack_require__(4);
 	
-	UIView = __webpack_require__(91);
+	UIView = __webpack_require__(90);
 	
-	Workspace = __webpack_require__(104);
+	Workspace = __webpack_require__(103);
 	
-	AppTimeline = __webpack_require__(109);
+	AppTimeline = __webpack_require__(108);
 	
-	UrlHandler = __webpack_require__(110);
+	UrlHandler = __webpack_require__(109);
 	
-	FileHandler = __webpack_require__(111);
+	FileHandler = __webpack_require__(110);
 	
-	NodeView = __webpack_require__(38);
+	NodeView = __webpack_require__(37);
 	
-	NodeViewColor = __webpack_require__(44);
+	NodeViewColor = __webpack_require__(43);
 	
-	NodeViewWebgl = __webpack_require__(113);
+	NodeViewWebgl = __webpack_require__(112);
 	
 	UI = (function() {
 	  function UI(core) {
@@ -241,7 +241,41 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 1 */,
+/* 1 */
+/***/ (function(module, exports) {
+
+	var Indexer, _instance;
+	
+	_instance = null;
+	
+	Indexer = (function() {
+	  function Indexer() {
+	    this.uid = 0;
+	  }
+	
+	  Indexer.prototype.getUID = function() {
+	    return this.uid += 1;
+	  };
+	
+	  Indexer.prototype.reset = function() {
+	    return this.uid = 0;
+	  };
+	
+	  return Indexer;
+	
+	})();
+	
+	Indexer.getInstance = function() {
+	  if (!_instance) {
+	    _instance = new Indexer();
+	  }
+	  return _instance;
+	};
+	
+	module.exports = Indexer;
+
+
+/***/ }),
 /* 2 */,
 /* 3 */
 /***/ (function(module, exports) {
@@ -364,20 +398,19 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 10 */,
 /* 11 */,
 /* 12 */,
-/* 13 */,
-/* 14 */
+/* 13 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div class='head'><span><%= get(\"name\") %></span></div>\n<div class='options'>\n  <div class='inputs'></div>\n  <div class='center'></div>\n  <div class='outputs'></div>\n</div>\n\n<div class=\"up handler\" data-attr='up'></div>\n<div class=\"down handler\" data-attr='down'></div>\n<div class=\"left handler\" data-attr='left'></div>\n<div class=\"right handler\" data-attr='right'></div>\n";
 
 /***/ }),
-/* 15 */
+/* 14 */
 /***/ (function(module, exports) {
 
 	module.exports = "<ul id=\"node-context-menu\" class=\"context-menu\">\n  <li><a href=\"#remove_node\">Remove node</a></li>\n</ul>";
 
 /***/ }),
-/* 16 */
+/* 15 */
 /***/ (function(module, exports) {
 
 	/*
@@ -412,7 +445,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 17 */
+/* 16 */
 /***/ (function(module, exports) {
 
 	// jQuery Context Menu Plugin
@@ -629,12 +662,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 18 */
+/* 17 */
 /***/ (function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_18__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_17__;
 
 /***/ }),
+/* 18 */,
 /* 19 */,
 /* 20 */,
 /* 21 */,
@@ -653,8 +687,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 34 */,
 /* 35 */,
 /* 36 */,
-/* 37 */,
-/* 38 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, FieldsView, NodeView, _, _view_node_context_menu, _view_node_template, namespace,
@@ -666,17 +699,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(4);
 	
-	_view_node_template = __webpack_require__(14);
+	_view_node_template = __webpack_require__(13);
 	
-	_view_node_context_menu = __webpack_require__(15);
+	_view_node_context_menu = __webpack_require__(14);
 	
-	FieldsView = __webpack_require__(39);
+	FieldsView = __webpack_require__(38);
 	
-	namespace = __webpack_require__(16).namespace;
+	namespace = __webpack_require__(15).namespace;
+	
+	__webpack_require__(16);
 	
 	__webpack_require__(17);
-	
-	__webpack_require__(18);
 	
 	
 	/* Node View */
@@ -925,7 +958,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 39 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, FieldButton, FieldsView, _,
@@ -937,9 +970,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(4);
 	
-	FieldButton = __webpack_require__(40);
+	FieldButton = __webpack_require__(39);
 	
-	__webpack_require__(18);
+	__webpack_require__(17);
 	
 	
 	/* Fields View */
@@ -1009,7 +1042,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 40 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, FieldButton, _, _view_field_context_menu, _view_node_field_in, _view_node_field_out,
@@ -1021,15 +1054,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(4);
 	
-	_view_node_field_in = __webpack_require__(41);
+	_view_node_field_in = __webpack_require__(40);
 	
-	_view_node_field_out = __webpack_require__(42);
+	_view_node_field_out = __webpack_require__(41);
 	
-	_view_field_context_menu = __webpack_require__(43);
+	_view_field_context_menu = __webpack_require__(42);
 	
 	__webpack_require__(8);
 	
-	__webpack_require__(17);
+	__webpack_require__(16);
 	
 	
 	/* FieldButton View */
@@ -1197,25 +1230,25 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 41 */
+/* 40 */
 /***/ (function(module, exports) {
 
 	module.exports = "<span class=\"inner-field\"><span></span><%= name %></span>";
 
 /***/ }),
-/* 42 */
+/* 41 */
 /***/ (function(module, exports) {
 
 	module.exports = "<span class=\"inner-field\"><%= name %><span></span></span>";
 
 /***/ }),
-/* 43 */
+/* 42 */
 /***/ (function(module, exports) {
 
 	module.exports = "<ul id=\"field-context-menu\" class=\"context-menu\">\n  <li><a href=\"#removeConnection\">Remove connection(s)</a></li>\n</ul>";
 
 /***/ }),
-/* 44 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Color, NodeView, _, namespace,
@@ -1227,13 +1260,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(4);
 	
-	namespace = __webpack_require__(16).namespace;
+	namespace = __webpack_require__(15).namespace;
 	
 	__webpack_require__(7);
 	
-	NodeView = __webpack_require__(38);
+	NodeView = __webpack_require__(37);
 	
-	__webpack_require__(45);
+	__webpack_require__(44);
 	
 	Color = (function(superClass) {
 	  extend(Color, superClass);
@@ -1307,7 +1340,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 45 */
+/* 44 */
 /***/ (function(module, exports) {
 
 	/**
@@ -1797,6 +1830,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(jQuery)
 
 /***/ }),
+/* 45 */,
 /* 46 */,
 /* 47 */,
 /* 48 */,
@@ -1831,19 +1865,19 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 77 */,
 /* 78 */,
 /* 79 */,
-/* 80 */,
+/* 80 */
+/***/ (function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_80__;
+
+/***/ }),
 /* 81 */
 /***/ (function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_81__;
 
 /***/ }),
-/* 82 */
-/***/ (function(module, exports) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_82__;
-
-/***/ }),
+/* 82 */,
 /* 83 */,
 /* 84 */,
 /* 85 */,
@@ -1851,8 +1885,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 87 */,
 /* 88 */,
 /* 89 */,
-/* 90 */,
-/* 91 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	
@@ -1866,25 +1899,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(4);
 	
-	_view_app_ui = __webpack_require__(92);
+	_view_app_ui = __webpack_require__(91);
 	
-	Sidebar = __webpack_require__(93);
+	Sidebar = __webpack_require__(92);
 	
-	Breadcrumb = __webpack_require__(96);
+	Breadcrumb = __webpack_require__(95);
 	
-	MenuBar = __webpack_require__(97);
+	MenuBar = __webpack_require__(96);
+	
+	__webpack_require__(99);
 	
 	__webpack_require__(100);
 	
-	__webpack_require__(101);
+	__webpack_require__(17);
 	
-	__webpack_require__(18);
+	__webpack_require__(101);
 	
 	__webpack_require__(102);
 	
-	__webpack_require__(103);
-	
-	__webpack_require__(18);
+	__webpack_require__(17);
 	
 	UIView = (function(superClass) {
 	  extend(UIView, superClass);
@@ -2232,13 +2265,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 92 */
+/* 91 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div id='container-wrapper' class=\"ui-layout-center\">\n  <div id='container'>\n    <div id='graph'></div>\n  </div>\n  <div id=\"breadcrumb\"></div>\n</div>\n<div id='sidebar' class=\"ui-layout-west\">\n  <ul class=\"ui-layout-north\">\n    <li><a href='#tab-new'>New</a></li>\n    <li><a href='#tab-attribute'>Attributes</a></li>\n    <!-- <li><a href='#tab-list'>List</a></li> -->\n  </ul>\n  <div class=\"container ui-layout-center\">\n    <div id='tab-attribute'></div>\n    <div id='tab-new'>\n      <!-- <input id='node_filter' name='search-node' placeholder='Search' type='input' /> -->\n    </div>\n    <!-- <div id='tab-list'></div> -->\n  </div>\n</div>\n<div id=\"library\" class=\"ui-layout-east\"></div>\n<div id=\"timeline\" class=\"ui-layout-south\"></div>\n<input id='main_file_input_open' multiple='false' type='file' />\n";
 
 /***/ }),
-/* 93 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, NodeSidebarView, Sidebar, TreeView, _,
@@ -2250,11 +2283,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(4);
 	
-	NodeSidebarView = __webpack_require__(94);
+	NodeSidebarView = __webpack_require__(93);
 	
-	TreeView = __webpack_require__(95);
+	TreeView = __webpack_require__(94);
 	
-	__webpack_require__(18);
+	__webpack_require__(17);
 	
 	
 	/* Sidebar View */
@@ -2503,7 +2536,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 94 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, NodeSidebarView, _,
@@ -2593,7 +2626,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 95 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, TreeView, _,
@@ -2605,7 +2638,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(4);
 	
-	__webpack_require__(18);
+	__webpack_require__(17);
 	
 	TreeView = (function(superClass) {
 	  extend(TreeView, superClass);
@@ -2683,7 +2716,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 96 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Breadcrumb, _,
@@ -2745,7 +2778,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 97 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, MenuBar, _, _view_menubar,
@@ -2757,9 +2790,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(4);
 	
-	_view_menubar = __webpack_require__(98);
+	_view_menubar = __webpack_require__(97);
 	
-	__webpack_require__(99);
+	__webpack_require__(98);
 	
 	MenuBar = (function(superClass) {
 	  extend(MenuBar, superClass);
@@ -2816,13 +2849,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 98 */
+/* 97 */
 /***/ (function(module, exports) {
 
 	module.exports = "<ul id=\"main-menu-bar\" class=\"menubar ui-layout-north\">\n  <li>\n    <a href=\"#File\">File</a>\n    <ul>\n      <li><a href=\"#NewFile\" data-event=\"ClearWorkspace\">New</a></li>\n      <li><a href=\"#OpenFile\" data-event=\"OpenFile\">Open</a></li>\n      <li><a href=\"#SaveFile\" data-event=\"SaveFile\">Save</a></li>\n    </ul>\n  </li>\n  <li>\n    <a href=\"#Edit\">Edit</a>\n    <ul>\n      <li><a href=\"#Rotate\" data-event=\"Rotate\">Rotate</a></li>\n      <li><a href=\"#GroupSelectedNodes\" data-event=\"GroupSelectedNodes\">Group selected nodes</a></li>\n    </ul>\n  </li>\n  <li>\n    <a href=\"#View\">View</a>\n    <ul>\n      <li><a href=\"#Library\" data-event=\"ToggleLibrary\">Library</a></li>\n      <li><a href=\"#Attributes\" data-event=\"ToggleAttributes\">Attributes</a></li>\n    </ul>\n  </li>\n  <li class=\"expanded\">\n    <a href=\"#examples\">Examples</a>\n    <ul>\n      <li><a href=\"#example/rotating_cube1.json\">Eagle Eye</a></li>\n      <li><a href=\"#example/geometry_and_material1.json\">VVR</a></li>\n    </ul>\n  </li>\n</ul>\n";
 
 /***/ }),
-/* 99 */
+/* 98 */
 /***/ (function(module, exports) {
 
 	/*!
@@ -3310,7 +3343,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 100 */
+/* 99 */
 /***/ (function(module, exports) {
 
 	/**
@@ -3338,13 +3371,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 101 */
+/* 100 */
 /***/ (function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_101__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_100__;
 
 /***/ }),
-/* 102 */
+/* 101 */
 /***/ (function(module, exports) {
 
 	/*
@@ -3901,7 +3934,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 103 */
+/* 102 */
 /***/ (function(module, exports) {
 
 	/**
@@ -4013,7 +4046,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 104 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, ConnectionView, GroupView, Workspace, _,
@@ -4025,11 +4058,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(4);
 	
-	ConnectionView = __webpack_require__(105);
+	ConnectionView = __webpack_require__(104);
 	
-	GroupView = __webpack_require__(106);
+	GroupView = __webpack_require__(105);
 	
-	__webpack_require__(18);
+	__webpack_require__(17);
 	
 	
 	/* Workspace View */
@@ -4161,7 +4194,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 105 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, ConnectionView, _,
@@ -4172,7 +4205,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(4);
 	
-	__webpack_require__(18);
+	__webpack_require__(17);
 	
 	
 	/* Connection View */
@@ -4316,7 +4349,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 106 */
+/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Group, _, _view_group_context_menu, _view_group_template, namespace,
@@ -4328,15 +4361,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(4);
 	
-	namespace = __webpack_require__(16).namespace;
+	namespace = __webpack_require__(15).namespace;
 	
-	_view_group_template = __webpack_require__(107);
+	_view_group_template = __webpack_require__(106);
 	
-	_view_group_context_menu = __webpack_require__(108);
+	_view_group_context_menu = __webpack_require__(107);
+	
+	__webpack_require__(16);
 	
 	__webpack_require__(17);
-	
-	__webpack_require__(18);
 	
 	
 	/* Node View */
@@ -4359,7 +4392,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  Group.prototype.className = "group";
 	
 	  Group.prototype.initialize = function(model) {
-	    debugger;
 	    this.makeElement();
 	    return this.render();
 	  };
@@ -4618,15 +4650,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
+/* 106 */
+13,
 /* 107 */
-14,
-/* 108 */
 /***/ (function(module, exports) {
 
 	module.exports = "<ul id=\"group-context-menu\" class=\"context-menu\">\n  <li><a href=\"#remove_group\">Remove group</a></li>\n</ul>";
 
 /***/ }),
-/* 109 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var AppTimeline, Backbone, _,
@@ -4773,7 +4805,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 110 */
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, UrlHandler,
@@ -4838,10 +4870,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 111 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var Backbone, CodeExporter, FileHandler, Utils, _,
+	var Backbone, CodeExporter, FileHandler, Indexer, Utils, _,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
@@ -4852,11 +4884,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Utils = __webpack_require__(8);
 	
-	CodeExporter = __webpack_require__(112);
+	CodeExporter = __webpack_require__(111);
+	
+	Indexer = __webpack_require__(1);
+	
+	__webpack_require__(80);
 	
 	__webpack_require__(81);
-	
-	__webpack_require__(82);
 	
 	FileHandler = (function(superClass) {
 	  extend(FileHandler, superClass);
@@ -4897,14 +4931,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	      stringify = true;
 	    }
 	    res = {
-	      uid: this.core.nodes.indexer.getUID(false),
+	      uid: Indexer.getInstance().getUID(),
 	      nodes: jQuery.map(this.core.nodes.models, function(n, i) {
 	        return n.toJSON();
 	      }),
-	      connections: jQuery.map(this.core.nodes.connections.models, function(c, i) {
+	      connections: jQuery.map(this.core.connections.models, function(c, i) {
 	        return c.toJSON();
 	      }),
-	      groups: jQuery.map(this.core.group_definitions.models, function(g, i) {
+	      groups: jQuery.map(this.core.groups.models, function(g, i) {
 	        return g.toJSON();
 	      })
 	    };
@@ -4943,7 +4977,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 112 */
+/* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, CodeExporter, _,
@@ -5059,7 +5093,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 113 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, NodeView, WebGLRenderer, _,
@@ -5073,7 +5107,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	__webpack_require__(7);
 	
-	NodeView = __webpack_require__(38);
+	NodeView = __webpack_require__(37);
 	
 	WebGLRenderer = (function(superClass) {
 	  extend(WebGLRenderer, superClass);

@@ -179,7 +179,7 @@ class Nodes extends Backbone.Collection
     @connections.remove(c)
 
 
-  getNodeById: (id) ->
+  getById: (id) ->
     return @models.find (n)->
       n.get('id') == id
 

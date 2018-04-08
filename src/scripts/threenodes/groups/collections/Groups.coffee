@@ -12,7 +12,16 @@ class Groups extends Backbone.Collection
     nodes = @getSelectedNodes()
     n = new Group({nodes: nodes}, {indexer: @indexer})
     @add(n)
+  
+  getById: (id) ->
+    return @models.find (g)->
+      g.get('id') == id
 
+  getByNodeId: (id) -> 
+    return @models.find (g) ->
+      nodes = g.get('nodes')
+      return nodes.find (n) -> 
+        return n.id == id
 
   getSelectedNodes: () ->
     selected_nodes = []

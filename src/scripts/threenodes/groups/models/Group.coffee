@@ -1,5 +1,6 @@
 _ = require 'Underscore'
 Backbone = require 'Backbone'
+Node = require '../../nodes/models/Node'
 
 
 # id
@@ -21,6 +22,7 @@ class Group extends Backbone.Model
         @set('id', obj.id || Indexer.getInstance().getUID())
         @set('x', obj.x)
         @set('y', obj.y)
+        @set('nodes', obj.nodes)
     
     typename: => String(@constructor.name)
 

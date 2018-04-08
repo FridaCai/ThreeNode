@@ -35,7 +35,7 @@ class ShapeNodeView extends Backbone.View
     #@model.on('postInit', @postInit)
     @model.on('remove', () => @remove())
     @model.on("node:computePosition", @computeNodePosition)
-    @model.on("node:renderConnections", @renderConnections)
+    # @model.on("node:renderConnections", @renderConnections)
     @model.on("node:addSelectedClass", @addSelectedClass)
 
     # Render the node and "post init" the model
@@ -123,12 +123,6 @@ class ShapeNodeView extends Backbone.View
   addSelectedClass: () =>
     @$el.addClass("ui-selected")
 
-  renderConnections: () =>
-    @model.renderConnections()
-    ## for group
-    # if @model.nodes
-    #   _.each @model.nodes.models, (n) ->
-    #     n.fields.renderConnections()
 
   computeNodePosition: () =>
     pos = $(@el).position()
@@ -224,15 +218,19 @@ class ShapeNodeView extends Backbone.View
             top: dx
             left: dy
           el.data("object").trigger("node:computePosition")
-          el.data("object").trigger("node:renderConnections")
+          # el.data("object").trigger("node:renderConnections")
         self.computeNodePosition()
-        self.renderConnections()
+        self.model.trigger('node:renderConnections', self.model)
+        # self.renderConnections()
       stop: () ->
-        selected_nodes.not(this).each () ->
-          el = $(this).data("object")
-          el.trigger("node:renderConnections")
-        self.computeNodePosition()
-        self.renderConnections()
+        # selected_nodes.not(this).each () ->
+        #   el = $(this).data("object")
+          # el.trigger("node:renderConnections")
+        # self.computeNodePosition()
+        # self.renderConnections()
+        # self.model.trigger('node:renderConnections')
+        
+        # Frida: write to db?
     return @
 
 ThreeNodes.Core.addNodeView('ShapeNodeView', ShapeNodeView)
