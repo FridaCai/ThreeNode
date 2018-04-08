@@ -4,7 +4,7 @@ Backbone = require 'Backbone'
 UIView = require './views/UIView'
 Workspace = require './views/Workspace'
 AppTimeline = require './views/AppTimeline'
-GroupDefinitionView = require './views/GroupDefinitionView'
+# GroupDefinitionView = require './views/GroupDefinitionView'
 #WebglBase = require 'threenodes/utils/WebglBase'
 UrlHandler = require 'threenodes/utils/UrlHandler'
 FileHandler = require 'threenodes/utils/FileHandler'
@@ -12,7 +12,7 @@ FileHandler = require 'threenodes/utils/FileHandler'
 NodeView = require 'threenodes/nodes/views/NodeView'
 NodeViewColor = require 'threenodes/nodes/views/Color'
 NodeViewWebgl = require 'threenodes/nodes/views/WebGLRenderer'
-NodeViewGroup = require 'threenodes/nodes/views/Group'
+# NodeViewGroup = require 'threenodes/nodes/views/Group'
 
 class UI
   constructor: (@core) ->
@@ -41,7 +41,7 @@ class UI
     # Initialize the workspace view
     @createWorkspace()
     # Make the workspace display the global nodes and connections
-    @workspace.render(@core.nodes)
+    @workspace.render(@core.nodes, @core.connections, @core.groups)
 
     # Start the url handling
     #
@@ -74,12 +74,12 @@ class UI
       @ui.breadcrumb.reset()
     else
       # create a hidden temporary group node from this definition
-      @edit_node = @core.nodes.createGroup
-        type: "Group"
-        definition: definition
-        x: -9999
-      @workspace.render(@edit_node.nodes)
-      @ui.breadcrumb.set([definition])
+      # @edit_node = @core.nodes.createGroup
+      #   type: "Group"
+      #   definition: definition
+      #   x: -9999
+      # @workspace.render(@edit_node.nodes)
+      # @ui.breadcrumb.set([definition])
 
   initUI: () =>
     if @core.settings.test == false
@@ -100,10 +100,10 @@ class UI
       @ui.menubar.on("LoadJSON", @file_handler.loadFromJsonData)
       @ui.menubar.on("LoadFile", @file_handler.loadLocalFile)
       #@ui.menubar.on("ExportImage", @webgl.exportImage)
-      @ui.menubar.on("GroupSelectedNodes", @core.group_definitions.groupSelectedNodes)
+      # @ui.menubar.on("GroupSelectedNodes", @core.group_definitions.groupSelectedNodes)
+      @ui.menubar.on("GroupSelectedNodes", @core.groups.createGroup)
 
       # Special events
-      @core.nodes.on("nodeslist:rebuild", @ui.onNodeListRebuild)
       @url_handler.on("SetDisplayModeCommand", @ui.setDisplayMode)
 
       #breadcrumb
@@ -133,7 +133,7 @@ class UI
       ui: @ui
 
     # Bind events to it
-    @core.nodes.bindTimelineEvents(@timelineView)
+    # @core.nodes.bindTimelineEvents(@timelineView)
     @core.nodes.on("remove", @timelineView.onNodeRemove)
     if @ui then @ui.onUiWindowResize()
 
@@ -141,7 +141,7 @@ class UI
 
   clearWorkspace: () =>
     @core.nodes.clearWorkspace()
-    @core.group_definitions.removeAll()
+    # @core.group_definitions.removeAll()
     if @ui then @ui.clearWorkspace()
     #@initTimeline()
 
@@ -150,6 +150,6 @@ UI.UIView = UIView
 UI.nodes.NodeView = NodeView
 UI.nodes.Color = NodeViewColor
 UI.nodes.WebGLRenderer = NodeViewWebgl
-UI.nodes.Group = NodeViewGroup
+# UI.nodes.Group = NodeViewGroup
 
 module.exports = UI

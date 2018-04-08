@@ -9,8 +9,8 @@ class ShapeNode extends Backbone.Model
   @group_name = ''
 
   defaults:
-    nid: -1
-    gid: -1 # group id, set on subnodes of group == group.nid
+    id: -1
+    # gid: -1 # group id, set on subnodes of group == group.id
     x: 0
     y: 0
     width: null
@@ -30,10 +30,10 @@ class ShapeNode extends Backbone.Model
     # Set a default node name if none is provided
     if @get('name') == '' then @set('name', @typename())
 
-    if @get('nid') == -1
-      @set('nid', @indexer.getUID())
+    if @get('id') == -1
+      @set('id', @indexer.getUID())
     else
-      @indexer.uid = @get('nid')
+      @indexer.uid = @get('id')
     return this
 
   typename: => String(@constructor.name)
@@ -59,7 +59,7 @@ class ShapeNode extends Backbone.Model
 
   toJSON: () =>
     res =
-      nid: @get('nid')
+      id: @get('id')
       name: @get('name')
       type: @typename()
       x: @get('x')

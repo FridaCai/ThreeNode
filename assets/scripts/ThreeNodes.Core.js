@@ -7,7 +7,7 @@
 		exports["Core"] = factory(require("_"), require("Backbone"));
 	else
 		root["ThreeNodes"] = root["ThreeNodes"] || {}, root["ThreeNodes"]["Core"] = factory(root["_"], root["Backbone"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_4__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -54,11 +54,21 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var Core, GroupDefinitions, Nodes;
+	var Connection, Connections, Core, Group, Groups, Indexer, Node, Nodes;
 	
-	Nodes = __webpack_require__(1);
+	Indexer = __webpack_require__(1);
 	
-	GroupDefinitions = __webpack_require__(7);
+	Nodes = __webpack_require__(2);
+	
+	Node = __webpack_require__(7);
+	
+	Connections = __webpack_require__(5);
+	
+	Connection = __webpack_require__(6);
+	
+	Groups = __webpack_require__(9);
+	
+	Group = __webpack_require__(10);
 	
 	Core = (function() {
 	  Core.fields = {
@@ -71,20 +81,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	    views: {}
 	  };
 	
+	  Core.groups = {
+	    models: {},
+	    views: {}
+	  };
+	
 	  function Core(options) {
-	    var settings;
+	    var indexer, settings;
 	    settings = {
 	      test: false,
 	      player_mode: false,
 	      direction: true
 	    };
 	    this.settings = $.extend({}, settings, options);
-	    this.group_definitions = new GroupDefinitions([]);
-	    this.nodes = new Nodes([], {
-	      settings: this.settings
+	    indexer = new Indexer();
+	    this.groups = new Groups([], {
+	      indexer: indexer
 	    });
-	    this.group_definitions.bind("definition:created", this.nodes.createGroup);
-	    this.group_definitions.bind("remove", this.nodes.removeGroupsByDefinition);
+	    this.nodes = new Nodes([], {
+	      settings: this.settings,
+	      indexer: indexer
+	    });
+	    this.connections = new Connections();
 	  }
 	
 	  Core.addFieldType = function(fieldName, field) {
@@ -107,45 +125,89 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return true;
 	  };
 	
+	  Core.prototype.getGroupByNode = function(id) {
+	    var group, i, len, ref;
+	    ref = this.db.groups;
+	    for (i = 0, len = ref.length; i < len; i++) {
+	      group = ref[i];
+	      if (group.nodes.includes(id)) {
+	        return group;
+	      }
+	    }
+	  };
+	
+	  Core.prototype.getNodeById = function(id) {
+	    var i, len, node, ref;
+	    ref = this.db.nodes;
+	    for (i = 0, len = ref.length; i < len; i++) {
+	      node = ref[i];
+	      if (node.id === id) {
+	        return node;
+	      }
+	    }
+	  };
+	
 	  Core.prototype.setNodes = function(json_object) {
-	    var connection, def, delay, grp, grp_def, i, j, k, len, len1, len2, node, ref, ref1, ref2;
+	    var self;
 	    this.nodes.removeAll();
-	    if (json_object.groups) {
-	      ref = json_object.groups;
-	      for (i = 0, len = ref.length; i < len; i++) {
-	        grp_def = ref[i];
-	        this.group_definitions.create(grp_def);
+	    this.db = json_object;
+	    self = this;
+	    this.db.nodes.map(function(obj) {
+	      var node;
+	      if (!self.getGroupByNode(obj.id, self.db.groups)) {
+	        node = new Node(obj);
+	        return self.nodes.push(node);
 	      }
-	    }
-	    ref1 = json_object.nodes;
-	    for (j = 0, len1 = ref1.length; j < len1; j++) {
-	      node = ref1[j];
-	      if (node.type !== "Group") {
-	        this.nodes.createNode(node);
-	      } else {
-	        def = this.group_definitions.getByGid(node.definition_id);
-	        if (def) {
-	          node.definition = def;
-	          grp = this.nodes.createGroup(node);
-	        } else {
-	          console.log("can't find the GroupDefinition: " + node.definition_id);
-	        }
-	      }
-	    }
-	    ref2 = json_object.connections;
-	    for (k = 0, len2 = ref2.length; k < len2; k++) {
-	      connection = ref2[k];
-	      this.nodes.createConnectionFromObject(connection);
-	    }
-	    this.nodes.indexer.uid = json_object.uid;
-	    delay = function(ms, func) {
-	      return setTimeout(func, ms);
-	    };
-	    return delay(1, (function(_this) {
-	      return function() {
-	        return _this.nodes.renderAllConnections();
+	    });
+	    this.db.groups.map(function(obj) {
+	      var group, groupObj;
+	      groupObj = {
+	        id: obj.id,
+	        x: obj.x,
+	        y: obj.y,
+	        width: obj.width,
+	        height: obj.height,
+	        nodes: []
 	      };
-	    })(this));
+	      obj.nodes.map(function(nodeId) {
+	        var node;
+	        node = self.nodes.getNodeById(nodeId);
+	        return groupObj.nodes.push(node);
+	      });
+	      group = new Group(groupObj);
+	      return self.groups.push(group);
+	    });
+	    return;
+	    return this.db.connections.map(function(c) {
+	      var connection, fromGroup, fromGroupObj, fromNode, fromNodeId, fromNodeObj, obj, toGroup, toGroupObj, toNode, toNodeId, toNodeObj;
+	      fromNodeId = c.from;
+	      fromNodeObj = self.getNodeById(fromNodeId);
+	      fromNode = new Node(fromNodeObj);
+	      fromGroupObj = self.getGroupByNode(fromNodeId, self.db.groups);
+	      if (fromGroupObj) {
+	        fromGroup = new Group(fromGroupObj);
+	      }
+	      toNodeId = c.to;
+	      toNodeObj = self.getNodeById(toNodeId);
+	      toNode = new Node(toNodeObj);
+	      toGroupObj = self.getGroupByNode(toNodeId, self.db.groups);
+	      if (toGroupObj) {
+	        toGroup = new Group(toGroupObj);
+	      }
+	      obj = {
+	        id: c.id,
+	        fromType: c.fromType,
+	        toType: c.toType
+	      };
+	      if (fromGroup && toGroup && fromGroup.id === toGroup.id) {
+	
+	      } else {
+	        obj.from = fromGroup || fromNode;
+	        obj.to = toGroup || toNode;
+	        connection = new Connection(obj);
+	        return self.connections.push(connection);
+	      }
+	    });
 	  };
 	
 	  return Core;
@@ -157,6 +219,41 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 1 */
+/***/ (function(module, exports) {
+
+	var Indexer, _instance;
+	
+	_instance = null;
+	
+	Indexer = (function() {
+	  function Indexer() {
+	    this.uid = 0;
+	  }
+	
+	  Indexer.prototype.getUID = function() {
+	    return this.uid += 1;
+	  };
+	
+	  Indexer.prototype.reset = function() {
+	    return this.uid = 0;
+	  };
+	
+	  return Indexer;
+	
+	})();
+	
+	Indexer.getInstance = function() {
+	  if (!_instance) {
+	    _instance = new Indexer();
+	  }
+	  return _instance;
+	};
+	
+	module.exports = Indexer;
+
+
+/***/ }),
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Connections, Indexer, Nodes, _,
@@ -164,11 +261,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
-	Indexer = __webpack_require__(4);
+	Indexer = __webpack_require__(1);
 	
 	Connections = __webpack_require__(5);
 	
@@ -179,15 +276,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.stopSound = bind(this.stopSound, this);
 	    this.startSound = bind(this.startSound, this);
 	    this.showNodesAnimation = bind(this.showNodesAnimation, this);
-	    this.getNodeByNid = bind(this.getNodeByNid, this);
 	    this.renderAllConnections = bind(this.renderAllConnections, this);
 	    this.removeGroupsByDefinition = bind(this.removeGroupsByDefinition, this);
-	    this.createGroup = bind(this.createGroup, this);
-	    this.createConnectionFromObject = bind(this.createConnectionFromObject, this);
 	    this.render = bind(this.render, this);
 	    this.createNode = bind(this.createNode, this);
 	    this.find = bind(this.find, this);
-	    this.bindTimelineEvents = bind(this.bindTimelineEvents, this);
 	    this.destroy = bind(this.destroy, this);
 	    this.clearWorkspace = bind(this.clearWorkspace, this);
 	    this.initialize = bind(this.initialize, this);
@@ -196,63 +289,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  Nodes.prototype.initialize = function(models, options) {
 	    var self;
-	    this.settings = options.settings;
 	    self = this;
-	    this.materials = [];
 	    this.indexer = new Indexer();
-	    this.connections = new Connections([], {
+	    return this.connections = new Connections([], {
 	      indexer: this.indexer
 	    });
-	    this.parent = options.parent;
-	    this.connections.bind("add", function(connection) {
-	      return self.trigger("nodeslist:rebuild", self);
-	    });
-	    this.bind("remove", (function(_this) {
-	      return function(node) {
-	        var indx;
-	        indx = _this.materials.indexOf(node);
-	        if (indx !== -1) {
-	          _this.materials.splice(indx, 1);
-	        }
-	        return self.trigger("nodeslist:rebuild", self);
-	      };
-	    })(this));
-	    this.bind("RebuildAllShaders", (function(_this) {
-	      return function() {
-	        var i, len, node, ref, results;
-	        ref = _this.materials;
-	        results = [];
-	        for (i = 0, len = ref.length; i < len; i++) {
-	          node = ref[i];
-	          results.push(node.rebuildShader());
-	        }
-	        return results;
-	      };
-	    })(this));
-	    this.connections.bind("remove", function(connection) {
-	      return self.trigger("nodeslist:rebuild", self);
-	    });
-	    this.bind("add", function(node) {
-	      if (node.is_material && node.is_material === true) {
-	        this.materials.push(node);
-	      }
-	      return self.trigger("nodeslist:rebuild", self);
-	    });
-	    this.bind("createConnection", (function(_this) {
-	      return function(from_node, from_type, to_node, to_type) {
-	        return _this.connections.create({
-	          from_node: from_node,
-	          from_type: from_type,
-	          to_node: to_node,
-	          to_type: to_type
-	        });
-	      };
-	    })(this));
-	    return this.bind("renderConnections", (function(_this) {
-	      return function(node) {
-	        return _this.connections.renderConnections(node);
-	      };
-	    })(this));
 	  };
 	
 	  Nodes.prototype.clearWorkspace = function() {
@@ -270,18 +311,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    delete this.materials;
 	    delete this.indexer;
 	    return delete this.connections;
-	  };
-	
-	  Nodes.prototype.bindTimelineEvents = function(timeline) {
-	    if (this.timeline) {
-	      this.timeline.off("tfieldsRebuild", this.showNodesAnimation);
-	      this.timeline.off("startSound", this.startSound);
-	      this.timeline.off("stopSound", this.stopSound);
-	    }
-	    this.timeline = timeline;
-	    this.timeline.on("tfieldsRebuild", this.showNodesAnimation);
-	    this.timeline.on("startSound", this.startSound);
-	    return this.timeline.on("stopSound", this.stopSound);
 	  };
 	
 	  Nodes.prototype.find = function(node_name) {
@@ -311,7 +340,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  Nodes.prototype.render = function() {
-	    var buildNodeArrays, evaluateSubGraph, invalidNodes, nid, terminalNodes;
+	    var buildNodeArrays, evaluateSubGraph, id, invalidNodes, terminalNodes;
 	    return;
 	    invalidNodes = {};
 	    terminalNodes = {};
@@ -321,9 +350,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      for (i = 0, len = nodes.length; i < len; i++) {
 	        node = nodes[i];
 	        if (node.hasOutConnection() === false || node.auto_evaluate || node.delays_output) {
-	          terminalNodes[node.attributes["nid"] + "/" + node.attributes["gid"]] = node;
+	          terminalNodes[node.attributes["id"] + "/" + node.attributes["gid"]] = node;
 	        }
-	        invalidNodes[node.attributes["nid"] + "/" + node.attributes["gid"]] = node;
+	        invalidNodes[node.attributes["id"] + "/" + node.attributes["gid"]] = node;
 	        if (node.nodes) {
 	          results.push(buildNodeArrays(node.nodes.models));
 	        } else {
@@ -338,7 +367,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      upstreamNodes = node.getUpstreamNodes();
 	      for (i = 0, len = upstreamNodes.length; i < len; i++) {
 	        upnode = upstreamNodes[i];
-	        if (invalidNodes[upnode.attributes["nid"] + "/" + upnode.attributes["gid"]] && !upnode.delays_output) {
+	        if (invalidNodes[upnode.attributes["id"] + "/" + upnode.attributes["gid"]] && !upnode.delays_output) {
 	          evaluateSubGraph(upnode);
 	        }
 	      }
@@ -347,61 +376,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	        node.dirty = false;
 	        node.fields.setFieldInputUnchanged();
 	      }
-	      delete invalidNodes[node.attributes["nid"] + "/" + node.attributes["gid"]];
+	      delete invalidNodes[node.attributes["id"] + "/" + node.attributes["gid"]];
 	      return true;
 	    };
-	    for (nid in terminalNodes) {
-	      if (invalidNodes[nid]) {
-	        evaluateSubGraph(terminalNodes[nid]);
+	    for (id in terminalNodes) {
+	      if (invalidNodes[id]) {
+	        evaluateSubGraph(terminalNodes[id]);
 	      }
 	    }
 	    return true;
-	  };
-	
-	  Nodes.prototype.createConnectionFromObject = function(connection) {
-	    var c, from, from_gid, from_node, tmp, to, to_gid, to_node;
-	    from_gid = connection.from_node_gid ? connection.from_node_gid.toString() : "-1";
-	    from_node = this.getNodeByNid(connection.from_node.toString(), from_gid);
-	    from = connection.from;
-	    to_gid = connection.to_node_gid ? connection.to_node_gid.toString() : "-1";
-	    to_node = this.getNodeByNid(connection.to_node.toString(), to_gid);
-	    to = connection.to;
-	    if (!from || !to) {
-	      tmp = from_node;
-	      from_node = to_node;
-	      to_node = tmp;
-	      from = from_node.fields.outputs[connection.to.toString()];
-	      to = to_node.fields.inputs[connection.from.toString()];
-	    }
-	    c = this.connections.create({
-	      from_node: from_node,
-	      to_node: to_node,
-	      from_type: connection.from,
-	      to_type: connection.to,
-	      cid: connection.id
-	    });
-	    return c;
-	  };
-	
-	  Nodes.prototype.createGroup = function(model, external_objects) {
-	    var c, connection, from, grp, i, len, to;
-	    if (external_objects == null) {
-	      external_objects = [];
-	    }
-	    grp = this.createNode(model);
-	    for (i = 0, len = external_objects.length; i < len; i++) {
-	      connection = external_objects[i];
-	      from = this.getNodeByNid(connection.from_node);
-	      to = this.getNodeByNid(connection.to_node);
-	      debugger;
-	      c = this.connections.create({
-	        from_node: from,
-	        from_type: connection.from,
-	        to_node: to,
-	        to_type: connection.to
-	      });
-	    }
-	    return grp;
 	  };
 	
 	  Nodes.prototype.removeGroupsByDefinition = function(def) {
@@ -422,27 +405,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return this.connections.remove(c);
 	  };
 	
-	  Nodes.prototype.getNodeByNid = function(nid, gid) {
-	    var i, len, node, ref, res;
-	    if (gid == null) {
-	      gid = "-1";
-	    }
-	    ref = this.models;
-	    for (i = 0, len = ref.length; i < len; i++) {
-	      node = ref[i];
-	      if (node.get("nid").toString() === nid.toString()) {
-	        if (gid === "-1" || node.get("gid").toString() === gid.toString()) {
-	          return node;
-	        }
-	      }
-	      if (node.nodes) {
-	        res = node.nodes.getNodeByNid(nid, gid);
-	        if (res) {
-	          return res;
-	        }
-	      }
-	    }
-	    return false;
+	  Nodes.prototype.getNodeById = function(id) {
+	    return this.models.find(function(n) {
+	      return n.get('id') === id;
+	    });
 	  };
 	
 	  Nodes.prototype.showNodesAnimation = function() {
@@ -497,12 +463,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 2 */
-/***/ (function(module, exports) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_2__;
-
-/***/ }),
 /* 3 */
 /***/ (function(module, exports) {
 
@@ -512,34 +472,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 4 */
 /***/ (function(module, exports) {
 
-	var Indexer;
-	
-	Indexer = (function() {
-	  function Indexer() {
-	    this.uid = 0;
-	  }
-	
-	  Indexer.prototype.getUID = function(increment) {
-	    if (increment == null) {
-	      increment = true;
-	    }
-	    if (increment) {
-	      return this.uid += 1;
-	    } else {
-	      return this.uid;
-	    }
-	  };
-	
-	  Indexer.prototype.reset = function() {
-	    return this.uid = 0;
-	  };
-	
-	  return Indexer;
-	
-	})();
-	
-	module.exports = Indexer;
-
+	module.exports = __WEBPACK_EXTERNAL_MODULE_4__;
 
 /***/ }),
 /* 5 */
@@ -550,7 +483,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
 	Connection = __webpack_require__(6);
 	
@@ -559,7 +492,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  function Connections() {
 	    this.removeAll = bind(this.removeAll, this);
-	    this.create = bind(this.create, this);
 	    this.renderConnections = bind(this.renderConnections, this);
 	    this.render = bind(this.render, this);
 	    this.initialize = bind(this.initialize, this);
@@ -569,7 +501,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  Connections.prototype.model = Connection;
 	
 	  Connections.prototype.initialize = function(models, options) {
-	    this.indexer = options.indexer;
 	    this.bind("connection:removed", (function(_this) {
 	      return function(c) {
 	        return _this.remove(c);
@@ -592,19 +523,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 	  };
 	
-	  Connections.prototype.create = function(model, options) {
-	    if (!options) {
-	      options = {};
-	    }
-	    model.indexer = this.indexer;
-	    model = this._prepareModel(model, options);
-	    if (!model) {
-	      return false;
-	    }
-	    this.add(model, options);
-	    return model;
-	  };
-	
 	  Connections.prototype.removeAll = function() {
 	    return this.remove(this.models);
 	  };
@@ -625,57 +543,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
-	Indexer = __webpack_require__(4);
-	
-	
-	/* Connection model */
+	Indexer = __webpack_require__(1);
 	
 	Connection = (function(superClass) {
 	  extend(Connection, superClass);
 	
 	  function Connection() {
-	    this.validate_deprecated = bind(this.validate_deprecated, this);
 	    this.validate = bind(this.validate, this);
 	    this.render = bind(this.render, this);
-	    this.remove = bind(this.remove, this);
 	    this.initialize = bind(this.initialize, this);
-	    this.sync = bind(this.sync, this);
 	    return Connection.__super__.constructor.apply(this, arguments);
 	  }
 	
-	  Connection.STATIC_INDEXER = new Indexer();
-	
-	  Connection.prototype.defaults = {
-	    "cid": -1
-	  };
-	
-	  Connection.prototype.sync = function() {};
-	
-	  Connection.prototype.initialize = function(options) {
-	    var indexer;
-	    this.options = options;
-	    this.from_node = options.from_node;
-	    this.from_type = options.from_type;
-	    this.to_node = options.to_node;
-	    this.to_type = options.to_type;
-	    indexer = options.indexer || Connection.STATIC_INDEXER;
-	    if (this.get("cid") === -1) {
-	      return this.set({
-	        "cid": indexer.getUID()
-	      });
-	    }
-	  };
-	
-	  Connection.prototype.remove = function() {
-	    delete this.from_node;
-	    delete this.from_type;
-	    delete this.to_node;
-	    delete this.to_type;
-	    this.trigger("connection:removed", this);
-	    this.destroy();
-	    return false;
+	  Connection.prototype.initialize = function(obj) {
+	    var id;
+	    id = obj.id || Indexer.getInstance().getUID();
+	    this.set('id', id);
+	    this.from = obj.from;
+	    this.fromType = obj.fromType;
+	    this.to = obj.to;
+	    return this.toType = obj.toType;
 	  };
 	
 	  Connection.prototype.render = function() {
@@ -684,29 +573,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  Connection.prototype.validate = function() {
 	    return false;
-	  };
-	
-	  Connection.prototype.validate_deprecated = function(attrs, options) {
-	    this.from_field = attrs.from_field;
-	    this.to_field = attrs.to_field;
-	    if (!this.from_field || !this.to_field) {
-	      return true;
-	    }
-	    return false;
-	  };
-	
-	  Connection.prototype.toJSON = function() {
-	    var res;
-	    res = {
-	      id: this.get("cid"),
-	      from_node: this.from_node.get("nid"),
-	      from_node_gid: this.from_node.get("gid"),
-	      from: this.from_type,
-	      to_node: this.to_node.get("nid"),
-	      to_node_gid: this.to_node.get("gid"),
-	      to: this.to_type
-	    };
-	    return res;
 	  };
 	
 	  return Connection;
@@ -720,280 +586,77 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var Backbone, GroupDefinition, GroupDefinitions, Indexer, _,
+	var Backbone, Node, Utils, _,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
-	Indexer = __webpack_require__(4);
+	Utils = __webpack_require__(8);
 	
-	GroupDefinition = __webpack_require__(8);
+	Node = (function(superClass) {
+	  extend(Node, superClass);
 	
-	GroupDefinitions = (function(superClass) {
-	  extend(GroupDefinitions, superClass);
-	
-	  function GroupDefinitions() {
-	    this.removeAll = bind(this.removeAll, this);
-	    this.groupSelectedNodes = bind(this.groupSelectedNodes, this);
-	    this.create = bind(this.create, this);
-	    this.render = bind(this.render, this);
-	    this.getByGid = bind(this.getByGid, this);
-	    this.removeAll = bind(this.removeAll, this);
+	  function Node() {
+	    this.toJSON = bind(this.toJSON, this);
+	    this.typename = bind(this.typename, this);
 	    this.initialize = bind(this.initialize, this);
-	    return GroupDefinitions.__super__.constructor.apply(this, arguments);
+	    return Node.__super__.constructor.apply(this, arguments);
 	  }
 	
-	  GroupDefinitions.prototype.model = GroupDefinition;
-	
-	  GroupDefinitions.prototype.initialize = function() {
-	    this.indexer = new Indexer();
-	    return this.bind("group:removed", (function(_this) {
-	      return function(c) {
-	        return _this.remove(c);
-	      };
-	    })(this));
+	  Node.prototype.defaults = {
+	    id: -1,
+	    x: 0,
+	    y: 0,
+	    width: 90,
+	    height: 26,
+	    name: ""
 	  };
 	
-	  GroupDefinitions.prototype.removeAll = function() {
-	    var models;
-	    models = this.models.concat();
-	    _.invoke(models, "remove");
-	    this.reset([]);
-	    return this.indexer.reset();
+	  Node.prototype.initialize = function(obj) {
+	    var id, name;
+	    Node.__super__.initialize.apply(this, arguments);
+	    id = obj.id || Index.getInstance().getUID();
+	    this.set('id', id);
+	    name = obj.name || this.typename();
+	    this.set('name', name);
+	    this.set('x', obj.x);
+	    this.set('y', obj.y);
+	    this.set('width', obj.width);
+	    this.set('height', obj.height);
+	    return this;
 	  };
 	
-	  GroupDefinitions.prototype.getByGid = function(gid) {
-	    return this.find(function(def) {
-	      return def.get("gid") === gid;
-	    });
+	  Node.prototype.typename = function() {
+	    return String(this.constructor.name);
 	  };
 	
-	  GroupDefinitions.prototype.render = function() {
-	    return this.each(function(c) {
-	      return c.render();
-	    });
-	  };
-	
-	  GroupDefinitions.prototype.create = function(model, options) {
-	    if (!options) {
-	      options = {};
-	    }
-	    options.indexer = this.indexer;
-	    model = this._prepareModel(model, options);
-	    if (!model) {
-	      return false;
-	    }
-	    this.add(model, options);
-	    return model;
-	  };
-	
-	  GroupDefinitions.prototype.groupSelectedNodes = function(selected_nodes) {
-	    var average_position, connections, dx, dy, external_objects, group_def, i, len, model, node;
-	    if (selected_nodes == null) {
-	      selected_nodes = false;
-	    }
-	    if (!selected_nodes) {
-	      selected_nodes = this.getSelectedNodes();
-	    }
-	    average_position = this.getNodesAveragePosition(selected_nodes);
-	    dx = average_position.x;
-	    dy = average_position.y;
-	    group_def = new GroupDefinition({
-	      fromSelectedNodes: selected_nodes,
-	      indexer: this.indexer
-	    });
-	    this.add(group_def);
-	    external_objects = [];
-	    if (selected_nodes.length !== 0) {
-	      connections = selected_nodes[0].collection.connections;
-	      connections.map(function(connection) {
-	        var connection_description, isFrom, isTo;
-	        isFrom = selected_nodes.indexOf(connection.from_node) !== -1;
-	        isTo = selected_nodes.indexOf(connection.to_node) !== -1;
-	        if (isFrom && !isTo) {
-	          connection_description = connection.toJSON();
-	          connection_description.to_subfield = false;
-	          return external_objects.push(connection_description);
-	        } else if (!isFrom && isTo) {
-	          connection_description = connection.toJSON();
-	          connection_description.to_subfield = true;
-	          return external_objects.push(connection_description);
-	        }
-	      });
-	    }
-	    for (i = 0, len = selected_nodes.length; i < len; i++) {
-	      node = selected_nodes[i];
-	      node.remove();
-	    }
-	    model = {
-	      type: "Group",
-	      definition: group_def,
-	      x: dx,
-	      y: dy
+	  Node.prototype.toJSON = function() {
+	    var res;
+	    res = {
+	      id: this.get('id'),
+	      name: this.get('name'),
+	      type: this.typename(),
+	      x: this.get('x'),
+	      y: this.get('y'),
+	      width: this.get('width'),
+	      height: this.get('height')
 	    };
-	    this.trigger("definition:created", model, external_objects);
-	    return group_def;
+	    return res;
 	  };
 	
-	  GroupDefinitions.prototype.getSelectedNodes = function() {
-	    var $selected, selected_nodes;
-	    selected_nodes = [];
-	    $selected = $(".node.ui-selected").not(".node .node");
-	    $selected.each(function() {
-	      var node;
-	      node = $(this).data("object");
-	      return selected_nodes.push(node);
-	    });
-	    return selected_nodes;
-	  };
+	  return Node;
 	
-	  GroupDefinitions.prototype.getNodesAveragePosition = function(selected_nodes) {
-	    var $selected, dx, dy, i, len, max_x, max_y, min_x, min_y, node;
-	    min_x = 0;
-	    min_y = 0;
-	    max_x = 0;
-	    max_y = 0;
-	    $selected = $(".node.ui-selected");
-	    if ($selected.length < 1 && selected_nodes.length === 0) {
-	      return false;
-	    }
-	    for (i = 0, len = selected_nodes.length; i < len; i++) {
-	      node = selected_nodes[i];
-	      min_x = Math.min(min_x, node.get("x"));
-	      max_x = Math.max(max_x, node.get("x"));
-	      min_y = Math.min(min_y, node.get("y"));
-	      max_y = Math.max(max_y, node.get("y"));
-	    }
-	    dx = (min_x + max_x) / 2;
-	    dy = (min_y + max_y) / 2;
-	    return {
-	      x: dx,
-	      y: dy
-	    };
-	  };
+	})(Backbone.Model);
 	
-	  GroupDefinitions.prototype.removeAll = function() {
-	    return this.remove(this.models);
-	  };
-	
-	  return GroupDefinitions;
-	
-	})(Backbone.Collection);
-	
-	module.exports = GroupDefinitions;
+	module.exports = Node;
 
 
 /***/ }),
 /* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	var Backbone, GroupDefinition, Utils, _,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	Utils = __webpack_require__(9);
-	
-	
-	/* GroupDefinition model */
-	
-	GroupDefinition = (function(superClass) {
-	  extend(GroupDefinition, superClass);
-	
-	  function GroupDefinition() {
-	    this.fromSelectedNodes = bind(this.fromSelectedNodes, this);
-	    this.isInternalConnection = bind(this.isInternalConnection, this);
-	    this.initialize = bind(this.initialize, this);
-	    this.getUID = bind(this.getUID, this);
-	    this.sync = bind(this.sync, this);
-	    return GroupDefinition.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  GroupDefinition.prototype.defaults = {
-	    nodes: [],
-	    connections: [],
-	    name: "Group",
-	    gid: -1
-	  };
-	
-	  GroupDefinition.prototype.sync = function() {};
-	
-	  GroupDefinition.prototype.getUID = function() {
-	    this.internal_uid += 1;
-	    return this.internal_uid;
-	  };
-	
-	  GroupDefinition.prototype.initialize = function(options) {
-	    var indexer;
-	    GroupDefinition.__super__.initialize.apply(this, arguments);
-	    this.internal_uid = 0;
-	    indexer = options.indexer;
-	    if (this.get("gid") === -1) {
-	      this.set("gid", indexer.getUID());
-	    }
-	    if (options.fromSelectedNodes && options.fromSelectedNodes !== false) {
-	      return this.fromSelectedNodes(options.fromSelectedNodes);
-	    }
-	  };
-	
-	  GroupDefinition.prototype.isInternalConnection = function(connection, selected_nodes) {
-	    return selected_nodes.indexOf(connection.from_node) !== -1 && selected_nodes.indexOf(connection.to_node) !== -1;
-	  };
-	
-	  GroupDefinition.prototype.fromSelectedNodes = function(selected_nodes) {
-	    var connections, internal_connections, self;
-	    internal_connections = [];
-	    self = this;
-	    if (selected_nodes.length !== 0) {
-	      connections = selected_nodes[0].collection.connections;
-	      connections.map(function(connection) {
-	        if (self.isInternalConnection(connection, selected_nodes)) {
-	          return internal_connections.push(connection);
-	        }
-	      });
-	    }
-	    this.attributes.nodes = jQuery.map(selected_nodes, function(n, i) {
-	      return n.toJSON();
-	    });
-	    return this.attributes.connections = jQuery.map(internal_connections, function(c, i) {
-	      return c.toJSON();
-	    });
-	  };
-	
-	  GroupDefinition.prototype.toJSON = function() {
-	    var res;
-	    res = {
-	      gid: this.get("gid"),
-	      name: this.get("name"),
-	      connections: this.get("connections"),
-	      nodes: this.get("nodes")
-	    };
-	    return res;
-	  };
-	
-	  GroupDefinition.prototype.toCode = function() {
-	    var res;
-	    res = "";
-	    return res;
-	  };
-	
-	  return GroupDefinition;
-	
-	})(Backbone.Model);
-	
-	module.exports = GroupDefinition;
-
-
-/***/ }),
-/* 9 */
 /***/ (function(module, exports) {
 
 	var Utils;
@@ -1020,6 +683,138 @@ return /******/ (function(modules) { // webpackBootstrap
 	})();
 	
 	module.exports = Utils;
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, Group, Groups, Indexer, _,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(3);
+	
+	Backbone = __webpack_require__(4);
+	
+	Indexer = __webpack_require__(1);
+	
+	Group = __webpack_require__(10);
+	
+	Groups = (function(superClass) {
+	  extend(Groups, superClass);
+	
+	  function Groups() {
+	    this.createGroup = bind(this.createGroup, this);
+	    this.initialize = bind(this.initialize, this);
+	    return Groups.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Groups.prototype.initialize = function(models, options) {
+	    return this.indexer = options.indexer;
+	  };
+	
+	  Groups.prototype.createGroup = function() {
+	    var n, nodes;
+	    nodes = this.getSelectedNodes();
+	    n = new Group({
+	      nodes: nodes
+	    }, {
+	      indexer: this.indexer
+	    });
+	    return this.add(n);
+	  };
+	
+	  Groups.prototype.getSelectedNodes = function() {
+	    var $selected, selected_nodes;
+	    selected_nodes = [];
+	    $selected = $(".node.ui-selected").not(".node .node");
+	    $selected.each(function() {
+	      var node;
+	      node = $(this).data("object");
+	      return selected_nodes.push(node);
+	    });
+	    return selected_nodes;
+	  };
+	
+	  return Groups;
+	
+	})(Backbone.Collection);
+	
+	module.exports = Groups;
+
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, Group, _,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(3);
+	
+	Backbone = __webpack_require__(4);
+	
+	Group = (function(superClass) {
+	  extend(Group, superClass);
+	
+	  function Group() {
+	    this.typename = bind(this.typename, this);
+	    this.initialize = bind(this.initialize, this);
+	    return Group.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Group.prototype.defaults = {
+	    id: -1,
+	    width: 90,
+	    height: 26,
+	    x: 0,
+	    y: 0,
+	    name: ""
+	  };
+	
+	  Group.prototype.initialize = function(obj) {
+	    Group.__super__.initialize.apply(this, arguments);
+	    this.set('name', obj.name || this.typename());
+	    this.set('id', obj.id || Indexer.getInstance().getUID());
+	    this.set('x', obj.x);
+	    return this.set('y', obj.y);
+	  };
+	
+	  Group.prototype.typename = function() {
+	    return String(this.constructor.name);
+	  };
+	
+	  Group.prototype.getNodesAveragePosition = function() {
+	    var dx, dy, i, len, max_x, max_y, min_x, min_y, node, ref;
+	    min_x = 0;
+	    min_y = 0;
+	    max_x = 0;
+	    max_y = 0;
+	    ref = this.get('nodes');
+	    for (i = 0, len = ref.length; i < len; i++) {
+	      node = ref[i];
+	      min_x = Math.min(min_x, node.get("x"));
+	      max_x = Math.max(max_x, node.get("x"));
+	      min_y = Math.min(min_y, node.get("y"));
+	      max_y = Math.max(max_y, node.get("y"));
+	    }
+	    dx = (min_x + max_x) / 2;
+	    dy = (min_y + max_y) / 2;
+	    return {
+	      x: dx,
+	      y: dy
+	    };
+	  };
+	
+	  return Group;
+	
+	})(Backbone.Model);
+	
+	module.exports = Group;
 
 
 /***/ })

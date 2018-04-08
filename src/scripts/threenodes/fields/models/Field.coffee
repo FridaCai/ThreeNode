@@ -23,7 +23,7 @@ class NodeField extends Backbone.Model
   defaults: () ->
     fid: -1
     name: "fieldname"
-    machine_name: "fieldname-nid"
+    machine_name: "fieldname-id"
     is_output: false
     value: 0
     default: null
@@ -81,7 +81,7 @@ class NodeField extends Backbone.Model
     # For proxyfields we append the subfield node id
     # since the same field name can be in different subnodes
     if @subfield && @subfield.node
-      @set("machine_name", @get("name") + "-" + @subfield.node.get("nid"))
+      @set("machine_name", @get("name") + "-" + @subfield.node.get("id"))
     if @get("fid") == -1
       @set("fid", indexer.getUID())
 
@@ -202,9 +202,9 @@ class NodeField extends Backbone.Model
     res =
       name: @get("name")
 
-    # Add the node nid for fields that are part of subnodes (group)
+    # Add the node id for fields that are part of subnodes (group)
     if @subfield
-      res.nid = @subfield.node.get("nid")
+      res.id = @subfield.node.get("id")
 
     # Help avoid cyclic value
     val = @get("value")

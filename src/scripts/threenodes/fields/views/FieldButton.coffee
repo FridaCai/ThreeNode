@@ -69,7 +69,7 @@ class FieldButton extends Backbone.View
       if field.get("is_output") == true
         target = ".inputs .field"
       $(target).filter () ->
-        $(this).parent().parent().parent().data("nid") != field.node.get("nid")
+        $(this).parent().parent().parent().data("id") != field.node.get("id")
       .addClass "field-possible-target"
 
     $(".inner-field", @$el).draggable

@@ -7,7 +7,7 @@
 		exports["NodeTypes.Three"] = factory(require("_"), require("Backbone"), require("jQuery"), require("Blob"), require("FileSaver"), require("Three"));
 	else
 		root["ThreeNodes"] = root["ThreeNodes"] || {}, root["ThreeNodes"]["NodeTypes.Three"] = factory(root["_"], root["Backbone"], root["jQuery"], root["Blob"], root["FileSaver"], root["Three"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_17__, __WEBPACK_EXTERNAL_MODULE_82__, __WEBPACK_EXTERNAL_MODULE_83__, __WEBPACK_EXTERNAL_MODULE_86__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_4__, __WEBPACK_EXTERNAL_MODULE_18__, __WEBPACK_EXTERNAL_MODULE_81__, __WEBPACK_EXTERNAL_MODULE_82__, __WEBPACK_EXTERNAL_MODULE_85__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -54,29 +54,24 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
+	__webpack_require__(58);
+	
 	__webpack_require__(59);
 	
 	__webpack_require__(60);
 	
-	__webpack_require__(61);
+	__webpack_require__(62);
 	
-	__webpack_require__(63);
+	__webpack_require__(72);
 	
-	__webpack_require__(73);
+	__webpack_require__(84);
 	
-	__webpack_require__(85);
-	
-	__webpack_require__(89);
+	__webpack_require__(88);
 
 
 /***/ }),
 /* 1 */,
-/* 2 */
-/***/ (function(module, exports) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_2__;
-
-/***/ }),
+/* 2 */,
 /* 3 */
 /***/ (function(module, exports) {
 
@@ -86,41 +81,85 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 4 */
 /***/ (function(module, exports) {
 
-	var Indexer;
-	
-	Indexer = (function() {
-	  function Indexer() {
-	    this.uid = 0;
-	  }
-	
-	  Indexer.prototype.getUID = function(increment) {
-	    if (increment == null) {
-	      increment = true;
-	    }
-	    if (increment) {
-	      return this.uid += 1;
-	    } else {
-	      return this.uid;
-	    }
-	  };
-	
-	  Indexer.prototype.reset = function() {
-	    return this.uid = 0;
-	  };
-	
-	  return Indexer;
-	
-	})();
-	
-	module.exports = Indexer;
-
+	module.exports = __WEBPACK_EXTERNAL_MODULE_4__;
 
 /***/ }),
 /* 5 */,
 /* 6 */,
-/* 7 */,
-/* 8 */,
-/* 9 */
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, Node, Utils, _,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	_ = __webpack_require__(3);
+	
+	Backbone = __webpack_require__(4);
+	
+	Utils = __webpack_require__(8);
+	
+	Node = (function(superClass) {
+	  extend(Node, superClass);
+	
+	  function Node() {
+	    this.toJSON = bind(this.toJSON, this);
+	    this.typename = bind(this.typename, this);
+	    this.initialize = bind(this.initialize, this);
+	    return Node.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Node.prototype.defaults = {
+	    id: -1,
+	    x: 0,
+	    y: 0,
+	    width: 90,
+	    height: 26,
+	    name: ""
+	  };
+	
+	  Node.prototype.initialize = function(obj) {
+	    var id, name;
+	    Node.__super__.initialize.apply(this, arguments);
+	    id = obj.id || Index.getInstance().getUID();
+	    this.set('id', id);
+	    name = obj.name || this.typename();
+	    this.set('name', name);
+	    this.set('x', obj.x);
+	    this.set('y', obj.y);
+	    this.set('width', obj.width);
+	    this.set('height', obj.height);
+	    return this;
+	  };
+	
+	  Node.prototype.typename = function() {
+	    return String(this.constructor.name);
+	  };
+	
+	  Node.prototype.toJSON = function() {
+	    var res;
+	    res = {
+	      id: this.get('id'),
+	      name: this.get('name'),
+	      type: this.typename(),
+	      x: this.get('x'),
+	      y: this.get('y'),
+	      width: this.get('width'),
+	      height: this.get('height')
+	    };
+	    return res;
+	  };
+	
+	  return Node;
+	
+	})(Backbone.Model);
+	
+	module.exports = Node;
+
+
+/***/ }),
+/* 8 */
 /***/ (function(module, exports) {
 
 	var Utils;
@@ -150,2650 +189,38 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
+/* 9 */,
 /* 10 */,
 /* 11 */,
 /* 12 */,
 /* 13 */,
 /* 14 */,
-/* 15 */
-/***/ (function(module, exports) {
-
-	/*
-	 * namespace.coffee v1.0.0
-	 * Copyright (c) 2011 CodeCatalyst, LLC.
-	 * Open source under the MIT License.
-	 */
-	(function() {
-	  var namespace;
-	  namespace = function(name, values) {
-	    var key, subpackage, target, value, _i, _len, _ref, _results;
-	    target = typeof exports !== "undefined" && exports !== null ? exports : window;
-	    //target = window;
-	    if (name.length > 0) {
-	      _ref = name.split('.');
-	      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	        subpackage = _ref[_i];
-	        target = target[subpackage] || (target[subpackage] = {});
-	      }
-	    }
-	    _results = [];
-	    for (key in values) {
-	      value = values[key];
-	      _results.push(target[key] = value);
-	    }
-	    return _results;
-	  };
-	  namespace("", {
-	    namespace: namespace
-	  });
-	}).call(this);
-
-
-/***/ }),
+/* 15 */,
 /* 16 */,
-/* 17 */
+/* 17 */,
+/* 18 */
 /***/ (function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_17__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_18__;
 
 /***/ }),
-/* 18 */,
 /* 19 */,
-/* 20 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	var Backbone, Fields, _,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	__webpack_require__(21);
-	
-	
-	/* Fields Collection */
-	
-	Fields = (function(superClass) {
-	  extend(Fields, superClass);
-	
-	  function Fields() {
-	    this.renderSidebar = bind(this.renderSidebar, this);
-	    this.addFields = bind(this.addFields, this);
-	    this.addField = bind(this.addField, this);
-	    this.removeConnections = bind(this.removeConnections, this);
-	    this.renderConnections = bind(this.renderConnections, this);
-	    this.setFieldInputUnchanged = bind(this.setFieldInputUnchanged, this);
-	    this.hasUnconnectedFields = bind(this.hasUnconnectedFields, this);
-	    this.hasUnconnectedOutputs = bind(this.hasUnconnectedOutputs, this);
-	    this.hasUnconnectedInputs = bind(this.hasUnconnectedInputs, this);
-	    this.getDownstreamNodes = bind(this.getDownstreamNodes, this);
-	    this.getUpstreamNodes = bind(this.getUpstreamNodes, this);
-	    this.getMaxInputSliceCount = bind(this.getMaxInputSliceCount, this);
-	    this.setField = bind(this.setField, this);
-	    this.getField = bind(this.getField, this);
-	    this.toJSON = bind(this.toJSON, this);
-	    this.load = bind(this.load, this);
-	    this.destroy = bind(this.destroy, this);
-	    this.initialize = bind(this.initialize, this);
-	    return Fields.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Fields.prototype.initialize = function(models, options) {
-	    Fields.__super__.initialize.apply(this, arguments);
-	    this.node = options.node;
-	    this.indexer = options.indexer;
-	    this.inputs = {};
-	    this.outputs = {};
-	    this.special_elements = {
-	      left: [],
-	      center: [],
-	      right: []
-	    };
-	    return this.addFields(this.node.getFields());
-	  };
-	
-	  Fields.prototype.destroy = function() {
-	    this.removeConnections();
-	    while (this.models.length > 0) {
-	      this.models[0].remove();
-	    }
-	    delete this.node;
-	    delete this.inputs;
-	    delete this.outputs;
-	    delete this.indexer;
-	    return delete this.special_elements;
-	  };
-	
-	  Fields.prototype.load = function(data) {
-	    var f, j, len, node_field, ref;
-	    if (!data || !data["in"]) {
-	      return false;
-	    }
-	    ref = data["in"];
-	    for (j = 0, len = ref.length; j < len; j++) {
-	      f = ref[j];
-	      if (!f.nid) {
-	        node_field = this.inputs[f.name];
-	      } else {
-	        node_field = this.inputs[f.name + "-" + f.nid];
-	      }
-	      if (node_field) {
-	        node_field.load(f.val);
-	      }
-	    }
-	    return true;
-	  };
-	
-	  Fields.prototype.toJSON = function() {
-	    var data;
-	    data = {
-	      "in": jQuery.map(this.inputs, function(f, i) {
-	        return f.toJSON();
-	      }),
-	      out: jQuery.map(this.outputs, function(f, i) {
-	        return f.toJSON();
-	      })
-	    };
-	    return data;
-	  };
-	
-	  Fields.prototype.getField = function(key, is_out) {
-	    var target;
-	    if (is_out == null) {
-	      is_out = false;
-	    }
-	    target = is_out === true ? "outputs" : "inputs";
-	    return this[target][key];
-	  };
-	
-	  Fields.prototype.setField = function(key, value) {
-	    if (this.outputs[key]) {
-	      return this.outputs[key].setValue(value);
-	    }
-	  };
-	
-	  Fields.prototype.getMaxInputSliceCount = function() {
-	    var f, fname, ref, result, val;
-	    result = 1;
-	    ref = this.inputs;
-	    for (fname in ref) {
-	      f = ref[fname];
-	      val = f.attributes.value;
-	      if (val && $.type(val) === "array") {
-	        if (val.length > result) {
-	          result = val.length;
-	        }
-	      }
-	    }
-	    return result - 1;
-	  };
-	
-	  Fields.prototype.getUpstreamNodes = function() {
-	    var c, f, fname, j, len, ref, ref1, res;
-	    res = [];
-	    ref = this.inputs;
-	    for (fname in ref) {
-	      f = ref[fname];
-	      ref1 = f.connections;
-	      for (j = 0, len = ref1.length; j < len; j++) {
-	        c = ref1[j];
-	        res[res.length] = c.from_field.node;
-	      }
-	    }
-	    return res;
-	  };
-	
-	  Fields.prototype.getDownstreamNodes = function() {
-	    var c, f, fname, j, k, len, len1, ref, ref1, res;
-	    res = [];
-	    ref = this.outputs;
-	    for (f = j = 0, len = ref.length; j < len; f = ++j) {
-	      fname = ref[f];
-	      f = this.inputs[fname];
-	      ref1 = f.connections;
-	      for (k = 0, len1 = ref1.length; k < len1; k++) {
-	        c = ref1[k];
-	        res[res.length] = c.to_field.node;
-	      }
-	    }
-	    return res;
-	  };
-	
-	  Fields.prototype.hasUnconnectedInputs = function() {
-	    var f, fname, ref;
-	    ref = this.inputs;
-	    for (fname in ref) {
-	      f = ref[fname];
-	      if (f.connections.length === 0) {
-	        return true;
-	      }
-	    }
-	    return false;
-	  };
-	
-	  Fields.prototype.hasUnconnectedOutputs = function() {
-	    var f, fname, ref;
-	    ref = this.outputs;
-	    for (fname in ref) {
-	      f = ref[fname];
-	      if (f.connections.length === 0) {
-	        return true;
-	      }
-	    }
-	    return false;
-	  };
-	
-	  Fields.prototype.hasUnconnectedFields = function() {
-	    return hasUnconnectedInputs() || hasUnconnectedOutputs();
-	  };
-	
-	  Fields.prototype.setFieldInputUnchanged = function() {
-	    var f, fname, j, len, ref, results;
-	    ref = this.inputs;
-	    results = [];
-	    for (j = 0, len = ref.length; j < len; j++) {
-	      fname = ref[j];
-	      f = this.inputs[fname];
-	      results.push(f.changed = false);
-	    }
-	    return results;
-	  };
-	
-	  Fields.prototype.renderConnections = function() {
-	    return this.invoke("renderConnections");
-	  };
-	
-	  Fields.prototype.removeConnections = function() {
-	    return this.invoke("removeConnections");
-	  };
-	
-	  Fields.prototype.addField = function(name, value, direction) {
-	    var f, field, field_index, field_is_out, target;
-	    if (direction == null) {
-	      direction = "inputs";
-	    }
-	    f = false;
-	    field_is_out = direction !== "inputs";
-	    if ($.type(value) !== "object") {
-	      value = this.getFieldValueObject(value);
-	    }
-	    if (value.propagateDirty == null) {
-	      value.propagateDirty = true;
-	    }
-	    field = new ThreeNodes.Core.fields.models[value.type]({
-	      name: name,
-	      value: value.val,
-	      possibilities: value.values,
-	      node: this.node,
-	      is_output: field_is_out,
-	      "default": value["default"],
-	      subfield: value.subfield,
-	      indexer: this.indexer,
-	      propagateDirty: value.propagateDirty
-	    });
-	    target = field.get("is_output") === false ? "inputs" : "outputs";
-	    field_index = field.get("name");
-	    if (field.subfield) {
-	      field_index += "-" + field.subfield.node.get("nid");
-	    }
-	    this[target][field_index] = field;
-	    this.add(field);
-	    return field;
-	  };
-	
-	  Fields.prototype.addFields = function(fields_array) {
-	    var dir, fname, value;
-	    for (dir in fields_array) {
-	      for (fname in fields_array[dir]) {
-	        value = fields_array[dir][fname];
-	        this.addField(fname, value, dir);
-	      }
-	    }
-	    return this;
-	  };
-	
-	  Fields.prototype.renderSidebar = function() {
-	    this.trigger("renderSidebar");
-	    return this;
-	  };
-	
-	  Fields.prototype.getFieldValueObject = function(default_value) {
-	    var ftype, res;
-	    ftype = (function() {
-	      switch ($.type(default_value)) {
-	        case "number":
-	          return "Float";
-	        case "boolean":
-	          return "Bool";
-	        default:
-	          return "String";
-	      }
-	    })();
-	    res = {
-	      type: ftype,
-	      val: default_value
-	    };
-	    return res;
-	  };
-	
-	  return Fields;
-	
-	})(Backbone.Collection);
-	
-	module.exports = Fields;
-
-
-/***/ }),
-/* 21 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	var Any, Array, Backbone, Bool, BoolField, Camera, Color, Euler, EulerField, Float, FloatField, Fog, Geometry, Indexer, Material, Mesh, NodeField, Object3D, Quaternion, QuaternionField, Scene, String, StringField, Texture, Vector2, Vector2Field, Vector3, Vector3Field, Vector4, Vector4Field, _, namespace,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	Indexer = __webpack_require__(4);
-	
-	namespace = __webpack_require__(15).namespace;
-	
-	BoolField = __webpack_require__(22);
-	
-	StringField = __webpack_require__(28);
-	
-	FloatField = __webpack_require__(29);
-	
-	Vector2Field = __webpack_require__(30);
-	
-	Vector3Field = __webpack_require__(31);
-	
-	Vector4Field = __webpack_require__(32);
-	
-	QuaternionField = __webpack_require__(33);
-	
-	EulerField = __webpack_require__(34);
-	
-	
-	/* Field model */
-	
-	NodeField = (function(superClass) {
-	  extend(NodeField, superClass);
-	
-	  function NodeField() {
-	    this.onValueChanged = bind(this.onValueChanged, this);
-	    this.removeConnections = bind(this.removeConnections, this);
-	    this.unregisterConnection = bind(this.unregisterConnection, this);
-	    this.addConnection = bind(this.addConnection, this);
-	    this.computeValue = bind(this.computeValue, this);
-	    this.renderConnections = bind(this.renderConnections, this);
-	    this.toJSON = bind(this.toJSON, this);
-	    this.isAnimationProperty = bind(this.isAnimationProperty, this);
-	    this.getSliceCount = bind(this.getSliceCount, this);
-	    this.isConnected = bind(this.isConnected, this);
-	    this.isChanged = bind(this.isChanged, this);
-	    this.getValue = bind(this.getValue, this);
-	    this.setValue = bind(this.setValue, this);
-	    this.remove = bind(this.remove, this);
-	    this.initialize = bind(this.initialize, this);
-	    this.load = bind(this.load, this);
-	    this.set = bind(this.set, this);
-	    this._validate = bind(this._validate, this);
-	    this.sync = bind(this.sync, this);
-	    return NodeField.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  NodeField.VIEW = false;
-	
-	  NodeField.STATIC_INDEXER = new Indexer();
-	
-	  NodeField.prototype.defaults = function() {
-	    return {
-	      fid: -1,
-	      name: "fieldname",
-	      machine_name: "fieldname-nid",
-	      is_output: false,
-	      value: 0,
-	      "default": null
-	    };
-	  };
-	
-	  NodeField.prototype.sync = function() {};
-	
-	  NodeField.prototype._validate = function(attrs, options) {
-	    return true;
-	  };
-	
-	  NodeField.prototype.set = function(key, value, options) {
-	    if (options == null) {
-	      options = {};
-	    }
-	    if (key === "value") {
-	      this.attributes[key] = value;
-	      return this;
-	    }
-	    return NodeField.__super__.set.apply(this, arguments);
-	  };
-	
-	  NodeField.prototype.load = function(data) {
-	    var property;
-	    if (!data && data !== false) {
-	      return;
-	    }
-	    if ($.type(data) !== "object") {
-	      this.setValue(data);
-	    } else {
-	      for (property in data) {
-	        this.attributes.value[property] = data[property];
-	      }
-	    }
-	    return this;
-	  };
-	
-	  NodeField.prototype.initialize = function(options) {
-	    var indexer, self;
-	    self = this;
-	    this.node = options.node;
-	    this.subfield = options.subfield;
-	    this.propagateDirty = options.propagateDirty != null ? options.propagateDirty : true;
-	    indexer = options.indexer || ThreeNodes.NodeField.STATIC_INDEXER;
-	    this.changed = true;
-	    this.connections = [];
-	    this.on_value_update_hooks = {};
-	    this.set("machine_name", this.get("name"));
-	    if (this.subfield && this.subfield.node) {
-	      this.set("machine_name", this.get("name") + "-" + this.subfield.node.get("nid"));
-	    }
-	    if (this.get("fid") === -1) {
-	      return this.set("fid", indexer.getUID());
-	    }
-	  };
-	
-	  NodeField.prototype.remove = function() {
-	    delete this.on_value_update_hooks;
-	    delete this.node;
-	    delete this.connections;
-	    delete this.button;
-	    delete this.subfield;
-	    return this.destroy();
-	  };
-	
-	  NodeField.prototype.isEqual = function(val, prev) {
-	    var i, j, len, prev1, same_array, val1;
-	    if (_.isArray(val) && _.isArray(prev)) {
-	      if (val.length !== prev.length) {
-	        return false;
-	      }
-	      same_array = true;
-	      for (i = j = 0, len = val.length; j < len; i = ++j) {
-	        val1 = val[i];
-	        prev1 = prev[i];
-	        if (this.isEqual(val1, prev1) === false) {
-	          same_array = false;
-	          break;
-	        }
-	      }
-	      if (same_array === false) {
-	        return false;
-	      } else {
-	        return true;
-	      }
-	    } else if (_.isObject(val) && _.isObject(prev)) {
-	      if ((val.uuid != null) && (prev.uuid != null) && val.uuid === prev.uuid) {
-	        return true;
-	      }
-	      return false;
-	    } else if (val === prev) {
-	      return true;
-	    }
-	    return false;
-	  };
-	
-	  NodeField.prototype.setValue = function(v) {
-	    var connection, default_val, hook, j, len, new_val, prev_val, propagate, ref, setNodeDirty, tmp_val;
-	    prev_val = this.attributes["value"];
-	    if (this.isEqual(v, prev_val)) {
-	      return false;
-	    }
-	    this.changed = true;
-	    propagate = this.propagateDirty;
-	    setNodeDirty = function(node) {
-	      node.dirty = true;
-	      if (propagate && node.parent) {
-	        return setNodeDirty(node.parent);
-	      }
-	    };
-	    if (this.node) {
-	      setNodeDirty(this.node);
-	    }
-	    new_val = this.onValueChanged(v);
-	    if ($.type(new_val) === "array") {
-	      tmp_val = _.filter(new_val, function(item) {
-	        return item !== null;
-	      });
-	      if (this.constructor === Array) {
-	        new_val = tmp_val;
-	      } else {
-	        if (tmp_val.length !== 0) {
-	          new_val = tmp_val;
-	        } else {
-	          new_val = null;
-	        }
-	      }
-	    }
-	    if (new_val === null) {
-	      default_val = this.attributes["default"];
-	      if (default_val !== null && default_val !== void 0) {
-	        prev_val = default_val;
-	      }
-	      new_val = prev_val;
-	    }
-	    this.attributes["value"] = new_val;
-	    this.trigger("value_updated", new_val);
-	    for (hook in this.on_value_update_hooks) {
-	      this.on_value_update_hooks[hook](new_val);
-	    }
-	    if (this.attributes["is_output"] === true) {
-	      ref = this.connections;
-	      for (j = 0, len = ref.length; j < len; j++) {
-	        connection = ref[j];
-	        connection.to_field.setValue(new_val);
-	      }
-	    }
-	    return true;
-	  };
-	
-	  NodeField.prototype.getValue = function(index) {
-	    var val;
-	    if (index == null) {
-	      index = 0;
-	    }
-	    val = this.attributes["value"];
-	    if ($.type(val) !== "array") {
-	      return val;
-	    } else {
-	      return val[index % val.length];
-	    }
-	  };
-	
-	  NodeField.prototype.isChanged = function() {
-	    var res;
-	    res = this.changed;
-	    this.changed = false;
-	    return res;
-	  };
-	
-	  NodeField.prototype.isConnected = function() {
-	    return this.connections.length > 0;
-	  };
-	
-	  NodeField.prototype.getSliceCount = function() {
-	    var val;
-	    val = this.attributes["value"];
-	    if (jQuery.type(val) !== "array") {
-	      return 1;
-	    }
-	    return val.length;
-	  };
-	
-	  NodeField.prototype.isAnimationProperty = function() {
-	    if (this.constructor === Float || this.constructor === Bool) {
-	      return true;
-	    }
-	    return false;
-	  };
-	
-	  NodeField.prototype.toJSON = function() {
-	    var res, val, val_type;
-	    res = {
-	      name: this.get("name")
-	    };
-	    if (this.subfield) {
-	      res.nid = this.subfield.node.get("nid");
-	    }
-	    val = this.get("value");
-	    val_type = jQuery.type(val);
-	    if (val_type !== "object" && val_type !== "array") {
-	      res.val = val;
-	    }
-	    if (val_type === "object") {
-	      if (val.constructor === THREE.Vector2 || val.constructor === THREE.Vector3 || val.constructor === THREE.Vector4 || val.constructor === THREE.Color) {
-	        res.val = val;
-	      }
-	    }
-	    return res;
-	  };
-	
-	  NodeField.prototype.renderConnections = function() {
-	    var connection, j, len, ref;
-	    ref = this.connections;
-	    for (j = 0, len = ref.length; j < len; j++) {
-	      connection = ref[j];
-	      connection.render();
-	    }
-	    return true;
-	  };
-	
-	  NodeField.prototype.computeValue = function(val) {
-	    return val;
-	  };
-	
-	  NodeField.prototype.addConnection = function(c) {
-	    if (this.connections.indexOf(c) === -1) {
-	      this.connections.push(c);
-	      if (this.get("is_output") === true) {
-	        this.node.addOutConnection(c, this);
-	      }
-	      this.node.disablePropertyAnim(this);
-	    }
-	    return c;
-	  };
-	
-	  NodeField.prototype.unregisterConnection = function(c) {
-	    var ind;
-	    this.node.removeConnection(c);
-	    ind = this.connections.indexOf(c);
-	    if (ind !== -1) {
-	      this.connections.splice(ind, 1);
-	    }
-	    if (this.connections.length === 0) {
-	      return this.node.enablePropertyAnim(this);
-	    }
-	  };
-	
-	  NodeField.prototype.removeConnections = function() {
-	    while (this.connections.length > 0) {
-	      this.connections[0].remove();
-	    }
-	    return this;
-	  };
-	
-	  NodeField.prototype.onValueChanged = function(val) {
-	    var self;
-	    self = this;
-	    if ($.type(val) === "array") {
-	      return _.map(val, function(n) {
-	        return self.computeValue(n);
-	      });
-	    }
-	    return this.computeValue(val);
-	  };
-	
-	  return NodeField;
-	
-	})(Backbone.Model);
-	
-	Any = (function(superClass) {
-	  extend(Any, superClass);
-	
-	  function Any() {
-	    this.onValueChanged = bind(this.onValueChanged, this);
-	    this.computeValue = bind(this.computeValue, this);
-	    return Any.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Any.prototype.computeValue = function(val) {
-	    return val;
-	  };
-	
-	  Any.prototype.onValueChanged = function(val) {
-	    return val;
-	  };
-	
-	  return Any;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Any', Any);
-	
-	Array = (function(superClass) {
-	  extend(Array, superClass);
-	
-	  function Array() {
-	    this.getValue = bind(this.getValue, this);
-	    this.onValueChanged = bind(this.onValueChanged, this);
-	    this.removeConnections = bind(this.removeConnections, this);
-	    this.computeValue = bind(this.computeValue, this);
-	    return Array.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Array.prototype.computeValue = function(val) {
-	    if (!val || val === false) {
-	      return [];
-	    }
-	    if ($.type(val) === "array") {
-	      return val;
-	    } else {
-	      return [val];
-	    }
-	  };
-	
-	  Array.prototype.removeConnections = function() {
-	    Array.__super__.removeConnections.apply(this, arguments);
-	    if (this.get("is_output") === false) {
-	      return this.setValue([]);
-	    }
-	  };
-	
-	  Array.prototype.onValueChanged = function(val) {
-	    return this.computeValue(val);
-	  };
-	
-	  Array.prototype.getValue = function(index) {
-	    if (index == null) {
-	      index = 0;
-	    }
-	    return this.get("value");
-	  };
-	
-	  return Array;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Array', Array);
-	
-	Bool = (function(superClass) {
-	  extend(Bool, superClass);
-	
-	  function Bool() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Bool.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Bool.VIEW = BoolField;
-	
-	  Bool.prototype.computeValue = function(val) {
-	    switch ($.type(val)) {
-	      case "boolean":
-	        return val;
-	      case "number":
-	        return val !== 0;
-	      case "string":
-	        return val === "1";
-	    }
-	    return null;
-	  };
-	
-	  return Bool;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Bool', Bool);
-	
-	String = (function(superClass) {
-	  extend(String, superClass);
-	
-	  function String() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return String.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  String.VIEW = StringField;
-	
-	  String.prototype.computeValue = function(val) {
-	    switch ($.type(val)) {
-	      case "array":
-	        return val;
-	      case "number":
-	        return val.toString;
-	      case "string":
-	        return val;
-	    }
-	    return null;
-	  };
-	
-	  return String;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('String', String);
-	
-	Float = (function(superClass) {
-	  extend(Float, superClass);
-	
-	  function Float() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Float.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Float.VIEW = FloatField;
-	
-	  Float.prototype.computeValue = function(val) {
-	    switch ($.type(val)) {
-	      case "number":
-	      case "string":
-	        return parseFloat(val);
-	      case "object":
-	        if (val.constructor === THREE.Vector2 || val.constructor === THREE.Vector3) {
-	          return val;
-	        }
-	        break;
-	      case "boolean":
-	        if (val === true) {
-	          return 1;
-	        } else {
-	          return 0;
-	        }
-	    }
-	    return null;
-	  };
-	
-	  return Float;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Float', Float);
-	
-	Vector2 = (function(superClass) {
-	  extend(Vector2, superClass);
-	
-	  function Vector2() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Vector2.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Vector2.VIEW = Vector2Field;
-	
-	  Vector2.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val.constructor === THREE.Vector2) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Vector2;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Vector2', Vector2);
-	
-	Vector3 = (function(superClass) {
-	  extend(Vector3, superClass);
-	
-	  function Vector3() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Vector3.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Vector3.VIEW = Vector3Field;
-	
-	  Vector3.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val.constructor === THREE.Vector3) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Vector3;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Vector3', Vector3);
-	
-	Vector4 = (function(superClass) {
-	  extend(Vector4, superClass);
-	
-	  function Vector4() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Vector4.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Vector4.VIEW = Vector4Field;
-	
-	  Vector4.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val.constructor === THREE.Vector4) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Vector4;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Vector4', Vector4);
-	
-	Quaternion = (function(superClass) {
-	  extend(Quaternion, superClass);
-	
-	  function Quaternion() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Quaternion.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Quaternion.VIEW = QuaternionField;
-	
-	  Quaternion.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val.constructor === THREE.Quaternion) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Quaternion;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Quaternion', Quaternion);
-	
-	Euler = (function(superClass) {
-	  extend(Euler, superClass);
-	
-	  function Euler() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Euler.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Euler.VIEW = EulerField;
-	
-	  Euler.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val.constructor === THREE.Euler) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Euler;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Euler', Euler);
-	
-	Color = (function(superClass) {
-	  extend(Color, superClass);
-	
-	  function Color() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Color.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Color.VIEW = false;
-	
-	  Color.prototype.computeValue = function(val) {
-	    switch ($.type(val)) {
-	      case "number":
-	        return new THREE.Color().setRGB(val, val, val);
-	      case "object":
-	        switch (val.constructor) {
-	          case THREE.Color:
-	            return val;
-	          case THREE.Vector3:
-	            return new THREE.Color().setRGB(val.x, val.y, val.z);
-	        }
-	        break;
-	      case "boolean":
-	        if (val) {
-	          return new THREE.Color(0xffffff);
-	        } else {
-	          return new THREE.Color(0x000000);
-	        }
-	    }
-	    return null;
-	  };
-	
-	  return Color;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Color', Color);
-	
-	Object3D = (function(superClass) {
-	  extend(Object3D, superClass);
-	
-	  function Object3D() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Object3D.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Object3D.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val.constructor === THREE.Object3D || val instanceof THREE.Object3D) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Object3D;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Object3D', Object3D);
-	
-	Scene = (function(superClass) {
-	  extend(Scene, superClass);
-	
-	  function Scene() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Scene.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Scene.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val instanceof THREE.Scene) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Scene;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Scene', Scene);
-	
-	Camera = (function(superClass) {
-	  extend(Camera, superClass);
-	
-	  function Camera() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Camera.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Camera.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val instanceof THREE.Camera || val instanceof THREE.PerspectiveCamera || val instanceof THREE.OrthographicCamera) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Camera;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Camera', Camera);
-	
-	Mesh = (function(superClass) {
-	  extend(Mesh, superClass);
-	
-	  function Mesh() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Mesh.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Mesh.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val.constructor === THREE.Mesh || val instanceof THREE.Mesh) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Mesh;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Mesh', Mesh);
-	
-	Geometry = (function(superClass) {
-	  extend(Geometry, superClass);
-	
-	  function Geometry() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Geometry.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Geometry.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val.constructor === THREE.Geometry || val instanceof THREE.Geometry) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Geometry;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Geometry', Geometry);
-	
-	Material = (function(superClass) {
-	  extend(Material, superClass);
-	
-	  function Material() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Material.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Material.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val.constructor === THREE.Material || val instanceof THREE.Material) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Material;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Material', Material);
-	
-	Texture = (function(superClass) {
-	  extend(Texture, superClass);
-	
-	  function Texture() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Texture.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Texture.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val.constructor === THREE.Texture || val instanceof THREE.Texture) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Texture;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Texture', Texture);
-	
-	Fog = (function(superClass) {
-	  extend(Fog, superClass);
-	
-	  function Fog() {
-	    this.computeValue = bind(this.computeValue, this);
-	    return Fog.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Fog.prototype.computeValue = function(val) {
-	    if ($.type(val) === "object") {
-	      if (val.constructor === THREE.Fog || val.constructor === THREE.FogExp2) {
-	        return val;
-	      }
-	    }
-	    return null;
-	  };
-	
-	  return Fog;
-	
-	})(NodeField);
-	
-	ThreeNodes.Core.addFieldType('Fog', Fog);
-
-
-/***/ }),
-/* 22 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	var Backbone, BaseField, BoolField, _, namespace,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	namespace = __webpack_require__(15).namespace;
-	
-	BaseField = __webpack_require__(23);
-	
-	
-	/* SidebarField View */
-	
-	BoolField = (function(superClass) {
-	  extend(BoolField, superClass);
-	
-	  function BoolField() {
-	    this.render = bind(this.render, this);
-	    this.on_value_updated = bind(this.on_value_updated, this);
-	    return BoolField.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  BoolField.prototype.on_value_updated = function(new_val) {
-	    if (this.model.getValue() === true) {
-	      return this.$checkbox.attr('checked', 'checked');
-	    } else {
-	      return this.$checkbox.removeAttr('checked');
-	    }
-	  };
-	
-	  BoolField.prototype.render = function() {
-	    var $container, $target, id;
-	    console.log("check..");
-	    $target = this.createSidebarContainer();
-	    id = "side-field-checkbox-" + (this.model.get('fid'));
-	    $container = $("<div><input type='checkbox' id='" + id + "'/></div>").appendTo($target);
-	    this.$checkbox = $("input", $container);
-	    if (this.model.getValue() === true) {
-	      this.$checkbox.attr('checked', 'checked');
-	    }
-	    this.$checkbox.change((function(_this) {
-	      return function(e) {
-	        if (_this.$checkbox.is(':checked')) {
-	          return _this.model.setValue(true);
-	        } else {
-	          return _this.model.setValue(false);
-	        }
-	      };
-	    })(this));
-	    return this;
-	  };
-	
-	  return BoolField;
-	
-	})(BaseField);
-	
-	module.exports = BoolField;
-
-
-/***/ }),
-/* 23 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	var Backbone, BaseField, SidebarTextfield, _, _view_field_sidebar_container,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	_view_field_sidebar_container = __webpack_require__(24);
-	
-	SidebarTextfield = __webpack_require__(25);
-	
-	
-	/* BaseField View */
-	
-	BaseField = (function(superClass) {
-	  extend(BaseField, superClass);
-	
-	  function BaseField() {
-	    this.createSidebarFieldTitle = bind(this.createSidebarFieldTitle, this);
-	    this.createSubvalTextinput = bind(this.createSubvalTextinput, this);
-	    this.createTextfield = bind(this.createTextfield, this);
-	    this.createSidebarContainer = bind(this.createSidebarContainer, this);
-	    this.render = bind(this.render, this);
-	    this.on_value_updated = bind(this.on_value_updated, this);
-	    return BaseField.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  BaseField.prototype.initialize = function(options) {
-	    BaseField.__super__.initialize.apply(this, arguments);
-	    this.model.on("value_updated", this.on_value_updated);
-	    return this.render();
-	  };
-	
-	  BaseField.prototype.on_value_updated = function(new_val) {
-	    return this;
-	  };
-	
-	  BaseField.prototype.render = function() {
-	    return this;
-	  };
-	
-	  BaseField.prototype.createSidebarContainer = function(name) {
-	    var options;
-	    if (name == null) {
-	      name = this.model.get("name");
-	    }
-	    options = {
-	      fid: this.model.get("fid"),
-	      model: this,
-	      name: name
-	    };
-	    this.container = $(_.template(_view_field_sidebar_container, options));
-	    this.$el.append(this.container);
-	    return this.container;
-	  };
-	
-	  BaseField.prototype.createTextfield = function($target, type, link_to_val) {
-	    var textField;
-	    if (type == null) {
-	      type = "float";
-	    }
-	    if (link_to_val == null) {
-	      link_to_val = true;
-	    }
-	    textField = new SidebarTextfield({
-	      model: this.model,
-	      el: $target,
-	      type: type,
-	      link_to_val: link_to_val
-	    });
-	    return textField;
-	  };
-	
-	  BaseField.prototype.createSubvalTextinput = function(subval, type) {
-	    var $target, textfield;
-	    if (type == null) {
-	      type = "float";
-	    }
-	    $target = this.createSidebarContainer(subval);
-	    textfield = this.createTextfield($target, type, false);
-	    textfield.linkTextfieldToSubval(subval, type);
-	    return false;
-	  };
-	
-	  BaseField.prototype.createSidebarFieldTitle = function(name) {
-	    if (name == null) {
-	      name = this.model.get("name");
-	    }
-	    this.$el.append("<h3>" + name + "</h3>");
-	    return this.$el;
-	  };
-	
-	  return BaseField;
-	
-	})(Backbone.View);
-	
-	module.exports = BaseField;
-
-
-/***/ }),
-/* 24 */
-/***/ (function(module, exports) {
-
-	module.exports = "<div data-fid=\"<%= fid %>\" class='field-wrapper'>\n  <h3><%= name %></h3>\n</div>\n";
-
-/***/ }),
-/* 25 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	var Backbone, DraggableNumber, SidebarTextfield, _, _view_field_textfield,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	_view_field_textfield = __webpack_require__(26);
-	
-	DraggableNumber = __webpack_require__(27);
-	
-	
-	/* SidebarTextfield View */
-	
-	SidebarTextfield = (function(superClass) {
-	  extend(SidebarTextfield, superClass);
-	
-	  function SidebarTextfield() {
-	    this.addTextfieldSlider = bind(this.addTextfieldSlider, this);
-	    this.linkTextfieldToSubval = bind(this.linkTextfieldToSubval, this);
-	    this.linkTextfieldToVal = bind(this.linkTextfieldToVal, this);
-	    this.render = bind(this.render, this);
-	    return SidebarTextfield.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  SidebarTextfield.prototype.initialize = function(options) {
-	    SidebarTextfield.__super__.initialize.apply(this, arguments);
-	    this.slider = false;
-	    return this.render();
-	  };
-	
-	  SidebarTextfield.prototype.render = function() {
-	    this.container = $(_.template(_view_field_textfield, this.options));
-	    this.$el.append(this.container);
-	    this.$input = $("input", this.container);
-	    return this;
-	  };
-	
-	  SidebarTextfield.prototype.linkTextfieldToVal = function(type) {
-	    var on_value_changed;
-	    if (type == null) {
-	      type = "float";
-	    }
-	    this.$input.val(this.model.getValue());
-	    if (this.options.type === "float" && this.slider === false) {
-	      this.slider = this.addTextfieldSlider();
-	    }
-	    on_value_changed = (function(_this) {
-	      return function(v) {
-	        if (_this.slider) {
-	          return _this.slider.set(v);
-	        }
-	      };
-	    })(this);
-	    this.model.on("value_updated", on_value_changed);
-	    this.$input.val(this.model.getValue());
-	    if (this.slider) {
-	      this.slider._options.changeCallback = (function(_this) {
-	        return function(new_val) {
-	          return _this.model.setValue(new_val);
-	        };
-	      })(this);
-	    }
-	    this.$input.keypress((function(_this) {
-	      return function(e) {
-	        if (e.which === 13) {
-	          if (type === "float") {
-	            _this.model.setValue(parseFloat(_this.$input.val()));
-	          } else {
-	            _this.model.setValue(_this.$input.val());
-	          }
-	          return _this.$input.blur();
-	        }
-	      };
-	    })(this));
-	    return this;
-	  };
-	
-	  SidebarTextfield.prototype.linkTextfieldToSubval = function(subval, type) {
-	    var updateVal;
-	    if (type == null) {
-	      type = "float";
-	    }
-	    this.$input.val(this.model.getValue()[subval]);
-	    if (this.options.type === "float") {
-	      this.slider = this.addTextfieldSlider();
-	    }
-	    this.model.on_value_update_hooks["update_sidebar_textfield_" + subval] = (function(_this) {
-	      return function(v) {
-	        return _this.$input.val(v[subval]);
-	      };
-	    })(this);
-	    updateVal = (function(_this) {
-	      return function() {
-	        var dval;
-	        dval = _this.$input.val();
-	        if (type === "float") {
-	          dval = parseFloat(dval);
-	        }
-	        if ($.type(_this.model.attributes.value) === "array") {
-	          return _this.model.attributes.value[0][subval] = dval;
-	        } else {
-	          return _this.model.attributes.value[subval] = dval;
-	        }
-	      };
-	    })(this);
-	    this.slider._options.changeCallback = (function(_this) {
-	      return function(new_val) {
-	        return updateVal();
-	      };
-	    })(this);
-	    this.$input.change((function(_this) {
-	      return function(e) {
-	        return updateVal();
-	      };
-	    })(this));
-	    this.$input.keypress((function(_this) {
-	      return function(e) {
-	        if (e.which === 13) {
-	          updateVal();
-	          return _this.$input.blur();
-	        }
-	      };
-	    })(this));
-	    return this;
-	  };
-	
-	  SidebarTextfield.prototype.addTextfieldSlider = function() {
-	    var slider;
-	    slider = new DraggableNumber(this.$input.get(0));
-	    return slider;
-	  };
-	
-	  return SidebarTextfield;
-	
-	})(Backbone.View);
-	
-	module.exports = SidebarTextfield;
-
-
-/***/ }),
-/* 26 */
-/***/ (function(module, exports) {
-
-	module.exports = "<div class='input-container'>\n  <input type='text' class='field-<%= type %>' />\n</div>\n";
-
-/***/ }),
-/* 27 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	/**!
-	 * draggable-number.js
-	 * Minimal numeric input widget
-	 *
-	 * @license Licensed under the MIT (http://www.opensource.org/licenses/mit-license.php) license.
-	 * @author David Mignot - http://idflood.com
-	 * @version 0.3.0
-	 **/
-	(function(root, factory) {
-	    if(true) {
-	        module.exports = factory();
-	    }
-	    else if(typeof define === 'function' && define.amd) {
-	        define([], factory);
-	    }
-	    else {
-	        root['DraggableNumber'] = factory();
-	    }
-	}(this, function() {
-	// Utility function to replace .bind(this) since it is not available in all browsers.
-	var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-	
-	/**
-	 * Define the DraggableNumber element.
-	 * @constructor
-	 * @param {DomElement} input - The input which will be converted to a draggableNumber.
-	 */
-	DraggableNumber = function (input, options) {
-	  this._options = options !== undefined ? options : {};
-	
-	  this._input = input;
-	  this._span = document.createElement("span");
-	  this._isDragging = false;
-	  this._lastMousePosition = {x: 0, y: 0};
-	  this._value = 0;
-	
-	  // Minimum mouse movement before a drag start.
-	  this._dragThreshold = this._setOption('dragThreshold', 10);
-	
-	  // Min/max value.
-	  this._min = this._setOption('min', -Infinity);
-	  this._max = this._setOption('max', Infinity);
-	
-	  // Store the original display style for the input and span.
-	  this._inputDisplayStyle = "";
-	  this._spanDisplayStyle = "";
-	
-	  this._init();
-	};
-	
-	/**
-	 * Constant used when there is no key modifier.
-	 * @constant
-	 * type {Number}
-	 */
-	DraggableNumber.MODIFIER_NONE = 0;
-	
-	/**
-	 * Constant used when there is a shift key modifier.
-	 * @constant
-	 * type {Number}
-	 */
-	DraggableNumber.MODIFIER_LARGE = 1;
-	
-	/**
-	 * Constant used when there is a control key modifier.
-	 * @constant
-	 * type {Number}
-	 */
-	DraggableNumber.MODIFIER_SMALL = 2;
-	
-	DraggableNumber.prototype = {
-	  constructor: DraggableNumber,
-	
-	  /**
-	   * Initialize the DraggableNumber.
-	   * @private
-	   */
-	  _init: function () {
-	    // Get the inital _value from the input.
-	    this._value = parseFloat(this._input.value, 10);
-	
-	    // Add a span containing the _value. Clicking on the span will show the
-	    // input. Dragging the span will change the _value.
-	    this._addSpan();
-	
-	    // Save the original display style of the input and span.
-	    this._inputDisplayStyle = this._input.style.display;
-	    this._spanDisplayStyle = this._span.style.display;
-	
-	    // Hide the input.
-	    this._input.style.display = 'none';
-	
-	    // Bind 'this' on event callbacks.
-	    this._onMouseUp = __bind(this._onMouseUp, this);
-	    this._onMouseMove = __bind(this._onMouseMove, this);
-	    this._onMouseDown = __bind(this._onMouseDown, this);
-	    this._onInputBlur = __bind(this._onInputBlur, this);
-	    this._onInputKeyDown = __bind(this._onInputKeyDown, this);
-	    this._onInputChange = __bind(this._onInputChange, this);
-	
-	    // Add mousedown event handler.
-	    this._span.addEventListener('mousedown', this._onMouseDown, false);
-	
-	    // Add key events on the input.
-	    this._input.addEventListener('blur', this._onInputBlur, false);
-	    this._input.addEventListener('keypress', this._onInputKeyDown, false);
-	
-	    // Directly assign the function instead of using addeventlistener.
-	    // To programatically change the _value of the draggableNumber you
-	    // could then do:
-	    // input._value = new_number;
-	    // input.onchange();
-	    this._input.onchange = this._onInputChange;
-	  },
-	
-	  /**
-	   * Set the DraggableNumber value.
-	   * @public
-	   * @param {Number} new_value - The new value.
-	   */
-	  set: function (new_value) {
-	    new_value = this._constraintValue(new_value);
-	    this._value = new_value;
-	    this._input.value = this._value;
-	    this._span.innerHTML = this._value;
-	  },
-	
-	  /**
-	   * Get the DraggableNumber value.
-	   * @public
-	   * @returns {Number}
-	   */
-	  get: function () {
-	    return this._value;
-	  },
-	
-	  /**
-	   * Set the minimum value.
-	   * @public
-	   * @param {Number} min - The minimum value.
-	   */
-	  setMin: function (min) {
-	    this._min = min;
-	    // Set the value with current value to automatically constrain it if needed.
-	    this.set(this._value);
-	  },
-	
-	  /**
-	   * Set the maximum value.
-	   * @public
-	   * @param {Number} min - The minimum value.
-	   */
-	  setMax: function (max) {
-	    this._max = max;
-	    // Set the value with current value to automatically constrain it if needed.
-	    this.set(this._value);
-	  },
-	
-	  /**
-	   * Remove the DraggableNumber.
-	   * @public
-	   */
-	  destroy: function () {
-	    // Remove event listeners.
-	    this._span.removeEventListener('mousedown', this._onMouseDown, false);
-	    this._input.removeEventListener('blur', this._onInputBlur, false);
-	    this._input.removeEventListener('keypress', this._onInputKeyDown, false);
-	    document.removeEventListener('mouseup', this._onMouseUp, false);
-	    document.removeEventListener('mousemove', this._onMouseMove, false);
-	
-	    // Remove the span element.
-	    if (this._span.parentNode) {
-	      this._span.parentNode.removeChild(this._span);
-	    }
-	
-	    // Delete variables.
-	    delete this._input;
-	    delete this._span;
-	    delete this._inputDisplayStyle;
-	    delete this._spanDisplayStyle;
-	  },
-	
-	  /**
-	   * Set an option value based on the option parameter and the data attribute.
-	   * @private
-	   * @param {String} name - The option name.
-	   * @param {Number} defaultValue - The default value.
-	   * @returns {Number}
-	   */
-	  _setOption: function (name, defaultValue) {
-	    // Return the option if it is defined.
-	    if (this._options[name] !== undefined) {
-	      return this._options[name];
-	    }
-	    // Return the data attribute if it is defined.
-	    if (this._input.hasAttribute("data-" + name)) {
-	      return parseFloat(this._input.getAttribute("data-" + name), 10);
-	    }
-	    // If there is no option and no attribute, return the default value.
-	    return defaultValue;
-	  },
-	
-	  /**
-	   * Prevent selection on the whole document.
-	   * @private
-	   * @param {Boolean} prevent - Should we prevent or not the selection.
-	   */
-	  _preventSelection: function (prevent) {
-	    var value = 'none';
-	    if (prevent === false) {
-	      value = 'all';
-	    }
-	
-	    document.body.style['-moz-user-select'] = value;
-	    document.body.style['-webkit-user-select'] = value;
-	    document.body.style['-ms-user-select'] = value;
-	    document.body.style['user-select'] = value;
-	  },
-	
-	  /**
-	   * Add a span element before the input.
-	   * @private
-	   */
-	  _addSpan: function () {
-	    var inputParent = this._input.parentNode;
-	    inputParent.insertBefore(this._span, this._input);
-	    this._span.innerHTML = this.get();
-	
-	    // Add resize cursor.
-	    this._span.style.cursor = "col-resize";
-	  },
-	
-	  /**
-	   * Display the input and hide the span element.
-	   * @private
-	   */
-	  _showInput: function () {
-	    this._input.style.display = this._inputDisplayStyle;
-	    this._span.style.display = 'none';
-	    this._input.focus();
-	  },
-	
-	  /**
-	   * Show the span element and hide the input.
-	   * @private
-	   */
-	  _showSpan: function () {
-	    this._input.style.display = 'none';
-	    this._span.style.display = this._spanDisplayStyle;
-	  },
-	
-	  /**
-	   * Called on input blur, set the new value and display span.
-	   * @private
-	   * @param {Object} e - Event.
-	   */
-	  _onInputBlur: function (e) {
-	    this._onInputChange();
-	    this._showSpan();
-	  },
-	
-	  /**
-	   * Called on input onchange event, set the value based on the input value.
-	   * @private
-	   */
-	  _onInputChange: function () {
-	    this.set(parseFloat(this._input.value, 10));
-	  },
-	
-	  /**
-	   * Called on input key down, blur on enter.
-	   * @private
-	   * @param {Object} e - Key event.
-	   */
-	  _onInputKeyDown: function (e) {
-	    var keyEnter = 13;
-	    if (e.charCode == keyEnter) {
-	      this._input.blur();
-	    }
-	  },
-	
-	  /**
-	   * Called on span mouse down, prevent selection and initalize logic for mouse drag.
-	   * @private
-	   * @param {Object} e - Mouse event.
-	   */
-	  _onMouseDown: function (e) {
-	    this._preventSelection(true);
-	    this._isDragging = false;
-	    this._lastMousePosition = {x: e.clientX, y: e.clientY};
-	
-	    document.addEventListener('mouseup', this._onMouseUp, false);
-	    document.addEventListener('mousemove', this._onMouseMove, false);
-	  },
-	
-	  /**
-	   * Called on span mouse up, show input if no drag.
-	   * @private
-	   * @param {Object} e - Mouse event.
-	   */
-	  _onMouseUp: function (e) {
-	    this._preventSelection(false);
-	    // If we didn't drag the span then we display the input.
-	    if (this._isDragging === false) {
-	      this._showInput();
-	    }
-	    this._isDragging = false;
-	
-	    document.removeEventListener('mouseup', this._onMouseUp, false);
-	    document.removeEventListener('mousemove', this._onMouseMove, false);
-	  },
-	
-	  /**
-	   * Check if difference bettween 2 positions is above minimum threshold.
-	   * @private
-	   * @param {Object} newMousePosition - the new mouse position.
-	   * @param {Object} lastMousePosition - the last mouse position.
-	   * @returns {Boolean}
-	   */
-	  _hasMovedEnough: function (newMousePosition, lastMousePosition) {
-	    if (Math.abs(newMousePosition.x - lastMousePosition.x) >= this._dragThreshold ||
-	      Math.abs(newMousePosition.y - lastMousePosition.y) >= this._dragThreshold) {
-	      return true;
-	    }
-	    return false;
-	  },
-	
-	  _onMouseMove: function (e) {
-	    // Get the new mouse position.
-	    var newMousePosition = {x: e.clientX, y: e.clientY};
-	
-	    if (this._hasMovedEnough(newMousePosition, this._lastMousePosition)) {
-	      this._isDragging = true;
-	    }
-	
-	    // If we are not dragging don't do anything.
-	    if (this._isDragging === false) {
-	      return;
-	    }
-	
-	    // Get the increment modifier. Small increment * 0.1, large increment * 10.
-	    var modifier = DraggableNumber.MODIFIER_NONE;
-	    if (e.shiftKey) {
-	      modifier = DraggableNumber.MODIFIER_LARGE;
-	    }
-	    else if (e.ctrlKey) {
-	      modifier = DraggableNumber.MODIFIER_SMALL;
-	    }
-	
-	    // Calculate the delta with previous mouse position.
-	    var delta = this._getLargestDelta(newMousePosition, this._lastMousePosition);
-	
-	    // Get the number offset.
-	    var offset = this._getNumberOffset(delta, modifier);
-	
-	    // Update the input number.
-	    var new_value = this.get() + offset;
-	    this.set(new_value);
-	
-	    // Call onchange callback if it exists.
-	    if ("changeCallback" in this._options) {
-	      this._options.changeCallback(new_value);
-	    }
-	
-	    // Save current mouse position.
-	    this._lastMousePosition = newMousePosition;
-	  },
-	
-	  /**
-	   * Return the number offset based on a delta and a modifier.
-	   * @private
-	   * @param {Number} delta - a positive or negative number.
-	   * @param {Number} modifier - the modifier type.
-	   * @returns {Number}
-	   */
-	  _getNumberOffset: function (delta, modifier) {
-	    var increment = 1;
-	    if (modifier == DraggableNumber.MODIFIER_SMALL) {
-	      increment *= 0.1;
-	    }
-	    else if (modifier == DraggableNumber.MODIFIER_LARGE) {
-	      increment *= 10;
-	    }
-	    // Negative increment if delta is negative.
-	    if (delta < 0) {
-	      increment *= -1;
-	    }
-	    return increment;
-	  },
-	
-	  /**
-	   * Return the largest difference between two positions, either x or y.
-	   * @private
-	   * @param {Object} newMousePosition - the new mouse position.
-	   * @param {Object} lastMousePosition - the last mouse position.
-	   * @returns {Number}
-	   */
-	  _getLargestDelta: function (newPosition, oldPosition) {
-	    var result = 0;
-	    var delta = {
-	      x: newPosition.x - oldPosition.x,
-	      y: newPosition.y - oldPosition.y,
-	    };
-	
-	    if (Math.abs(delta.x) > Math.abs(delta.y)) {
-	      return delta.x;
-	    }
-	    else {
-	      // Inverse the position.y since mouse move to up should increase the _value.
-	      return delta.y * -1;
-	    }
-	  },
-	
-	  /**
-	   * Constrain a value between min and max.
-	   * @private
-	   * @param {Number} value - The value to constrain.
-	   * @returns {Number}
-	   */
-	  _constraintValue: function (value) {
-	    value = Math.min(value, this._max);
-	    value = Math.max(value, this._min);
-	    return value;
-	  }
-	};
-	
-	    return DraggableNumber;
-	}));
-	
-
-
-/***/ }),
-/* 28 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	var Backbone, BaseField, StringField, _, namespace,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	namespace = __webpack_require__(15).namespace;
-	
-	BaseField = __webpack_require__(23);
-	
-	
-	/* StringField View */
-	
-	StringField = (function(superClass) {
-	  extend(StringField, superClass);
-	
-	  function StringField() {
-	    this.create_sidebar_input = bind(this.create_sidebar_input, this);
-	    this.create_sidebar_select = bind(this.create_sidebar_select, this);
-	    this.render = bind(this.render, this);
-	    return StringField.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  StringField.prototype.render = function() {
-	    var $target;
-	    $target = this.createSidebarContainer();
-	    if (this.model.attributes.possibilities) {
-	      this.create_sidebar_select($target);
-	    } else {
-	      this.create_sidebar_input($target);
-	    }
-	    return true;
-	  };
-	
-	  StringField.prototype.create_sidebar_select = function($target) {
-	    var dval, f, input, self;
-	    self = this;
-	    input = "<div><select>";
-	    for (f in this.model.get("possibilities")) {
-	      dval = this.model.get("possibilities")[f];
-	      if (dval === this.val) {
-	        input += "<option value='" + dval + "' selected='selected'>" + f + "</option>";
-	      } else {
-	        input += "<option value='" + dval + "'>" + f + "</option>";
-	      }
-	    }
-	    input += "</select></div>";
-	    $target.append(input);
-	    $("select", $target).change((function(_this) {
-	      return function(e) {
-	        return _this.model.setValue($("select", $target).val());
-	      };
-	    })(this));
-	    return true;
-	  };
-	
-	  StringField.prototype.create_sidebar_input = function($target) {
-	    this.textfield = this.createTextfield($target, "string");
-	    return this.textfield.linkTextfieldToVal("string");
-	  };
-	
-	  return StringField;
-	
-	})(BaseField);
-	
-	module.exports = StringField;
-
-
-/***/ }),
-/* 29 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	var Backbone, BaseField, FloatField, _, namespace,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	namespace = __webpack_require__(15).namespace;
-	
-	BaseField = __webpack_require__(23);
-	
-	
-	/* FloatField View */
-	
-	FloatField = (function(superClass) {
-	  extend(FloatField, superClass);
-	
-	  function FloatField() {
-	    this.create_sidebar_input = bind(this.create_sidebar_input, this);
-	    this.create_sidebar_select = bind(this.create_sidebar_select, this);
-	    this.render = bind(this.render, this);
-	    return FloatField.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  FloatField.prototype.initialize = function(options) {
-	    return FloatField.__super__.initialize.apply(this, arguments);
-	  };
-	
-	  FloatField.prototype.render = function() {
-	    var $target;
-	    $target = this.createSidebarContainer();
-	    if (this.model.attributes.possibilities) {
-	      this.create_sidebar_select($target);
-	    } else {
-	      this.create_sidebar_input($target);
-	    }
-	    return true;
-	  };
-	
-	  FloatField.prototype.create_sidebar_select = function($target) {
-	    var dval, f, input, self;
-	    self = this;
-	    input = "<div><select>";
-	    for (f in this.model.get("possibilities")) {
-	      dval = this.model.get("possibilities")[f];
-	      if (dval === this.val) {
-	        input += "<option value='" + dval + "' selected='selected'>" + f + "</option>";
-	      } else {
-	        input += "<option value='" + dval + "'>" + f + "</option>";
-	      }
-	    }
-	    input += "</select></div>";
-	    $target.append(input);
-	    $("select", $target).change((function(_this) {
-	      return function(e) {
-	        return _this.model.setValue($("select", $target).val());
-	      };
-	    })(this));
-	    return true;
-	  };
-	
-	  FloatField.prototype.create_sidebar_input = function($target) {
-	    this.textfield = this.createTextfield($target);
-	    return this.textfield.linkTextfieldToVal();
-	  };
-	
-	  return FloatField;
-	
-	})(BaseField);
-	
-	module.exports = FloatField;
-
-
-/***/ }),
-/* 30 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	var Backbone, BaseField, Vector2Field, _, namespace,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	namespace = __webpack_require__(15).namespace;
-	
-	BaseField = __webpack_require__(23);
-	
-	
-	/* Vector2Field View */
-	
-	Vector2Field = (function(superClass) {
-	  extend(Vector2Field, superClass);
-	
-	  function Vector2Field() {
-	    this.render = bind(this.render, this);
-	    return Vector2Field.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Vector2Field.prototype.render = function() {
-	    this.createSidebarFieldTitle();
-	    this.createSubvalTextinput("x");
-	    this.createSubvalTextinput("y");
-	    return this;
-	  };
-	
-	  return Vector2Field;
-	
-	})(BaseField);
-	
-	module.exports = Vector2Field;
-
-
-/***/ }),
-/* 31 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	var Backbone, BaseField, Vector3Field, _, namespace,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	namespace = __webpack_require__(15).namespace;
-	
-	BaseField = __webpack_require__(23);
-	
-	
-	/* Vector3Field View */
-	
-	Vector3Field = (function(superClass) {
-	  extend(Vector3Field, superClass);
-	
-	  function Vector3Field() {
-	    this.render = bind(this.render, this);
-	    return Vector3Field.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Vector3Field.prototype.render = function() {
-	    this.createSidebarFieldTitle();
-	    this.createSubvalTextinput("x");
-	    this.createSubvalTextinput("y");
-	    this.createSubvalTextinput("z");
-	    return this;
-	  };
-	
-	  return Vector3Field;
-	
-	})(BaseField);
-	
-	module.exports = Vector3Field;
-
-
-/***/ }),
-/* 32 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	var Backbone, BaseField, Vector4Field, _, namespace,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	namespace = __webpack_require__(15).namespace;
-	
-	BaseField = __webpack_require__(23);
-	
-	
-	/* Vector4Field View */
-	
-	Vector4Field = (function(superClass) {
-	  extend(Vector4Field, superClass);
-	
-	  function Vector4Field() {
-	    this.render = bind(this.render, this);
-	    return Vector4Field.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Vector4Field.prototype.render = function() {
-	    this.createSidebarFieldTitle();
-	    this.createSubvalTextinput("x");
-	    this.createSubvalTextinput("y");
-	    this.createSubvalTextinput("z");
-	    this.createSubvalTextinput("w");
-	    return this;
-	  };
-	
-	  return Vector4Field;
-	
-	})(BaseField);
-	
-	module.exports = Vector4Field;
-
-
-/***/ }),
-/* 33 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	var Backbone, BaseField, QuaternionField, _, namespace,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	namespace = __webpack_require__(15).namespace;
-	
-	BaseField = __webpack_require__(23);
-	
-	
-	/* Vector3Field View */
-	
-	QuaternionField = (function(superClass) {
-	  extend(QuaternionField, superClass);
-	
-	  function QuaternionField() {
-	    this.render = bind(this.render, this);
-	    return QuaternionField.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  QuaternionField.prototype.render = function() {
-	    this.createSidebarFieldTitle();
-	    this.createSubvalTextinput("x");
-	    this.createSubvalTextinput("y");
-	    this.createSubvalTextinput("z");
-	    this.createSubvalTextinput("w");
-	    return this;
-	  };
-	
-	  return QuaternionField;
-	
-	})(BaseField);
-	
-	module.exports = QuaternionField;
-
-
-/***/ }),
-/* 34 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	var Backbone, BaseField, EulerField, _, namespace,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	namespace = __webpack_require__(15).namespace;
-	
-	BaseField = __webpack_require__(23);
-	
-	
-	/* Euler3Field View */
-	
-	EulerField = (function(superClass) {
-	  extend(EulerField, superClass);
-	
-	  function EulerField() {
-	    this.render = bind(this.render, this);
-	    return EulerField.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  EulerField.prototype.render = function() {
-	    this.createSidebarFieldTitle();
-	    this.createSubvalTextinput("x");
-	    this.createSubvalTextinput("y");
-	    this.createSubvalTextinput("z");
-	    this.createSubvalTextinput("order", "string");
-	    return this;
-	  };
-	
-	  return EulerField;
-	
-	})(BaseField);
-	
-	module.exports = EulerField;
-
-
-/***/ }),
-/* 35 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	var Backbone, Fields, Node, Utils, _,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	Utils = __webpack_require__(9);
-	
-	Fields = __webpack_require__(20);
-	
-	
-	/* Node model */
-	
-	Node = (function(superClass) {
-	  extend(Node, superClass);
-	
-	  function Node() {
-	    this.createAnimContainer = bind(this.createAnimContainer, this);
-	    this.enablePropertyAnim = bind(this.enablePropertyAnim, this);
-	    this.disablePropertyAnim = bind(this.disablePropertyAnim, this);
-	    this.removeConnection = bind(this.removeConnection, this);
-	    this.addOutConnection = bind(this.addOutConnection, this);
-	    this.applyFieldsToVal = bind(this.applyFieldsToVal, this);
-	    this.toJSON = bind(this.toJSON, this);
-	    this.getAnimationData = bind(this.getAnimationData, this);
-	    this.hasPropertyTrackAnim = bind(this.hasPropertyTrackAnim, this);
-	    this.getDownstreamNodes = bind(this.getDownstreamNodes, this);
-	    this.getUpstreamNodes = bind(this.getUpstreamNodes, this);
-	    this.hasOutConnection = bind(this.hasOutConnection, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.inputValueHasChanged = bind(this.inputValueHasChanged, this);
-	    this.createCacheObject = bind(this.createCacheObject, this);
-	    this.addCountInput = bind(this.addCountInput, this);
-	    this.createConnection = bind(this.createConnection, this);
-	    this.loadAnimation = bind(this.loadAnimation, this);
-	    this.remove = bind(this.remove, this);
-	    this.onFieldsCreated = bind(this.onFieldsCreated, this);
-	    this.typename = bind(this.typename, this);
-	    this.initialize = bind(this.initialize, this);
-	    return Node.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Node.node_name = '';
-	
-	  Node.group_name = '';
-	
-	  Node.prototype.defaults = {
-	    nid: -1,
-	    gid: -1,
-	    x: 0,
-	    y: 0,
-	    width: 90,
-	    height: 26,
-	    name: ""
-	  };
-	
-	  Node.prototype.initialize = function(options) {
-	    Node.__super__.initialize.apply(this, arguments);
-	    this.auto_evaluate = false;
-	    this.delays_output = false;
-	    this.dirty = true;
-	    this.is_animated = false;
-	    this.out_connections = [];
-	    this.apptimeline = options.timeline;
-	    this.settings = options.settings;
-	    this.indexer = options.indexer;
-	    this.options = options;
-	    this.parent = options.parent;
-	    if (this.get('name') === '') {
-	      this.set('name', this.typename());
-	    }
-	    if (this.get('nid') === -1) {
-	      this.set('nid', this.indexer.getUID());
-	    } else {
-	      this.indexer.uid = this.get('nid');
-	    }
-	    this.fields = new Fields(false, {
-	      node: this,
-	      indexer: this.indexer
-	    });
-	    this.onFieldsCreated();
-	    this.fields.load(this.options.fields);
-	    this.anim = this.createAnimContainer();
-	    if (this.options.anim !== false) {
-	      this.loadAnimation();
-	    }
-	    return this;
-	  };
-	
-	  Node.prototype.typename = function() {
-	    return String(this.constructor.name);
-	  };
-	
-	  Node.prototype.onFieldsCreated = function() {};
-	
-	  Node.prototype.remove = function() {
-	    if (this.anim) {
-	      this.anim.destroy();
-	    }
-	    if (this.fields) {
-	      this.fields.destroy();
-	    }
-	    delete this.fields;
-	    delete this.apptimeline;
-	    delete this.anim;
-	    delete this.options;
-	    delete this.settings;
-	    delete this.indexer;
-	    delete this.fully_inited;
-	    return this.destroy();
-	  };
-	
-	  Node.prototype.loadAnimation = function() {
-	    var anims, i, len, propKey, propLabel, ref, track;
-	    ref = this.options.anim;
-	    for (propLabel in ref) {
-	      anims = ref[propLabel];
-	      track = this.anim.getPropertyTrack(propLabel);
-	      for (i = 0, len = anims.length; i < len; i++) {
-	        propKey = anims[i];
-	        track.keys.push({
-	          time: propKey.time,
-	          value: propKey.value,
-	          easing: Timeline.stringToEasingFunction(propKey.easing),
-	          track: track
-	        });
-	      }
-	      this.anim.timeline.rebuildTrackAnimsFromKeys(track);
-	    }
-	    return true;
-	  };
-	
-	  Node.prototype.createConnection = function(field1, field2) {
-	    return this.trigger("createConnection", field1, field2);
-	  };
-	
-	  Node.prototype.addCountInput = function() {
-	    return this.fields.addFields({
-	      inputs: {
-	        "count": 1
-	      }
-	    });
-	  };
-	
-	  Node.prototype.createCacheObject = function(values) {
-	    var field, i, len, res, v;
-	    res = {};
-	    for (i = 0, len = values.length; i < len; i++) {
-	      v = values[i];
-	      field = this.fields.getField(v);
-	      res[v] = !field ? false : field.attributes["value"];
-	    }
-	    return res;
-	  };
-	
-	  Node.prototype.inputValueHasChanged = function(values, cache) {
-	    var field, i, len, v, v2;
-	    if (cache == null) {
-	      cache = this.material_cache;
-	    }
-	    for (i = 0, len = values.length; i < len; i++) {
-	      v = values[i];
-	      field = this.fields.getField(v);
-	      if (!field) {
-	        return false;
-	      } else {
-	        v2 = field.attributes["value"];
-	        if (v2 !== cache[v]) {
-	          return true;
-	        }
-	      }
-	    }
-	    return false;
-	  };
-	
-	  Node.prototype.getFields = function() {
-	    return {};
-	  };
-	
-	  Node.prototype.hasOutConnection = function() {
-	    return this.out_connections.length !== 0;
-	  };
-	
-	  Node.prototype.getUpstreamNodes = function() {
-	    return this.fields.getUpstreamNodes();
-	  };
-	
-	  Node.prototype.getDownstreamNodes = function() {
-	    return this.fields.getDownstreamNodes();
-	  };
-	
-	  Node.prototype.hasPropertyTrackAnim = function() {
-	    var i, len, propTrack, ref;
-	    ref = this.anim.objectTrack.propertyTracks;
-	    for (i = 0, len = ref.length; i < len; i++) {
-	      propTrack = ref[i];
-	      if (propTrack.anims.length > 0) {
-	        return true;
-	      }
-	    }
-	    return false;
-	  };
-	
-	  Node.prototype.getAnimationData = function() {
-	    var anim, i, j, k, len, len1, propTrack, ref, ref1, res;
-	    if (!this.anim || !this.anim.objectTrack || !this.anim.objectTrack.propertyTracks || this.hasPropertyTrackAnim() === false) {
-	      return false;
-	    }
-	    if (this.anim !== false) {
-	      res = {};
-	      ref = this.anim.objectTrack.propertyTracks;
-	      for (i = 0, len = ref.length; i < len; i++) {
-	        propTrack = ref[i];
-	        res[propTrack.propertyName] = [];
-	        ref1 = propTrack.keys;
-	        for (j = 0, len1 = ref1.length; j < len1; j++) {
-	          anim = ref1[j];
-	          k = {
-	            time: anim.time,
-	            value: anim.value,
-	            easing: Timeline.easingFunctionToString(anim.easing)
-	          };
-	          res[propTrack.propertyName].push(k);
-	        }
-	      }
-	    }
-	    return res;
-	  };
-	
-	  Node.prototype.toJSON = function() {
-	    var res;
-	    res = {
-	      nid: this.get('nid'),
-	      name: this.get('name'),
-	      type: this.typename(),
-	      anim: this.getAnimationData(),
-	      x: this.get('x'),
-	      y: this.get('y'),
-	      width: this.get('width'),
-	      height: this.get('height'),
-	      fields: this.fields.toJSON()
-	    };
-	    return res;
-	  };
-	
-	  Node.prototype.applyFieldsToVal = function(afields, target, exceptions, index) {
-	    var f, field_name, nf, results;
-	    if (exceptions == null) {
-	      exceptions = [];
-	    }
-	    results = [];
-	    for (f in afields) {
-	      nf = afields[f];
-	      field_name = nf.get("name");
-	      if (exceptions.indexOf(field_name) === -1) {
-	        results.push(target[field_name] = this.fields.getField(field_name).getValue(index));
-	      } else {
-	        results.push(void 0);
-	      }
-	    }
-	    return results;
-	  };
-	
-	  Node.prototype.addOutConnection = function(c, field) {
-	    if (this.out_connections.indexOf(c) === -1) {
-	      this.out_connections.push(c);
-	    }
-	    return c;
-	  };
-	
-	  Node.prototype.removeConnection = function(c) {
-	    var c_index;
-	    c_index = this.out_connections.indexOf(c);
-	    if (c_index !== -1) {
-	      this.out_connections.splice(c_index, 1);
-	    }
-	    return c;
-	  };
-	
-	  Node.prototype.disablePropertyAnim = function(field) {
-	    if (this.anim && field.get("is_output") === false) {
-	      return this.anim.disableProperty(field.get("name"));
-	    }
-	  };
-	
-	  Node.prototype.enablePropertyAnim = function(field) {
-	    if (field.get("is_output") === true || !this.anim) {
-	      return false;
-	    }
-	    if (field.isAnimationProperty()) {
-	      return this.anim.enableProperty(field.get("name"));
-	    }
-	  };
-	
-	  Node.prototype.createAnimContainer = function() {
-	    var f, field, res;
-	    res = anim("nid-" + this.get("nid"), this.fields.inputs);
-	    for (f in this.fields.inputs) {
-	      field = this.fields.inputs[f];
-	      if (field.isAnimationProperty() === false) {
-	        this.disablePropertyAnim(field);
-	      }
-	    }
-	    return res;
-	  };
-	
-	  return Node;
-	
-	})(Backbone.Model);
-	
-	module.exports = Node;
-
-
-/***/ }),
+/* 20 */,
+/* 21 */,
+/* 22 */,
+/* 23 */,
+/* 24 */,
+/* 25 */,
+/* 26 */,
+/* 27 */,
+/* 28 */,
+/* 29 */,
+/* 30 */,
+/* 31 */,
+/* 32 */,
+/* 33 */,
+/* 34 */,
+/* 35 */,
 /* 36 */,
 /* 37 */,
 /* 38 */,
@@ -2816,8 +243,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 55 */,
 /* 56 */,
 /* 57 */,
-/* 58 */,
-/* 59 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, CubeGeometry, CylinderGeometry, Node, OctahedronGeometry, PlaneGeometry, SphereGeometry, TextGeometry, TorusGeometry, TorusKnotGeometry, Utils, _,
@@ -2825,13 +251,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
-	Utils = __webpack_require__(9);
+	Utils = __webpack_require__(8);
 	
-	Node = __webpack_require__(35);
+	Node = __webpack_require__(7);
 	
 	PlaneGeometry = (function(superClass) {
 	  extend(PlaneGeometry, superClass);
@@ -3428,7 +854,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 60 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var AmbientLight, Backbone, DirectionalLight, Node, PointLight, SpotLight, _,
@@ -3436,11 +862,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
-	Node = __webpack_require__(35);
+	Node = __webpack_require__(7);
 	
 	PointLight = (function(superClass) {
 	  extend(PointLight, superClass);
@@ -3709,7 +1135,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 61 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, LineBasicMaterial, MeshBasicMaterial, MeshLambertMaterial, MeshPhongMaterial, Node, NodeMaterialBase, _,
@@ -3717,13 +1143,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
-	Node = __webpack_require__(35);
+	Node = __webpack_require__(7);
 	
-	NodeMaterialBase = __webpack_require__(62);
+	NodeMaterialBase = __webpack_require__(61);
 	
 	MeshBasicMaterial = (function(superClass) {
 	  extend(MeshBasicMaterial, superClass);
@@ -3966,7 +1392,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 62 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Node, NodeMaterialBase,
@@ -3974,7 +1400,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	Node = __webpack_require__(35);
+	Node = __webpack_require__(7);
 	
 	NodeMaterialBase = (function(superClass) {
 	  extend(NodeMaterialBase, superClass);
@@ -4088,7 +1514,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 63 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, BleachPass, BloomPass, DotScreenPass, FilmPass, HorizontalBlurPass, Node, Utils, VerticalBlurPass, VignettePass, _,
@@ -4096,13 +1522,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
-	Utils = __webpack_require__(9);
+	Utils = __webpack_require__(8);
 	
-	Node = __webpack_require__(35);
+	Node = __webpack_require__(7);
+	
+	__webpack_require__(63);
 	
 	__webpack_require__(64);
 	
@@ -4119,8 +1547,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	__webpack_require__(70);
 	
 	__webpack_require__(71);
-	
-	__webpack_require__(72);
 	
 	BloomPass = (function(superClass) {
 	  extend(BloomPass, superClass);
@@ -4563,7 +1989,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 64 */
+/* 63 */
 /***/ (function(module, exports) {
 
 	/**
@@ -4632,7 +2058,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 65 */
+/* 64 */
 /***/ (function(module, exports) {
 
 	/**
@@ -4700,7 +2126,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 66 */
+/* 65 */
 /***/ (function(module, exports) {
 
 	/**
@@ -4768,7 +2194,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 67 */
+/* 66 */
 /***/ (function(module, exports) {
 
 	/**
@@ -4838,7 +2264,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 68 */
+/* 67 */
 /***/ (function(module, exports) {
 
 	/**
@@ -4897,7 +2323,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 69 */
+/* 68 */
 /***/ (function(module, exports) {
 
 	/**
@@ -5004,7 +2430,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 70 */
+/* 69 */
 /***/ (function(module, exports) {
 
 	/**
@@ -5118,7 +2544,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 71 */
+/* 70 */
 /***/ (function(module, exports) {
 
 	/**
@@ -5228,7 +2654,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 72 */
+/* 71 */
 /***/ (function(module, exports) {
 
 	/**
@@ -5288,7 +2714,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 73 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Camera, ColladaLoader, Fog, FogExp2, Node, Object3D, Object3DwithMeshAndMaterial, Scene, Texture, ThreeLine, ThreeMesh, WebGLRenderer, WebglBase, _, jQuery,
@@ -5296,19 +2722,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	jQuery = __webpack_require__(17);
+	jQuery = __webpack_require__(18);
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
-	Node = __webpack_require__(35);
+	Node = __webpack_require__(7);
 	
-	__webpack_require__(74);
+	__webpack_require__(73);
 	
-	Object3D = __webpack_require__(75);
+	Object3D = __webpack_require__(74);
 	
-	WebglBase = __webpack_require__(76);
+	WebglBase = __webpack_require__(75);
 	
 	Scene = (function(superClass) {
 	  extend(Scene, superClass);
@@ -6182,7 +3608,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 74 */
+/* 73 */
 /***/ (function(module, exports) {
 
 	/**
@@ -11100,7 +8526,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 75 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Node, Object3D,
@@ -11108,7 +8534,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	Node = __webpack_require__(35);
+	Node = __webpack_require__(7);
 	
 	Object3D = (function(superClass) {
 	  extend(Object3D, superClass);
@@ -11284,15 +8710,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 76 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, WebglBase, _,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
+	
+	__webpack_require__(76);
 	
 	__webpack_require__(77);
 	
@@ -11307,8 +8735,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	__webpack_require__(82);
 	
 	__webpack_require__(83);
-	
-	__webpack_require__(84);
 	
 	WebglBase = (function() {
 	  WebglBase.instance = false;
@@ -11356,7 +8782,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 77 */
+/* 76 */
 /***/ (function(module, exports) {
 
 	/**
@@ -11506,7 +8932,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 78 */
+/* 77 */
 /***/ (function(module, exports) {
 
 	/**
@@ -11598,7 +9024,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 79 */
+/* 78 */
 /***/ (function(module, exports) {
 
 	/**
@@ -11655,7 +9081,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 80 */
+/* 79 */
 /***/ (function(module, exports) {
 
 	/**
@@ -11712,7 +9138,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 81 */
+/* 80 */
 /***/ (function(module, exports) {
 
 	/**
@@ -11764,6 +9190,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
+/* 81 */
+/***/ (function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_81__;
+
+/***/ }),
 /* 82 */
 /***/ (function(module, exports) {
 
@@ -11771,12 +9203,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 83 */
-/***/ (function(module, exports) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_83__;
-
-/***/ }),
-/* 84 */
 /***/ (function(module, exports) {
 
 	/* canvas-toBlob.js
@@ -11889,7 +9315,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 85 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, CsgIntersect, CsgSubtract, CsgUnion, Node, NodeCSG, Utils, _,
@@ -11897,19 +9323,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
-	Utils = __webpack_require__(9);
+	Utils = __webpack_require__(8);
 	
-	Node = __webpack_require__(35);
+	Node = __webpack_require__(7);
+	
+	__webpack_require__(85);
 	
 	__webpack_require__(86);
 	
 	__webpack_require__(87);
-	
-	__webpack_require__(88);
 	
 	NodeCSG = (function(superClass) {
 	  extend(NodeCSG, superClass);
@@ -12077,13 +9503,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 86 */
+/* 85 */
 /***/ (function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_86__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_85__;
 
 /***/ }),
-/* 87 */
+/* 86 */
 /***/ (function(module, exports) {
 
 	// Constructive Solid Geometry (CSG) is a modeling technique that uses Boolean
@@ -12684,7 +10110,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 88 */
+/* 87 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -13234,7 +10660,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	})();
 
 /***/ }),
-/* 89 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Node, NodeMaterialBase, Object3D, ParticleBasicMaterial, ParticlePool, ParticleSystem, RandomCloudGeometry, SparksAccelerate, SparksAccelerateFactor, SparksAccelerateVelocity, SparksAge, SparksCubeZone, SparksEmitter, SparksLifetime, SparksLineZone, SparksMove, SparksPointZone, SparksPosition, SparksRandomDrift, SparksSteadyCounter, Utils, _,
@@ -13242,25 +10668,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
-	Utils = __webpack_require__(9);
+	Utils = __webpack_require__(8);
 	
-	Node = __webpack_require__(35);
+	Node = __webpack_require__(7);
 	
-	Object3D = __webpack_require__(75);
+	Object3D = __webpack_require__(74);
 	
-	NodeMaterialBase = __webpack_require__(62);
+	NodeMaterialBase = __webpack_require__(61);
 	
-	__webpack_require__(73);
+	__webpack_require__(72);
 	
-	__webpack_require__(61);
+	__webpack_require__(60);
+	
+	__webpack_require__(89);
 	
 	__webpack_require__(90);
-	
-	__webpack_require__(91);
 	
 	ParticleSystem = (function(superClass) {
 	  extend(ParticleSystem, superClass);
@@ -14432,7 +11858,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 90 */
+/* 89 */
 /***/ (function(module, exports) {
 
 	// tween.js r5 - http://github.com/sole/tween.js
@@ -14451,7 +11877,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 91 */
+/* 90 */
 /***/ (function(module, exports) {
 
 	/*

@@ -17,7 +17,7 @@ class Group extends Node
     super
 
     # set the subnodes gid
-    @nodes.each (node) => node.set("gid", @get("nid"))
+    @nodes.each (node) => node.set("gid", @get("id"))
 
     # Recreate the connections between internal subnodes
     for connection in @definition.get("connections")
@@ -40,7 +40,7 @@ class Group extends Node
 
   toJSON: () =>
     res =
-      nid: @get('nid')
+      id: @get('id')
       name: @get('name')
       type: @typename()
       anim: @getAnimationData()

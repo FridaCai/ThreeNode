@@ -5,9 +5,8 @@ require 'jquery.ui'
 
 ### Connection View ###
 class ConnectionView extends Backbone.View
-  initialize: (options) ->
+  initialize: () ->
     super
-    @settings = options.settings
     @container = $("#graph")
     
     # @svg = ThreeNodes.UI.UIView.svg.path().attr
@@ -75,8 +74,7 @@ class ConnectionView extends Backbone.View
     return o1
 
   renderTriangle: ()->
-    if(!@settings.direction)
-      return;
+    return;
     len = @curve.getTotalLength()
     obj = @curve.getPointAtLength(len-13)
     @triangle.attr
@@ -86,8 +84,8 @@ class ConnectionView extends Backbone.View
   renderCurve: () ->
     # f1 = @getFieldPosition(@model.from_field)
     # f2 = @getFieldPosition(@model.to_field)
-    f1 = @getNodePosition(@model.options.from_node, @model.options.from_type)
-    f2 = @getNodePosition(@model.options.to_node, @model.options.to_type)
+    f1 = @getNodePosition(@model.from, @model.fromType)
+    f2 = @getNodePosition(@model.to, @model.toType)
 
     offset = $("#container-wrapper").offset()
     ofx = $("#container-wrapper").scrollLeft() - offset.left

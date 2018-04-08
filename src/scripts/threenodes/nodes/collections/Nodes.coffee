@@ -6,56 +6,30 @@ Connections = require 'threenodes/connections/collections/Connections'
 class Nodes extends Backbone.Collection
 
   initialize: (models, options) =>
-    @settings = options.settings
     self = this
     # save material nodes in an array so they can be quickly rebuild
-    @materials = []
 
     # Each node collections has it's own indexer, used to get unique id
     @indexer = new Indexer()
-
-    # Create the connections collection
     @connections = new Connections([], {indexer: @indexer})
 
     # Parent node, used for groups
-    @parent = options.parent
+    # @parent = options.parent
 
-    @connections.bind "add", (connection) ->
-      self.trigger "nodeslist:rebuild", self
+    # @bind "createConnection", (from_node, from_type, to_node, to_type) =>
+    #   @connections.create
+    #     from_node: from_node
+    #     from_type: from_type
+    #     to_node: to_node
+    #     to_type: to_type
 
-    @bind "remove", (node) =>
-      indx = @materials.indexOf(node)
-      if indx != -1
-        @materials.splice(indx, 1)
-      self.trigger "nodeslist:rebuild", self
+    # @bind "renderConnections", (node) =>
+    #   @connections.renderConnections(node)
 
-    @bind "RebuildAllShaders", () =>
-      for node in @materials
-        node.rebuildShader()
-
-    @connections.bind "remove", (connection) ->
-      self.trigger "nodeslist:rebuild", self
-
-    @bind "add", (node) ->
-      if node.is_material && node.is_material == true
-        @materials.push(node)
-
-      self.trigger "nodeslist:rebuild", self
-
-    @bind "createConnection", (from_node, from_type, to_node, to_type) =>
-      @connections.create
-        from_node: from_node
-        from_type: from_type
-        to_node: to_node
-        to_type: to_type
-
-    @bind "renderConnections", (node) =>
-      @connections.renderConnections(node)
-
-    @bind "removeConnection", (node) =>
-      @connections.map (c) ->
-        if c.from_node == node || c.to_node == node
-          self.removeConnection(c)
+    # @bind "removeConnection", (node) =>
+    #   @connections.map (c) ->
+    #     if c.from_node == node || c.to_node == node
+    #       self.removeConnection(c)
 
   clearWorkspace: () =>
     @removeConnections()
@@ -72,16 +46,16 @@ class Nodes extends Backbone.Collection
     delete @indexer
     delete @connections
 
-  bindTimelineEvents: (timeline) =>
-    if @timeline
-      @timeline.off("tfieldsRebuild", @showNodesAnimation)
-      @timeline.off("startSound", @startSound)
-      @timeline.off("stopSound", @stopSound)
+  # bindTimelineEvents: (timeline) =>
+  #   if @timeline
+  #     @timeline.off("tfieldsRebuild", @showNodesAnimation)
+  #     @timeline.off("startSound", @startSound)
+  #     @timeline.off("stopSound", @stopSound)
 
-    @timeline = timeline
-    @timeline.on("tfieldsRebuild", @showNodesAnimation)
-    @timeline.on("startSound", @startSound)
-    @timeline.on("stopSound", @stopSound)
+  #   @timeline = timeline
+  #   @timeline.on("tfieldsRebuild", @showNodesAnimation)
+  #   @timeline.on("startSound", @startSound)
+  #   @timeline.on("stopSound", @stopSound)
 
   find: (node_name) =>
     return this.where({name: node_name})
@@ -124,8 +98,8 @@ class Nodes extends Backbone.Collection
     buildNodeArrays = (nodes) ->
       for node in nodes
         if node.hasOutConnection() == false || node.auto_evaluate || node.delays_output
-          terminalNodes[node.attributes["nid"] + "/" + node.attributes["gid"]] = node
-        invalidNodes[node.attributes["nid"] + "/" + node.attributes["gid"]] = node
+          terminalNodes[node.attributes["id"] + "/" + node.attributes["gid"]] = node
+        invalidNodes[node.attributes["id"] + "/" + node.attributes["gid"]] = node
         if node.nodes
           buildNodeArrays(node.nodes.models)
     buildNodeArrays(@models)
@@ -134,65 +108,65 @@ class Nodes extends Backbone.Collection
     evaluateSubGraph = (node) ->
       upstreamNodes = node.getUpstreamNodes()
       for upnode in upstreamNodes
-        if invalidNodes[upnode.attributes["nid"] + "/" + upnode.attributes["gid"]] && !upnode.delays_output
+        if invalidNodes[upnode.attributes["id"] + "/" + upnode.attributes["gid"]] && !upnode.delays_output
           evaluateSubGraph(upnode)
       if node.dirty || node.auto_evaluate
         node.compute()
         node.dirty = false
         node.fields.setFieldInputUnchanged()
 
-      delete invalidNodes[node.attributes["nid"] + "/" + node.attributes["gid"]]
+      delete invalidNodes[node.attributes["id"] + "/" + node.attributes["gid"]]
       true
 
     # Process all root nodes which require an update
-    for nid of terminalNodes
-      if invalidNodes[nid]
-        evaluateSubGraph(terminalNodes[nid])
+    for id of terminalNodes
+      if invalidNodes[id]
+        evaluateSubGraph(terminalNodes[id])
     true
 
-  createConnectionFromObject: (connection) =>
-    # Get variables from their id
-    from_gid = if connection.from_node_gid then connection.from_node_gid.toString() else "-1"
-    from_node = @getNodeByNid(connection.from_node.toString(), from_gid)
-    from = connection.from
-    to_gid = if connection.to_node_gid then connection.to_node_gid.toString() else "-1"
-    to_node = @getNodeByNid(connection.to_node.toString(), to_gid)
-    to = connection.to
+  # createConnectionFromObject: (connection) =>
+  #   # Get variables from their id
+  #   from_gid = if connection.from_node_gid then connection.from_node_gid.toString() else "-1"
+  #   from_node = @getNodeByNid(connection.from_node.toString(), from_gid)
+  #   from = connection.from
+  #   to_gid = if connection.to_node_gid then connection.to_node_gid.toString() else "-1"
+  #   to_node = @getNodeByNid(connection.to_node.toString(), to_gid)
+  #   to = connection.to
 
-    # If a field is missing try to switch from/to
-    if !from || !to
-      tmp = from_node
-      from_node = to_node
-      to_node = tmp
-      from = from_node.fields.outputs[connection.to.toString()]
-      to = to_node.fields.inputs[connection.from.toString()]
+  #   # If a field is missing try to switch from/to
+  #   if !from || !to
+  #     tmp = from_node
+  #     from_node = to_node
+  #     to_node = tmp
+  #     from = from_node.fields.outputs[connection.to.toString()]
+  #     to = to_node.fields.inputs[connection.from.toString()]
 
-    c = @connections.create
-        from_node: from_node
-        to_node: to_node
-        from_type: connection.from
-        to_type: connection.to
-        cid: connection.id
+  #   c = @connections.create
+  #       from_node: from_node
+  #       to_node: to_node
+  #       from_type: connection.from
+  #       to_type: connection.to
+  #       id: connection.id
 
-    c
+  #   c
 
-  createGroup: (model, external_objects = []) =>
-    # create the group node
-    grp = @createNode(model)
+  # createGroup: (model, external_objects = []) =>
+  #   # create the group node
+  #   grp = @createNode(model)
 
-    # Recreate the external connections
-    for connection in external_objects
-      from = @getNodeByNid(connection.from_node)
-      to = @getNodeByNid(connection.to_node)
+  #   # Recreate the external connections
+  #   for connection in external_objects
+  #     from = @getNodeByNid(connection.from_node)
+  #     to = @getNodeByNid(connection.to_node)
 
-      debugger;
-      c = @connections.create
-        from_node: from
-        from_type: connection.from
-        to_node: to
-        to_type: connection.to
+  #     debugger;
+  #     c = @connections.create
+  #       from_node: from
+  #       from_type: connection.from
+  #       to_node: to
+  #       to_type: connection.to
 
-    return grp
+  #   return grp
 
   removeGroupsByDefinition: (def) =>
     _nodes = @models.concat()
@@ -204,17 +178,22 @@ class Nodes extends Backbone.Collection
   removeConnection: (c) ->
     @connections.remove(c)
 
-  getNodeByNid: (nid, gid = "-1") =>
-    for node in @models
-      if node.get("nid").toString() == nid.toString()
-        if gid == "-1" || node.get("gid").toString() == gid.toString()
-          return node
-      # special case for group
-      if node.nodes
-        res = node.nodes.getNodeByNid(nid, gid)
-        if res then return res
 
-    return false
+  getNodeById: (id) ->
+    return @models.find (n)->
+      n.get('id') == id
+
+  # getNodeByNid: (id, gid = "-1") =>
+  #   for node in @models
+  #     if node.get("id").toString() == id.toString()
+  #       if gid == "-1" || node.get("gid").toString() == gid.toString()
+  #         return node
+  #     # special case for group
+  #     if node.nodes
+  #       res = node.nodes.getNodeByNid(id, gid)
+  #       if res then return res
+
+  #   return false
 
   showNodesAnimation: () =>
     @invoke "showNodeAnimation"

@@ -1,0 +1,57 @@
+.group
+  +clearfix
+  border-radius: 4px
+  box-shadow: 0px 1px 2px 0px rgba(#000, 0.2)
+  position: absolute !important
+  padding: 4px
+  border: 1px solid transparent
+  min-width: 80px
+  background: $node_color
+  color: #aaa
+  font-size: 10px
+
+  .head
+    font-weight: normal
+    letter-spacing: 1px
+    text-align: center
+
+  &.ui-selecting
+    background: ($node_color - #050505)
+    border: 1px solid ($node_color + #222)
+
+  &.ui-selected
+    background: ($node_color + #050505)
+    border: 1px solid ($node_color + #333)
+
+  .options
+    +clearfix
+    width: 100%
+    .warning
+      padding-top: 7px
+
+
+  .handler
+    position: absolute
+    width: 5px;
+    height: 5px;
+    cursor: crosshair
+    background: red
+    margin-left: -2.5px
+    margin-top: -2.5px
+
+    &.up
+      left: 50%
+      top: 0
+
+
+    &.down
+      left: 50%
+      top: 100%
+
+    &.left
+      top: 50%
+      left: 0
+
+    &.right
+      left: 100%
+      top: 50%

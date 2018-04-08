@@ -5,7 +5,6 @@ class Connections extends Backbone.Collection
   model: Connection
 
   initialize: (models, options) =>
-    @indexer = options.indexer
     @bind "connection:removed", (c) => @remove(c)
     super
 
@@ -17,14 +16,14 @@ class Connections extends Backbone.Collection
       if(c.options.to_node == node or c.options.from_node == node)
         c.render()
 
-  create: (model, options) =>
-    if !options then options = {}
-    model.indexer = @indexer
-    model = @_prepareModel(model, options)
-    if !model
-      return false
-    @add(model, options)
-    return model
+  # create: (model, options) =>
+  #   if !options then options = {}
+  #   model.indexer = @indexer
+  #   model = @_prepareModel(model, options)
+  #   if !model
+  #     return false
+  #   @add(model, options)
+  #   return model
 
   removeAll: () =>
     @remove(@models)

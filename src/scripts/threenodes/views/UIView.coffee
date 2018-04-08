@@ -60,13 +60,7 @@ class UIView extends Backbone.View
     # Start main render loop
     @animate()
 
-  onNodeListRebuild: (nodes) =>
-    if @timeoutId
-      clearTimeout(@timeoutId)
-    # add a little delay since the event is fired multiple time on file load
-    onTimeOut = () =>
-      @sidebar.render(nodes)
-    @timeoutId = setTimeout(onTimeOut, 10)
+
 
   clearWorkspace: () =>
     # Remove the nodes attributes from the sidebar
@@ -155,7 +149,7 @@ class UIView extends Backbone.View
             obgrp = ob.get("parent")
             # obgrp.anim.objectTrack.name = ob.get("name")
             # add the object only once
-            if !_.find(nodes, (n) -> n.cid == obgrp.cid)
+            if !_.find(nodes, (n) -> n.id == obgrp.id)
               # anims.push(obgrp.anim)
               nodes.push(obgrp)
         # Display the selected nodes attributes in the sidebar

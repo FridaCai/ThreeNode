@@ -111,32 +111,7 @@ class GroupDefinitions extends Backbone.Collection
 
     return selected_nodes
 
-  getNodesAveragePosition: (selected_nodes) ->
-    # Get the average position of selected nodes
-    min_x = 0
-    min_y = 0
-    max_x = 0
-    max_y = 0
-
-    # Selected nodes jquery selector
-    $selected = $(".node.ui-selected")
-
-    # Stop directly if there is no node selected
-    if $selected.length < 1 && selected_nodes.length == 0
-      return false
-
-    # Get selected nodes
-    for node in selected_nodes
-      # get the x/y node min and max to place the new node at the center
-      min_x = Math.min(min_x, node.get("x"))
-      max_x = Math.max(max_x, node.get("x"))
-      min_y = Math.min(min_y, node.get("y"))
-      max_y = Math.max(max_y, node.get("y"))
-
-    # compute the center node position
-    dx = (min_x + max_x) / 2
-    dy = (min_y + max_y) / 2
-    return {x: dx, y: dy}
+  
 
   removeAll: () =>
     @remove(@models)

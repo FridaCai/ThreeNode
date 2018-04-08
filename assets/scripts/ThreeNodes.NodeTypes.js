@@ -7,7 +7,7 @@
 		exports["NodeTypes"] = factory(require("_"), require("Backbone"), require("jQuery"), require("libs/jshint"));
 	else
 		root["ThreeNodes"] = root["ThreeNodes"] || {}, root["ThreeNodes"]["NodeTypes"] = factory(root["_"], root["Backbone"], root["jQuery"], root["libs/jshint"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_17__, __WEBPACK_EXTERNAL_MODULE_50__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_4__, __WEBPACK_EXTERNAL_MODULE_18__, __WEBPACK_EXTERNAL_MODULE_50__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -54,9 +54,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	__webpack_require__(10);
+	__webpack_require__(11);
 	
-	__webpack_require__(18);
+	__webpack_require__(19);
 	
 	__webpack_require__(36);
 	
@@ -69,383 +69,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	__webpack_require__(55);
 	
 	__webpack_require__(56);
-	
-	__webpack_require__(58);
 
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	var Backbone, Connections, Indexer, Nodes, _,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	Indexer = __webpack_require__(4);
-	
-	Connections = __webpack_require__(5);
-	
-	Nodes = (function(superClass) {
-	  extend(Nodes, superClass);
-	
-	  function Nodes() {
-	    this.stopSound = bind(this.stopSound, this);
-	    this.startSound = bind(this.startSound, this);
-	    this.showNodesAnimation = bind(this.showNodesAnimation, this);
-	    this.getNodeByNid = bind(this.getNodeByNid, this);
-	    this.renderAllConnections = bind(this.renderAllConnections, this);
-	    this.removeGroupsByDefinition = bind(this.removeGroupsByDefinition, this);
-	    this.createGroup = bind(this.createGroup, this);
-	    this.createConnectionFromObject = bind(this.createConnectionFromObject, this);
-	    this.render = bind(this.render, this);
-	    this.createNode = bind(this.createNode, this);
-	    this.find = bind(this.find, this);
-	    this.bindTimelineEvents = bind(this.bindTimelineEvents, this);
-	    this.destroy = bind(this.destroy, this);
-	    this.clearWorkspace = bind(this.clearWorkspace, this);
-	    this.initialize = bind(this.initialize, this);
-	    return Nodes.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Nodes.prototype.initialize = function(models, options) {
-	    var self;
-	    this.settings = options.settings;
-	    self = this;
-	    this.materials = [];
-	    this.indexer = new Indexer();
-	    this.connections = new Connections([], {
-	      indexer: this.indexer
-	    });
-	    this.parent = options.parent;
-	    this.connections.bind("add", function(connection) {
-	      return self.trigger("nodeslist:rebuild", self);
-	    });
-	    this.bind("remove", (function(_this) {
-	      return function(node) {
-	        var indx;
-	        indx = _this.materials.indexOf(node);
-	        if (indx !== -1) {
-	          _this.materials.splice(indx, 1);
-	        }
-	        return self.trigger("nodeslist:rebuild", self);
-	      };
-	    })(this));
-	    this.bind("RebuildAllShaders", (function(_this) {
-	      return function() {
-	        var i, len, node, ref, results;
-	        ref = _this.materials;
-	        results = [];
-	        for (i = 0, len = ref.length; i < len; i++) {
-	          node = ref[i];
-	          results.push(node.rebuildShader());
-	        }
-	        return results;
-	      };
-	    })(this));
-	    this.connections.bind("remove", function(connection) {
-	      return self.trigger("nodeslist:rebuild", self);
-	    });
-	    this.bind("add", function(node) {
-	      if (node.is_material && node.is_material === true) {
-	        this.materials.push(node);
-	      }
-	      return self.trigger("nodeslist:rebuild", self);
-	    });
-	    this.bind("createConnection", (function(_this) {
-	      return function(from_node, from_type, to_node, to_type) {
-	        return _this.connections.create({
-	          from_node: from_node,
-	          from_type: from_type,
-	          to_node: to_node,
-	          to_type: to_type
-	        });
-	      };
-	    })(this));
-	    return this.bind("renderConnections", (function(_this) {
-	      return function(node) {
-	        return _this.connections.renderConnections(node);
-	      };
-	    })(this));
-	  };
-	
-	  Nodes.prototype.clearWorkspace = function() {
-	    this.removeConnections();
-	    this.removeAll();
-	    $("#webgl-window canvas").remove();
-	    this.materials = [];
-	    this.indexer.reset();
-	    return this;
-	  };
-	
-	  Nodes.prototype.destroy = function() {
-	    this.removeConnections();
-	    this.removeAll();
-	    delete this.materials;
-	    delete this.indexer;
-	    return delete this.connections;
-	  };
-	
-	  Nodes.prototype.bindTimelineEvents = function(timeline) {
-	    if (this.timeline) {
-	      this.timeline.off("tfieldsRebuild", this.showNodesAnimation);
-	      this.timeline.off("startSound", this.startSound);
-	      this.timeline.off("stopSound", this.stopSound);
-	    }
-	    this.timeline = timeline;
-	    this.timeline.on("tfieldsRebuild", this.showNodesAnimation);
-	    this.timeline.on("startSound", this.startSound);
-	    return this.timeline.on("stopSound", this.stopSound);
-	  };
-	
-	  Nodes.prototype.find = function(node_name) {
-	    return this.where({
-	      name: node_name
-	    });
-	  };
-	
-	  Nodes.prototype.createNode = function(options) {
-	    var n;
-	    if ($.type(options) === "string") {
-	      options = {
-	        type: options
-	      };
-	    }
-	    options.timeline = this.timeline;
-	    options.settings = this.settings;
-	    options.indexer = this.indexer;
-	    options.parent = this.parent;
-	    if (!ThreeNodes.Core.nodes.models[options.type]) {
-	      console.error("Node type doesn't exists: " + options.type);
-	      return false;
-	    }
-	    n = new ThreeNodes.Core.nodes.models[options.type](options);
-	    this.add(n);
-	    return n;
-	  };
-	
-	  Nodes.prototype.render = function() {
-	    var buildNodeArrays, evaluateSubGraph, invalidNodes, nid, terminalNodes;
-	    return;
-	    invalidNodes = {};
-	    terminalNodes = {};
-	    buildNodeArrays = function(nodes) {
-	      var i, len, node, results;
-	      results = [];
-	      for (i = 0, len = nodes.length; i < len; i++) {
-	        node = nodes[i];
-	        if (node.hasOutConnection() === false || node.auto_evaluate || node.delays_output) {
-	          terminalNodes[node.attributes["nid"] + "/" + node.attributes["gid"]] = node;
-	        }
-	        invalidNodes[node.attributes["nid"] + "/" + node.attributes["gid"]] = node;
-	        if (node.nodes) {
-	          results.push(buildNodeArrays(node.nodes.models));
-	        } else {
-	          results.push(void 0);
-	        }
-	      }
-	      return results;
-	    };
-	    buildNodeArrays(this.models);
-	    evaluateSubGraph = function(node) {
-	      var i, len, upnode, upstreamNodes;
-	      upstreamNodes = node.getUpstreamNodes();
-	      for (i = 0, len = upstreamNodes.length; i < len; i++) {
-	        upnode = upstreamNodes[i];
-	        if (invalidNodes[upnode.attributes["nid"] + "/" + upnode.attributes["gid"]] && !upnode.delays_output) {
-	          evaluateSubGraph(upnode);
-	        }
-	      }
-	      if (node.dirty || node.auto_evaluate) {
-	        node.compute();
-	        node.dirty = false;
-	        node.fields.setFieldInputUnchanged();
-	      }
-	      delete invalidNodes[node.attributes["nid"] + "/" + node.attributes["gid"]];
-	      return true;
-	    };
-	    for (nid in terminalNodes) {
-	      if (invalidNodes[nid]) {
-	        evaluateSubGraph(terminalNodes[nid]);
-	      }
-	    }
-	    return true;
-	  };
-	
-	  Nodes.prototype.createConnectionFromObject = function(connection) {
-	    var c, from, from_gid, from_node, tmp, to, to_gid, to_node;
-	    from_gid = connection.from_node_gid ? connection.from_node_gid.toString() : "-1";
-	    from_node = this.getNodeByNid(connection.from_node.toString(), from_gid);
-	    from = connection.from;
-	    to_gid = connection.to_node_gid ? connection.to_node_gid.toString() : "-1";
-	    to_node = this.getNodeByNid(connection.to_node.toString(), to_gid);
-	    to = connection.to;
-	    if (!from || !to) {
-	      tmp = from_node;
-	      from_node = to_node;
-	      to_node = tmp;
-	      from = from_node.fields.outputs[connection.to.toString()];
-	      to = to_node.fields.inputs[connection.from.toString()];
-	    }
-	    c = this.connections.create({
-	      from_node: from_node,
-	      to_node: to_node,
-	      from_type: connection.from,
-	      to_type: connection.to,
-	      cid: connection.id
-	    });
-	    return c;
-	  };
-	
-	  Nodes.prototype.createGroup = function(model, external_objects) {
-	    var c, connection, from, grp, i, len, to;
-	    if (external_objects == null) {
-	      external_objects = [];
-	    }
-	    grp = this.createNode(model);
-	    for (i = 0, len = external_objects.length; i < len; i++) {
-	      connection = external_objects[i];
-	      from = this.getNodeByNid(connection.from_node);
-	      to = this.getNodeByNid(connection.to_node);
-	      debugger;
-	      c = this.connections.create({
-	        from_node: from,
-	        from_type: connection.from,
-	        to_node: to,
-	        to_type: connection.to
-	      });
-	    }
-	    return grp;
-	  };
-	
-	  Nodes.prototype.removeGroupsByDefinition = function(def) {
-	    var _nodes;
-	    _nodes = this.models.concat();
-	    return _.each(_nodes, function(node) {
-	      if (node.definition && node.definition.gid === def.gid) {
-	        return node.remove();
-	      }
-	    });
-	  };
-	
-	  Nodes.prototype.renderAllConnections = function() {
-	    return this.connections.render();
-	  };
-	
-	  Nodes.prototype.removeConnection = function(c) {
-	    return this.connections.remove(c);
-	  };
-	
-	  Nodes.prototype.getNodeByNid = function(nid, gid) {
-	    var i, len, node, ref, res;
-	    if (gid == null) {
-	      gid = "-1";
-	    }
-	    ref = this.models;
-	    for (i = 0, len = ref.length; i < len; i++) {
-	      node = ref[i];
-	      if (node.get("nid").toString() === nid.toString()) {
-	        if (gid === "-1" || node.get("gid").toString() === gid.toString()) {
-	          return node;
-	        }
-	      }
-	      if (node.nodes) {
-	        res = node.nodes.getNodeByNid(nid, gid);
-	        if (res) {
-	          return res;
-	        }
-	      }
-	    }
-	    return false;
-	  };
-	
-	  Nodes.prototype.showNodesAnimation = function() {
-	    return this.invoke("showNodeAnimation");
-	  };
-	
-	  Nodes.prototype.startSound = function(time) {
-	    return this.each(function(node) {
-	      if (node.playSound instanceof Function) {
-	        return node.playSound(time);
-	      }
-	    });
-	  };
-	
-	  Nodes.prototype.stopSound = function() {
-	    return this.each(function(node) {
-	      if (node.stopSound instanceof Function) {
-	        return node.stopSound();
-	      }
-	    });
-	  };
-	
-	  Nodes.prototype.removeSelectedNodes = function() {
-	    var i, len, node, ref, results;
-	    ref = $(".node.ui-selected");
-	    results = [];
-	    for (i = 0, len = ref.length; i < len; i++) {
-	      node = ref[i];
-	      results.push($(node).data("object").remove());
-	    }
-	    return results;
-	  };
-	
-	  Nodes.prototype.removeAll = function() {
-	    var models;
-	    $("#tab-attribute").html("");
-	    models = this.models.concat();
-	    _.invoke(models, "remove");
-	    this.reset([]);
-	    return true;
-	  };
-	
-	  Nodes.prototype.removeConnections = function() {
-	    return this.connections.removeAll();
-	  };
-	
-	  return Nodes;
-	
-	})(Backbone.Collection);
-	
-	module.exports = Nodes;
-
-
-/***/ }),
-/* 2 */
 /***/ (function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_2__;
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_3__;
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports) {
-
-	var Indexer;
+	var Indexer, _instance;
+	
+	_instance = null;
 	
 	Indexer = (function() {
 	  function Indexer() {
 	    this.uid = 0;
 	  }
 	
-	  Indexer.prototype.getUID = function(increment) {
-	    if (increment == null) {
-	      increment = true;
-	    }
-	    if (increment) {
-	      return this.uid += 1;
-	    } else {
-	      return this.uid;
-	    }
+	  Indexer.prototype.getUID = function() {
+	    return this.uid += 1;
 	  };
 	
 	  Indexer.prototype.reset = function() {
@@ -456,188 +96,106 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	})();
 	
+	Indexer.getInstance = function() {
+	  if (!_instance) {
+	    _instance = new Indexer();
+	  }
+	  return _instance;
+	};
+	
 	module.exports = Indexer;
 
 
 /***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 2 */,
+/* 3 */
+/***/ (function(module, exports) {
 
-	var Backbone, Connection, Connections,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	Backbone = __webpack_require__(3);
-	
-	Connection = __webpack_require__(6);
-	
-	Connections = (function(superClass) {
-	  extend(Connections, superClass);
-	
-	  function Connections() {
-	    this.removeAll = bind(this.removeAll, this);
-	    this.create = bind(this.create, this);
-	    this.renderConnections = bind(this.renderConnections, this);
-	    this.render = bind(this.render, this);
-	    this.initialize = bind(this.initialize, this);
-	    return Connections.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Connections.prototype.model = Connection;
-	
-	  Connections.prototype.initialize = function(models, options) {
-	    this.indexer = options.indexer;
-	    this.bind("connection:removed", (function(_this) {
-	      return function(c) {
-	        return _this.remove(c);
-	      };
-	    })(this));
-	    return Connections.__super__.initialize.apply(this, arguments);
-	  };
-	
-	  Connections.prototype.render = function() {
-	    return this.each(function(c) {
-	      return c.render();
-	    });
-	  };
-	
-	  Connections.prototype.renderConnections = function(node) {
-	    return this.each(function(c) {
-	      if (c.options.to_node === node || c.options.from_node === node) {
-	        return c.render();
-	      }
-	    });
-	  };
-	
-	  Connections.prototype.create = function(model, options) {
-	    if (!options) {
-	      options = {};
-	    }
-	    model.indexer = this.indexer;
-	    model = this._prepareModel(model, options);
-	    if (!model) {
-	      return false;
-	    }
-	    this.add(model, options);
-	    return model;
-	  };
-	
-	  Connections.prototype.removeAll = function() {
-	    return this.remove(this.models);
-	  };
-	
-	  return Connections;
-	
-	})(Backbone.Collection);
-	
-	module.exports = Connections;
-
+	module.exports = __WEBPACK_EXTERNAL_MODULE_3__;
 
 /***/ }),
-/* 6 */
+/* 4 */
+/***/ (function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_4__;
+
+/***/ }),
+/* 5 */,
+/* 6 */,
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var Backbone, Connection, Indexer,
+	var Backbone, Node, Utils, _,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	Backbone = __webpack_require__(3);
+	_ = __webpack_require__(3);
 	
-	Indexer = __webpack_require__(4);
+	Backbone = __webpack_require__(4);
 	
+	Utils = __webpack_require__(8);
 	
-	/* Connection model */
+	Node = (function(superClass) {
+	  extend(Node, superClass);
 	
-	Connection = (function(superClass) {
-	  extend(Connection, superClass);
-	
-	  function Connection() {
-	    this.validate_deprecated = bind(this.validate_deprecated, this);
-	    this.validate = bind(this.validate, this);
-	    this.render = bind(this.render, this);
-	    this.remove = bind(this.remove, this);
+	  function Node() {
+	    this.toJSON = bind(this.toJSON, this);
+	    this.typename = bind(this.typename, this);
 	    this.initialize = bind(this.initialize, this);
-	    this.sync = bind(this.sync, this);
-	    return Connection.__super__.constructor.apply(this, arguments);
+	    return Node.__super__.constructor.apply(this, arguments);
 	  }
 	
-	  Connection.STATIC_INDEXER = new Indexer();
-	
-	  Connection.prototype.defaults = {
-	    "cid": -1
+	  Node.prototype.defaults = {
+	    id: -1,
+	    x: 0,
+	    y: 0,
+	    width: 90,
+	    height: 26,
+	    name: ""
 	  };
 	
-	  Connection.prototype.sync = function() {};
-	
-	  Connection.prototype.initialize = function(options) {
-	    var indexer;
-	    this.options = options;
-	    this.from_node = options.from_node;
-	    this.from_type = options.from_type;
-	    this.to_node = options.to_node;
-	    this.to_type = options.to_type;
-	    indexer = options.indexer || Connection.STATIC_INDEXER;
-	    if (this.get("cid") === -1) {
-	      return this.set({
-	        "cid": indexer.getUID()
-	      });
-	    }
+	  Node.prototype.initialize = function(obj) {
+	    var id, name;
+	    Node.__super__.initialize.apply(this, arguments);
+	    id = obj.id || Index.getInstance().getUID();
+	    this.set('id', id);
+	    name = obj.name || this.typename();
+	    this.set('name', name);
+	    this.set('x', obj.x);
+	    this.set('y', obj.y);
+	    this.set('width', obj.width);
+	    this.set('height', obj.height);
+	    return this;
 	  };
 	
-	  Connection.prototype.remove = function() {
-	    delete this.from_node;
-	    delete this.from_type;
-	    delete this.to_node;
-	    delete this.to_type;
-	    this.trigger("connection:removed", this);
-	    this.destroy();
-	    return false;
+	  Node.prototype.typename = function() {
+	    return String(this.constructor.name);
 	  };
 	
-	  Connection.prototype.render = function() {
-	    return this.trigger("render", this, this);
-	  };
-	
-	  Connection.prototype.validate = function() {
-	    return false;
-	  };
-	
-	  Connection.prototype.validate_deprecated = function(attrs, options) {
-	    this.from_field = attrs.from_field;
-	    this.to_field = attrs.to_field;
-	    if (!this.from_field || !this.to_field) {
-	      return true;
-	    }
-	    return false;
-	  };
-	
-	  Connection.prototype.toJSON = function() {
+	  Node.prototype.toJSON = function() {
 	    var res;
 	    res = {
-	      id: this.get("cid"),
-	      from_node: this.from_node.get("nid"),
-	      from_node_gid: this.from_node.get("gid"),
-	      from: this.from_type,
-	      to_node: this.to_node.get("nid"),
-	      to_node_gid: this.to_node.get("gid"),
-	      to: this.to_type
+	      id: this.get('id'),
+	      name: this.get('name'),
+	      type: this.typename(),
+	      x: this.get('x'),
+	      y: this.get('y'),
+	      width: this.get('width'),
+	      height: this.get('height')
 	    };
 	    return res;
 	  };
 	
-	  return Connection;
+	  return Node;
 	
 	})(Backbone.Model);
 	
-	module.exports = Connection;
+	module.exports = Node;
 
 
 /***/ }),
-/* 7 */,
-/* 8 */,
-/* 9 */
+/* 8 */
 /***/ (function(module, exports) {
 
 	var Utils;
@@ -667,7 +225,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 10 */
+/* 9 */,
+/* 10 */,
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Circle, Ellipse, Rectangle, ShapeNode, ShapeNodeView,
@@ -675,9 +235,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  hasProp = {}.hasOwnProperty,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 	
-	ShapeNode = __webpack_require__(11);
+	ShapeNode = __webpack_require__(12);
 	
-	ShapeNodeView = __webpack_require__(12);
+	ShapeNodeView = __webpack_require__(13);
 	
 	Rectangle = (function(superClass) {
 	  extend(Rectangle, superClass);
@@ -798,7 +358,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, ShapeNode, _,
@@ -806,9 +366,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
 	
 	/* Node model */
@@ -820,6 +380,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.toJSON = bind(this.toJSON, this);
 	    this.renderConnections = bind(this.renderConnections, this);
 	    this.createConnection = bind(this.createConnection, this);
+	    this.removeConnection = bind(this.removeConnection, this);
 	    this.remove = bind(this.remove, this);
 	    this.typename = bind(this.typename, this);
 	    this.initialize = bind(this.initialize, this);
@@ -831,8 +392,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  ShapeNode.group_name = '';
 	
 	  ShapeNode.prototype.defaults = {
-	    nid: -1,
-	    gid: -1,
+	    id: -1,
 	    x: 0,
 	    y: 0,
 	    width: null,
@@ -849,10 +409,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (this.get('name') === '') {
 	      this.set('name', this.typename());
 	    }
-	    if (this.get('nid') === -1) {
-	      this.set('nid', this.indexer.getUID());
+	    if (this.get('id') === -1) {
+	      this.set('id', this.indexer.getUID());
 	    } else {
-	      this.indexer.uid = this.get('nid');
+	      this.indexer.uid = this.get('id');
 	    }
 	    return this;
 	  };
@@ -866,7 +426,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    delete this.settings;
 	    delete this.indexer;
 	    delete this.fully_inited;
+	    this.removeConnection();
 	    return this.destroy();
+	  };
+	
+	  ShapeNode.prototype.removeConnection = function() {
+	    return this.trigger("removeConnection", this);
 	  };
 	
 	  ShapeNode.prototype.createConnection = function(from_node, from_type, to_node, to_type) {
@@ -880,7 +445,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  ShapeNode.prototype.toJSON = function() {
 	    var res;
 	    res = {
-	      nid: this.get('nid'),
+	      id: this.get('id'),
 	      name: this.get('name'),
 	      type: this.typename(),
 	      x: this.get('x'),
@@ -899,7 +464,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, ShapeNodeView, _, _view_node_context_menu, _view_node_template, namespace,
@@ -907,19 +472,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
-	_view_node_template = __webpack_require__(13);
+	_view_node_template = __webpack_require__(14);
 	
-	_view_node_context_menu = __webpack_require__(14);
+	_view_node_context_menu = __webpack_require__(15);
 	
-	namespace = __webpack_require__(15).namespace;
-	
-	__webpack_require__(16);
+	namespace = __webpack_require__(16).namespace;
 	
 	__webpack_require__(17);
+	
+	__webpack_require__(18);
 	
 	
 	/* Node View */
@@ -1217,19 +782,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div class='head'><span><%= get(\"name\") %></span></div>\n<div class='options'>\n  <div class='inputs'></div>\n  <div class='center'></div>\n  <div class='outputs'></div>\n</div>\n\n<div class=\"up handler\" data-attr='up'></div>\n<div class=\"down handler\" data-attr='down'></div>\n<div class=\"left handler\" data-attr='left'></div>\n<div class=\"right handler\" data-attr='right'></div>\n";
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports) {
 
 	module.exports = "<ul id=\"node-context-menu\" class=\"context-menu\">\n  <li><a href=\"#remove_node\">Remove node</a></li>\n</ul>";
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports) {
 
 	/*
@@ -1264,7 +829,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports) {
 
 	// jQuery Context Menu Plugin
@@ -1481,20 +1046,20 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_17__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_18__;
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Direction, NoDirection, NodeNumberSimple,
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	NodeNumberSimple = __webpack_require__(19);
+	NodeNumberSimple = __webpack_require__(20);
 	
 	Direction = (function(superClass) {
 	  extend(Direction, superClass);
@@ -1532,7 +1097,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Fields, Node, NodeNumberSimple, Utils, _,
@@ -1540,15 +1105,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
-	Utils = __webpack_require__(9);
+	Utils = __webpack_require__(8);
 	
-	Fields = __webpack_require__(20);
+	Fields = __webpack_require__(21);
 	
-	Node = __webpack_require__(35);
+	Node = __webpack_require__(7);
 	
 	
 	/* NodeNumberSimple model */
@@ -1635,7 +1200,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Fields, _,
@@ -1643,11 +1208,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
-	__webpack_require__(21);
+	__webpack_require__(22);
 	
 	
 	/* Fields Collection */
@@ -1711,10 +1276,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    ref = data["in"];
 	    for (j = 0, len = ref.length; j < len; j++) {
 	      f = ref[j];
-	      if (!f.nid) {
+	      if (!f.id) {
 	        node_field = this.inputs[f.name];
 	      } else {
-	        node_field = this.inputs[f.name + "-" + f.nid];
+	        node_field = this.inputs[f.name + "-" + f.id];
 	      }
 	      if (node_field) {
 	        node_field.load(f.val);
@@ -1873,7 +1438,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    target = field.get("is_output") === false ? "inputs" : "outputs";
 	    field_index = field.get("name");
 	    if (field.subfield) {
-	      field_index += "-" + field.subfield.node.get("nid");
+	      field_index += "-" + field.subfield.node.get("id");
 	    }
 	    this[target][field_index] = field;
 	    this.add(field);
@@ -1923,7 +1488,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Any, Array, Backbone, Bool, BoolField, Camera, Color, Euler, EulerField, Float, FloatField, Fog, Geometry, Indexer, Material, Mesh, NodeField, Object3D, Quaternion, QuaternionField, Scene, String, StringField, Texture, Vector2, Vector2Field, Vector3, Vector3Field, Vector4, Vector4Field, _, namespace,
@@ -1931,29 +1496,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
-	Indexer = __webpack_require__(4);
+	Indexer = __webpack_require__(1);
 	
-	namespace = __webpack_require__(15).namespace;
+	namespace = __webpack_require__(16).namespace;
 	
-	BoolField = __webpack_require__(22);
+	BoolField = __webpack_require__(23);
 	
-	StringField = __webpack_require__(28);
+	StringField = __webpack_require__(29);
 	
-	FloatField = __webpack_require__(29);
+	FloatField = __webpack_require__(30);
 	
-	Vector2Field = __webpack_require__(30);
+	Vector2Field = __webpack_require__(31);
 	
-	Vector3Field = __webpack_require__(31);
+	Vector3Field = __webpack_require__(32);
 	
-	Vector4Field = __webpack_require__(32);
+	Vector4Field = __webpack_require__(33);
 	
-	QuaternionField = __webpack_require__(33);
+	QuaternionField = __webpack_require__(34);
 	
-	EulerField = __webpack_require__(34);
+	EulerField = __webpack_require__(35);
 	
 	
 	/* Field model */
@@ -1992,7 +1557,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return {
 	      fid: -1,
 	      name: "fieldname",
-	      machine_name: "fieldname-nid",
+	      machine_name: "fieldname-id",
 	      is_output: false,
 	      value: 0,
 	      "default": null
@@ -2043,7 +1608,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.on_value_update_hooks = {};
 	    this.set("machine_name", this.get("name"));
 	    if (this.subfield && this.subfield.node) {
-	      this.set("machine_name", this.get("name") + "-" + this.subfield.node.get("nid"));
+	      this.set("machine_name", this.get("name") + "-" + this.subfield.node.get("id"));
 	    }
 	    if (this.get("fid") === -1) {
 	      return this.set("fid", indexer.getUID());
@@ -2190,7 +1755,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      name: this.get("name")
 	    };
 	    if (this.subfield) {
-	      res.nid = this.subfield.node.get("nid");
+	      res.id = this.subfield.node.get("id");
 	    }
 	    val = this.get("value");
 	    val_type = jQuery.type(val);
@@ -2774,7 +2339,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, BaseField, BoolField, _, namespace,
@@ -2782,13 +2347,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
-	namespace = __webpack_require__(15).namespace;
+	namespace = __webpack_require__(16).namespace;
 	
-	BaseField = __webpack_require__(23);
+	BaseField = __webpack_require__(24);
 	
 	
 	/* SidebarField View */
@@ -2840,7 +2405,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, BaseField, SidebarTextfield, _, _view_field_sidebar_container,
@@ -2848,13 +2413,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
-	_view_field_sidebar_container = __webpack_require__(24);
+	_view_field_sidebar_container = __webpack_require__(25);
 	
-	SidebarTextfield = __webpack_require__(25);
+	SidebarTextfield = __webpack_require__(26);
 	
 	
 	/* BaseField View */
@@ -2945,13 +2510,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div data-fid=\"<%= fid %>\" class='field-wrapper'>\n  <h3><%= name %></h3>\n</div>\n";
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, DraggableNumber, SidebarTextfield, _, _view_field_textfield,
@@ -2959,13 +2524,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
-	_view_field_textfield = __webpack_require__(26);
+	_view_field_textfield = __webpack_require__(27);
 	
-	DraggableNumber = __webpack_require__(27);
+	DraggableNumber = __webpack_require__(28);
 	
 	
 	/* SidebarTextfield View */
@@ -3097,13 +2662,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div class='input-container'>\n  <input type='text' class='field-<%= type %>' />\n</div>\n";
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**!
@@ -3539,7 +3104,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, BaseField, StringField, _, namespace,
@@ -3547,13 +3112,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
-	namespace = __webpack_require__(15).namespace;
+	namespace = __webpack_require__(16).namespace;
 	
-	BaseField = __webpack_require__(23);
+	BaseField = __webpack_require__(24);
 	
 	
 	/* StringField View */
@@ -3614,7 +3179,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, BaseField, FloatField, _, namespace,
@@ -3622,13 +3187,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
-	namespace = __webpack_require__(15).namespace;
+	namespace = __webpack_require__(16).namespace;
 	
-	BaseField = __webpack_require__(23);
+	BaseField = __webpack_require__(24);
 	
 	
 	/* FloatField View */
@@ -3693,7 +3258,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, BaseField, Vector2Field, _, namespace,
@@ -3701,13 +3266,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
-	namespace = __webpack_require__(15).namespace;
+	namespace = __webpack_require__(16).namespace;
 	
-	BaseField = __webpack_require__(23);
+	BaseField = __webpack_require__(24);
 	
 	
 	/* Vector2Field View */
@@ -3735,7 +3300,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, BaseField, Vector3Field, _, namespace,
@@ -3743,13 +3308,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
-	namespace = __webpack_require__(15).namespace;
+	namespace = __webpack_require__(16).namespace;
 	
-	BaseField = __webpack_require__(23);
+	BaseField = __webpack_require__(24);
 	
 	
 	/* Vector3Field View */
@@ -3778,7 +3343,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, BaseField, Vector4Field, _, namespace,
@@ -3786,13 +3351,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
-	namespace = __webpack_require__(15).namespace;
+	namespace = __webpack_require__(16).namespace;
 	
-	BaseField = __webpack_require__(23);
+	BaseField = __webpack_require__(24);
 	
 	
 	/* Vector4Field View */
@@ -3822,7 +3387,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, BaseField, QuaternionField, _, namespace,
@@ -3830,13 +3395,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
-	namespace = __webpack_require__(15).namespace;
+	namespace = __webpack_require__(16).namespace;
 	
-	BaseField = __webpack_require__(23);
+	BaseField = __webpack_require__(24);
 	
 	
 	/* Vector3Field View */
@@ -3866,7 +3431,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, BaseField, EulerField, _, namespace,
@@ -3874,13 +3439,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
-	namespace = __webpack_require__(15).namespace;
+	namespace = __webpack_require__(16).namespace;
 	
-	BaseField = __webpack_require__(23);
+	BaseField = __webpack_require__(24);
 	
 	
 	/* Euler3Field View */
@@ -3910,326 +3475,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 35 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	var Backbone, Fields, Node, Utils, _,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	Utils = __webpack_require__(9);
-	
-	Fields = __webpack_require__(20);
-	
-	
-	/* Node model */
-	
-	Node = (function(superClass) {
-	  extend(Node, superClass);
-	
-	  function Node() {
-	    this.createAnimContainer = bind(this.createAnimContainer, this);
-	    this.enablePropertyAnim = bind(this.enablePropertyAnim, this);
-	    this.disablePropertyAnim = bind(this.disablePropertyAnim, this);
-	    this.removeConnection = bind(this.removeConnection, this);
-	    this.addOutConnection = bind(this.addOutConnection, this);
-	    this.applyFieldsToVal = bind(this.applyFieldsToVal, this);
-	    this.toJSON = bind(this.toJSON, this);
-	    this.getAnimationData = bind(this.getAnimationData, this);
-	    this.hasPropertyTrackAnim = bind(this.hasPropertyTrackAnim, this);
-	    this.getDownstreamNodes = bind(this.getDownstreamNodes, this);
-	    this.getUpstreamNodes = bind(this.getUpstreamNodes, this);
-	    this.hasOutConnection = bind(this.hasOutConnection, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.inputValueHasChanged = bind(this.inputValueHasChanged, this);
-	    this.createCacheObject = bind(this.createCacheObject, this);
-	    this.addCountInput = bind(this.addCountInput, this);
-	    this.createConnection = bind(this.createConnection, this);
-	    this.loadAnimation = bind(this.loadAnimation, this);
-	    this.remove = bind(this.remove, this);
-	    this.onFieldsCreated = bind(this.onFieldsCreated, this);
-	    this.typename = bind(this.typename, this);
-	    this.initialize = bind(this.initialize, this);
-	    return Node.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Node.node_name = '';
-	
-	  Node.group_name = '';
-	
-	  Node.prototype.defaults = {
-	    nid: -1,
-	    gid: -1,
-	    x: 0,
-	    y: 0,
-	    width: 90,
-	    height: 26,
-	    name: ""
-	  };
-	
-	  Node.prototype.initialize = function(options) {
-	    Node.__super__.initialize.apply(this, arguments);
-	    this.auto_evaluate = false;
-	    this.delays_output = false;
-	    this.dirty = true;
-	    this.is_animated = false;
-	    this.out_connections = [];
-	    this.apptimeline = options.timeline;
-	    this.settings = options.settings;
-	    this.indexer = options.indexer;
-	    this.options = options;
-	    this.parent = options.parent;
-	    if (this.get('name') === '') {
-	      this.set('name', this.typename());
-	    }
-	    if (this.get('nid') === -1) {
-	      this.set('nid', this.indexer.getUID());
-	    } else {
-	      this.indexer.uid = this.get('nid');
-	    }
-	    this.fields = new Fields(false, {
-	      node: this,
-	      indexer: this.indexer
-	    });
-	    this.onFieldsCreated();
-	    this.fields.load(this.options.fields);
-	    this.anim = this.createAnimContainer();
-	    if (this.options.anim !== false) {
-	      this.loadAnimation();
-	    }
-	    return this;
-	  };
-	
-	  Node.prototype.typename = function() {
-	    return String(this.constructor.name);
-	  };
-	
-	  Node.prototype.onFieldsCreated = function() {};
-	
-	  Node.prototype.remove = function() {
-	    if (this.anim) {
-	      this.anim.destroy();
-	    }
-	    if (this.fields) {
-	      this.fields.destroy();
-	    }
-	    delete this.fields;
-	    delete this.apptimeline;
-	    delete this.anim;
-	    delete this.options;
-	    delete this.settings;
-	    delete this.indexer;
-	    delete this.fully_inited;
-	    return this.destroy();
-	  };
-	
-	  Node.prototype.loadAnimation = function() {
-	    var anims, i, len, propKey, propLabel, ref, track;
-	    ref = this.options.anim;
-	    for (propLabel in ref) {
-	      anims = ref[propLabel];
-	      track = this.anim.getPropertyTrack(propLabel);
-	      for (i = 0, len = anims.length; i < len; i++) {
-	        propKey = anims[i];
-	        track.keys.push({
-	          time: propKey.time,
-	          value: propKey.value,
-	          easing: Timeline.stringToEasingFunction(propKey.easing),
-	          track: track
-	        });
-	      }
-	      this.anim.timeline.rebuildTrackAnimsFromKeys(track);
-	    }
-	    return true;
-	  };
-	
-	  Node.prototype.createConnection = function(field1, field2) {
-	    return this.trigger("createConnection", field1, field2);
-	  };
-	
-	  Node.prototype.addCountInput = function() {
-	    return this.fields.addFields({
-	      inputs: {
-	        "count": 1
-	      }
-	    });
-	  };
-	
-	  Node.prototype.createCacheObject = function(values) {
-	    var field, i, len, res, v;
-	    res = {};
-	    for (i = 0, len = values.length; i < len; i++) {
-	      v = values[i];
-	      field = this.fields.getField(v);
-	      res[v] = !field ? false : field.attributes["value"];
-	    }
-	    return res;
-	  };
-	
-	  Node.prototype.inputValueHasChanged = function(values, cache) {
-	    var field, i, len, v, v2;
-	    if (cache == null) {
-	      cache = this.material_cache;
-	    }
-	    for (i = 0, len = values.length; i < len; i++) {
-	      v = values[i];
-	      field = this.fields.getField(v);
-	      if (!field) {
-	        return false;
-	      } else {
-	        v2 = field.attributes["value"];
-	        if (v2 !== cache[v]) {
-	          return true;
-	        }
-	      }
-	    }
-	    return false;
-	  };
-	
-	  Node.prototype.getFields = function() {
-	    return {};
-	  };
-	
-	  Node.prototype.hasOutConnection = function() {
-	    return this.out_connections.length !== 0;
-	  };
-	
-	  Node.prototype.getUpstreamNodes = function() {
-	    return this.fields.getUpstreamNodes();
-	  };
-	
-	  Node.prototype.getDownstreamNodes = function() {
-	    return this.fields.getDownstreamNodes();
-	  };
-	
-	  Node.prototype.hasPropertyTrackAnim = function() {
-	    var i, len, propTrack, ref;
-	    ref = this.anim.objectTrack.propertyTracks;
-	    for (i = 0, len = ref.length; i < len; i++) {
-	      propTrack = ref[i];
-	      if (propTrack.anims.length > 0) {
-	        return true;
-	      }
-	    }
-	    return false;
-	  };
-	
-	  Node.prototype.getAnimationData = function() {
-	    var anim, i, j, k, len, len1, propTrack, ref, ref1, res;
-	    if (!this.anim || !this.anim.objectTrack || !this.anim.objectTrack.propertyTracks || this.hasPropertyTrackAnim() === false) {
-	      return false;
-	    }
-	    if (this.anim !== false) {
-	      res = {};
-	      ref = this.anim.objectTrack.propertyTracks;
-	      for (i = 0, len = ref.length; i < len; i++) {
-	        propTrack = ref[i];
-	        res[propTrack.propertyName] = [];
-	        ref1 = propTrack.keys;
-	        for (j = 0, len1 = ref1.length; j < len1; j++) {
-	          anim = ref1[j];
-	          k = {
-	            time: anim.time,
-	            value: anim.value,
-	            easing: Timeline.easingFunctionToString(anim.easing)
-	          };
-	          res[propTrack.propertyName].push(k);
-	        }
-	      }
-	    }
-	    return res;
-	  };
-	
-	  Node.prototype.toJSON = function() {
-	    var res;
-	    res = {
-	      nid: this.get('nid'),
-	      name: this.get('name'),
-	      type: this.typename(),
-	      anim: this.getAnimationData(),
-	      x: this.get('x'),
-	      y: this.get('y'),
-	      width: this.get('width'),
-	      height: this.get('height'),
-	      fields: this.fields.toJSON()
-	    };
-	    return res;
-	  };
-	
-	  Node.prototype.applyFieldsToVal = function(afields, target, exceptions, index) {
-	    var f, field_name, nf, results;
-	    if (exceptions == null) {
-	      exceptions = [];
-	    }
-	    results = [];
-	    for (f in afields) {
-	      nf = afields[f];
-	      field_name = nf.get("name");
-	      if (exceptions.indexOf(field_name) === -1) {
-	        results.push(target[field_name] = this.fields.getField(field_name).getValue(index));
-	      } else {
-	        results.push(void 0);
-	      }
-	    }
-	    return results;
-	  };
-	
-	  Node.prototype.addOutConnection = function(c, field) {
-	    if (this.out_connections.indexOf(c) === -1) {
-	      this.out_connections.push(c);
-	    }
-	    return c;
-	  };
-	
-	  Node.prototype.removeConnection = function(c) {
-	    var c_index;
-	    c_index = this.out_connections.indexOf(c);
-	    if (c_index !== -1) {
-	      this.out_connections.splice(c_index, 1);
-	    }
-	    return c;
-	  };
-	
-	  Node.prototype.disablePropertyAnim = function(field) {
-	    if (this.anim && field.get("is_output") === false) {
-	      return this.anim.disableProperty(field.get("name"));
-	    }
-	  };
-	
-	  Node.prototype.enablePropertyAnim = function(field) {
-	    if (field.get("is_output") === true || !this.anim) {
-	      return false;
-	    }
-	    if (field.isAnimationProperty()) {
-	      return this.anim.enableProperty(field.get("name"));
-	    }
-	  };
-	
-	  Node.prototype.createAnimContainer = function() {
-	    var f, field, res;
-	    res = anim("nid-" + this.get("nid"), this.fields.inputs);
-	    for (f in this.fields.inputs) {
-	      field = this.fields.inputs[f];
-	      if (field.isAnimationProperty() === false) {
-	        this.disablePropertyAnim(field);
-	      }
-	    }
-	    return res;
-	  };
-	
-	  return Node;
-	
-	})(Backbone.Model);
-	
-	module.exports = Node;
-
-
-/***/ }),
 /* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4238,13 +3483,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  hasProp = {}.hasOwnProperty,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
-	Node = __webpack_require__(35);
+	Node = __webpack_require__(7);
 	
-	NodeNumberSimple = __webpack_require__(19);
+	NodeNumberSimple = __webpack_require__(20);
 	
 	NodeWithCenterTextfield = __webpack_require__(37);
 	
@@ -4729,11 +3974,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
-	__webpack_require__(35);
+	__webpack_require__(7);
 	
 	NodeView = __webpack_require__(38);
 	
@@ -4791,21 +4036,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
-	_view_node_template = __webpack_require__(13);
+	_view_node_template = __webpack_require__(14);
 	
-	_view_node_context_menu = __webpack_require__(14);
+	_view_node_context_menu = __webpack_require__(15);
 	
 	FieldsView = __webpack_require__(39);
 	
-	namespace = __webpack_require__(15).namespace;
-	
-	__webpack_require__(16);
+	namespace = __webpack_require__(16).namespace;
 	
 	__webpack_require__(17);
+	
+	__webpack_require__(18);
 	
 	
 	/* Node View */
@@ -4830,16 +4075,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  NodeView.prototype.initialize = function(options) {
 	    this.makeElement();
-	    if (!options.isSubNode) {
-	      this.makeDraggable();
-	    }
+	    this.makeDraggable();
 	    this.initNodeClick();
 	    this.initTitleClick();
-	    this.fields_view = new FieldsView({
-	      node: this.model,
-	      collection: this.model.fields,
-	      el: $("> .options", this.$el)
-	    });
 	    this.model.on('change', this.render);
 	    this.model.on('remove', (function(_this) {
 	      return function() {
@@ -4850,8 +4088,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.model.on("node:renderConnections", this.renderConnections);
 	    this.model.on("node:addSelectedClass", this.addSelectedClass);
 	    this.render();
-	    this.initContextMenus();
-	    return this.highlighAnimations();
+	    return this.initContextMenus();
 	  };
 	
 	  NodeView.prototype.initContextMenus = function() {
@@ -5070,13 +4307,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
 	FieldButton = __webpack_require__(40);
 	
-	__webpack_require__(17);
+	__webpack_require__(18);
 	
 	
 	/* Fields View */
@@ -5154,9 +4391,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
 	_view_node_field_in = __webpack_require__(41);
 	
@@ -5164,9 +4401,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	_view_field_context_menu = __webpack_require__(43);
 	
-	__webpack_require__(9);
+	__webpack_require__(8);
 	
-	__webpack_require__(16);
+	__webpack_require__(17);
 	
 	
 	/* FieldButton View */
@@ -5258,7 +4495,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        target = ".inputs .field";
 	      }
 	      return $(target).filter(function() {
-	        return $(this).parent().parent().parent().data("nid") !== field.node.get("nid");
+	        return $(this).parent().parent().parent().data("id") !== field.node.get("id");
 	      }).addClass("field-possible-target");
 	    };
 	    $(".inner-field", this.$el).draggable({
@@ -5360,13 +4597,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
-	namespace = __webpack_require__(15).namespace;
+	namespace = __webpack_require__(16).namespace;
 	
-	__webpack_require__(35);
+	__webpack_require__(7);
 	
 	NodeView = __webpack_require__(38);
 	
@@ -5942,13 +5179,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	jQuery = __webpack_require__(17);
+	jQuery = __webpack_require__(18);
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
-	Node = __webpack_require__(35);
+	Node = __webpack_require__(7);
 	
 	IfElse = (function(superClass) {
 	  extend(IfElse, superClass);
@@ -6233,11 +5470,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  hasProp = {}.hasOwnProperty,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
-	Node = __webpack_require__(35);
+	Node = __webpack_require__(7);
 	
 	NodeCodeView = __webpack_require__(48);
 	
@@ -6431,9 +5668,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
 	CodeMirror = __webpack_require__(49);
 	
@@ -6445,7 +5682,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	__webpack_require__(53);
 	
-	__webpack_require__(35);
+	__webpack_require__(7);
 	
 	NodeView = __webpack_require__(38);
 	
@@ -15186,13 +14423,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
-	Node = __webpack_require__(35);
+	Node = __webpack_require__(7);
 	
-	NodeNumberSimple = __webpack_require__(19);
+	NodeNumberSimple = __webpack_require__(20);
 	
 	MathSin = (function(superClass) {
 	  extend(MathSin, superClass);
@@ -15784,11 +15021,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
-	Node = __webpack_require__(35);
+	Node = __webpack_require__(7);
 	
 	NodeWithCenterTextfield = __webpack_require__(37);
 	
@@ -16662,13 +15899,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(2);
+	_ = __webpack_require__(3);
 	
-	Backbone = __webpack_require__(3);
+	Backbone = __webpack_require__(4);
 	
 	Rc4Random = __webpack_require__(57);
 	
-	Node = __webpack_require__(35);
+	Node = __webpack_require__(7);
 	
 	RandomSpread = (function(superClass) {
 	  extend(RandomSpread, superClass);
@@ -16876,120 +16113,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	})();
 	
 	module.exports = Rc4Random;
-
-
-/***/ }),
-/* 58 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	var Backbone, Group, Node, Nodes, _,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	_ = __webpack_require__(2);
-	
-	Backbone = __webpack_require__(3);
-	
-	Nodes = __webpack_require__(1);
-	
-	Node = __webpack_require__(35);
-	
-	Group = (function(superClass) {
-	  extend(Group, superClass);
-	
-	  function Group() {
-	    this.renderConnections = bind(this.renderConnections, this);
-	    this.compute = bind(this.compute, this);
-	    this.remove = bind(this.remove, this);
-	    this.getFields = bind(this.getFields, this);
-	    this.toJSON = bind(this.toJSON, this);
-	    this.initSubnodes = bind(this.initSubnodes, this);
-	    this.initialize = bind(this.initialize, this);
-	    return Group.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Group.node_name = 'Group';
-	
-	  Group.group_name = false;
-	
-	  Group.prototype.initialize = function(options) {
-	    var connection, j, len, ref, results;
-	    this.initSubnodes(options);
-	    Group.__super__.initialize.apply(this, arguments);
-	    this.nodes.each((function(_this) {
-	      return function(node) {
-	        return node.set("gid", _this.get("nid"));
-	      };
-	    })(this));
-	    ref = this.definition.get("connections");
-	    results = [];
-	    for (j = 0, len = ref.length; j < len; j++) {
-	      connection = ref[j];
-	      results.push(this.nodes.createConnectionFromObject(connection));
-	    }
-	    return results;
-	  };
-	
-	  Group.prototype.initSubnodes = function(options) {
-	    var j, len, n, nds, node, results;
-	    this.nodes = new Nodes([], {
-	      settings: options.settings,
-	      parent: this
-	    });
-	    this.definition = options.definition;
-	    nds = options.nodes ? options.nodes : this.definition.get("nodes");
-	    results = [];
-	    for (j = 0, len = nds.length; j < len; j++) {
-	      node = nds[j];
-	      results.push(n = this.nodes.createNode(node));
-	    }
-	    return results;
-	  };
-	
-	  Group.prototype.toJSON = function() {
-	    var res;
-	    res = {
-	      nid: this.get('nid'),
-	      name: this.get('name'),
-	      type: this.typename(),
-	      anim: this.getAnimationData(),
-	      x: this.get('x'),
-	      y: this.get('y'),
-	      nodes: jQuery.map(this.nodes.models, function(n, i) {
-	        return n.toJSON();
-	      }),
-	      definition_id: this.definition.get("gid")
-	    };
-	    return res;
-	  };
-	
-	  Group.prototype.getFields = function() {
-	    return false;
-	  };
-	
-	  Group.prototype.remove = function() {
-	    if (this.nodes) {
-	      this.nodes.destroy();
-	      delete this.nodes;
-	    }
-	    delete this.definition;
-	    return Group.__super__.remove.apply(this, arguments);
-	  };
-	
-	  Group.prototype.compute = function() {
-	    return this;
-	  };
-	
-	  Group.prototype.renderConnections = function() {
-	    return this.trigger("renderConnections", this);
-	  };
-	
-	  return Group;
-	
-	})(Node);
-	
-	ThreeNodes.Core.addNodeType('Group', Group);
 
 
 /***/ })

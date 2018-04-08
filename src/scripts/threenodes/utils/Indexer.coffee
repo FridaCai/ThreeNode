@@ -1,15 +1,21 @@
+# Frida todo: why cannot be singleton?
+
+_instance = null
+
 class Indexer
   constructor: () ->
-    # Define a "unique id" property
     @uid = 0
 
-  getUID: (increment = true) ->
-    if increment
-      return @uid += 1
-    else
-      return @uid
-
+  getUID: () ->
+    return @uid += 1
+    
   reset: () ->
     @uid = 0
+
+
+Indexer.getInstance = () ->
+  if (!_instance)
+    _instance = new Indexer();
+  return _instance;
 
 module.exports = Indexer
