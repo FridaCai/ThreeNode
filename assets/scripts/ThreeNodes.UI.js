@@ -2080,7 +2080,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  UIView.prototype.makeSelectable = function() {
 	    $("#container").selectable({
-	      filter: ".node",
+	      filter: ".nodes-container >div",
 	      stop: (function(_this) {
 	        return function(event, ui) {
 	          var $selected, nodes;
@@ -4380,7 +4380,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function Group() {
 	    this.makeDraggable = bind(this.makeDraggable, this);
 	    this.remove = bind(this.remove, this);
-	    this.renderConnections = bind(this.renderConnections, this);
 	    this.addSelectedClass = bind(this.addSelectedClass, this);
 	    this.computeNodePosition = bind(this.computeNodePosition, this);
 	    this.render = bind(this.render, this);
@@ -4393,7 +4392,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  Group.prototype.initialize = function(model) {
 	    this.makeElement();
-	    return this.render();
+	    this.render();
+	    this.initContextMenus();
+	    this.makeDraggable();
+	    this.initNodeClick();
+	    return this.initTitleClick();
 	  };
 	
 	  Group.prototype.makeElement = function() {
@@ -4514,10 +4517,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return this.$el.addClass("ui-selected");
 	  };
 	
-	  Group.prototype.renderConnections = function() {
-	    return this.model.renderConnections();
-	  };
-	
 	  Group.prototype.remove = function() {
 	    $(".field", this.el).destroyContextMenu();
 	    if (this.$el.data("draggable")) {
@@ -4534,6 +4533,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    $(this.el).click(function(e) {
 	      var selectable;
 	      if (e.metaKey === false) {
+	        $(".group").removeClass("ui-selected");
 	        $(".node").removeClass("ui-selected");
 	        $(this).addClass("ui-selecting");
 	      } else {
@@ -4547,8 +4547,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (!selectable) {
 	        return;
 	      }
-	      selectable.refresh();
-	      return selectable._mouseStop(null);
+	      return selectable.refresh();
 	    });
 	    return this;
 	  };
@@ -4623,21 +4622,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	            top: dx,
 	            left: dy
 	          });
-	          el.data("object").trigger("node:computePosition");
-	          return el.data("object").trigger("node:renderConnections");
+	          return el.data("object").trigger("node:computePosition");
 	        });
 	        self.computeNodePosition();
-	        return self.renderConnections();
+	        return self.model.trigger('node:renderConnections', self.model);
 	      },
-	      stop: function() {
-	        selected_nodes.not(this).each(function() {
-	          var el;
-	          el = $(this).data("object");
-	          return el.trigger("node:renderConnections");
-	        });
-	        self.computeNodePosition();
-	        return self.renderConnections();
-	      }
+	      stop: function() {}
 	    });
 	    return this;
 	  };
@@ -4655,7 +4645,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 107 */
 /***/ (function(module, exports) {
 
-	module.exports = "<ul id=\"group-context-menu\" class=\"context-menu\">\n  <li><a href=\"#remove_group\">Remove group</a></li>\n</ul>";
+	module.exports = "<ul id=\"group-context-menu\" class=\"context-menu\">\n  <li><a href=\"#remove_group\">Remove group</a></li>\n  <li><a href=\"#view_detail\">View detail</a></li>\n</ul>";
 
 /***/ }),
 /* 108 */

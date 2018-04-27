@@ -104,6 +104,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 	    this.connections = new Connections();
 	    this.nodes.bind('node:renderConnections', this.renderConnections.bind(this));
+	    this.groups.bind('node:renderConnections', this.renderConnections.bind(this));
 	  }
 	
 	  Core.prototype.renderConnections = function(node) {

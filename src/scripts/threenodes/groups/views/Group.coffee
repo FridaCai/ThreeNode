@@ -15,20 +15,17 @@ class Group extends Backbone.View
   initialize: (model) ->
     @makeElement()
     @render()
-    # @initContextMenus()
+    @initContextMenus()
+    @makeDraggable()
 
 
-    # @makeDraggable()
-    # @initNodeClick()
-    # @initTitleClick()
+    @initNodeClick()
+    @initTitleClick()
 
     # @model.on('change', @render)
     # @model.on('remove', () => @remove())
     # @model.on("node:computePosition", @computeNodePosition)
-    # @model.on("node:renderConnections", @renderConnections)
     # @model.on("node:addSelectedClass", @addSelectedClass)
-    
-
 
 
   makeElement: () =>
@@ -135,12 +132,7 @@ class Group extends Backbone.View
   addSelectedClass: () =>
     @$el.addClass("ui-selected")
 
-  renderConnections: () =>
-    @model.renderConnections()
-    ## for group
-    # if @model.nodes
-    #   _.each @model.nodes.models, (n) ->
-    #     n.fields.renderConnections()
+  
 
 
 
@@ -155,6 +147,7 @@ class Group extends Backbone.View
     self = this
     $(@el).click (e) ->
       if e.metaKey == false
+        $( ".group" ).removeClass("ui-selected")
         $( ".node" ).removeClass("ui-selected")
         $(this).addClass("ui-selecting")
       else
@@ -165,7 +158,7 @@ class Group extends Backbone.View
       selectable = $("#container").data("ui-selectable")
       if !selectable then return
       selectable.refresh()
-      selectable._mouseStop(null)
+      # selectable._mouseStop(null)
       # self.model.fields.renderSidebar()
     return @
 
@@ -231,15 +224,16 @@ class Group extends Backbone.View
             top: dx
             left: dy
           el.data("object").trigger("node:computePosition")
-          el.data("object").trigger("node:renderConnections")
+          # el.data("object").trigger("node:renderConnections")
         self.computeNodePosition()
-        self.renderConnections()
+        self.model.trigger('node:renderConnections', self.model)
+        # self.renderConnections()
       stop: () ->
-        selected_nodes.not(this).each () ->
-          el = $(this).data("object")
-          el.trigger("node:renderConnections")
-        self.computeNodePosition()
-        self.renderConnections()
+        # selected_nodes.not(this).each () ->
+        #   el = $(this).data("object")
+        #   el.trigger("node:renderConnections")
+        # self.computeNodePosition()
+        # self.renderConnections()
     return @
 
 module.exports = Group

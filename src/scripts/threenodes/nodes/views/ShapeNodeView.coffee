@@ -143,6 +143,7 @@ class ShapeNodeView extends Backbone.View
     $(@el).click (e) ->
       if e.metaKey == false
         $( ".node" ).removeClass("ui-selected")
+        $( ".group" ).removeClass("ui-selected")
         $(this).addClass("ui-selecting")
       else
         if $(this).hasClass("ui-selected")
@@ -152,7 +153,7 @@ class ShapeNodeView extends Backbone.View
       selectable = $("#container").data("ui-selectable")
       if !selectable then return
       selectable.refresh()
-      selectable._mouseStop(null)
+      # selectable._mouseStop(null)
       # self.model.fields.renderSidebar()
     return @
 

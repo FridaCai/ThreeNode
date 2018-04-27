@@ -132,7 +132,7 @@ class UIView extends Backbone.View
   # Handle the nodes selection
   makeSelectable: () ->
     $("#container").selectable
-      filter: ".node"
+      filter: ".nodes-container >div"
       stop: (event, ui) =>
         $selected = $(".node.ui-selected")
         nodes = []

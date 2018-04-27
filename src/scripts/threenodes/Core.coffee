@@ -34,6 +34,7 @@ class Core
     @connections = new Connections()
 
     @nodes.bind('node:renderConnections', @renderConnections.bind(@))
+    @groups.bind('node:renderConnections', @renderConnections.bind(@))
 
     # Create a group node when selected nodes are grouped
     # @group_definitions.bind("definition:created", @nodes.createGroup)

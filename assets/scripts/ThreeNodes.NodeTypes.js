@@ -553,6 +553,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var selectable;
 	      if (e.metaKey === false) {
 	        $(".node").removeClass("ui-selected");
+	        $(".group").removeClass("ui-selected");
 	        $(this).addClass("ui-selecting");
 	      } else {
 	        if ($(this).hasClass("ui-selected")) {
@@ -565,8 +566,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (!selectable) {
 	        return;
 	      }
-	      selectable.refresh();
-	      return selectable._mouseStop(null);
+	      return selectable.refresh();
 	    });
 	    return this;
 	  };
