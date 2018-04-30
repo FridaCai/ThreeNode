@@ -216,12 +216,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return this;
 	  };
 	
-	  UI.prototype.clearWorkspace = function() {
-	    this.core.nodes.clearWorkspace();
-	    if (this.ui) {
-	      return this.ui.clearWorkspace();
-	    }
-	  };
+	  UI.prototype.clearWorkspace = function() {};
 	
 	  return UI;
 	
@@ -293,9 +288,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = __WEBPACK_EXTERNAL_MODULE_4__;
 
 /***/ }),
-/* 5 */,
-/* 6 */,
-/* 7 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Node, Utils, _,
@@ -307,12 +300,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(4);
 	
-	Utils = __webpack_require__(8);
+	Utils = __webpack_require__(6);
 	
 	Node = (function(superClass) {
 	  extend(Node, superClass);
 	
 	  function Node() {
+	    this.remove = bind(this.remove, this);
 	    this.toJSON = bind(this.toJSON, this);
 	    this.typename = bind(this.typename, this);
 	    this.initialize = bind(this.initialize, this);
@@ -359,6 +353,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return res;
 	  };
 	
+	  Node.prototype.remove = function() {
+	    return this.trigger("node:removed", this);
+	  };
+	
 	  return Node;
 	
 	})(Backbone.Model);
@@ -367,7 +365,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 8 */
+/* 6 */
 /***/ (function(module, exports) {
 
 	var Utils;
@@ -397,6 +395,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
+/* 7 */,
+/* 8 */,
 /* 9 */,
 /* 10 */,
 /* 11 */,
@@ -1063,7 +1063,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	_view_field_context_menu = __webpack_require__(42);
 	
-	__webpack_require__(8);
+	__webpack_require__(6);
 	
 	__webpack_require__(16);
 	
@@ -1265,7 +1265,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	namespace = __webpack_require__(15).namespace;
 	
-	__webpack_require__(7);
+	__webpack_require__(5);
 	
 	NodeView = __webpack_require__(37);
 	
@@ -4867,7 +4867,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(4);
 	
-	Utils = __webpack_require__(8);
+	Utils = __webpack_require__(6);
 	
 	CodeExporter = __webpack_require__(111);
 	
@@ -4911,9 +4911,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  FileHandler.prototype.getLocalJson = function(stringify) {
+	    var res;
 	    if (stringify == null) {
 	      stringify = true;
 	    }
+	    res = {
+	      id: this.core.id,
+	      nodes: jQuery.map(this.core.nodes.models, function(n, i) {
+	        return n.toJSON();
+	      }),
+	      connections: jQuery.map(this.core.connections.models, function(c, i) {
+	        return c.toJSON();
+	      }),
+	      groups: jQuery.map(this.core.groups.models, function(g, i) {
+	        return g.toJSON();
+	      })
+	    };
 	    if (stringify) {
 	      return JSON.stringify(res, null, 2);
 	    } else {
@@ -5077,7 +5090,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(4);
 	
-	__webpack_require__(7);
+	__webpack_require__(5);
 	
 	NodeView = __webpack_require__(37);
 	

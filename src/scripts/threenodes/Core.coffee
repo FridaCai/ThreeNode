@@ -36,7 +36,14 @@ class Core
     @nodes.bind('node:renderConnections', @renderConnections.bind(@))
     @groups.bind('node:renderConnections', @renderConnections.bind(@))
 
-    json = DB.getInstance()
+    
+    
+    
+    
+    #rm connections by node or group
+    @bind "connections:removed", (n)=>
+      @connections.removeByEntity(n)
+    
     # Create a group node when selected nodes are grouped
     # @group_definitions.bind("definition:created", @nodes.createGroup)
 
@@ -66,7 +73,7 @@ class Core
   
 
   setNodes: (json) ->
-    @nodes.removeAll()
+    # @nodes.removeAll()
 
     self = @
     @id = json.id

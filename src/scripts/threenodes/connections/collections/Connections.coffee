@@ -5,10 +5,20 @@ class Connections extends Backbone.Collection
   model: Connection
 
   initialize: (models, options) =>
-    @bind "connection:removed", (c) => @remove(c)
+    @bind "connection:removed", (c) => 
+      @remove(c)
     super
 
+
+  removeByEntity: (n)=>
+    @models.map((c)->
+      if(c.from.id == n.id || c.to.id == n.id)
+        @remove(c)
+    , @)
+
   render: () =>
+    if(c.from.id == c.to.id)
+      return
     @each (c) -> c.render()
 
   renderConnections: (node) =>

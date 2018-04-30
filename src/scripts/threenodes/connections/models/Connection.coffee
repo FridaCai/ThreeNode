@@ -23,16 +23,6 @@ class Connection extends Backbone.Model
     @fromType = obj.fromType;
     @toType = obj.toType;
 
-  # remove: =>
-  #   # Delete variable reference for garbage collection
-  #   delete @from_node
-  #   delete @from_type
-  #   delete @to_node
-  #   delete @to_type
-  #   @trigger "connection:removed", this
-  #   @destroy()
-  #   false
-
   render: () =>
     @trigger("render", this, this)
 

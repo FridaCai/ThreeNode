@@ -37,5 +37,9 @@ class Node extends Backbone.Model
       width: @get('width')
       height: @get('height')
     res
+
+
+  remove: () =>
+    @trigger "node:removed", @
  
 module.exports = Node

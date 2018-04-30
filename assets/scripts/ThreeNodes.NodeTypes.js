@@ -124,9 +124,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = __WEBPACK_EXTERNAL_MODULE_4__;
 
 /***/ }),
-/* 5 */,
-/* 6 */,
-/* 7 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Node, Utils, _,
@@ -138,12 +136,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(4);
 	
-	Utils = __webpack_require__(8);
+	Utils = __webpack_require__(6);
 	
 	Node = (function(superClass) {
 	  extend(Node, superClass);
 	
 	  function Node() {
+	    this.remove = bind(this.remove, this);
 	    this.toJSON = bind(this.toJSON, this);
 	    this.typename = bind(this.typename, this);
 	    this.initialize = bind(this.initialize, this);
@@ -190,6 +189,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return res;
 	  };
 	
+	  Node.prototype.remove = function() {
+	    return this.trigger("node:removed", this);
+	  };
+	
 	  return Node;
 	
 	})(Backbone.Model);
@@ -198,7 +201,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 8 */
+/* 6 */
 /***/ (function(module, exports) {
 
 	var Utils;
@@ -228,6 +231,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
+/* 7 */,
+/* 8 */,
 /* 9 */,
 /* 10 */,
 /* 11 */
@@ -238,7 +243,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  hasProp = {}.hasOwnProperty,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 	
-	Node = __webpack_require__(7);
+	Node = __webpack_require__(5);
 	
 	ShapeNodeView = __webpack_require__(12);
 	
@@ -422,7 +427,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  ShapeNodeView.prototype.initContextMenus = function() {
-	    var node_menu;
+	    var node_menu, self;
+	    self = this;
 	    if ($("#node-context-menu").length < 1) {
 	      node_menu = _.template(_view_node_context_menu, {});
 	      $("body").append(node_menu);
@@ -432,7 +438,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, (function(_this) {
 	      return function(action, el, pos) {
 	        if (action === "remove_node") {
-	          return _this.model.remove();
+	          return self.model.remove();
 	        }
 	      };
 	    })(this));
@@ -991,11 +997,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(4);
 	
-	Utils = __webpack_require__(8);
+	Utils = __webpack_require__(6);
 	
 	Fields = __webpack_require__(20);
 	
-	Node = __webpack_require__(7);
+	Node = __webpack_require__(5);
 	
 	
 	/* NodeNumberSimple model */
@@ -3369,7 +3375,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(4);
 	
-	Node = __webpack_require__(7);
+	Node = __webpack_require__(5);
 	
 	NodeNumberSimple = __webpack_require__(19);
 	
@@ -3860,7 +3866,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(4);
 	
-	__webpack_require__(7);
+	__webpack_require__(5);
 	
 	NodeView = __webpack_require__(37);
 	
@@ -4283,7 +4289,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	_view_field_context_menu = __webpack_require__(42);
 	
-	__webpack_require__(8);
+	__webpack_require__(6);
 	
 	__webpack_require__(16);
 	
@@ -4485,7 +4491,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	namespace = __webpack_require__(15).namespace;
 	
-	__webpack_require__(7);
+	__webpack_require__(5);
 	
 	NodeView = __webpack_require__(37);
 	
@@ -5067,7 +5073,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(4);
 	
-	Node = __webpack_require__(7);
+	Node = __webpack_require__(5);
 	
 	IfElse = (function(superClass) {
 	  extend(IfElse, superClass);
@@ -5356,7 +5362,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(4);
 	
-	Node = __webpack_require__(7);
+	Node = __webpack_require__(5);
 	
 	NodeCodeView = __webpack_require__(47);
 	
@@ -5564,7 +5570,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	__webpack_require__(52);
 	
-	__webpack_require__(7);
+	__webpack_require__(5);
 	
 	NodeView = __webpack_require__(37);
 	
@@ -14309,7 +14315,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(4);
 	
-	Node = __webpack_require__(7);
+	Node = __webpack_require__(5);
 	
 	NodeNumberSimple = __webpack_require__(19);
 	
@@ -14907,7 +14913,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(4);
 	
-	Node = __webpack_require__(7);
+	Node = __webpack_require__(5);
 	
 	NodeWithCenterTextfield = __webpack_require__(36);
 	
@@ -15787,7 +15793,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Rc4Random = __webpack_require__(56);
 	
-	Node = __webpack_require__(7);
+	Node = __webpack_require__(5);
 	
 	RandomSpread = (function(superClass) {
 	  extend(RandomSpread, superClass);

@@ -5,6 +5,10 @@ Group = require '../models/Group'
 class Groups extends Backbone.Collection
 
   initialize: (models, options) =>
+    @bind "group:removed", (group)=>
+      @.remove(group)
+      @trigger "connections:removed", group
+
 
   createGroup: () =>
     nodes = @getSelectedNodes()

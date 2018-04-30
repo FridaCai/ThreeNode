@@ -1,17 +1,23 @@
 _ = require 'Underscore'
 Backbone = require 'Backbone'
-Indexer = require 'threenodes/utils/Indexer'
-Connections = require 'threenodes/connections/collections/Connections'
+# Indexer = require 'threenodes/utils/Indexer'
+# Connections = require 'threenodes/connections/collections/Connections'
 
 class Nodes extends Backbone.Collection
 
   initialize: (models, options) =>
     self = this
+
+    @bind "node:removed", (node)=>
+      @.remove(node)
+      @trigger "connections:removed", node
+
+      
     # save material nodes in an array so they can be quickly rebuild
 
     # Each node collections has it's own indexer, used to get unique id
-    @indexer = new Indexer()
-    @connections = new Connections([], {indexer: @indexer})
+    # @indexer = new Indexer()
+    # @connections = new Connections([], {indexer: @indexer})
 
     # Parent node, used for groups
     # @parent = options.parent
@@ -31,20 +37,20 @@ class Nodes extends Backbone.Collection
     #     if c.from_node == node || c.to_node == node
     #       self.removeConnection(c)
 
-  clearWorkspace: () =>
-    @removeConnections()
-    @removeAll()
-    $("#webgl-window canvas").remove()
-    @materials = []
-    @indexer.reset()
-    return this
+  # clearWorkspace: () =>
+  #   @removeConnections()
+  #   @removeAll()
+  #   $("#webgl-window canvas").remove()
+  #   @materials = []
+  #   @indexer.reset()
+  #   return this
 
   destroy: () =>
-    @removeConnections()
+    # @removeConnections()
     @removeAll()
-    delete @materials
-    delete @indexer
-    delete @connections
+    # delete @materials
+    # delete @indexer
+    # delete @connections
 
   # bindTimelineEvents: (timeline) =>
   #   if @timeline
@@ -70,7 +76,7 @@ class Nodes extends Backbone.Collection
     options.settings = @settings
 
     # Save a reference of the nodes indexer
-    options.indexer = @indexer
+    # options.indexer = @indexer
 
     options.parent = @parent
 
@@ -168,15 +174,15 @@ class Nodes extends Backbone.Collection
 
   #   return grp
 
-  removeGroupsByDefinition: (def) =>
-    _nodes = @models.concat()
-    _.each _nodes, (node) -> if node.definition && node.definition.gid == def.gid then node.remove()
+  # removeGroupsByDefinition: (def) =>
+  #   _nodes = @models.concat()
+  #   _.each _nodes, (node) -> if node.definition && node.definition.gid == def.gid then node.remove()
 
-  renderAllConnections: () =>
-    @connections.render()
+  # renderAllConnections: () =>
+  #   @connections.render()
 
-  removeConnection: (c) ->
-    @connections.remove(c)
+  # removeConnection: (c) ->
+  #   @connections.remove(c)
 
 
   getById: (id) ->
@@ -208,14 +214,14 @@ class Nodes extends Backbone.Collection
     for node in $(".node.ui-selected")
       $(node).data("object").remove()
 
-  removeAll: () ->
-    $("#tab-attribute").html("")
-    models = @models.concat()
-    _.invoke models, "remove"
-    @reset([])
-    true
+  # removeAll: () ->
+  #   $("#tab-attribute").html("")
+  #   models = @models.concat()
+  #   _.invoke models, "remove"
+  #   @reset([])
+  #   true
 
-  removeConnections: () ->
-    @connections.removeAll()
+  # removeConnections: () ->
+  #   @connections.removeAll()
 
 module.exports = Nodes

@@ -140,9 +140,9 @@ class UI
     return this
 
   clearWorkspace: () =>
-    @core.nodes.clearWorkspace()
+    # @core.nodes.clearWorkspace()
     # @core.group_definitions.removeAll()
-    if @ui then @ui.clearWorkspace()
+    # if @ui then @ui.clearWorkspace()
     #@initTimeline()
 
 UI.nodes = {}
