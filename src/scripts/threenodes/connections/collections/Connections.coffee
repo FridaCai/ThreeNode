@@ -16,15 +16,6 @@ class Connections extends Backbone.Collection
       if(c.to == node or c.from == node)
         c.render()
 
-  # create: (model, options) =>
-  #   if !options then options = {}
-  #   model.indexer = @indexer
-  #   model = @_prepareModel(model, options)
-  #   if !model
-  #     return false
-  #   @add(model, options)
-  #   return model
-
   removeAll: () =>
     @remove(@models)
 

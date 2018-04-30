@@ -81,7 +81,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Indexer = (function() {
 	  function Indexer() {
-	    this.uid = 0;
+	    this.uid = -1;
 	  }
 	
 	  Indexer.prototype.getUID = function() {
@@ -89,7 +89,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  Indexer.prototype.reset = function() {
-	    return this.uid = 0;
+	    return this.uid = -1;
+	  };
+	
+	  Indexer.prototype.set = function(value) {
+	    return this.uid = value;
 	  };
 	
 	  return Indexer;
@@ -177,7 +181,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var res;
 	    res = {
 	      id: this.get('id'),
-	      name: this.get('name'),
 	      type: this.typename(),
 	      x: this.get('x'),
 	      y: this.get('y'),

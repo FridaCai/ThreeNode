@@ -1,16 +1,14 @@
 _ = require 'Underscore'
 Backbone = require 'Backbone'
-Indexer = require 'threenodes/utils/Indexer'
 Group = require '../models/Group'
 
 class Groups extends Backbone.Collection
 
   initialize: (models, options) =>
-    @indexer = options.indexer
 
   createGroup: () =>
     nodes = @getSelectedNodes()
-    n = new Group({nodes: nodes}, {indexer: @indexer})
+    n = new Group({nodes: nodes})
     @add(n)
   
   getById: (id) ->

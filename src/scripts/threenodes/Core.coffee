@@ -17,7 +17,8 @@ class Core
   @fields: {models:{}, views: {}}
   @nodes: {models:{}, views: {}}
   @groups: {models: {}, views: {}}
-
+  @id: Indexer.getInstance().getUID()
+  
   constructor: (options) ->
     # Default settings
     settings =
@@ -28,14 +29,14 @@ class Core
 
     # Initialize some core classes
     # @group_definitions = new GroupDefinitions([])
-    indexer = new Indexer()
-    @groups = new Groups([], {indexer: indexer})
-    @nodes = new Nodes([], {settings: @settings, indexer:indexer})
+    @groups = new Groups([])
+    @nodes = new Nodes([], {settings: @settings})
     @connections = new Connections()
 
     @nodes.bind('node:renderConnections', @renderConnections.bind(@))
     @groups.bind('node:renderConnections', @renderConnections.bind(@))
 
+    json = DB.getInstance()
     # Create a group node when selected nodes are grouped
     # @group_definitions.bind("definition:created", @nodes.createGroup)
 
@@ -62,31 +63,24 @@ class Core
     Core.nodes.views[viewName] = nodeView
     return true
 
-  getGroupByNode: (id) ->
-    for group in @db.groups
-      if(group.nodes.includes(id))
-        return group
-    return
+  
 
-  getNodeById: (id) ->
-    for node in @db.nodes
-      if(node.id == id)
-        return node
-    return
-
-  setNodes: (json_object) ->
+  setNodes: (json) ->
     @nodes.removeAll()
-    @db = json_object
-    self = @
 
-    @db.nodes.map (obj) ->
-      if !self.getGroupByNode(obj.id, self.db.groups)
-        nodeClass = Core.nodes.models[obj.type]
-        node = new nodeClass(obj)
-        self.nodes.push(node)
+    self = @
+    @id = json.id
+    maxid = json.id
+
+    json.nodes.map (obj) ->
+      maxid = if obj.id > maxid then obj.id else maxid
+      nodeClass = Core.nodes.models[obj.type]
+      node = new nodeClass(obj)
+      self.nodes.push(node)
 
     # group
-    @db.groups.map (obj) ->
+    json.groups.map (obj) ->
+      maxid = if obj.id > maxid then obj.id else maxid
       groupObj = {
         id: obj.id,
         x: obj.x,
@@ -96,33 +90,21 @@ class Core
         nodes: []
       }
 
-      obj.nodes.map (nodeId) ->
-        nodeObj = self.getNodeById(nodeId)
+      obj.nodes.map (nodeObj) ->
+        maxid = if nodeObj.id > maxid then nodeObj.id else maxid
         node = new Core.nodes.models[nodeObj.type](nodeObj)
         groupObj.nodes.push(node)
       
       group = new Group(groupObj)
       self.groups.push(group)
 
-      
-    # connections
-    @db.connections.map (c) ->
-      fromNode = self.nodes.getById(c.from)
-      fromGroup = self.groups.getByNodeId(c.from)
-      toNode = self.nodes.getById(c.to)
-      toGroup = self.groups.getByNodeId(c.to)
-      obj = {
-        id: c.id,
-        fromType: c.fromType,
-        toType: c.toType
-      }
-      
-      if fromGroup && toGroup && fromGroup.id == toGroup.id
-        # do nothing
-      else
-        obj.from = fromGroup || fromNode
-        obj.to = toGroup || toNode
-        connection = new Connection(obj)
-        self.connections.push(connection)
+
+    #connections
+    json.connections.map (c) ->
+      maxid = if c.id > maxid then c.id else maxid
+      connection = new Connection(c)
+      self.connections.push(connection)
+
+    Indexer.getInstance().set(maxid)
 
 module.exports = Core

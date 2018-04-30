@@ -141,7 +141,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var res;
 	    res = {
 	      id: this.get('id'),
-	      name: this.get('name'),
 	      type: this.typename(),
 	      x: this.get('x'),
 	      y: this.get('y'),

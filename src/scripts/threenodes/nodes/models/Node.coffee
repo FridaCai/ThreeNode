@@ -31,7 +31,6 @@ class Node extends Backbone.Model
   toJSON: () =>
     res =
       id: @get('id')
-      name: @get('name')
       type: @typename()
       x: @get('x')
       y: @get('y')

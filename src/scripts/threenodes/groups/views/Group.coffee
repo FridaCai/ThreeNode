@@ -70,7 +70,7 @@ class Group extends Backbone.View
     @model.set
       x: pos.left + $("#container-wrapper").scrollLeft()
       y: pos.top + $("#container-wrapper").scrollTop()
-
+    
 
 
 
@@ -224,10 +224,8 @@ class Group extends Backbone.View
             top: dx
             left: dy
           el.data("object").trigger("node:computePosition")
-          # el.data("object").trigger("node:renderConnections")
         self.computeNodePosition()
         self.model.trigger('node:renderConnections', self.model)
-        # self.renderConnections()
       stop: () ->
         # selected_nodes.not(this).each () ->
         #   el = $(this).data("object")

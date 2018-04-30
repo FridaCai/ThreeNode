@@ -1,16 +1,20 @@
-# Frida todo: why cannot be singleton?
+# id generator.
 
 _instance = null
 
 class Indexer
   constructor: () ->
-    @uid = 0
+    @uid = -1
 
   getUID: () ->
     return @uid += 1
     
   reset: () ->
-    @uid = 0
+    @uid = -1
+
+  # when load, need to set id according to external file
+  set: (value)->
+    @uid = value
 
 
 Indexer.getInstance = () ->

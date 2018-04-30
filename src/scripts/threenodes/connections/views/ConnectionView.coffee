@@ -58,21 +58,6 @@ class ConnectionView extends Backbone.View
     o1.left += diff
     return o1
 
-  getFieldPosition_deprecated: (field) ->
-    # if !field.button
-    #   console.log "no button"
-    #   console.log field
-    #   return {left: 0, top: 0}
-    # o1 = $(".inner-field span", field.button).offset()
-    # #console.log field.button
-    # if !o1
-    #   console.log "no o1"
-    #   return {left: 0, top: 0}
-    diff = 3
-    o1.top += diff
-    o1.left += diff
-    return o1
-
   renderTriangle: ()->
     return;
     len = @curve.getTotalLength()

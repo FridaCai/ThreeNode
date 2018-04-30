@@ -27,11 +27,8 @@ class FileHandler extends Backbone.Events
     fileSaver = saveAs(blob, "nodes.js")
 
   getLocalJson: (stringify = true) =>
-    res =
-      uid: Indexer.getInstance().getUID()
-      nodes: jQuery.map(@core.nodes.models, (n, i) -> n.toJSON())
-      connections: jQuery.map(@core.connections.models, (c, i) -> c.toJSON())
-      groups: jQuery.map(@core.groups.models, (g, i) -> g.toJSON())
+    # res = @core.db.syncWithDm(@core.nodes, @core.connections, @core.groups)
+    # todo.
 
     if stringify
       return JSON.stringify(res, null, 2)
