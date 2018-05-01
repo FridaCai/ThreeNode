@@ -113,6 +113,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return _this.connections.removeByGroup(g);
 	      };
 	    })(this));
+	    this.nodes.bind("connection:create", (function(_this) {
+	      return function(op) {
+	        return _this.connections.create(op);
+	      };
+	    })(this));
 	  }
 	
 	  Core.prototype.renderConnections = function(node) {
@@ -527,6 +532,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.render = bind(this.render, this);
 	    this.removeByNode = bind(this.removeByNode, this);
 	    this.removeByGroup = bind(this.removeByGroup, this);
+	    this.create = bind(this.create, this);
 	    this.initialize = bind(this.initialize, this);
 	    return Connections.__super__.constructor.apply(this, arguments);
 	  }
@@ -540,6 +546,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	      };
 	    })(this));
 	    return Connections.__super__.initialize.apply(this, arguments);
+	  };
+	
+	  Connections.prototype.create = function(op) {
+	    return this.add(new Connection({
+	      from: op.from,
+	      to: op.to,
+	      fromType: op.fromType,
+	      toType: op.toType
+	    }));
 	  };
 	
 	  Connections.prototype.removeByGroup = function(g) {

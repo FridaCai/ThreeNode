@@ -4394,7 +4394,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.initContextMenus();
 	    this.makeDraggable();
 	    this.initNodeClick();
-	    return this.initTitleClick();
+	    this.initTitleClick();
+	    return this.model.on('remove', (function(_this) {
+	      return function() {
+	        return _this.remove();
+	      };
+	    })(this));
 	  };
 	
 	  Group.prototype.makeElement = function() {

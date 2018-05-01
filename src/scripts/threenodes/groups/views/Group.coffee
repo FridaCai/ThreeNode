@@ -23,7 +23,7 @@ class Group extends Backbone.View
     @initTitleClick()
 
     # @model.on('change', @render)
-    # @model.on('remove', () => @remove())
+    @model.on('remove', () => @remove())
     # @model.on("node:computePosition", @computeNodePosition)
     # @model.on("node:addSelectedClass", @addSelectedClass)
 
@@ -237,6 +237,5 @@ class Group extends Backbone.View
 
 module.exports = Group
 
-# ThreeNodes.Core.addGroupView('Group', Group)
 
 

@@ -511,12 +511,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      hoverClass: "ui-state-hover",
 	      tolerance: "pointer",
 	      drop: function(event, ui) {
-	        var from_node, from_type, to_node, to_type;
-	        from_node = $(ui.draggable).parent().data('object');
-	        from_type = $(ui.draggable).attr('data-attr');
-	        to_node = self.model;
-	        to_type = $(this).attr('data-attr');
-	        self.model.createConnection(from_node, from_type, to_node, to_type);
+	        self.model.trigger("connection:create", {
+	          from: $(ui.draggable).parent().data('object').id,
+	          fromType: $(ui.draggable).attr('data-attr'),
+	          to: self.model.id,
+	          toType: $(this).attr('data-attr')
+	        });
 	        return this;
 	      }
 	    });

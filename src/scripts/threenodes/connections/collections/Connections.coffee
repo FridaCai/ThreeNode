@@ -9,6 +9,14 @@ class Connections extends Backbone.Collection
       @remove(c)
     super
 
+  create: (op) =>
+    @add(new Connection(
+      from: op.from
+      to: op.to
+      fromType: op.fromType
+      toType: op.toType
+    ))
+
   removeByGroup: (g)=>
     ids = [g.id]
     

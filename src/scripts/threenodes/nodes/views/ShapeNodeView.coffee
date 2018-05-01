@@ -106,13 +106,12 @@ class ShapeNodeView extends Backbone.View
       hoverClass: "ui-state-hover"
       tolerance: "pointer"
       drop: (event, ui) ->
-        from_node = $(ui.draggable).parent().data('object') 
-        from_type = $(ui.draggable).attr('data-attr')
-
-        to_node = self.model
-        to_type = $(@).attr('data-attr')
-        
-        self.model.createConnection(from_node, from_type, to_node, to_type)
+        self.model.trigger("connection:create", {
+          from: $(ui.draggable).parent().data('object').id 
+          fromType: $(ui.draggable).attr('data-attr')
+          to: self.model.id
+          toType: $(@).attr('data-attr')
+        })
         return this
   render: () =>
     @$el.css
@@ -232,7 +231,6 @@ class ShapeNodeView extends Backbone.View
         # self.renderConnections()
         # self.model.trigger('node:renderConnections')
         
-        # Frida: write to db?
     return @
 
 ThreeNodes.Core.addNodeView('ShapeNodeView', ShapeNodeView)
