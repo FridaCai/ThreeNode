@@ -2,7 +2,7 @@ _ = require 'Underscore'
 Backbone = require 'Backbone'
 Utils = require 'threenodes/utils/Utils'
 CodeExporter = require 'threenodes/utils/CodeExporter'
-Indexer = require './Indexer'
+
 
 require 'Blob'
 require 'FileSaver'

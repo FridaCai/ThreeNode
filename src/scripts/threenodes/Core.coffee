@@ -1,5 +1,3 @@
-Indexer = require './utils/Indexer'
-
 Nodes = require './nodes/collections/Nodes'
 Node = require './nodes/models/Node'
 
@@ -9,6 +7,8 @@ Connection = require './connections/models/Connection'
 Groups = require './groups/collections/Groups'
 Group = require './groups/models/Group'
 
+# Frida. please find better solution.
+Indexer = require 'threenodes/utils/Indexer'
 
 #require 'jquery'
 
@@ -17,9 +17,11 @@ class Core
   @fields: {models:{}, views: {}}
   @nodes: {models:{}, views: {}}
   @groups: {models: {}, views: {}}
-  @id: Indexer.getInstance().getUID()
+  
   
   constructor: (options) ->
+    @id = indexer.getUID()
+
     # Default settings
     settings =
       test: false
@@ -36,24 +38,34 @@ class Core
     @nodes.bind('node:renderConnections', @renderConnections.bind(@))
     @groups.bind('node:renderConnections', @renderConnections.bind(@))
 
-    
-    
-    
-    
-    #rm connections by node or group
-    @nodes.bind "connections:removed", (n)=>
-      @connections.removeByNode(n)
-    @groups.bind "connections:removed", (g)=>
-      @connections.removeByGroup(g)
+    @nodes.bind "connections:removed", (n)=>@connections.removeByNode(n)
+    @groups.bind "connections:removed", (g)=>@connections.removeByGroup(g)
+    @nodes.bind "connection:create", (op) =>@connections.create(op)
 
-    @nodes.bind "connection:create", (op) =>
-      @connections.create(op)
-    
-    # Create a group node when selected nodes are grouped
-    # @group_definitions.bind("definition:created", @nodes.createGroup)
 
-    # When a group definition is removed delete all goup nodes using this definition
-    # @group_definitions.bind("remove", @nodes.removeGroupsByDefinition)
+  createGroup: ()->
+    nodes = @getSelectedNodes()
+    @groups.add(new Group({nodes: nodes}))
+    @nodes.remove(nodes)
+    
+    connectionsToRM = @connections.filter((c)->
+      findnode = nodes.find((n)->
+        n.id == c.from or n.id == c.to
+      )
+      if(findnode)
+        return true;
+      return false
+    )    
+    @connections.remove(connectionsToRM)
+
+
+  getSelectedNodes: () ->
+    selected_nodes = []
+    $selected = $(".node.ui-selected").not(".node .node")
+    $selected.each () ->
+      node = $(this).data("object")
+      selected_nodes.push(node)
+    return selected_nodes
 
   renderConnections: (node) ->
     @connections.renderConnections(node)
@@ -117,6 +129,6 @@ class Core
       connection = new Connection(c)
       self.connections.push(connection)
 
-    Indexer.getInstance().set(maxid)
+    indexer.set(maxid)
 
 module.exports = Core

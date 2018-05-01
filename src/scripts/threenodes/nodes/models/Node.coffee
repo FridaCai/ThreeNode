@@ -4,7 +4,6 @@ Utils = require 'threenodes/utils/Utils'
 
 class Node extends Backbone.Model
   defaults:
-    id: -1
     x: 0
     y: 0
     width: 90
@@ -14,7 +13,7 @@ class Node extends Backbone.Model
   initialize: (obj) =>
     super
     
-    id = obj.id || Index.getInstance().getUID() #todo: Indexer
+    id = obj.id || indexer.getUID() #todo: Indexer
     @set('id', id)
     
     name = obj.name || @typename()

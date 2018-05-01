@@ -7,7 +7,7 @@
 		exports["NodeTypes.Three"] = factory(require("_"), require("Backbone"), require("jQuery"), require("Blob"), require("FileSaver"), require("Three"));
 	else
 		root["ThreeNodes"] = root["ThreeNodes"] || {}, root["ThreeNodes"]["NodeTypes.Three"] = factory(root["_"], root["Backbone"], root["jQuery"], root["Blob"], root["FileSaver"], root["Three"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_4__, __WEBPACK_EXTERNAL_MODULE_17__, __WEBPACK_EXTERNAL_MODULE_80__, __WEBPACK_EXTERNAL_MODULE_81__, __WEBPACK_EXTERNAL_MODULE_84__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_17__, __WEBPACK_EXTERNAL_MODULE_80__, __WEBPACK_EXTERNAL_MODULE_81__, __WEBPACK_EXTERNAL_MODULE_84__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -71,7 +71,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 1 */,
-/* 2 */,
+/* 2 */
+/***/ (function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_2__;
+
+/***/ }),
 /* 3 */
 /***/ (function(module, exports) {
 
@@ -79,12 +84,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 4 */
-/***/ (function(module, exports) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_4__;
-
-/***/ }),
-/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Node, Utils, _,
@@ -92,11 +91,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(3);
+	_ = __webpack_require__(2);
 	
-	Backbone = __webpack_require__(4);
+	Backbone = __webpack_require__(3);
 	
-	Utils = __webpack_require__(6);
+	Utils = __webpack_require__(5);
 	
 	Node = (function(superClass) {
 	  extend(Node, superClass);
@@ -110,7 +109,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  Node.prototype.defaults = {
-	    id: -1,
 	    x: 0,
 	    y: 0,
 	    width: 90,
@@ -121,7 +119,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  Node.prototype.initialize = function(obj) {
 	    var id, name;
 	    Node.__super__.initialize.apply(this, arguments);
-	    id = obj.id || Index.getInstance().getUID();
+	    id = obj.id || indexer.getUID();
 	    this.set('id', id);
 	    name = obj.name || this.typename();
 	    this.set('name', name);
@@ -161,7 +159,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports) {
 
 	var Utils;
@@ -191,6 +189,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
+/* 6 */,
 /* 7 */,
 /* 8 */,
 /* 9 */,
@@ -254,13 +253,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(3);
+	_ = __webpack_require__(2);
 	
-	Backbone = __webpack_require__(4);
+	Backbone = __webpack_require__(3);
 	
-	Utils = __webpack_require__(6);
+	Utils = __webpack_require__(5);
 	
-	Node = __webpack_require__(5);
+	Node = __webpack_require__(4);
 	
 	PlaneGeometry = (function(superClass) {
 	  extend(PlaneGeometry, superClass);
@@ -865,11 +864,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(3);
+	_ = __webpack_require__(2);
 	
-	Backbone = __webpack_require__(4);
+	Backbone = __webpack_require__(3);
 	
-	Node = __webpack_require__(5);
+	Node = __webpack_require__(4);
 	
 	PointLight = (function(superClass) {
 	  extend(PointLight, superClass);
@@ -1146,11 +1145,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(3);
+	_ = __webpack_require__(2);
 	
-	Backbone = __webpack_require__(4);
+	Backbone = __webpack_require__(3);
 	
-	Node = __webpack_require__(5);
+	Node = __webpack_require__(4);
 	
 	NodeMaterialBase = __webpack_require__(60);
 	
@@ -1403,7 +1402,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	Node = __webpack_require__(5);
+	Node = __webpack_require__(4);
 	
 	NodeMaterialBase = (function(superClass) {
 	  extend(NodeMaterialBase, superClass);
@@ -1525,13 +1524,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(3);
+	_ = __webpack_require__(2);
 	
-	Backbone = __webpack_require__(4);
+	Backbone = __webpack_require__(3);
 	
-	Utils = __webpack_require__(6);
+	Utils = __webpack_require__(5);
 	
-	Node = __webpack_require__(5);
+	Node = __webpack_require__(4);
 	
 	__webpack_require__(62);
 	
@@ -2727,11 +2726,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	jQuery = __webpack_require__(17);
 	
-	_ = __webpack_require__(3);
+	_ = __webpack_require__(2);
 	
-	Backbone = __webpack_require__(4);
+	Backbone = __webpack_require__(3);
 	
-	Node = __webpack_require__(5);
+	Node = __webpack_require__(4);
 	
 	__webpack_require__(72);
 	
@@ -8537,7 +8536,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	Node = __webpack_require__(5);
+	Node = __webpack_require__(4);
 	
 	Object3D = (function(superClass) {
 	  extend(Object3D, superClass);
@@ -8719,9 +8718,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Backbone, WebglBase, _,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 	
-	_ = __webpack_require__(3);
+	_ = __webpack_require__(2);
 	
-	Backbone = __webpack_require__(4);
+	Backbone = __webpack_require__(3);
 	
 	__webpack_require__(75);
 	
@@ -9326,13 +9325,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(3);
+	_ = __webpack_require__(2);
 	
-	Backbone = __webpack_require__(4);
+	Backbone = __webpack_require__(3);
 	
-	Utils = __webpack_require__(6);
+	Utils = __webpack_require__(5);
 	
-	Node = __webpack_require__(5);
+	Node = __webpack_require__(4);
 	
 	__webpack_require__(84);
 	
@@ -10671,13 +10670,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(3);
+	_ = __webpack_require__(2);
 	
-	Backbone = __webpack_require__(4);
+	Backbone = __webpack_require__(3);
 	
-	Utils = __webpack_require__(6);
+	Utils = __webpack_require__(5);
 	
-	Node = __webpack_require__(5);
+	Node = __webpack_require__(4);
 	
 	Object3D = __webpack_require__(73);
 	

@@ -18,29 +18,24 @@ class Workspace extends Backbone.View
     @settings = options.settings
     @initDrop()
 
-  render: (nodes, connections, groups) =>
-    # Keep a reference of the current nodes
-    @nodes = nodes
-    @connections = connections
-    @groups = groups
-
-    console.log "Workspace.render " + nodes.length
     @views = []
+    @nodes = core.nodes
+    @connections = core.connections
+    @groups = core.groups
 
-    # Create the views for already created nodes and connections
-    # _.each(@nodes.models, @renderNode)
-    # _.each(@nodes.connections.models, @renderConnection)
-
-    # Create views when a new node is created
     @nodes.bind("add", @renderNode)
     @connections.bind("add", @renderConnection)
     @groups.bind("add", @renderGroup)
+
+  render: () =>
+    
+    
 
   destroy: () =>
     # Remove all existing views before displaying new ones
     _.each(@views, (view) -> view.remove())
     @nodes.unbind("add", @renderNode)
-    @nodes.connections.unbind("add", @renderConnection)
+    @connections.unbind("add", @renderConnection)
     delete @views
     delete @settings
     @remove()

@@ -1,10 +1,9 @@
 Backbone = require 'Backbone'
-Indexer = require 'threenodes/utils/Indexer'
 
 # Node to Node; Group to Group; Node to Group
 class Connection extends Backbone.Model
   initialize: (obj) =>
-    id = obj.id || Indexer.getInstance().getUID()
+    id = obj.id || indexer.getUID()
     @set('id', id)
 
     @rawFromId = obj.from
@@ -24,7 +23,6 @@ class Connection extends Backbone.Model
     @toType = obj.toType;
 
   render: () =>
-    
     @trigger("render", this, this)
 
   validate: () =>

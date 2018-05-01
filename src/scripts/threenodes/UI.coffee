@@ -101,7 +101,7 @@ class UI
       @ui.menubar.on("LoadFile", @file_handler.loadLocalFile)
       #@ui.menubar.on("ExportImage", @webgl.exportImage)
       # @ui.menubar.on("GroupSelectedNodes", @core.group_definitions.groupSelectedNodes)
-      @ui.menubar.on("GroupSelectedNodes", @core.groups.createGroup)
+      @ui.menubar.on("GroupSelectedNodes", @core.createGroup.bind(@core))
 
       # Special events
       @url_handler.on("SetDisplayModeCommand", @ui.setDisplayMode)

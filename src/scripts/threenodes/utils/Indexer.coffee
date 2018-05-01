@@ -23,3 +23,6 @@ Indexer.getInstance = () ->
   return _instance;
 
 module.exports = Indexer
+
+# Frida. find better solutions. indexer will be included into several packages. so there will be multiple indexer instance with diff uid.
+window.indexer = Indexer.getInstance()

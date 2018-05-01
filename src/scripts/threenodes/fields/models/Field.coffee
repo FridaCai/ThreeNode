@@ -1,6 +1,5 @@
 _ = require 'Underscore'
 Backbone = require 'Backbone'
-Indexer = require 'threenodes/utils/Indexer'
 namespace = require('libs/namespace').namespace
 
 BoolField = require 'threenodes/fields/views/sidebar/BoolField'
@@ -18,7 +17,7 @@ class NodeField extends Backbone.Model
   @VIEW:  false
 
   # Create a static indexer used if the field is not part of a nodes collection (tests)
-  @STATIC_INDEXER: new Indexer()
+  @STATIC_INDEXER: indexer
 
   defaults: () ->
     fid: -1

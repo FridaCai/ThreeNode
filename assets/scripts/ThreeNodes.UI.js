@@ -7,7 +7,7 @@
 		exports["UI"] = factory(require("_"), require("Backbone"), require("jQuery"), require("Blob"), require("FileSaver"), require("Raphael"));
 	else
 		root["ThreeNodes"] = root["ThreeNodes"] || {}, root["ThreeNodes"]["UI"] = factory(root["_"], root["Backbone"], root["jQuery"], root["Blob"], root["FileSaver"], root["Raphael"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_4__, __WEBPACK_EXTERNAL_MODULE_17__, __WEBPACK_EXTERNAL_MODULE_80__, __WEBPACK_EXTERNAL_MODULE_81__, __WEBPACK_EXTERNAL_MODULE_100__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_17__, __WEBPACK_EXTERNAL_MODULE_80__, __WEBPACK_EXTERNAL_MODULE_81__, __WEBPACK_EXTERNAL_MODULE_100__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -82,9 +82,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	__webpack_require__(17);
 	
-	_ = __webpack_require__(3);
+	_ = __webpack_require__(2);
 	
-	Backbone = __webpack_require__(4);
+	Backbone = __webpack_require__(3);
 	
 	UIView = __webpack_require__(90);
 	
@@ -178,7 +178,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.ui.menubar.on("ExportCode", this.file_handler.exportCode);
 	      this.ui.menubar.on("LoadJSON", this.file_handler.loadFromJsonData);
 	      this.ui.menubar.on("LoadFile", this.file_handler.loadLocalFile);
-	      this.ui.menubar.on("GroupSelectedNodes", this.core.groups.createGroup);
+	      this.ui.menubar.on("GroupSelectedNodes", this.core.createGroup.bind(this.core));
 	      this.url_handler.on("SetDisplayModeCommand", this.ui.setDisplayMode);
 	      this.ui.breadcrumb.on("click", this.setWorkspaceFromDefinition);
 	    } else {
@@ -236,46 +236,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 1 */
+/* 1 */,
+/* 2 */
 /***/ (function(module, exports) {
 
-	var Indexer, _instance;
-	
-	_instance = null;
-	
-	Indexer = (function() {
-	  function Indexer() {
-	    this.uid = -1;
-	  }
-	
-	  Indexer.prototype.getUID = function() {
-	    return this.uid += 1;
-	  };
-	
-	  Indexer.prototype.reset = function() {
-	    return this.uid = -1;
-	  };
-	
-	  Indexer.prototype.set = function(value) {
-	    return this.uid = value;
-	  };
-	
-	  return Indexer;
-	
-	})();
-	
-	Indexer.getInstance = function() {
-	  if (!_instance) {
-	    _instance = new Indexer();
-	  }
-	  return _instance;
-	};
-	
-	module.exports = Indexer;
-
+	module.exports = __WEBPACK_EXTERNAL_MODULE_2__;
 
 /***/ }),
-/* 2 */,
 /* 3 */
 /***/ (function(module, exports) {
 
@@ -283,12 +250,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 4 */
-/***/ (function(module, exports) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_4__;
-
-/***/ }),
-/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Node, Utils, _,
@@ -296,11 +257,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(3);
+	_ = __webpack_require__(2);
 	
-	Backbone = __webpack_require__(4);
+	Backbone = __webpack_require__(3);
 	
-	Utils = __webpack_require__(6);
+	Utils = __webpack_require__(5);
 	
 	Node = (function(superClass) {
 	  extend(Node, superClass);
@@ -314,7 +275,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  Node.prototype.defaults = {
-	    id: -1,
 	    x: 0,
 	    y: 0,
 	    width: 90,
@@ -325,7 +285,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  Node.prototype.initialize = function(obj) {
 	    var id, name;
 	    Node.__super__.initialize.apply(this, arguments);
-	    id = obj.id || Index.getInstance().getUID();
+	    id = obj.id || indexer.getUID();
 	    this.set('id', id);
 	    name = obj.name || this.typename();
 	    this.set('name', name);
@@ -365,7 +325,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports) {
 
 	var Utils;
@@ -395,6 +355,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
+/* 6 */,
 /* 7 */,
 /* 8 */,
 /* 9 */,
@@ -698,9 +659,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(3);
+	_ = __webpack_require__(2);
 	
-	Backbone = __webpack_require__(4);
+	Backbone = __webpack_require__(3);
 	
 	_view_node_template = __webpack_require__(13);
 	
@@ -969,9 +930,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(3);
+	_ = __webpack_require__(2);
 	
-	Backbone = __webpack_require__(4);
+	Backbone = __webpack_require__(3);
 	
 	FieldButton = __webpack_require__(39);
 	
@@ -1053,9 +1014,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(3);
+	_ = __webpack_require__(2);
 	
-	Backbone = __webpack_require__(4);
+	Backbone = __webpack_require__(3);
 	
 	_view_node_field_in = __webpack_require__(40);
 	
@@ -1063,7 +1024,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	_view_field_context_menu = __webpack_require__(42);
 	
-	__webpack_require__(6);
+	__webpack_require__(5);
 	
 	__webpack_require__(16);
 	
@@ -1259,13 +1220,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(3);
+	_ = __webpack_require__(2);
 	
-	Backbone = __webpack_require__(4);
+	Backbone = __webpack_require__(3);
 	
 	namespace = __webpack_require__(15).namespace;
 	
-	__webpack_require__(5);
+	__webpack_require__(4);
 	
 	NodeView = __webpack_require__(37);
 	
@@ -1898,9 +1859,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(3);
+	_ = __webpack_require__(2);
 	
-	Backbone = __webpack_require__(4);
+	Backbone = __webpack_require__(3);
 	
 	_view_app_ui = __webpack_require__(91);
 	
@@ -2282,9 +2243,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(3);
+	_ = __webpack_require__(2);
 	
-	Backbone = __webpack_require__(4);
+	Backbone = __webpack_require__(3);
 	
 	NodeSidebarView = __webpack_require__(93);
 	
@@ -2547,9 +2508,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(3);
+	_ = __webpack_require__(2);
 	
-	Backbone = __webpack_require__(4);
+	Backbone = __webpack_require__(3);
 	
 	
 	/* NodeSidebarView */
@@ -2637,9 +2598,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(3);
+	_ = __webpack_require__(2);
 	
-	Backbone = __webpack_require__(4);
+	Backbone = __webpack_require__(3);
 	
 	__webpack_require__(17);
 	
@@ -2727,9 +2688,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(3);
+	_ = __webpack_require__(2);
 	
-	Backbone = __webpack_require__(4);
+	Backbone = __webpack_require__(3);
 	
 	Breadcrumb = (function(superClass) {
 	  extend(Breadcrumb, superClass);
@@ -2789,9 +2750,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(3);
+	_ = __webpack_require__(2);
 	
-	Backbone = __webpack_require__(4);
+	Backbone = __webpack_require__(3);
 	
 	_view_menubar = __webpack_require__(97);
 	
@@ -4057,9 +4018,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(3);
+	_ = __webpack_require__(2);
 	
-	Backbone = __webpack_require__(4);
+	Backbone = __webpack_require__(3);
 	
 	ConnectionView = __webpack_require__(104);
 	
@@ -4087,26 +4048,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	  Workspace.prototype.initialize = function(options) {
 	    Workspace.__super__.initialize.apply(this, arguments);
 	    this.settings = options.settings;
-	    return this.initDrop();
-	  };
-	
-	  Workspace.prototype.render = function(nodes, connections, groups) {
-	    this.nodes = nodes;
-	    this.connections = connections;
-	    this.groups = groups;
-	    console.log("Workspace.render " + nodes.length);
+	    this.initDrop();
 	    this.views = [];
+	    this.nodes = core.nodes;
+	    this.connections = core.connections;
+	    this.groups = core.groups;
 	    this.nodes.bind("add", this.renderNode);
 	    this.connections.bind("add", this.renderConnection);
 	    return this.groups.bind("add", this.renderGroup);
 	  };
+	
+	  Workspace.prototype.render = function() {};
 	
 	  Workspace.prototype.destroy = function() {
 	    _.each(this.views, function(view) {
 	      return view.remove();
 	    });
 	    this.nodes.unbind("add", this.renderNode);
-	    this.nodes.connections.unbind("add", this.renderConnection);
+	    this.connections.unbind("add", this.renderConnection);
 	    delete this.views;
 	    delete this.settings;
 	    return this.remove();
@@ -4204,9 +4163,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(3);
+	_ = __webpack_require__(2);
 	
-	Backbone = __webpack_require__(4);
+	Backbone = __webpack_require__(3);
 	
 	__webpack_require__(17);
 	
@@ -4355,9 +4314,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(3);
+	_ = __webpack_require__(2);
 	
-	Backbone = __webpack_require__(4);
+	Backbone = __webpack_require__(3);
 	
 	namespace = __webpack_require__(15).namespace;
 	
@@ -4660,9 +4619,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(3);
+	_ = __webpack_require__(2);
 	
-	Backbone = __webpack_require__(4);
+	Backbone = __webpack_require__(3);
 	
 	
 	/* Timeline View */
@@ -4807,7 +4766,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	Backbone = __webpack_require__(4);
+	Backbone = __webpack_require__(3);
 	
 	UrlHandler = (function(superClass) {
 	  extend(UrlHandler, superClass);
@@ -4867,20 +4826,18 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var Backbone, CodeExporter, FileHandler, Indexer, Utils, _,
+	var Backbone, CodeExporter, FileHandler, Utils, _,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(3);
+	_ = __webpack_require__(2);
 	
-	Backbone = __webpack_require__(4);
+	Backbone = __webpack_require__(3);
 	
-	Utils = __webpack_require__(6);
+	Utils = __webpack_require__(5);
 	
 	CodeExporter = __webpack_require__(111);
-	
-	Indexer = __webpack_require__(1);
 	
 	__webpack_require__(80);
 	
@@ -4977,9 +4934,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Backbone, CodeExporter, _,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 	
-	_ = __webpack_require__(3);
+	_ = __webpack_require__(2);
 	
-	Backbone = __webpack_require__(4);
+	Backbone = __webpack_require__(3);
 	
 	CodeExporter = (function() {
 	  function CodeExporter() {
@@ -5095,11 +5052,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(3);
+	_ = __webpack_require__(2);
 	
-	Backbone = __webpack_require__(4);
+	Backbone = __webpack_require__(3);
 	
-	__webpack_require__(5);
+	__webpack_require__(4);
 	
 	NodeView = __webpack_require__(37);
 	

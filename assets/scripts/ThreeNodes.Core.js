@@ -7,7 +7,7 @@
 		exports["Core"] = factory(require("_"), require("Backbone"));
 	else
 		root["ThreeNodes"] = root["ThreeNodes"] || {}, root["ThreeNodes"]["Core"] = factory(root["_"], root["Backbone"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_4__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -56,19 +56,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var Connection, Connections, Core, Group, Groups, Indexer, Node, Nodes;
 	
-	Indexer = __webpack_require__(1);
+	Nodes = __webpack_require__(1);
 	
-	Nodes = __webpack_require__(2);
+	Node = __webpack_require__(4);
 	
-	Node = __webpack_require__(5);
+	Connections = __webpack_require__(6);
 	
-	Connections = __webpack_require__(7);
+	Connection = __webpack_require__(7);
 	
-	Connection = __webpack_require__(8);
+	Groups = __webpack_require__(8);
 	
-	Groups = __webpack_require__(9);
+	Group = __webpack_require__(9);
 	
-	Group = __webpack_require__(10);
+	Indexer = __webpack_require__(10);
 	
 	Core = (function() {
 	  Core.fields = {
@@ -86,10 +86,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    views: {}
 	  };
 	
-	  Core.id = Indexer.getInstance().getUID();
-	
 	  function Core(options) {
 	    var settings;
+	    this.id = indexer.getUID();
 	    settings = {
 	      test: false,
 	      player_mode: false,
@@ -119,6 +118,38 @@ return /******/ (function(modules) { // webpackBootstrap
 	      };
 	    })(this));
 	  }
+	
+	  Core.prototype.createGroup = function() {
+	    var connectionsToRM, nodes;
+	    nodes = this.getSelectedNodes();
+	    this.groups.add(new Group({
+	      nodes: nodes
+	    }));
+	    this.nodes.remove(nodes);
+	    connectionsToRM = this.connections.filter(function(c) {
+	      var findnode;
+	      findnode = nodes.find(function(n) {
+	        return n.id === c.from || n.id === c.to;
+	      });
+	      if (findnode) {
+	        return true;
+	      }
+	      return false;
+	    });
+	    return this.connections.remove(connectionsToRM);
+	  };
+	
+	  Core.prototype.getSelectedNodes = function() {
+	    var $selected, selected_nodes;
+	    selected_nodes = [];
+	    $selected = $(".node.ui-selected").not(".node .node");
+	    $selected.each(function() {
+	      var node;
+	      node = $(this).data("object");
+	      return selected_nodes.push(node);
+	    });
+	    return selected_nodes;
+	  };
 	
 	  Core.prototype.renderConnections = function(node) {
 	    return this.connections.renderConnections(node);
@@ -182,7 +213,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      connection = new Connection(c);
 	      return self.connections.push(connection);
 	    });
-	    return Indexer.getInstance().set(maxid);
+	    return indexer.set(maxid);
 	  };
 	
 	  return Core;
@@ -194,45 +225,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports) {
-
-	var Indexer, _instance;
-	
-	_instance = null;
-	
-	Indexer = (function() {
-	  function Indexer() {
-	    this.uid = -1;
-	  }
-	
-	  Indexer.prototype.getUID = function() {
-	    return this.uid += 1;
-	  };
-	
-	  Indexer.prototype.reset = function() {
-	    return this.uid = -1;
-	  };
-	
-	  Indexer.prototype.set = function(value) {
-	    return this.uid = value;
-	  };
-	
-	  return Indexer;
-	
-	})();
-	
-	Indexer.getInstance = function() {
-	  if (!_instance) {
-	    _instance = new Indexer();
-	  }
-	  return _instance;
-	};
-	
-	module.exports = Indexer;
-
-
-/***/ }),
-/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Nodes, _,
@@ -240,9 +232,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(3);
+	_ = __webpack_require__(2);
 	
-	Backbone = __webpack_require__(4);
+	Backbone = __webpack_require__(3);
 	
 	Nodes = (function(superClass) {
 	  extend(Nodes, superClass);
@@ -392,6 +384,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
+/* 2 */
+/***/ (function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_2__;
+
+/***/ }),
 /* 3 */
 /***/ (function(module, exports) {
 
@@ -399,12 +397,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 4 */
-/***/ (function(module, exports) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_4__;
-
-/***/ }),
-/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Node, Utils, _,
@@ -412,11 +404,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(3);
+	_ = __webpack_require__(2);
 	
-	Backbone = __webpack_require__(4);
+	Backbone = __webpack_require__(3);
 	
-	Utils = __webpack_require__(6);
+	Utils = __webpack_require__(5);
 	
 	Node = (function(superClass) {
 	  extend(Node, superClass);
@@ -430,7 +422,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  Node.prototype.defaults = {
-	    id: -1,
 	    x: 0,
 	    y: 0,
 	    width: 90,
@@ -441,7 +432,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  Node.prototype.initialize = function(obj) {
 	    var id, name;
 	    Node.__super__.initialize.apply(this, arguments);
-	    id = obj.id || Index.getInstance().getUID();
+	    id = obj.id || indexer.getUID();
 	    this.set('id', id);
 	    name = obj.name || this.typename();
 	    this.set('name', name);
@@ -481,7 +472,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports) {
 
 	var Utils;
@@ -511,7 +502,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Connection, Connections,
@@ -519,9 +510,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	Backbone = __webpack_require__(4);
+	Backbone = __webpack_require__(3);
 	
-	Connection = __webpack_require__(8);
+	Connection = __webpack_require__(7);
 	
 	Connections = (function(superClass) {
 	  extend(Connections, superClass);
@@ -610,17 +601,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var Backbone, Connection, Indexer,
+	var Backbone, Connection,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	Backbone = __webpack_require__(4);
-	
-	Indexer = __webpack_require__(1);
+	Backbone = __webpack_require__(3);
 	
 	Connection = (function(superClass) {
 	  extend(Connection, superClass);
@@ -634,7 +623,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  Connection.prototype.initialize = function(obj) {
 	    var groupFrom, groupTo, id, nodeFrom, nodeTo;
-	    id = obj.id || Indexer.getInstance().getUID();
+	    id = obj.id || indexer.getUID();
 	    this.set('id', id);
 	    this.rawFromId = obj.from;
 	    this.rawToId = obj.to;
@@ -676,7 +665,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 9 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Group, Groups, _,
@@ -684,17 +673,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(3);
+	_ = __webpack_require__(2);
 	
-	Backbone = __webpack_require__(4);
+	Backbone = __webpack_require__(3);
 	
-	Group = __webpack_require__(10);
+	Group = __webpack_require__(9);
 	
 	Groups = (function(superClass) {
 	  extend(Groups, superClass);
 	
 	  function Groups() {
-	    this.createGroup = bind(this.createGroup, this);
 	    this.initialize = bind(this.initialize, this);
 	    return Groups.__super__.constructor.apply(this, arguments);
 	  }
@@ -706,15 +694,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return _this.trigger("connections:removed", group);
 	      };
 	    })(this));
-	  };
-	
-	  Groups.prototype.createGroup = function() {
-	    var n, nodes;
-	    nodes = this.getSelectedNodes();
-	    n = new Group({
-	      nodes: nodes
-	    });
-	    return this.add(n);
 	  };
 	
 	  Groups.prototype.getById = function(id) {
@@ -733,18 +712,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 	  };
 	
-	  Groups.prototype.getSelectedNodes = function() {
-	    var $selected, selected_nodes;
-	    selected_nodes = [];
-	    $selected = $(".node.ui-selected").not(".node .node");
-	    $selected.each(function() {
-	      var node;
-	      node = $(this).data("object");
-	      return selected_nodes.push(node);
-	    });
-	    return selected_nodes;
-	  };
-	
 	  return Groups;
 	
 	})(Backbone.Collection);
@@ -753,7 +720,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 10 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Group, Node, _,
@@ -761,11 +728,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	_ = __webpack_require__(3);
+	_ = __webpack_require__(2);
 	
-	Backbone = __webpack_require__(4);
+	Backbone = __webpack_require__(3);
 	
-	Node = __webpack_require__(5);
+	Node = __webpack_require__(4);
 	
 	Group = (function(superClass) {
 	  extend(Group, superClass);
@@ -778,7 +745,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  Group.prototype.defaults = {
-	    id: -1,
 	    width: 90,
 	    height: 26,
 	    x: 0,
@@ -787,12 +753,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  Group.prototype.initialize = function(obj) {
+	    var avgpos, id, x, y;
 	    Group.__super__.initialize.apply(this, arguments);
+	    id = obj.id || indexer.getUID();
 	    this.set('name', obj.name || this.typename());
-	    this.set('id', obj.id || Indexer.getInstance().getUID());
-	    this.set('x', obj.x);
-	    this.set('y', obj.y);
-	    return this.set('nodes', obj.nodes);
+	    this.set('id', id);
+	    this.set('nodes', obj.nodes);
+	    avgpos = this.getNodesAveragePosition();
+	    x = obj.x ? obj.x : avgpos.x;
+	    y = obj.y ? obj.y : avgpos.y;
+	    this.set('x', x);
+	    return this.set('y', y);
 	  };
 	
 	  Group.prototype.typename = function() {
@@ -830,6 +801,47 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(Backbone.Model);
 	
 	module.exports = Group;
+
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports) {
+
+	var Indexer, _instance;
+	
+	_instance = null;
+	
+	Indexer = (function() {
+	  function Indexer() {
+	    this.uid = -1;
+	  }
+	
+	  Indexer.prototype.getUID = function() {
+	    return this.uid += 1;
+	  };
+	
+	  Indexer.prototype.reset = function() {
+	    return this.uid = -1;
+	  };
+	
+	  Indexer.prototype.set = function(value) {
+	    return this.uid = value;
+	  };
+	
+	  return Indexer;
+	
+	})();
+	
+	Indexer.getInstance = function() {
+	  if (!_instance) {
+	    _instance = new Indexer();
+	  }
+	  return _instance;
+	};
+	
+	module.exports = Indexer;
+	
+	window.indexer = Indexer.getInstance();
 
 
 /***/ })
