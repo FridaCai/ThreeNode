@@ -9,7 +9,6 @@ class Groups extends Backbone.Collection
       @.remove(group)
       @trigger "connections:removed", group
 
-
   createGroup: () =>
     nodes = @getSelectedNodes()
     n = new Group({nodes: nodes})

@@ -9,16 +9,30 @@ class Connections extends Backbone.Collection
       @remove(c)
     super
 
+  removeByGroup: (g)=>
+    ids = [g.id]
+    
+    g.get('nodes').map((n)->
+      ids.push n.id
+    )
+    
+    todelete = @models.filter((c)=>
+      if(ids.includes(c.rawFromId) || ids.includes(c.rawToId))
+        return true
+      return false)
 
-  removeByEntity: (n)=>
+    todelete.map((g)->
+      @.remove(g)
+    ,@)
+
+
+  removeByNode: (n)=>
     @models.map((c)->
       if(c.from.id == n.id || c.to.id == n.id)
         @remove(c)
     , @)
 
   render: () =>
-    if(c.from.id == c.to.id)
-      return
     @each (c) -> c.render()
 
   renderConnections: (node) =>

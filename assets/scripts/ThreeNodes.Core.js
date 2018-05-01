@@ -103,9 +103,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.connections = new Connections();
 	    this.nodes.bind('node:renderConnections', this.renderConnections.bind(this));
 	    this.groups.bind('node:renderConnections', this.renderConnections.bind(this));
-	    this.bind("connections:removed", (function(_this) {
+	    this.nodes.bind("connections:removed", (function(_this) {
 	      return function(n) {
-	        return _this.connections.removeByEntity(n);
+	        return _this.connections.removeByNode(n);
+	      };
+	    })(this));
+	    this.groups.bind("connections:removed", (function(_this) {
+	      return function(g) {
+	        return _this.connections.removeByGroup(g);
 	      };
 	    })(this));
 	  }
@@ -520,7 +525,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.removeAll = bind(this.removeAll, this);
 	    this.renderConnections = bind(this.renderConnections, this);
 	    this.render = bind(this.render, this);
-	    this.removeByEntity = bind(this.removeByEntity, this);
+	    this.removeByNode = bind(this.removeByNode, this);
+	    this.removeByGroup = bind(this.removeByGroup, this);
 	    this.initialize = bind(this.initialize, this);
 	    return Connections.__super__.constructor.apply(this, arguments);
 	  }
@@ -536,7 +542,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return Connections.__super__.initialize.apply(this, arguments);
 	  };
 	
-	  Connections.prototype.removeByEntity = function(n) {
+	  Connections.prototype.removeByGroup = function(g) {
+	    var ids, todelete;
+	    ids = [g.id];
+	    g.get('nodes').map(function(n) {
+	      return ids.push(n.id);
+	    });
+	    todelete = this.models.filter((function(_this) {
+	      return function(c) {
+	        if (ids.includes(c.rawFromId) || ids.includes(c.rawToId)) {
+	          return true;
+	        }
+	        return false;
+	      };
+	    })(this));
+	    return todelete.map(function(g) {
+	      return this.remove(g);
+	    }, this);
+	  };
+	
+	  Connections.prototype.removeByNode = function(n) {
 	    return this.models.map(function(c) {
 	      if (c.from.id === n.id || c.to.id === n.id) {
 	        return this.remove(c);
@@ -545,9 +570,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  Connections.prototype.render = function() {
-	    if (c.from.id === c.to.id) {
-	      return;
-	    }
 	    return this.each(function(c) {
 	      return c.render();
 	    });
@@ -666,7 +688,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return this.bind("group:removed", (function(_this) {
 	      return function(group) {
 	        _this.remove(group);
-	        return _this.trigger("connections:removed", node);
+	        return _this.trigger("connections:removed", group);
 	      };
 	    })(this));
 	  };
@@ -734,6 +756,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend(Group, superClass);
 	
 	  function Group() {
+	    this.remove = bind(this.remove, this);
 	    this.typename = bind(this.typename, this);
 	    this.initialize = bind(this.initialize, this);
 	    return Group.__super__.constructor.apply(this, arguments);
@@ -781,6 +804,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      x: dx,
 	      y: dy
 	    };
+	  };
+	
+	  Group.prototype.remove = function() {
+	    return this.trigger("group:removed", this);
 	  };
 	
 	  return Group;

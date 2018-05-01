@@ -4259,6 +4259,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  ConnectionView.prototype.render = function() {
+	    if (this.model.from.id === this.model.to.id) {
+	      return;
+	    }
 	    if (this.svg) {
 	      this.renderCurve();
 	      this.renderTriangle();
@@ -4403,7 +4406,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  Group.prototype.initContextMenus = function() {
-	    var node_menu;
+	    var node_menu, self;
+	    self = this;
 	    if ($("#node-context-menu").length < 1) {
 	      node_menu = _.template(_view_node_context_menu, {});
 	      $("body").append(node_menu);
@@ -4413,7 +4417,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, (function(_this) {
 	      return function(action, el, pos) {
 	        if (action === "remove_node") {
-	          return _this.model.remove();
+	          return self.model.remove();
 	        }
 	      };
 	    })(this));

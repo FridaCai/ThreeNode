@@ -41,4 +41,7 @@ class Group extends Backbone.Model
         dy = (min_y + max_y) / 2
         return {x: dx, y: dy}
 
+    remove: () =>
+        @trigger "group:removed", @
+
 module.exports = Group

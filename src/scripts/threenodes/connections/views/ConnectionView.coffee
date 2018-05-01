@@ -36,6 +36,9 @@ class ConnectionView extends Backbone.View
     return true
 
   render: () ->
+    if(@model.from.id == @model.to.id)
+      return
+
     if @svg 
       @renderCurve();
       @renderTriangle();

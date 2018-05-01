@@ -24,6 +24,7 @@ class Connection extends Backbone.Model
     @toType = obj.toType;
 
   render: () =>
+    
     @trigger("render", this, this)
 
   validate: () =>

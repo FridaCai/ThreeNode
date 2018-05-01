@@ -48,11 +48,12 @@ class Group extends Backbone.View
 
 
   initContextMenus: () =>
+    self = @
     if $("#node-context-menu").length < 1
       node_menu = _.template(_view_node_context_menu, {})
       $("body").append(node_menu)
     @$el.find(".head").contextMenu {menu: "node-context-menu"}, (action, el, pos) =>
-      if action == "remove_node" then @model.remove()
+      if action == "remove_node" then self.model.remove()
     return @
 
 

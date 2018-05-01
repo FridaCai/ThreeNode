@@ -41,8 +41,10 @@ class Core
     
     
     #rm connections by node or group
-    @bind "connections:removed", (n)=>
-      @connections.removeByEntity(n)
+    @nodes.bind "connections:removed", (n)=>
+      @connections.removeByNode(n)
+    @groups.bind "connections:removed", (g)=>
+      @connections.removeByGroup(g)
     
     # Create a group node when selected nodes are grouped
     # @group_definitions.bind("definition:created", @nodes.createGroup)
