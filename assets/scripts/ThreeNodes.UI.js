@@ -4368,6 +4368,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.addSelectedClass = bind(this.addSelectedClass, this);
 	    this.computeNodePosition = bind(this.computeNodePosition, this);
 	    this.render = bind(this.render, this);
+	    this.onViewDetail = bind(this.onViewDetail, this);
 	    this.initContextMenus = bind(this.initContextMenus, this);
 	    this.makeElement = bind(this.makeElement, this);
 	    return Group.__super__.constructor.apply(this, arguments);
@@ -4398,22 +4399,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  Group.prototype.initContextMenus = function() {
-	    var node_menu, self;
+	    var self;
 	    self = this;
-	    if ($("#node-context-menu").length < 1) {
-	      node_menu = _.template(_view_node_context_menu, {});
-	      $("body").append(node_menu);
+	    if ($("#group-context-menu").length < 1) {
+	      $("body").append(_.template(_view_group_context_menu, {}));
 	    }
-	    this.$el.find(".head").contextMenu({
-	      menu: "node-context-menu"
+	    return this.$el.find(".head").contextMenu({
+	      menu: "group-context-menu"
 	    }, (function(_this) {
 	      return function(action, el, pos) {
-	        if (action === "remove_node") {
-	          return self.model.remove();
+	        if (action === "remove_group") {
+	          self.model.remove();
+	        }
+	        if (action === "view_detail") {
+	          return self.onViewDetail();
 	        }
 	      };
 	    })(this));
-	    return this;
+	  };
+	
+	  Group.prototype.onViewDetail = function() {
+	    return console.log('frida test on view detail', this.model);
 	  };
 	
 	  Group.prototype.render = function() {

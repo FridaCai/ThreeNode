@@ -40,23 +40,18 @@ class Group extends Backbone.View
     @$el.addClass("node-Group")
     @addHandlerListener()
 
-
-  
-
-
-
-
-
   initContextMenus: () =>
     self = @
-    if $("#node-context-menu").length < 1
-      node_menu = _.template(_view_node_context_menu, {})
-      $("body").append(node_menu)
-    @$el.find(".head").contextMenu {menu: "node-context-menu"}, (action, el, pos) =>
-      if action == "remove_node" then self.model.remove()
-    return @
+    
+    if $("#group-context-menu").length < 1
+      $("body").append(_.template(_view_group_context_menu, {}))
 
+    @$el.find(".head").contextMenu {menu: "group-context-menu"}, (action, el, pos) =>
+        if action == "remove_group" then self.model.remove()
+        if action == "view_detail" then self.onViewDetail()
 
+  onViewDetail: () =>
+    console.log('frida test on view detail', @model)
 
   render: () =>
     @$el.css
