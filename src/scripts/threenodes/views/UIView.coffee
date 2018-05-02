@@ -65,6 +65,7 @@ class UIView extends Backbone.View
   clearWorkspace: () =>
     # Remove the nodes attributes from the sidebar
     @sidebar.clearWorkspace()
+    $("#tab-attribute").html("")
 
   # Setup menubar
   initMenubar: () =>

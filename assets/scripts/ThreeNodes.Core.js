@@ -243,10 +243,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend(Nodes, superClass);
 	
 	  function Nodes() {
-	    this.stopSound = bind(this.stopSound, this);
-	    this.startSound = bind(this.startSound, this);
-	    this.showNodesAnimation = bind(this.showNodesAnimation, this);
-	    this.render = bind(this.render, this);
 	    this.createNode = bind(this.createNode, this);
 	    this.find = bind(this.find, this);
 	    this.destroy = bind(this.destroy, this);
@@ -294,77 +290,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return n;
 	  };
 	
-	  Nodes.prototype.render = function() {
-	    var buildNodeArrays, evaluateSubGraph, id, invalidNodes, terminalNodes;
-	    return;
-	    invalidNodes = {};
-	    terminalNodes = {};
-	    buildNodeArrays = function(nodes) {
-	      var i, len, node, results;
-	      results = [];
-	      for (i = 0, len = nodes.length; i < len; i++) {
-	        node = nodes[i];
-	        if (node.hasOutConnection() === false || node.auto_evaluate || node.delays_output) {
-	          terminalNodes[node.attributes["id"] + "/" + node.attributes["gid"]] = node;
-	        }
-	        invalidNodes[node.attributes["id"] + "/" + node.attributes["gid"]] = node;
-	        if (node.nodes) {
-	          results.push(buildNodeArrays(node.nodes.models));
-	        } else {
-	          results.push(void 0);
-	        }
-	      }
-	      return results;
-	    };
-	    buildNodeArrays(this.models);
-	    evaluateSubGraph = function(node) {
-	      var i, len, upnode, upstreamNodes;
-	      upstreamNodes = node.getUpstreamNodes();
-	      for (i = 0, len = upstreamNodes.length; i < len; i++) {
-	        upnode = upstreamNodes[i];
-	        if (invalidNodes[upnode.attributes["id"] + "/" + upnode.attributes["gid"]] && !upnode.delays_output) {
-	          evaluateSubGraph(upnode);
-	        }
-	      }
-	      if (node.dirty || node.auto_evaluate) {
-	        node.compute();
-	        node.dirty = false;
-	        node.fields.setFieldInputUnchanged();
-	      }
-	      delete invalidNodes[node.attributes["id"] + "/" + node.attributes["gid"]];
-	      return true;
-	    };
-	    for (id in terminalNodes) {
-	      if (invalidNodes[id]) {
-	        evaluateSubGraph(terminalNodes[id]);
-	      }
-	    }
-	    return true;
-	  };
-	
 	  Nodes.prototype.getById = function(id) {
 	    return this.models.find(function(n) {
 	      return n.get('id') === id;
-	    });
-	  };
-	
-	  Nodes.prototype.showNodesAnimation = function() {
-	    return this.invoke("showNodeAnimation");
-	  };
-	
-	  Nodes.prototype.startSound = function(time) {
-	    return this.each(function(node) {
-	      if (node.playSound instanceof Function) {
-	        return node.playSound(time);
-	      }
-	    });
-	  };
-	
-	  Nodes.prototype.stopSound = function() {
-	    return this.each(function(node) {
-	      if (node.stopSound instanceof Function) {
-	        return node.stopSound();
-	      }
 	    });
 	  };
 	
@@ -377,6 +305,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      results.push($(node).data("object").remove());
 	    }
 	    return results;
+	  };
+	
+	  Nodes.prototype.removeAll = function() {
+	    return this.remove(this.models);
 	  };
 	
 	  return Nodes;
@@ -719,6 +651,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return n.id === id;
 	      });
 	    });
+	  };
+	
+	  Groups.prototype.removeAll = function() {
+	    return this.remove(this.models);
 	  };
 	
 	  return Groups;

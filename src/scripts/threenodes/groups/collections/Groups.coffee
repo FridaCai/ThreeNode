@@ -18,7 +18,9 @@ class Groups extends Backbone.Collection
       nodes = g.get('nodes')
       return nodes.find (n) -> 
         return n.id == id
-
+  
+  removeAll: () ->
+    @remove(@models)
 
 
 module.exports = Groups

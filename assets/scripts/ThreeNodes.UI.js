@@ -216,7 +216,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return this;
 	  };
 	
-	  UI.prototype.clearWorkspace = function() {};
+	  UI.prototype.clearWorkspace = function() {
+	    this.core.nodes.removeAll();
+	    this.core.connections.removeAll();
+	    this.core.groups.removeAll();
+	    indexer.reset();
+	    if (this.ui) {
+	      return this.ui.clearWorkspace();
+	    }
+	  };
 	
 	  return UI;
 	
@@ -1937,7 +1945,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  UIView.prototype.clearWorkspace = function() {
-	    return this.sidebar.clearWorkspace();
+	    this.sidebar.clearWorkspace();
+	    return $("#tab-attribute").html("");
 	  };
 	
 	  UIView.prototype.initMenubar = function() {
