@@ -27,11 +27,13 @@ class ConnectionView extends Backbone.View
     @render()
 
   remove: ->
-    @curve.remove()
-    delete @curve
+    if(@curve)
+      @curve.remove()
+      delete @curve
     
-    @triangle.remove()
-    delete @triangle
+    if(@triangle)
+      @triangle.remove()
+      delete @triangle
 
     return true
 

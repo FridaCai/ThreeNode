@@ -127,7 +127,13 @@ class Group extends Backbone.View
         to_node = self.model
         to_type = $(@).attr('data-attr')
         
-        self.model.createConnection(from_node, from_type, to_node, to_type)
+
+        self.model.trigger("connection:create", {
+          from: $(ui.draggable).parent().data('object').id 
+          fromType: $(ui.draggable).attr('data-attr')
+          to: self.model.id
+          toType: $(@).attr('data-attr')
+        })
         return this
  
   addSelectedClass: () =>

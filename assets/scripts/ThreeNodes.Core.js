@@ -100,8 +100,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      settings: this.settings
 	    });
 	    this.connections = new Connections();
-	    this.nodes.bind('node:renderConnections', this.renderConnections.bind(this));
-	    this.groups.bind('node:renderConnections', this.renderConnections.bind(this));
+	    this.nodes.bind('node:renderConnections', this.renderConnectionsByNode.bind(this));
+	    this.groups.bind('node:renderConnections', this.renderConnectionsByGroup.bind(this));
 	    this.nodes.bind("connections:removed", (function(_this) {
 	      return function(n) {
 	        return _this.connections.removeByNode(n);
@@ -113,6 +113,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      };
 	    })(this));
 	    this.nodes.bind("connection:create", (function(_this) {
+	      return function(op) {
+	        return _this.connections.create(op);
+	      };
+	    })(this));
+	    this.groups.bind("connection:create", (function(_this) {
 	      return function(op) {
 	        return _this.connections.create(op);
 	      };
@@ -142,8 +147,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return selected_nodes;
 	  };
 	
-	  Core.prototype.renderConnections = function(node) {
+	  Core.prototype.renderConnectionsByNode = function(node) {
 	    return this.connections.renderConnections(node);
+	  };
+	
+	  Core.prototype.renderConnectionsByGroup = function(group) {
+	    group.get('nodes').map(function(n) {
+	      return this.connections.renderConnections(n);
+	    }, this);
+	    return this.connections.renderConnections(group);
 	  };
 	
 	  Core.addFieldType = function(fieldName, field) {
@@ -613,17 +625,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  Connection.prototype.initialize = function(obj) {
-	    var groupFrom, groupTo, id, nodeFrom, nodeTo;
+	    var from, id, to;
 	    id = obj.id || indexer.getUID();
 	    this.set('id', id);
 	    this.rawFromId = obj.from;
 	    this.rawToId = obj.to;
-	    groupFrom = core.groups.getByNodeId(obj.from);
-	    nodeFrom = core.nodes.getById(obj.from);
-	    this.from = nodeFrom || groupFrom;
-	    groupTo = core.groups.getByNodeId(obj.to);
-	    nodeTo = core.nodes.getById(obj.to);
-	    this.to = nodeTo || groupTo;
+	    from = {
+	      node: core.nodes.getById(obj.from),
+	      group: core.groups.getById(obj.from),
+	      nodeInGroup: core.groups.getByNodeId(obj.from)
+	    };
+	    this.from = from.node || from.group || from.nodeInGroup;
+	    to = {
+	      node: core.nodes.getById(obj.to),
+	      group: core.groups.getById(obj.to),
+	      nodeInGroup: core.groups.getByNodeId(obj.to)
+	    };
+	    this.to = to.node || to.group || to.nodeInGroup;
 	    this.fromType = obj.fromType;
 	    return this.toType = obj.toType;
 	  };

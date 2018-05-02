@@ -9,15 +9,20 @@ class Connection extends Backbone.Model
     @rawFromId = obj.from
     @rawToId = obj.to
 
-    
-    groupFrom = core.groups.getByNodeId(obj.from)
-    nodeFrom = core.nodes.getById(obj.from)
-    @from = nodeFrom || groupFrom;
+    from = {
+      node: core.nodes.getById(obj.from)
+      group: core.groups.getById(obj.from)
+      nodeInGroup: core.groups.getByNodeId(obj.from)
+    }
+    @from = from.node || from.group || from.nodeInGroup;
     
 
-    groupTo = core.groups.getByNodeId(obj.to)
-    nodeTo = core.nodes.getById(obj.to)
-    @to = nodeTo || groupTo;
+    to = {
+      node: core.nodes.getById(obj.to)
+      group: core.groups.getById(obj.to)
+      nodeInGroup: core.groups.getByNodeId(obj.to)
+    }
+    @to = to.node || to.group || to.nodeInGroup;
 
     @fromType = obj.fromType;
     @toType = obj.toType;

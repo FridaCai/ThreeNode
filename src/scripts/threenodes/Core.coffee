@@ -35,12 +35,13 @@ class Core
     @nodes = new Nodes([], {settings: @settings})
     @connections = new Connections()
 
-    @nodes.bind('node:renderConnections', @renderConnections.bind(@))
-    @groups.bind('node:renderConnections', @renderConnections.bind(@))
+    @nodes.bind('node:renderConnections', @renderConnectionsByNode.bind(@))
+    @groups.bind('node:renderConnections', @renderConnectionsByGroup.bind(@))
 
     @nodes.bind "connections:removed", (n)=>@connections.removeByNode(n)
     @groups.bind "connections:removed", (g)=>@connections.removeByGroup(g)
     @nodes.bind "connection:create", (op) =>@connections.create(op)
+    @groups.bind "connection:create", (op) =>@connections.create(op)
 
 
   createGroup: ()->
@@ -58,9 +59,15 @@ class Core
       selected_nodes.push(node)
     return selected_nodes
 
-  renderConnections: (node) ->
+  renderConnectionsByNode: (node) ->
     @connections.renderConnections(node)
 
+  renderConnectionsByGroup:(group) ->
+    group.get('nodes').map((n)->
+      @connections.renderConnections(n)
+    , @)
+    @connections.renderConnections(group)
+    
 
   @addFieldType: (fieldName, field) ->
     Core.fields.models[fieldName] = field

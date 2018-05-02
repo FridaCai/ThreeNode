@@ -4210,10 +4210,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  ConnectionView.prototype.remove = function() {
-	    this.curve.remove();
-	    delete this.curve;
-	    this.triangle.remove();
-	    delete this.triangle;
+	    if (this.curve) {
+	      this.curve.remove();
+	      delete this.curve;
+	    }
+	    if (this.triangle) {
+	      this.triangle.remove();
+	      delete this.triangle;
+	    }
 	    return true;
 	  };
 	
@@ -4485,7 +4489,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        from_type = $(ui.draggable).attr('data-attr');
 	        to_node = self.model;
 	        to_type = $(this).attr('data-attr');
-	        self.model.createConnection(from_node, from_type, to_node, to_type);
+	        self.model.trigger("connection:create", {
+	          from: $(ui.draggable).parent().data('object').id,
+	          fromType: $(ui.draggable).attr('data-attr'),
+	          to: self.model.id,
+	          toType: $(this).attr('data-attr')
+	        });
 	        return this;
 	      }
 	    });
