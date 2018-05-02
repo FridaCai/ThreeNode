@@ -36,11 +36,30 @@ class ConnectionView extends Backbone.View
     return true
 
   render: () ->
+    #                 node  group nodeInsideGroup
+    # node            n->n  n->g  n->g
+    # group           g->n  g->g  g->g
+    # nodeInsideGroup g->n  g->g  sameGroup ? not render: g->g
     if(@model.from.id == @model.to.id)
+      @remove()
       return
 
+    drawModel = @model
+    fromGroup = core.groups.getByNodeId(@model.from.id)
+    toGroup = core.groups.getByNodeId(@model.to.id)
+    if(fromGroup && toGroup && fromGroup.id == toGroup.id)
+      @remove()
+      return
+    
+    drawModel = {
+      from: fromGroup || @model.from
+      fromType: @model.fromType
+      to: toGroup || @model.to
+      toType: @model.toType
+    }
+
     if @svg 
-      @renderCurve();
+      @renderCurve(drawModel);
       @renderTriangle();
     @
 
@@ -69,26 +88,18 @@ class ConnectionView extends Backbone.View
       path: ["M", 0, 0, "L", 1.732, -1, "L", 1.732, 1].join(',')
     .transform('t' + obj.x + ',' + obj.y + 's5, 5' + 'r' + obj.alpha)
 
-  renderCurve: () ->
-    # f1 = @getFieldPosition(@model.from_field)
-    # f2 = @getFieldPosition(@model.to_field)
-    f1 = @getNodePosition(@model.from, @model.fromType)
-    f2 = @getNodePosition(@model.to, @model.toType)
+  renderCurve: (drawModel) ->
+    f1 = @getNodePosition(drawModel.from, drawModel.fromType)
+    f2 = @getNodePosition(drawModel.to, drawModel.toType)
 
     offset = $("#container-wrapper").offset()
     ofx = $("#container-wrapper").scrollLeft() - offset.left
     ofy = $("#container-wrapper").scrollTop() - offset.top
 
-    # x1 = f1.left + ofx
-    # y1 = f1.top + ofy
-    # x4 = f2.left + ofx
-    # y4 = f2.top + ofy
     x1 = f1.left
     y1 = f1.top
     x4 = f2.left
     y4 = f2.top
-
-
 
     min_diff = 42
     diffx = Math.max(min_diff, x4 - x1)

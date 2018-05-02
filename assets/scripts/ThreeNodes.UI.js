@@ -4218,11 +4218,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  ConnectionView.prototype.render = function() {
+	    var drawModel, fromGroup, toGroup;
 	    if (this.model.from.id === this.model.to.id) {
+	      this.remove();
 	      return;
 	    }
+	    drawModel = this.model;
+	    fromGroup = core.groups.getByNodeId(this.model.from.id);
+	    toGroup = core.groups.getByNodeId(this.model.to.id);
+	    if (fromGroup && toGroup && fromGroup.id === toGroup.id) {
+	      this.remove();
+	      return;
+	    }
+	    drawModel = {
+	      from: fromGroup || this.model.from,
+	      fromType: this.model.fromType,
+	      to: toGroup || this.model.to,
+	      toType: this.model.toType
+	    };
 	    if (this.svg) {
-	      this.renderCurve();
+	      this.renderCurve(drawModel);
 	      this.renderTriangle();
 	    }
 	    return this;
@@ -4275,10 +4290,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }).transform('t' + obj.x + ',' + obj.y + 's5, 5' + 'r' + obj.alpha);
 	  };
 	
-	  ConnectionView.prototype.renderCurve = function() {
+	  ConnectionView.prototype.renderCurve = function(drawModel) {
 	    var diffx, diffy, f1, f2, min_diff, offset, ofx, ofy, x1, x2, x3, x4, y1, y2, y3, y4;
-	    f1 = this.getNodePosition(this.model.from, this.model.fromType);
-	    f2 = this.getNodePosition(this.model.to, this.model.toType);
+	    f1 = this.getNodePosition(drawModel.from, drawModel.fromType);
+	    f2 = this.getNodePosition(drawModel.to, drawModel.toType);
 	    offset = $("#container-wrapper").offset();
 	    ofx = $("#container-wrapper").scrollLeft() - offset.left;
 	    ofy = $("#container-wrapper").scrollTop() - offset.top;

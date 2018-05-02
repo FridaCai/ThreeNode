@@ -120,23 +120,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  Core.prototype.createGroup = function() {
-	    var connectionsToRM, nodes;
+	    var group, nodes;
 	    nodes = this.getSelectedNodes();
-	    this.groups.add(new Group({
+	    group = new Group({
 	      nodes: nodes
-	    }));
-	    this.nodes.remove(nodes);
-	    connectionsToRM = this.connections.filter(function(c) {
-	      var findnode;
-	      findnode = nodes.find(function(n) {
-	        return n.id === c.from || n.id === c.to;
-	      });
-	      if (findnode) {
-	        return true;
-	      }
-	      return false;
 	    });
-	    return this.connections.remove(connectionsToRM);
+	    this.groups.add(group);
+	    this.nodes.remove(nodes);
+	    return this.connections.render();
 	  };
 	
 	  Core.prototype.getSelectedNodes = function() {

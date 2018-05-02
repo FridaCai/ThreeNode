@@ -45,19 +45,10 @@ class Core
 
   createGroup: ()->
     nodes = @getSelectedNodes()
-    @groups.add(new Group({nodes: nodes}))
+    group = new Group({nodes: nodes})
+    @groups.add(group)
     @nodes.remove(nodes)
-    
-    connectionsToRM = @connections.filter((c)->
-      findnode = nodes.find((n)->
-        n.id == c.from or n.id == c.to
-      )
-      if(findnode)
-        return true;
-      return false
-    )    
-    @connections.remove(connectionsToRM)
-
+    @connections.render()
 
   getSelectedNodes: () ->
     selected_nodes = []
