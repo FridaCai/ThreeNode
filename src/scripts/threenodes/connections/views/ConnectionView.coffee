@@ -42,26 +42,26 @@ class ConnectionView extends Backbone.View
     # node            n->n  n->g  n->g
     # group           g->n  g->g  g->g
     # nodeInsideGroup g->n  g->g  sameGroup ? not render: g->g
-    if(@model.from.id == @model.to.id)
-      @remove()
-      return
+    # if(@model.from.id == @model.to.id)
+    #   @remove()
+    #   return
 
-    drawModel = @model
-    fromGroup = core.groups.getByNodeId(@model.from.id)
-    toGroup = core.groups.getByNodeId(@model.to.id)
-    if(fromGroup && toGroup && fromGroup.id == toGroup.id)
-      @remove()
-      return
+    # drawModel = @model
+    # fromGroup = core.groups.getByNodeId(@model.from.id)
+    # toGroup = core.groups.getByNodeId(@model.to.id)
+    # if(fromGroup && toGroup && fromGroup.id == toGroup.id)
+    #   @remove()
+    #   return
     
-    drawModel = {
-      from: fromGroup || @model.from
-      fromType: @model.fromType
-      to: toGroup || @model.to
-      toType: @model.toType
-    }
+    # drawModel = {
+    #   from: fromGroup || @model.from
+    #   fromType: @model.fromType
+    #   to: toGroup || @model.to
+    #   toType: @model.toType
+    # }
 
     if @svg 
-      @renderCurve(drawModel);
+      @renderCurve(@model);
       @renderTriangle();
     @
 

@@ -54,7 +54,8 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var Connection, Connections, Core, Group, Groups, Indexer, Node, Nodes;
+	var Connection, Connections, Core, DB, Group, Groups, Indexer, Node, Nodes,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 	
 	Nodes = __webpack_require__(1);
 	
@@ -69,6 +70,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	Group = __webpack_require__(9);
 	
 	Indexer = __webpack_require__(10);
+	
+	DB = __webpack_require__(11);
 	
 	Core = (function() {
 	  Core.fields = {
@@ -87,6 +90,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  function Core(options) {
+	    this.dump = bind(this.dump, this);
 	    var settings;
 	    this.id = indexer.getUID();
 	    settings = {
@@ -100,6 +104,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      settings: this.settings
 	    });
 	    this.connections = new Connections();
+	    this.head = null;
 	    this.nodes.bind('node:renderConnections', this.renderConnectionsByNode.bind(this));
 	    this.groups.bind('node:renderConnections', this.renderConnectionsByGroup.bind(this));
 	    this.nodes.bind("connections:removed", (function(_this) {
@@ -178,45 +183,78 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return true;
 	  };
 	
+	  Core.prototype.dump = function() {
+	    var db, res;
+	    db = DB.getInstance();
+	    db.updateProperty({
+	      nodes: this.nodes,
+	      groups: this.groups,
+	      connections: this.connections
+	    });
+	    res = db.dump();
+	    return JSON.stringify(res, null, 2);
+	  };
+	
 	  Core.prototype.setNodes = function(json) {
-	    var maxid, self;
+	    var db, dbInstance, maxid, self, tmparr;
+	    dbInstance = DB.getInstance();
+	    dbInstance.loadFromJson(json);
+	    db = dbInstance.dump();
 	    self = this;
-	    this.id = json.id;
-	    maxid = json.id;
-	    json.nodes.map(function(obj) {
+	    tmparr = db.nodes.concat(db.connections);
+	    db.groups.map(function(obj) {
+	      return obj.nodes.map(function(nodeObj) {
+	        return tmparr.push(nodeObj);
+	      });
+	    });
+	    maxid = tmparr.reduce(function(a, b) {
+	      return (a.id > b.id ? a.id : b.id);
+	    });
+	    indexer.set(maxid);
+	    db.nodes.map(function(obj) {
 	      var node, nodeClass;
-	      maxid = obj.id > maxid ? obj.id : maxid;
 	      nodeClass = Core.nodes.models[obj.type];
 	      node = new nodeClass(obj);
 	      return self.nodes.push(node);
 	    });
-	    json.groups.map(function(obj) {
+	    db.groups.map(function(obj) {
 	      var group, groupObj;
-	      maxid = obj.id > maxid ? obj.id : maxid;
 	      groupObj = {
 	        id: obj.id,
 	        x: obj.x,
 	        y: obj.y,
 	        width: obj.width,
 	        height: obj.height,
-	        nodes: []
+	        nodes: obj.nodes
 	      };
-	      obj.nodes.map(function(nodeObj) {
-	        var node;
-	        maxid = nodeObj.id > maxid ? nodeObj.id : maxid;
-	        node = new Core.nodes.models[nodeObj.type](nodeObj);
-	        return groupObj.nodes.push(node);
-	      });
 	      group = new Group(groupObj);
 	      return self.groups.push(group);
 	    });
-	    json.connections.map(function(c) {
-	      var connection;
-	      maxid = c.id > maxid ? c.id : maxid;
-	      connection = new Connection(c);
-	      return self.connections.push(connection);
+	    return db.connections.map(function(c) {
+	      var connection, from, to;
+	      from = {
+	        node: self.nodes.getById(c.from),
+	        group: self.groups.getById(c.from),
+	        nodeInGroup: self.groups.getByNodeId(c.from)
+	      };
+	      to = {
+	        node: self.nodes.getById(c.to),
+	        group: self.groups.getById(c.to),
+	        nodeInGroup: self.groups.getByNodeId(c.to)
+	      };
+	      if (from.nodeInGroup && to.nodeInGroup && from.nodeInGroup === to.nodeInGroup) {
+	
+	      } else {
+	        connection = new Connection({
+	          id: c.id,
+	          from: from.node || from.group || from.nodeInGroup,
+	          to: to.node || to.group || to.nodeInGroup,
+	          fromType: c.fromType,
+	          toType: c.toType
+	        });
+	        return self.connections.push(connection);
+	      }
 	    });
-	    return indexer.set(maxid);
 	  };
 	
 	  return Core;
@@ -557,23 +595,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  Connection.prototype.initialize = function(obj) {
-	    var from, id, to;
-	    id = obj.id || indexer.getUID();
-	    this.set('id', id);
-	    this.rawFromId = obj.from;
-	    this.rawToId = obj.to;
-	    from = {
-	      node: core.nodes.getById(obj.from),
-	      group: core.groups.getById(obj.from),
-	      nodeInGroup: core.groups.getByNodeId(obj.from)
-	    };
-	    this.from = from.node || from.group || from.nodeInGroup;
-	    to = {
-	      node: core.nodes.getById(obj.to),
-	      group: core.groups.getById(obj.to),
-	      nodeInGroup: core.groups.getByNodeId(obj.to)
-	    };
-	    this.to = to.node || to.group || to.nodeInGroup;
+	    this.id = obj.id || indexer.getUID();
+	    this.from = obj.from;
+	    this.to = obj.to;
 	    this.fromType = obj.fromType;
 	    return this.toType = obj.toType;
 	  };
@@ -584,18 +608,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  Connection.prototype.validate = function() {
 	    return false;
-	  };
-	
-	  Connection.prototype.toJSON = function() {
-	    var res;
-	    res = {
-	      id: this.get("id"),
-	      from: this.rawFromId,
-	      fromType: this.fromType,
-	      to: this.rawToId,
-	      toType: this.toType
-	    };
-	    return res;
 	  };
 	
 	  return Connection;
@@ -694,21 +706,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	    height: 26,
 	    x: 0,
 	    y: 0,
-	    name: ""
+	    name: "Hello Group"
 	  };
 	
 	  Group.prototype.initialize = function(obj) {
-	    var avgpos, id, x, y;
+	    var id;
 	    Group.__super__.initialize.apply(this, arguments);
 	    id = obj.id || indexer.getUID();
 	    this.set('name', obj.name || this.typename());
 	    this.set('id', id);
 	    this.set('nodes', obj.nodes);
-	    avgpos = this.getNodesAveragePosition();
-	    x = obj.x ? obj.x : avgpos.x;
-	    y = obj.y ? obj.y : avgpos.y;
-	    this.set('x', x);
-	    return this.set('y', y);
+	    this.set('x', obj.x);
+	    return this.set('y', obj.y);
 	  };
 	
 	  Group.prototype.typename = function() {
@@ -787,6 +796,91 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Indexer;
 	
 	window.indexer = Indexer.getInstance();
+
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports) {
+
+	var DB, db,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+	
+	db = null;
+	
+	DB = (function() {
+	  function DB() {
+	    this.dump = bind(this.dump, this);
+	    this.createGroup = bind(this.createGroup, this);
+	    this.updateProperty = bind(this.updateProperty, this);
+	    this.loadFromJson = bind(this.loadFromJson, this);
+	    this.reset = bind(this.reset, this);
+	  }
+	
+	  DB.prototype.reset = function() {
+	    this.nodes = [];
+	    this.connections = [];
+	    this.groups = [];
+	    return this.id = null;
+	  };
+	
+	  DB.prototype.loadFromJson = function(json) {
+	    this.reset();
+	    this.id = json.id;
+	    this.nodes = json.nodes;
+	    this.groups = json.groups;
+	    return this.connections = json.connections;
+	  };
+	
+	  DB.prototype.updateProperty = function(param) {
+	    param.groups.map((function(_this) {
+	      return function(gParam) {
+	        var g;
+	        g = _this.groups.find(function(_g) {
+	          return _g.id === gParam.get('id');
+	        });
+	        g.x = gParam.get('x');
+	        g.y = gParam.get('y');
+	        g.width = gParam.get('width');
+	        return g.height = gParam.get('height');
+	      };
+	    })(this), this);
+	    return param.nodes.map((function(_this) {
+	      return function(nParam) {
+	        var n;
+	        n = _this.nodes.find(function(_n) {
+	          return _n.id === nParam.id;
+	        });
+	        n.x = nParam.get('x');
+	        n.y = nParam.get('y');
+	        n.width = nParam.get('width');
+	        return n.height = nParam.get('height');
+	      };
+	    })(this), this);
+	  };
+	
+	  DB.prototype.createGroup = function() {};
+	
+	  DB.prototype.dump = function() {
+	    return {
+	      id: this.id,
+	      nodes: this.nodes,
+	      groups: this.groups,
+	      connections: this.connections
+	    };
+	  };
+	
+	  DB.getInstance = function() {
+	    if (!db) {
+	      db = new DB();
+	    }
+	    return db;
+	  };
+	
+	  return DB;
+	
+	})();
+	
+	module.exports = DB;
 
 
 /***/ })

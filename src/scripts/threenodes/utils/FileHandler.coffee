@@ -13,33 +13,11 @@ class FileHandler extends Backbone.Events
     _.extend(FileHandler::, Backbone.Events)
 
   saveLocalFile: () =>
-    result_string = @getLocalJson()
+    result_string = @core.dump()
     blob = new Blob([result_string], {"text/plain;charset=utf-8"})
     fileSaver = saveAs(blob, "nodes.json")
 
-  exportCode: () =>
-    # get the json export and convert it to code
-    json = @getLocalJson(false)
-    exporter = new CodeExporter()
-    res = exporter.toCode(json)
-
-    blob = new Blob([res], {"text/plain;charset=utf-8"})
-    fileSaver = saveAs(blob, "nodes.js")
-
-  getLocalJson: (stringify = true) =>
-    res =
-      id: @core.id
-      nodes: jQuery.map(@core.nodes.models, (n, i) -> n.toJSON())
-      connections: jQuery.map(@core.connections.models, (c, i) -> c.toJSON())
-      groups: jQuery.map(@core.groups.models, (g, i) -> g.toJSON())
-
-    if stringify
-      return JSON.stringify(res, null, 2)
-    else
-      return res
-
   loadFromJsonData: (txt) =>
-    # Parse the json string
     loaded_data = JSON.parse(txt)
     @core.setNodes(loaded_data)
 

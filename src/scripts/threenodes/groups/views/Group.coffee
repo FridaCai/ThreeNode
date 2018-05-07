@@ -51,7 +51,7 @@ class Group extends Backbone.View
         if action == "view_detail" then self.onViewDetail()
 
   onViewDetail: () =>
-    console.log('frida test on view detail', @model)
+    $(document).trigger('view_group_detail', [@model])
 
   render: () =>
     @$el.css

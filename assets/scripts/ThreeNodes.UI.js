@@ -7,7 +7,7 @@
 		exports["UI"] = factory(require("_"), require("Backbone"), require("jQuery"), require("Blob"), require("FileSaver"), require("Raphael"));
 	else
 		root["ThreeNodes"] = root["ThreeNodes"] || {}, root["ThreeNodes"]["UI"] = factory(root["_"], root["Backbone"], root["jQuery"], root["Blob"], root["FileSaver"], root["Raphael"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_17__, __WEBPACK_EXTERNAL_MODULE_80__, __WEBPACK_EXTERNAL_MODULE_81__, __WEBPACK_EXTERNAL_MODULE_100__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_18__, __WEBPACK_EXTERNAL_MODULE_81__, __WEBPACK_EXTERNAL_MODULE_82__, __WEBPACK_EXTERNAL_MODULE_101__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -80,31 +80,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	var AppTimeline, Backbone, FileHandler, NodeView, NodeViewColor, NodeViewWebgl, UI, UIView, UrlHandler, Workspace, _,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 	
-	__webpack_require__(17);
+	__webpack_require__(18);
 	
 	_ = __webpack_require__(2);
 	
 	Backbone = __webpack_require__(3);
 	
-	UIView = __webpack_require__(90);
+	UIView = __webpack_require__(91);
 	
-	Workspace = __webpack_require__(103);
+	Workspace = __webpack_require__(104);
 	
-	AppTimeline = __webpack_require__(108);
+	AppTimeline = __webpack_require__(109);
 	
-	UrlHandler = __webpack_require__(109);
+	UrlHandler = __webpack_require__(110);
 	
-	FileHandler = __webpack_require__(110);
+	FileHandler = __webpack_require__(111);
 	
-	NodeView = __webpack_require__(37);
+	NodeView = __webpack_require__(38);
 	
-	NodeViewColor = __webpack_require__(43);
+	NodeViewColor = __webpack_require__(44);
 	
-	NodeViewWebgl = __webpack_require__(112);
+	NodeViewWebgl = __webpack_require__(113);
 	
 	UI = (function() {
-	  function UI(core) {
-	    this.core = core;
+	  function UI(core1) {
+	    this.core = core1;
 	    this.clearWorkspace = bind(this.clearWorkspace, this);
 	    this.initTimeline = bind(this.initTimeline, this);
 	    this.setDisplayMode = bind(this.setDisplayMode, this);
@@ -132,7 +132,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.initUI();
 	    this.initTimeline();
 	    this.createWorkspace();
-	    this.workspace.render(this.core.nodes, this.core.connections, this.core.groups);
 	    Backbone.history.start({
 	      pushState: false
 	    });
@@ -165,6 +164,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  UI.prototype.initUI = function() {
+	    var self;
 	    if (this.core.settings.test === false) {
 	      this.ui = new UIView({
 	        el: $("body"),
@@ -181,6 +181,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.ui.menubar.on("GroupSelectedNodes", this.core.createGroup.bind(this.core));
 	      this.url_handler.on("SetDisplayModeCommand", this.ui.setDisplayMode);
 	      this.ui.breadcrumb.on("click", this.setWorkspaceFromDefinition);
+	      self = this;
+	      $(document).on('view_group_detail', function(e, group) {
+	        var nodes;
+	        self.createWorkspace();
+	        self.ui.breadcrumb.set(group);
+	        nodes = group.get('nodes');
+	        nodes.map(function(n) {
+	          return self.workspace.renderNode(n);
+	        });
+	        return core.connections.map((function(_this) {
+	          return function(c) {
+	            var groupFrom, groupTo;
+	            groupFrom = groups.getGroupByNodeId(c.rawFromId);
+	            groupTo = groups.getGroupByNodeId(c.rawToId);
+	            if (groupFrom && groupTo && groupFrom === groupTo) {
+	              return self.workspace.renderConnection(c);
+	            }
+	          };
+	        })(this));
+	      });
 	    } else {
 	      $("body").addClass("test-mode");
 	    }
@@ -370,19 +390,20 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 10 */,
 /* 11 */,
 /* 12 */,
-/* 13 */
+/* 13 */,
+/* 14 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div class='head'><span><%= get(\"name\") %></span></div>\n<div class='options'>\n  <div class='inputs'></div>\n  <div class='center'></div>\n  <div class='outputs'></div>\n</div>\n\n<div class=\"up handler\" data-attr='up'></div>\n<div class=\"down handler\" data-attr='down'></div>\n<div class=\"left handler\" data-attr='left'></div>\n<div class=\"right handler\" data-attr='right'></div>\n";
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports) {
 
 	module.exports = "<ul id=\"node-context-menu\" class=\"context-menu\">\n  <li><a href=\"#remove_node\">Remove node</a></li>\n</ul>";
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports) {
 
 	/*
@@ -417,7 +438,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports) {
 
 	// jQuery Context Menu Plugin
@@ -634,13 +655,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_17__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_18__;
 
 /***/ }),
-/* 18 */,
 /* 19 */,
 /* 20 */,
 /* 21 */,
@@ -659,7 +679,8 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 34 */,
 /* 35 */,
 /* 36 */,
-/* 37 */
+/* 37 */,
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, FieldsView, NodeView, _, _view_node_context_menu, _view_node_template, namespace,
@@ -671,17 +692,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	_view_node_template = __webpack_require__(13);
+	_view_node_template = __webpack_require__(14);
 	
-	_view_node_context_menu = __webpack_require__(14);
+	_view_node_context_menu = __webpack_require__(15);
 	
-	FieldsView = __webpack_require__(38);
+	FieldsView = __webpack_require__(39);
 	
-	namespace = __webpack_require__(15).namespace;
-	
-	__webpack_require__(16);
+	namespace = __webpack_require__(16).namespace;
 	
 	__webpack_require__(17);
+	
+	__webpack_require__(18);
 	
 	
 	/* Node View */
@@ -930,7 +951,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, FieldButton, FieldsView, _,
@@ -942,9 +963,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	FieldButton = __webpack_require__(39);
+	FieldButton = __webpack_require__(40);
 	
-	__webpack_require__(17);
+	__webpack_require__(18);
 	
 	
 	/* Fields View */
@@ -1014,7 +1035,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, FieldButton, _, _view_field_context_menu, _view_node_field_in, _view_node_field_out,
@@ -1026,15 +1047,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	_view_node_field_in = __webpack_require__(40);
+	_view_node_field_in = __webpack_require__(41);
 	
-	_view_node_field_out = __webpack_require__(41);
+	_view_node_field_out = __webpack_require__(42);
 	
-	_view_field_context_menu = __webpack_require__(42);
+	_view_field_context_menu = __webpack_require__(43);
 	
 	__webpack_require__(5);
 	
-	__webpack_require__(16);
+	__webpack_require__(17);
 	
 	
 	/* FieldButton View */
@@ -1202,25 +1223,25 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports) {
 
 	module.exports = "<span class=\"inner-field\"><span></span><%= name %></span>";
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports) {
 
 	module.exports = "<span class=\"inner-field\"><%= name %><span></span></span>";
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports) {
 
 	module.exports = "<ul id=\"field-context-menu\" class=\"context-menu\">\n  <li><a href=\"#removeConnection\">Remove connection(s)</a></li>\n</ul>";
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Color, NodeView, _, namespace,
@@ -1232,13 +1253,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	namespace = __webpack_require__(15).namespace;
+	namespace = __webpack_require__(16).namespace;
 	
 	__webpack_require__(4);
 	
-	NodeView = __webpack_require__(37);
+	NodeView = __webpack_require__(38);
 	
-	__webpack_require__(44);
+	__webpack_require__(45);
 	
 	Color = (function(superClass) {
 	  extend(Color, superClass);
@@ -1312,7 +1333,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports) {
 
 	/**
@@ -1802,7 +1823,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(jQuery)
 
 /***/ }),
-/* 45 */,
 /* 46 */,
 /* 47 */,
 /* 48 */,
@@ -1837,19 +1857,19 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 77 */,
 /* 78 */,
 /* 79 */,
-/* 80 */
-/***/ (function(module, exports) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_80__;
-
-/***/ }),
+/* 80 */,
 /* 81 */
 /***/ (function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_81__;
 
 /***/ }),
-/* 82 */,
+/* 82 */
+/***/ (function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_82__;
+
+/***/ }),
 /* 83 */,
 /* 84 */,
 /* 85 */,
@@ -1857,7 +1877,8 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 87 */,
 /* 88 */,
 /* 89 */,
-/* 90 */
+/* 90 */,
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	
@@ -1871,25 +1892,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	_view_app_ui = __webpack_require__(91);
+	_view_app_ui = __webpack_require__(92);
 	
-	Sidebar = __webpack_require__(92);
+	Sidebar = __webpack_require__(93);
 	
-	Breadcrumb = __webpack_require__(95);
+	Breadcrumb = __webpack_require__(96);
 	
-	MenuBar = __webpack_require__(96);
-	
-	__webpack_require__(99);
+	MenuBar = __webpack_require__(97);
 	
 	__webpack_require__(100);
 	
-	__webpack_require__(17);
-	
 	__webpack_require__(101);
+	
+	__webpack_require__(18);
 	
 	__webpack_require__(102);
 	
-	__webpack_require__(17);
+	__webpack_require__(103);
+	
+	__webpack_require__(18);
 	
 	UIView = (function(superClass) {
 	  extend(UIView, superClass);
@@ -2238,13 +2259,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 91 */
+/* 92 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div id='container-wrapper' class=\"ui-layout-center\">\n  <div id='container'>\n    <div id='graph'></div>\n  </div>\n  <div id=\"breadcrumb\"></div>\n</div>\n<div id='sidebar' class=\"ui-layout-west\">\n  <ul class=\"ui-layout-north\">\n    <li><a href='#tab-new'>New</a></li>\n    <li><a href='#tab-attribute'>Attributes</a></li>\n    <!-- <li><a href='#tab-list'>List</a></li> -->\n  </ul>\n  <div class=\"container ui-layout-center\">\n    <div id='tab-attribute'></div>\n    <div id='tab-new'>\n      <!-- <input id='node_filter' name='search-node' placeholder='Search' type='input' /> -->\n    </div>\n    <!-- <div id='tab-list'></div> -->\n  </div>\n</div>\n<div id=\"library\" class=\"ui-layout-east\"></div>\n<div id=\"timeline\" class=\"ui-layout-south\"></div>\n<input id='main_file_input_open' multiple='false' type='file' />\n";
 
 /***/ }),
-/* 92 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, NodeSidebarView, Sidebar, TreeView, _,
@@ -2256,11 +2277,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	NodeSidebarView = __webpack_require__(93);
+	NodeSidebarView = __webpack_require__(94);
 	
-	TreeView = __webpack_require__(94);
+	TreeView = __webpack_require__(95);
 	
-	__webpack_require__(17);
+	__webpack_require__(18);
 	
 	
 	/* Sidebar View */
@@ -2509,7 +2530,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 93 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, NodeSidebarView, _,
@@ -2599,7 +2620,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 94 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, TreeView, _,
@@ -2611,7 +2632,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	__webpack_require__(17);
+	__webpack_require__(18);
 	
 	TreeView = (function(superClass) {
 	  extend(TreeView, superClass);
@@ -2689,7 +2710,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 95 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Breadcrumb, _,
@@ -2729,7 +2750,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    for (i = 0, len = items.length; i < len; i++) {
 	      item = items[i];
 	      name = item.get("name");
-	      gid = item.get("gid");
+	      gid = item.get("id");
 	      results.push(this.$el.append(" ▶ " + ("<a href='#' class='grp' data-gid='" + gid + "'>" + name + "</a>")));
 	    }
 	    return results;
@@ -2737,7 +2758,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  Breadcrumb.prototype.onClick = function(e) {
 	    var gid;
-	    gid = $(e.target).data("gid");
+	    gid = $(e.target).data("id");
 	    if (gid === "global") {
 	      return this.trigger("click", "global");
 	    }
@@ -2751,7 +2772,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 96 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, MenuBar, _, _view_menubar,
@@ -2763,9 +2784,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	_view_menubar = __webpack_require__(97);
+	_view_menubar = __webpack_require__(98);
 	
-	__webpack_require__(98);
+	__webpack_require__(99);
 	
 	MenuBar = (function(superClass) {
 	  extend(MenuBar, superClass);
@@ -2822,13 +2843,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 97 */
+/* 98 */
 /***/ (function(module, exports) {
 
 	module.exports = "<ul id=\"main-menu-bar\" class=\"menubar ui-layout-north\">\n  <li>\n    <a href=\"#File\">File</a>\n    <ul>\n      <li><a href=\"#NewFile\" data-event=\"ClearWorkspace\">New</a></li>\n      <li><a href=\"#OpenFile\" data-event=\"OpenFile\">Open</a></li>\n      <li><a href=\"#SaveFile\" data-event=\"SaveFile\">Save</a></li>\n    </ul>\n  </li>\n  <li>\n    <a href=\"#Edit\">Edit</a>\n    <ul>\n      <li><a href=\"#Rotate\" data-event=\"Rotate\">Rotate</a></li>\n      <li><a href=\"#GroupSelectedNodes\" data-event=\"GroupSelectedNodes\">Group selected nodes</a></li>\n    </ul>\n  </li>\n  <li>\n    <a href=\"#View\">View</a>\n    <ul>\n      <li><a href=\"#Library\" data-event=\"ToggleLibrary\">Library</a></li>\n      <li><a href=\"#Attributes\" data-event=\"ToggleAttributes\">Attributes</a></li>\n    </ul>\n  </li>\n  <li class=\"expanded\">\n    <a href=\"#examples\">Examples</a>\n    <ul>\n      <li><a href=\"#example/rotating_cube1.json\">Eagle Eye</a></li>\n      <li><a href=\"#example/geometry_and_material1.json\">VVR</a></li>\n    </ul>\n  </li>\n</ul>\n";
 
 /***/ }),
-/* 98 */
+/* 99 */
 /***/ (function(module, exports) {
 
 	/*!
@@ -3316,7 +3337,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 99 */
+/* 100 */
 /***/ (function(module, exports) {
 
 	/**
@@ -3344,13 +3365,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 100 */
+/* 101 */
 /***/ (function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_100__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_101__;
 
 /***/ }),
-/* 101 */
+/* 102 */
 /***/ (function(module, exports) {
 
 	/*
@@ -3907,7 +3928,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 102 */
+/* 103 */
 /***/ (function(module, exports) {
 
 	/**
@@ -4019,7 +4040,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 103 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, ConnectionView, GroupView, Workspace, _,
@@ -4031,11 +4052,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	ConnectionView = __webpack_require__(104);
+	ConnectionView = __webpack_require__(105);
 	
-	GroupView = __webpack_require__(105);
+	GroupView = __webpack_require__(106);
 	
-	__webpack_require__(17);
+	__webpack_require__(18);
 	
 	
 	/* Workspace View */
@@ -4165,7 +4186,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 104 */
+/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, ConnectionView, _,
@@ -4176,7 +4197,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	__webpack_require__(17);
+	__webpack_require__(18);
 	
 	
 	/* Connection View */
@@ -4231,26 +4252,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  ConnectionView.prototype.render = function() {
-	    var drawModel, fromGroup, toGroup;
-	    if (this.model.from.id === this.model.to.id) {
-	      this.remove();
-	      return;
-	    }
-	    drawModel = this.model;
-	    fromGroup = core.groups.getByNodeId(this.model.from.id);
-	    toGroup = core.groups.getByNodeId(this.model.to.id);
-	    if (fromGroup && toGroup && fromGroup.id === toGroup.id) {
-	      this.remove();
-	      return;
-	    }
-	    drawModel = {
-	      from: fromGroup || this.model.from,
-	      fromType: this.model.fromType,
-	      to: toGroup || this.model.to,
-	      toType: this.model.toType
-	    };
 	    if (this.svg) {
-	      this.renderCurve(drawModel);
+	      this.renderCurve(this.model);
 	      this.renderTriangle();
 	    }
 	    return this;
@@ -4334,7 +4337,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 105 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Group, _, _view_group_context_menu, _view_group_template, namespace,
@@ -4346,15 +4349,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	namespace = __webpack_require__(15).namespace;
+	namespace = __webpack_require__(16).namespace;
 	
-	_view_group_template = __webpack_require__(106);
+	_view_group_template = __webpack_require__(107);
 	
-	_view_group_context_menu = __webpack_require__(107);
-	
-	__webpack_require__(16);
+	_view_group_context_menu = __webpack_require__(108);
 	
 	__webpack_require__(17);
+	
+	__webpack_require__(18);
 	
 	
 	/* Node View */
@@ -4419,7 +4422,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  Group.prototype.onViewDetail = function() {
-	    return console.log('frida test on view detail', this.model);
+	    return $(document).trigger('view_group_detail', [this.model]);
 	  };
 	
 	  Group.prototype.render = function() {
@@ -4642,15 +4645,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 106 */
-13,
 /* 107 */
+14,
+/* 108 */
 /***/ (function(module, exports) {
 
 	module.exports = "<ul id=\"group-context-menu\" class=\"context-menu\">\n  <li><a href=\"#remove_group\">Remove group</a></li>\n  <li><a href=\"#view_detail\">View detail</a></li>\n</ul>";
 
 /***/ }),
-/* 108 */
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var AppTimeline, Backbone, _,
@@ -4797,7 +4800,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 109 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, UrlHandler,
@@ -4862,7 +4865,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 110 */
+/* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, CodeExporter, FileHandler, Utils, _,
@@ -4876,11 +4879,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Utils = __webpack_require__(5);
 	
-	CodeExporter = __webpack_require__(111);
-	
-	__webpack_require__(80);
+	CodeExporter = __webpack_require__(112);
 	
 	__webpack_require__(81);
+	
+	__webpack_require__(82);
 	
 	FileHandler = (function(superClass) {
 	  extend(FileHandler, superClass);
@@ -4889,54 +4892,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.core = core;
 	    this.loadLocalFile = bind(this.loadLocalFile, this);
 	    this.loadFromJsonData = bind(this.loadFromJsonData, this);
-	    this.getLocalJson = bind(this.getLocalJson, this);
-	    this.exportCode = bind(this.exportCode, this);
 	    this.saveLocalFile = bind(this.saveLocalFile, this);
 	    _.extend(FileHandler.prototype, Backbone.Events);
 	  }
 	
 	  FileHandler.prototype.saveLocalFile = function() {
 	    var blob, fileSaver, result_string;
-	    result_string = this.getLocalJson();
+	    result_string = this.core.dump();
 	    blob = new Blob([result_string], {
 	      "text/plain;charset=utf-8": "text/plain;charset=utf-8"
 	    });
 	    return fileSaver = saveAs(blob, "nodes.json");
-	  };
-	
-	  FileHandler.prototype.exportCode = function() {
-	    var blob, exporter, fileSaver, json, res;
-	    json = this.getLocalJson(false);
-	    exporter = new CodeExporter();
-	    res = exporter.toCode(json);
-	    blob = new Blob([res], {
-	      "text/plain;charset=utf-8": "text/plain;charset=utf-8"
-	    });
-	    return fileSaver = saveAs(blob, "nodes.js");
-	  };
-	
-	  FileHandler.prototype.getLocalJson = function(stringify) {
-	    var res;
-	    if (stringify == null) {
-	      stringify = true;
-	    }
-	    res = {
-	      id: this.core.id,
-	      nodes: jQuery.map(this.core.nodes.models, function(n, i) {
-	        return n.toJSON();
-	      }),
-	      connections: jQuery.map(this.core.connections.models, function(c, i) {
-	        return c.toJSON();
-	      }),
-	      groups: jQuery.map(this.core.groups.models, function(g, i) {
-	        return g.toJSON();
-	      })
-	    };
-	    if (stringify) {
-	      return JSON.stringify(res, null, 2);
-	    } else {
-	      return res;
-	    }
 	  };
 	
 	  FileHandler.prototype.loadFromJsonData = function(txt) {
@@ -4967,7 +4933,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 111 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, CodeExporter, _,
@@ -5083,7 +5049,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 112 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, NodeView, WebGLRenderer, _,
@@ -5097,7 +5063,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	__webpack_require__(4);
 	
-	NodeView = __webpack_require__(37);
+	NodeView = __webpack_require__(38);
 	
 	WebGLRenderer = (function(superClass) {
 	  extend(WebGLRenderer, superClass);

@@ -4,15 +4,12 @@ Backbone = require 'Backbone'
 UIView = require './views/UIView'
 Workspace = require './views/Workspace'
 AppTimeline = require './views/AppTimeline'
-# GroupDefinitionView = require './views/GroupDefinitionView'
-#WebglBase = require 'threenodes/utils/WebglBase'
 UrlHandler = require 'threenodes/utils/UrlHandler'
 FileHandler = require 'threenodes/utils/FileHandler'
 
 NodeView = require 'threenodes/nodes/views/NodeView'
 NodeViewColor = require 'threenodes/nodes/views/Color'
 NodeViewWebgl = require 'threenodes/nodes/views/WebGLRenderer'
-# NodeViewGroup = require 'threenodes/nodes/views/Group'
 
 class UI
   constructor: (@core) ->
@@ -40,14 +37,7 @@ class UI
 
     # Initialize the workspace view
     @createWorkspace()
-    # Make the workspace display the global nodes and connections
-    @workspace.render(@core.nodes, @core.connections, @core.groups)
 
-    # Start the url handling
-    #
-    # Enabling the pushState method would require to redirect path
-    # for the node.js server and github page (if possible)
-    # for simplicity we disable it
     Backbone.history.start
       pushState: false
 
@@ -58,6 +48,28 @@ class UI
     @workspace = new Workspace
       el: jQuery("<div class='nodes-container'></div>").appendTo("#container")
       settings: @core.settings
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   setWorkspaceFromDefinition: (definition) =>
     @createWorkspace()
@@ -81,6 +93,19 @@ class UI
       # @workspace.render(@edit_node.nodes)
       # @ui.breadcrumb.set([definition])
 
+
+
+
+
+
+
+
+
+
+
+
+
+
   initUI: () =>
     if @core.settings.test == false
       # Create the main user interface view
@@ -99,8 +124,6 @@ class UI
       @ui.menubar.on("ExportCode", @file_handler.exportCode)
       @ui.menubar.on("LoadJSON", @file_handler.loadFromJsonData)
       @ui.menubar.on("LoadFile", @file_handler.loadLocalFile)
-      #@ui.menubar.on("ExportImage", @webgl.exportImage)
-      # @ui.menubar.on("GroupSelectedNodes", @core.group_definitions.groupSelectedNodes)
       @ui.menubar.on("GroupSelectedNodes", @core.createGroup.bind(@core))
 
       # Special events
@@ -108,6 +131,38 @@ class UI
 
       #breadcrumb
       @ui.breadcrumb.on("click", @setWorkspaceFromDefinition)
+
+      self= @
+      $(document).on('view_group_detail', (e, group)->
+        self.createWorkspace() # accually, reset workspace.
+        self.ui.breadcrumb.set(group)
+
+        nodes = group.get('nodes');
+        nodes.map((n)->
+          self.workspace.renderNode(n)
+        )
+        core.connections.map((c)=>
+          groupFrom = groups.getGroupByNodeId(c.rawFromId)
+          groupTo = groups.getGroupByNodeId(c.rawToId)
+          if groupFrom && groupTo && groupFrom == groupTo 
+            self.workspace.renderConnection(c)
+        )
+      )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     else
       # If the application is in test mode add a css class to the body
       $("body").addClass "test-mode"
@@ -144,7 +199,6 @@ class UI
     @core.connections.removeAll()
     @core.groups.removeAll()
     indexer.reset()
-    
     if @ui then @ui.clearWorkspace()
 
 UI.nodes = {}

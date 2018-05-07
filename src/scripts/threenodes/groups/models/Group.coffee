@@ -12,7 +12,7 @@ class Group extends Backbone.Model
         height: 26
         x: 0
         y: 0
-        name: ""
+        name: "Hello Group"
 
     initialize: (obj) =>
         super
@@ -21,11 +21,11 @@ class Group extends Backbone.Model
         @set('id', id)
         @set('nodes', obj.nodes)
 
-        avgpos = @getNodesAveragePosition()
-        x = if obj.x then obj.x else avgpos.x
-        y = if obj.y then obj.y else avgpos.y
-        @set('x', x)
-        @set('y', y)
+        # avgpos = @getNodesAveragePosition()
+        # x = if obj.x then obj.x else avgpos.x
+        # y = if obj.y then obj.y else avgpos.y
+        @set('x', obj.x)
+        @set('y', obj.y)
     
     typename: => String(@constructor.name)
 

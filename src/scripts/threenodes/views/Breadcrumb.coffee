@@ -17,11 +17,11 @@ class Breadcrumb extends Backbone.View
     @$el.html("<a href='#' data-gid='global'>Global</a>")
     for item in items
       name = item.get("name")
-      gid = item.get("gid")
+      gid = item.get("id")
       @$el.append(" ▶ " + "<a href='#' class='grp' data-gid='#{gid}'>#{name}</a>")
 
   onClick: (e) =>
-    gid = $(e.target).data("gid")
+    gid = $(e.target).data("id")
     if gid == "global"
       @trigger("click", "global")
 

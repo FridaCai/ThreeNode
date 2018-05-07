@@ -10,6 +10,8 @@ Group = require './groups/models/Group'
 # Frida. please find better solution.
 Indexer = require 'threenodes/utils/Indexer'
 
+DB = require './db'
+
 #require 'jquery'
 
 #### App
@@ -29,11 +31,10 @@ class Core
       direction: true
     @settings = $.extend({}, settings, options)
 
-    # Initialize some core classes
-    # @group_definitions = new GroupDefinitions([])
     @groups = new Groups([])
     @nodes = new Nodes([], {settings: @settings})
     @connections = new Connections()
+    @head = null # null or groupid
 
     @nodes.bind('node:renderConnections', @renderConnectionsByNode.bind(@))
     @groups.bind('node:renderConnections', @renderConnectionsByGroup.bind(@))
@@ -85,48 +86,80 @@ class Core
     Core.nodes.views[viewName] = nodeView
     return true
 
-  
+  dump: () =>
+    db = DB.getInstance()
+    db.updateProperty({
+      nodes: @nodes
+      groups: @groups
+      connections: @connections
+    })
+    res = db.dump()
+    return JSON.stringify(res, null, 2)
 
   setNodes: (json) ->
     # @nodes.removeAll()
+    dbInstance = DB.getInstance()
+    dbInstance.loadFromJson(json)
+    db = dbInstance.dump()
 
     self = @
-    @id = json.id
-    maxid = json.id
 
-    json.nodes.map (obj) ->
-      maxid = if obj.id > maxid then obj.id else maxid
+    tmparr = db.nodes.concat(db.connections)
+    db.groups.map (obj) ->
+      obj.nodes.map (nodeObj) ->
+        tmparr.push(nodeObj)
+    maxid = tmparr.reduce (a, b) ->
+      return (if a.id > b.id then a.id else b.id)
+    indexer.set(maxid)
+
+
+    db.nodes.map (obj) ->
       nodeClass = Core.nodes.models[obj.type]
       node = new nodeClass(obj)
       self.nodes.push(node)
 
     # group
-    json.groups.map (obj) ->
-      maxid = if obj.id > maxid then obj.id else maxid
+    db.groups.map (obj) ->
       groupObj = {
-        id: obj.id,
-        x: obj.x,
+        id: obj.id
+        x: obj.x
         y: obj.y
         width: obj.width,
         height: obj.height,
-        nodes: []
+        nodes: obj.nodes
       }
-
-      obj.nodes.map (nodeObj) ->
-        maxid = if nodeObj.id > maxid then nodeObj.id else maxid
-        node = new Core.nodes.models[nodeObj.type](nodeObj)
-        groupObj.nodes.push(node)
-      
       group = new Group(groupObj)
       self.groups.push(group)
 
 
     #connections
-    json.connections.map (c) ->
-      maxid = if c.id > maxid then c.id else maxid
-      connection = new Connection(c)
-      self.connections.push(connection)
+    #                 node  group nodeInsideGroup
+    # node            n->n  n->g  n->g
+    # group           g->n  g->g  g->g
+    # nodeInsideGroup g->n  g->g  sameGroup ? not render: g->g
+    
+    db.connections.map (c) ->
+      from = {
+        node: self.nodes.getById(c.from)
+        group: self.groups.getById(c.from)
+        nodeInGroup: self.groups.getByNodeId(c.from)
+      }
+      to = {
+        node: self.nodes.getById(c.to)
+        group: self.groups.getById(c.to)
+        nodeInGroup: self.groups.getByNodeId(c.to)
+      }
 
-    indexer.set(maxid)
+      if(from.nodeInGroup && to.nodeInGroup && from.nodeInGroup == to.nodeInGroup)
+        # do nothing
+      else
+        connection = new Connection({
+          id: c.id
+          from: from.node || from.group || from.nodeInGroup
+          to: to.node || to.group || to.nodeInGroup
+          fromType: c.fromType
+          toType: c.toType
+        })
+        self.connections.push(connection)
 
 module.exports = Core
