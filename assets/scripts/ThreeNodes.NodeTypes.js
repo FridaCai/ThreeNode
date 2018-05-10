@@ -474,9 +474,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      tolerance: "pointer",
 	      drop: function(event, ui) {
 	        self.model.trigger("connection:create", {
-	          from: $(ui.draggable).parent().data('object').id,
+	          from: $(ui.draggable).parent().data('object'),
 	          fromType: $(ui.draggable).attr('data-attr'),
-	          to: self.model.id,
+	          to: self.model,
 	          toType: $(this).attr('data-attr')
 	        });
 	        return this;

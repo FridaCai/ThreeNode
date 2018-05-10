@@ -45,21 +45,19 @@ class Core
     @groups.bind "connection:create", (op) =>@connections.create(op)
 
 
-  createGroup: ()->
-    nodes = @getSelectedNodes()
-    group = new Group({nodes: nodes})
-    @groups.add(group)
-    @nodes.remove(nodes)
-    @connections.render()
+  createGroup: (nodes)->
+    db = DB.getInstance()
+    index = Indexer.getInstance().getUID()
+    db.createGroup(nodes, index)    
+    @refreshDatamodelAccordingToDB(db)
 
-  getSelectedNodes: () ->
-    selected_nodes = []
-    $selected = $(".node.ui-selected").not(".node .node")
-    $selected.each () ->
-      node = $(this).data("object")
-      selected_nodes.push(node)
-    return selected_nodes
+    
+    # group = new Group({nodes: nodes})
+    # @groups.add(group)
+    # @nodes.remove(nodes)
+    # @connections.render()
 
+  
   renderConnectionsByNode: (node) ->
     @connections.renderConnections(node)
 
@@ -102,8 +100,6 @@ class Core
     dbInstance.loadFromJson(json)
     db = dbInstance.dump()
 
-    self = @
-
     tmparr = db.nodes.concat(db.connections)
     db.groups.map (obj) ->
       obj.nodes.map (nodeObj) ->
@@ -111,8 +107,20 @@ class Core
     maxid = tmparr.reduce (a, b) ->
       return (if a.id > b.id then a.id else b.id)
     indexer.set(maxid)
+    @refreshDatamodelAccordingToDB(db)
 
 
+
+  refreshDatamodelAccordingToDB:(db)->
+   # @groups = new Groups([])
+    # @nodes = new Nodes([], {settings: @settings})
+    # @connections = new Connections()
+    @groups.removeAll()
+    @nodes.removeAll()
+    @connections.removeAll()
+
+
+    self = @
     db.nodes.map (obj) ->
       nodeClass = Core.nodes.models[obj.type]
       node = new nodeClass(obj)

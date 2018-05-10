@@ -29,21 +29,7 @@ class Group extends Backbone.Model
     
     typename: => String(@constructor.name)
 
-    getNodesAveragePosition: () ->
-        min_x = 0
-        min_y = 0
-        max_x = 0
-        max_y = 0
-        for node in this.get('nodes')
-            min_x = Math.min(min_x, node.get("x"))
-            max_x = Math.max(max_x, node.get("x"))
-            min_y = Math.min(min_y, node.get("y"))
-            max_y = Math.max(max_y, node.get("y"))
-
-        dx = (min_x + max_x) / 2
-        dy = (min_y + max_y) / 2
-        return {x: dx, y: dy}
-
+    
     remove: () =>
         @trigger "group:removed", @
 

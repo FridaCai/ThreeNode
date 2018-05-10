@@ -129,27 +129,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    })(this));
 	  }
 	
-	  Core.prototype.createGroup = function() {
-	    var group, nodes;
-	    nodes = this.getSelectedNodes();
-	    group = new Group({
-	      nodes: nodes
-	    });
-	    this.groups.add(group);
-	    this.nodes.remove(nodes);
-	    return this.connections.render();
-	  };
-	
-	  Core.prototype.getSelectedNodes = function() {
-	    var $selected, selected_nodes;
-	    selected_nodes = [];
-	    $selected = $(".node.ui-selected").not(".node .node");
-	    $selected.each(function() {
-	      var node;
-	      node = $(this).data("object");
-	      return selected_nodes.push(node);
-	    });
-	    return selected_nodes;
+	  Core.prototype.createGroup = function(nodes) {
+	    var db, index;
+	    db = DB.getInstance();
+	    index = Indexer.getInstance().getUID();
+	    db.createGroup(nodes, index);
+	    return this.refreshDatamodelAccordingToDB(db);
 	  };
 	
 	  Core.prototype.renderConnectionsByNode = function(node) {
@@ -196,11 +181,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  Core.prototype.setNodes = function(json) {
-	    var db, dbInstance, maxid, self, tmparr;
+	    var db, dbInstance, maxid, tmparr;
 	    dbInstance = DB.getInstance();
 	    dbInstance.loadFromJson(json);
 	    db = dbInstance.dump();
-	    self = this;
 	    tmparr = db.nodes.concat(db.connections);
 	    db.groups.map(function(obj) {
 	      return obj.nodes.map(function(nodeObj) {
@@ -211,6 +195,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return (a.id > b.id ? a.id : b.id);
 	    });
 	    indexer.set(maxid);
+	    return this.refreshDatamodelAccordingToDB(db);
+	  };
+	
+	  Core.prototype.refreshDatamodelAccordingToDB = function(db) {
+	    var self;
+	    this.groups.removeAll();
+	    this.nodes.removeAll();
+	    this.connections.removeAll();
+	    self = this;
 	    db.nodes.map(function(obj) {
 	      var node, nodeClass;
 	      nodeClass = Core.nodes.models[obj.type];
@@ -724,28 +717,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return String(this.constructor.name);
 	  };
 	
-	  Group.prototype.getNodesAveragePosition = function() {
-	    var dx, dy, i, len, max_x, max_y, min_x, min_y, node, ref;
-	    min_x = 0;
-	    min_y = 0;
-	    max_x = 0;
-	    max_y = 0;
-	    ref = this.get('nodes');
-	    for (i = 0, len = ref.length; i < len; i++) {
-	      node = ref[i];
-	      min_x = Math.min(min_x, node.get("x"));
-	      max_x = Math.max(max_x, node.get("x"));
-	      min_y = Math.min(min_y, node.get("y"));
-	      max_y = Math.max(max_y, node.get("y"));
-	    }
-	    dx = (min_x + max_x) / 2;
-	    dy = (min_y + max_y) / 2;
-	    return {
-	      x: dx,
-	      y: dy
-	    };
-	  };
-	
 	  Group.prototype.remove = function() {
 	    return this.trigger("group:removed", this);
 	  };
@@ -858,7 +829,51 @@ return /******/ (function(modules) { // webpackBootstrap
 	    })(this), this);
 	  };
 	
-	  DB.prototype.createGroup = function() {};
+	  DB.prototype.calculatePos = function(nodes) {
+	    var dx, dy, i, len, max_x, max_y, min_x, min_y, node;
+	    min_x = 0;
+	    min_y = 0;
+	    max_x = 0;
+	    max_y = 0;
+	    for (i = 0, len = nodes.length; i < len; i++) {
+	      node = nodes[i];
+	      min_x = Math.min(min_x, node.get("x"));
+	      max_x = Math.max(max_x, node.get("x"));
+	      min_y = Math.min(min_y, node.get("y"));
+	      max_y = Math.max(max_y, node.get("y"));
+	    }
+	    dx = (min_x + max_x) / 2;
+	    dy = (min_y + max_y) / 2;
+	    return {
+	      x: dx,
+	      y: dy
+	    };
+	  };
+	
+	  DB.prototype.createGroup = function(nodes, index) {
+	    var nodesObj, pos;
+	    pos = this.calculatePos(nodes);
+	    nodesObj = nodes.map((function(_this) {
+	      return function(n) {
+	        return n.toJSON();
+	      };
+	    })(this));
+	    this.groups.push({
+	      id: index,
+	      x: pos.x,
+	      y: pos.y,
+	      width: 90,
+	      height: 26,
+	      nodes: nodesObj
+	    });
+	    return this.nodes = this.nodes.filter(function(n) {
+	      var nodeIds;
+	      nodeIds = nodes.map(function(_n) {
+	        return _n.id;
+	      });
+	      return !nodeIds.includes(n.id);
+	    }, this);
+	  };
 	
 	  DB.prototype.dump = function() {
 	    return {

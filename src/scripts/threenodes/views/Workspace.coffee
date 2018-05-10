@@ -29,7 +29,9 @@ class Workspace extends Backbone.View
 
   render: () =>
     
-    
+  clearView:()->
+    _.each(@views, (view) -> view.remove())
+    @views=[]
 
   destroy: () =>
     # Remove all existing views before displaying new ones

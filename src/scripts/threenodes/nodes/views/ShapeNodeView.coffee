@@ -107,9 +107,9 @@ class ShapeNodeView extends Backbone.View
       tolerance: "pointer"
       drop: (event, ui) ->
         self.model.trigger("connection:create", {
-          from: $(ui.draggable).parent().data('object').id 
+          from: $(ui.draggable).parent().data('object')
           fromType: $(ui.draggable).attr('data-attr')
-          to: self.model.id
+          to: self.model
           toType: $(@).attr('data-attr')
         })
         return this

@@ -108,6 +108,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.clearWorkspace = bind(this.clearWorkspace, this);
 	    this.initTimeline = bind(this.initTimeline, this);
 	    this.setDisplayMode = bind(this.setDisplayMode, this);
+	    this.createGroup = bind(this.createGroup, this);
 	    this.initUI = bind(this.initUI, this);
 	    this.setWorkspaceFromDefinition = bind(this.setWorkspaceFromDefinition, this);
 	    this.createWorkspace = bind(this.createWorkspace, this);
@@ -178,7 +179,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.ui.menubar.on("ExportCode", this.file_handler.exportCode);
 	      this.ui.menubar.on("LoadJSON", this.file_handler.loadFromJsonData);
 	      this.ui.menubar.on("LoadFile", this.file_handler.loadLocalFile);
-	      this.ui.menubar.on("GroupSelectedNodes", this.core.createGroup.bind(this.core));
+	      this.ui.menubar.on("GroupSelectedNodes", this.createGroup);
 	      this.url_handler.on("SetDisplayModeCommand", this.ui.setDisplayMode);
 	      this.ui.breadcrumb.on("click", this.setWorkspaceFromDefinition);
 	      self = this;
@@ -205,6 +206,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	      $("body").addClass("test-mode");
 	    }
 	    return this;
+	  };
+	
+	  UI.prototype.createGroup = function() {
+	    var nodes;
+	    nodes = this.getSelectedNodes();
+	    this.workspace.clearView();
+	    return this.core.createGroup(nodes);
+	  };
+	
+	  UI.prototype.getSelectedNodes = function() {
+	    var $selected, selected_nodes;
+	    selected_nodes = [];
+	    $selected = $(".node.ui-selected").not(".node .node");
+	    $selected.each(function() {
+	      var node;
+	      node = $(this).data("object");
+	      return selected_nodes.push(node);
+	    });
+	    return selected_nodes;
 	  };
 	
 	  UI.prototype.setDisplayMode = function(is_player) {
@@ -4090,6 +4110,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  Workspace.prototype.render = function() {};
 	
+	  Workspace.prototype.clearView = function() {
+	    _.each(this.views, function(view) {
+	      return view.remove();
+	    });
+	    return this.views = [];
+	  };
+	
 	  Workspace.prototype.destroy = function() {
 	    _.each(this.views, function(view) {
 	      return view.remove();
@@ -4508,9 +4535,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        to_node = self.model;
 	        to_type = $(this).attr('data-attr');
 	        self.model.trigger("connection:create", {
-	          from: $(ui.draggable).parent().data('object').id,
+	          from: $(ui.draggable).parent().data('object'),
 	          fromType: $(ui.draggable).attr('data-attr'),
-	          to: self.model.id,
+	          to: self.model,
 	          toType: $(this).attr('data-attr')
 	        });
 	        return this;

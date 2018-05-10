@@ -124,7 +124,7 @@ class UI
       @ui.menubar.on("ExportCode", @file_handler.exportCode)
       @ui.menubar.on("LoadJSON", @file_handler.loadFromJsonData)
       @ui.menubar.on("LoadFile", @file_handler.loadLocalFile)
-      @ui.menubar.on("GroupSelectedNodes", @core.createGroup.bind(@core))
+      @ui.menubar.on("GroupSelectedNodes", @createGroup)
 
       # Special events
       @url_handler.on("SetDisplayModeCommand", @ui.setDisplayMode)
@@ -167,6 +167,20 @@ class UI
       # If the application is in test mode add a css class to the body
       $("body").addClass "test-mode"
     return this
+
+  createGroup:()=>
+    nodes = @getSelectedNodes()
+    @workspace.clearView()
+    @core.createGroup(nodes)
+  
+  getSelectedNodes: () ->
+    selected_nodes = []
+    $selected = $(".node.ui-selected").not(".node .node")
+    $selected.each () ->
+      node = $(this).data("object")
+      selected_nodes.push(node)
+    return selected_nodes
+
 
   setDisplayMode: (is_player = false) =>
     if @ui then @ui.setDisplayMode(is_player)
