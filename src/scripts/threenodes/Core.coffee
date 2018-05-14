@@ -46,7 +46,6 @@ class Core
 
 
   createGroup: (nodes)->
-    db = DB.getInstance()
     index = Indexer.getInstance().getUID()
     db.createGroup(nodes, index)    
     @refreshDatamodelAccordingToDB(db)
@@ -85,21 +84,23 @@ class Core
     return true
 
   dump: () =>
-    db = DB.getInstance()
     db.updateProperty({
       nodes: @nodes
       groups: @groups
       connections: @connections
+      id: @id
     })
-    res = db.dump()
+    res = {
+      id: db.id,
+      connections: db.connections,
+      nodes: db.nodes,
+      groups: db.groups
+    }
     return JSON.stringify(res, null, 2)
 
   setNodes: (json) ->
     # @nodes.removeAll()
-    dbInstance = DB.getInstance()
-    dbInstance.loadFromJson(json)
-    db = dbInstance.dump()
-
+    db.loadFromJson(json)
     tmparr = db.nodes.concat(db.connections)
     db.groups.map (obj) ->
       obj.nodes.map (nodeObj) ->
@@ -128,13 +129,17 @@ class Core
 
     # group
     db.groups.map (obj) ->
+      nodes = obj.nodes.map (obj)->
+        nodeClass = Core.nodes.models[obj.type]
+        return new nodeClass(obj)
+
       groupObj = {
         id: obj.id
         x: obj.x
         y: obj.y
         width: obj.width,
         height: obj.height,
-        nodes: obj.nodes
+        nodes: nodes
       }
       group = new Group(groupObj)
       self.groups.push(group)
@@ -152,11 +157,18 @@ class Core
         group: self.groups.getById(c.from)
         nodeInGroup: self.groups.getByNodeId(c.from)
       }
+      # when view group detial, external connection might be the case.
+      if(!from.node && !from.group && !from.nodeInGroup)
+        return
+
       to = {
         node: self.nodes.getById(c.to)
         group: self.groups.getById(c.to)
         nodeInGroup: self.groups.getByNodeId(c.to)
       }
+
+      if(!to.node && !to.group && !to.nodeInGroup)
+        return
 
       if(from.nodeInGroup && to.nodeInGroup && from.nodeInGroup == to.nodeInGroup)
         # do nothing
