@@ -10,6 +10,7 @@ FileHandler = require 'threenodes/utils/FileHandler'
 NodeView = require 'threenodes/nodes/views/NodeView'
 NodeViewColor = require 'threenodes/nodes/views/Color'
 NodeViewWebgl = require 'threenodes/nodes/views/WebGLRenderer'
+DB = require 'threenodes/db'
 
 class UI
   constructor: (@core) ->
@@ -70,41 +71,14 @@ class UI
 
 
 
-
-  setWorkspaceFromDefinition: (definition) =>
-    @createWorkspace()
-
-    # always remove current edit node if it exists
-    if @edit_node
-      console.log "remove edit node"
-      @edit_node.remove()
-      delete @edit_node
-      # maybe sync new modifications...
-
-    if definition == "global"
-      @workspace.render(@core.nodes)
+  setWorkspaceFromDefinition: (clickNode) =>
+    if clickNode == "global"
       @ui.breadcrumb.reset()
-    else
-      # create a hidden temporary group node from this definition
-      # @edit_node = @core.nodes.createGroup
-      #   type: "Group"
-      #   definition: definition
-      #   x: -9999
-      # @workspace.render(@edit_node.nodes)
-      # @ui.breadcrumb.set([definition])
-
-
-
-
-
-
-
-
-
-
-
-
-
+      core.refreshDatamodelAccordingToDB({
+        nodes: db.nodes,
+        connections: db.connections,
+        groups: db.groups
+      })
 
   initUI: () =>
     if @core.settings.test == false
@@ -130,39 +104,22 @@ class UI
       @url_handler.on("SetDisplayModeCommand", @ui.setDisplayMode)
 
       #breadcrumb
-      @ui.breadcrumb.on("click", @setWorkspaceFromDefinition)
+      @ui.breadcrumb.on("click", @setWorkspaceFromDefinition.bind(@))
 
       self= @
       $(document).on('view_group_detail', (e, group)->
-        self.createWorkspace() # accually, reset workspace.
-        self.ui.breadcrumb.set(group)
+        # self.createWorkspace() # accually, reset workspace.
+        self.ui.breadcrumb.set([group])
 
-        nodes = group.get('nodes');
-        nodes.map((n)->
-          self.workspace.renderNode(n)
+        group = db.groups.find((g)->
+          return g.id == group.get('id')
         )
-        core.connections.map((c)=>
-          groupFrom = groups.getGroupByNodeId(c.rawFromId)
-          groupTo = groups.getGroupByNodeId(c.rawToId)
-          if groupFrom && groupTo && groupFrom == groupTo 
-            self.workspace.renderConnection(c)
-        )
+        core.refreshDatamodelAccordingToDB({
+          nodes: group.nodes,
+          connections: db.connections,
+          groups: []
+        })
       )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     else
       # If the application is in test mode add a css class to the body
       $("body").addClass "test-mode"

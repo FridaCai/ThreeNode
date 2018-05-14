@@ -15,4 +15,12 @@ class Connection extends Backbone.Model
   validate: () =>
     return false
   
+  toJSON: ()=>
+    return {
+      id: @id,
+      from: @from.id
+      to: @to.id
+      fromType: @fromType
+      toType: @toType
+    }
 module.exports = Connection

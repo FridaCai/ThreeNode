@@ -130,8 +130,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  Core.prototype.createGroup = function(nodes) {
-	    var db, index;
-	    db = DB.getInstance();
+	    var index;
 	    index = Indexer.getInstance().getUID();
 	    db.createGroup(nodes, index);
 	    return this.refreshDatamodelAccordingToDB(db);
@@ -169,22 +168,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  Core.prototype.dump = function() {
-	    var db, res;
-	    db = DB.getInstance();
+	    var res;
 	    db.updateProperty({
 	      nodes: this.nodes,
 	      groups: this.groups,
-	      connections: this.connections
+	      connections: this.connections,
+	      id: this.id
 	    });
-	    res = db.dump();
+	    res = {
+	      id: db.id,
+	      connections: db.connections,
+	      nodes: db.nodes,
+	      groups: db.groups
+	    };
 	    return JSON.stringify(res, null, 2);
 	  };
 	
 	  Core.prototype.setNodes = function(json) {
-	    var db, dbInstance, maxid, tmparr;
-	    dbInstance = DB.getInstance();
-	    dbInstance.loadFromJson(json);
-	    db = dbInstance.dump();
+	    var maxid, tmparr;
+	    db.loadFromJson(json);
 	    tmparr = db.nodes.concat(db.connections);
 	    db.groups.map(function(obj) {
 	      return obj.nodes.map(function(nodeObj) {
@@ -211,14 +213,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return self.nodes.push(node);
 	    });
 	    db.groups.map(function(obj) {
-	      var group, groupObj;
+	      var group, groupObj, nodes;
+	      nodes = obj.nodes.map(function(obj) {
+	        var nodeClass;
+	        nodeClass = Core.nodes.models[obj.type];
+	        return new nodeClass(obj);
+	      });
 	      groupObj = {
 	        id: obj.id,
 	        x: obj.x,
 	        y: obj.y,
 	        width: obj.width,
 	        height: obj.height,
-	        nodes: obj.nodes
+	        nodes: nodes
 	      };
 	      group = new Group(groupObj);
 	      return self.groups.push(group);
@@ -230,11 +237,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	        group: self.groups.getById(c.from),
 	        nodeInGroup: self.groups.getByNodeId(c.from)
 	      };
+	      if (!from.node && !from.group && !from.nodeInGroup) {
+	        return;
+	      }
 	      to = {
 	        node: self.nodes.getById(c.to),
 	        group: self.groups.getById(c.to),
 	        nodeInGroup: self.groups.getByNodeId(c.to)
 	      };
+	      if (!to.node && !to.group && !to.nodeInGroup) {
+	        return;
+	      }
 	      if (from.nodeInGroup && to.nodeInGroup && from.nodeInGroup === to.nodeInGroup) {
 	
 	      } else {
@@ -581,6 +594,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend(Connection, superClass);
 	
 	  function Connection() {
+	    this.toJSON = bind(this.toJSON, this);
 	    this.validate = bind(this.validate, this);
 	    this.render = bind(this.render, this);
 	    this.initialize = bind(this.initialize, this);
@@ -601,6 +615,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  Connection.prototype.validate = function() {
 	    return false;
+	  };
+	
+	  Connection.prototype.toJSON = function() {
+	    return {
+	      id: this.id,
+	      from: this.from.id,
+	      to: this.to.id,
+	      fromType: this.fromType,
+	      toType: this.toType
+	    };
 	  };
 	
 	  return Connection;
@@ -780,11 +804,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	DB = (function() {
 	  function DB() {
-	    this.dump = bind(this.dump, this);
 	    this.createGroup = bind(this.createGroup, this);
 	    this.updateProperty = bind(this.updateProperty, this);
 	    this.loadFromJson = bind(this.loadFromJson, this);
 	    this.reset = bind(this.reset, this);
+	    this.reset();
 	  }
 	
 	  DB.prototype.reset = function() {
@@ -803,28 +827,51 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  DB.prototype.updateProperty = function(param) {
+	    this.id = param.id;
 	    param.groups.map((function(_this) {
 	      return function(gParam) {
 	        var g;
-	        g = _this.groups.find(function(_g) {
-	          return _g.id === gParam.get('id');
-	        });
-	        g.x = gParam.get('x');
-	        g.y = gParam.get('y');
-	        g.width = gParam.get('width');
-	        return g.height = gParam.get('height');
+	        if (!_this.groups.length) {
+	          return _this.groups.push(gParam.toJSON());
+	        } else {
+	          g = _this.groups.find(function(_g) {
+	            return _g.id === gParam.get('id');
+	          });
+	          if (g) {
+	            g.x = gParam.get('x');
+	            g.y = gParam.get('y');
+	            g.width = gParam.get('width');
+	            return g.height = gParam.get('height');
+	          } else {
+	            return _this.groups.push(gParam.toJSON());
+	          }
+	        }
 	      };
 	    })(this), this);
-	    return param.nodes.map((function(_this) {
+	    param.nodes.map((function(_this) {
 	      return function(nParam) {
 	        var n;
-	        n = _this.nodes.find(function(_n) {
-	          return _n.id === nParam.id;
-	        });
-	        n.x = nParam.get('x');
-	        n.y = nParam.get('y');
-	        n.width = nParam.get('width');
-	        return n.height = nParam.get('height');
+	        if (!_this.nodes.length) {
+	          return _this.nodes.push(nParam.toJSON());
+	        } else {
+	          n = _this.nodes.find(function(_n) {
+	            return _n.id === nParam.id;
+	          });
+	          if (n) {
+	            n.x = nParam.get('x');
+	            n.y = nParam.get('y');
+	            n.width = nParam.get('width');
+	            return n.height = nParam.get('height');
+	          } else {
+	            return _this.nodes.push(nParam.toJSON());
+	          }
+	        }
+	      };
+	    })(this), this);
+	    this.connections = [];
+	    return param.connections.map((function(_this) {
+	      return function(cParam) {
+	        return _this.connections.push(cParam.toJSON());
 	      };
 	    })(this), this);
 	  };
@@ -875,27 +922,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, this);
 	  };
 	
-	  DB.prototype.dump = function() {
-	    return {
-	      id: this.id,
-	      nodes: this.nodes,
-	      groups: this.groups,
-	      connections: this.connections
-	    };
-	  };
-	
-	  DB.getInstance = function() {
-	    if (!db) {
-	      db = new DB();
-	    }
-	    return db;
-	  };
-	
 	  return DB;
 	
 	})();
 	
 	module.exports = DB;
+	
+	window.db = new DB();
 
 
 /***/ })

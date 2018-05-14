@@ -2,6 +2,9 @@ db = null
 
     
 class DB
+    constructor:() ->
+        @reset()
+    
     reset: ()=>
         @nodes = []
         @connections = []
@@ -19,24 +22,42 @@ class DB
     
     updateProperty: (param)=>
         # no need to update connections
+        @id = param.id
         param.groups.map((gParam)=>
-            g = @groups.find((_g)=>
-                return _g.id == gParam.get('id')
-            )
-            g.x = gParam.get('x')
-            g.y = gParam.get('y')
-            g.width = gParam.get('width')
-            g.height = gParam.get('height')
+            if(!@groups.length)
+                @groups.push(gParam.toJSON())
+            else               
+                g = @groups.find((_g)=>
+                    return _g.id == gParam.get('id')
+                )
+                if(g)
+                    g.x = gParam.get('x')
+                    g.y = gParam.get('y')
+                    g.width = gParam.get('width')
+                    g.height = gParam.get('height')
+                else
+                    @groups.push(gParam.toJSON())
         , @)
 
         param.nodes.map((nParam)=>
-            n = @nodes.find((_n)=>
-                return _n.id == nParam.id
-            )
-            n.x = nParam.get('x')
-            n.y = nParam.get('y')
-            n.width = nParam.get('width')
-            n.height = nParam.get('height')
+            if(!@nodes.length)
+                @nodes.push(nParam.toJSON())
+            else
+                n = @nodes.find((_n)=>
+                    return _n.id == nParam.id
+                )
+                if(n)
+                    n.x = nParam.get('x')
+                    n.y = nParam.get('y')
+                    n.width = nParam.get('width')
+                    n.height = nParam.get('height')
+                else
+                    @nodes.push(nParam.toJSON())
+        , @)
+        
+        @connections = [];
+        param.connections.map((cParam)=>
+            @connections.push(cParam.toJSON())
         , @)
 
     calculatePos: (nodes) ->
@@ -77,21 +98,6 @@ class DB
             return !nodeIds.includes(n.id)
         ,@)
 
-        
-        
-
-
-    dump: ()=>
-        return {
-            id: @id
-            nodes: @nodes
-            groups: @groups
-            connections: @connections
-        }
-
-    @getInstance = ()=>
-        if(!db)
-            db = new DB()
-        return db
-
 module.exports = DB
+
+window.db = new DB()

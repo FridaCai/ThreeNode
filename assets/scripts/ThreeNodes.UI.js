@@ -77,7 +77,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var AppTimeline, Backbone, FileHandler, NodeView, NodeViewColor, NodeViewWebgl, UI, UIView, UrlHandler, Workspace, _,
+	var AppTimeline, Backbone, DB, FileHandler, NodeView, NodeViewColor, NodeViewWebgl, UI, UIView, UrlHandler, Workspace, _,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 	
 	__webpack_require__(18);
@@ -101,6 +101,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	NodeViewColor = __webpack_require__(44);
 	
 	NodeViewWebgl = __webpack_require__(113);
+	
+	DB = __webpack_require__(11);
 	
 	UI = (function() {
 	  function UI(core1) {
@@ -149,18 +151,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 	  };
 	
-	  UI.prototype.setWorkspaceFromDefinition = function(definition) {
-	    this.createWorkspace();
-	    if (this.edit_node) {
-	      console.log("remove edit node");
-	      this.edit_node.remove();
-	      delete this.edit_node;
-	    }
-	    if (definition === "global") {
-	      this.workspace.render(this.core.nodes);
-	      return this.ui.breadcrumb.reset();
-	    } else {
-	
+	  UI.prototype.setWorkspaceFromDefinition = function(clickNode) {
+	    if (clickNode === "global") {
+	      this.ui.breadcrumb.reset();
+	      return core.refreshDatamodelAccordingToDB({
+	        nodes: db.nodes,
+	        connections: db.connections,
+	        groups: db.groups
+	      });
 	    }
 	  };
 	
@@ -181,26 +179,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.ui.menubar.on("LoadFile", this.file_handler.loadLocalFile);
 	      this.ui.menubar.on("GroupSelectedNodes", this.createGroup);
 	      this.url_handler.on("SetDisplayModeCommand", this.ui.setDisplayMode);
-	      this.ui.breadcrumb.on("click", this.setWorkspaceFromDefinition);
+	      this.ui.breadcrumb.on("click", this.setWorkspaceFromDefinition.bind(this));
 	      self = this;
 	      $(document).on('view_group_detail', function(e, group) {
-	        var nodes;
-	        self.createWorkspace();
-	        self.ui.breadcrumb.set(group);
-	        nodes = group.get('nodes');
-	        nodes.map(function(n) {
-	          return self.workspace.renderNode(n);
+	        self.ui.breadcrumb.set([group]);
+	        group = db.groups.find(function(g) {
+	          return g.id === group.get('id');
 	        });
-	        return core.connections.map((function(_this) {
-	          return function(c) {
-	            var groupFrom, groupTo;
-	            groupFrom = groups.getGroupByNodeId(c.rawFromId);
-	            groupTo = groups.getGroupByNodeId(c.rawToId);
-	            if (groupFrom && groupTo && groupFrom === groupTo) {
-	              return self.workspace.renderConnection(c);
-	            }
-	          };
-	        })(this));
+	        return core.refreshDatamodelAccordingToDB({
+	          nodes: group.nodes,
+	          connections: db.connections,
+	          groups: []
+	        });
 	      });
 	    } else {
 	      $("body").addClass("test-mode");
@@ -408,7 +398,144 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 8 */,
 /* 9 */,
 /* 10 */,
-/* 11 */,
+/* 11 */
+/***/ (function(module, exports) {
+
+	var DB, db,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+	
+	db = null;
+	
+	DB = (function() {
+	  function DB() {
+	    this.createGroup = bind(this.createGroup, this);
+	    this.updateProperty = bind(this.updateProperty, this);
+	    this.loadFromJson = bind(this.loadFromJson, this);
+	    this.reset = bind(this.reset, this);
+	    this.reset();
+	  }
+	
+	  DB.prototype.reset = function() {
+	    this.nodes = [];
+	    this.connections = [];
+	    this.groups = [];
+	    return this.id = null;
+	  };
+	
+	  DB.prototype.loadFromJson = function(json) {
+	    this.reset();
+	    this.id = json.id;
+	    this.nodes = json.nodes;
+	    this.groups = json.groups;
+	    return this.connections = json.connections;
+	  };
+	
+	  DB.prototype.updateProperty = function(param) {
+	    this.id = param.id;
+	    param.groups.map((function(_this) {
+	      return function(gParam) {
+	        var g;
+	        if (!_this.groups.length) {
+	          return _this.groups.push(gParam.toJSON());
+	        } else {
+	          g = _this.groups.find(function(_g) {
+	            return _g.id === gParam.get('id');
+	          });
+	          if (g) {
+	            g.x = gParam.get('x');
+	            g.y = gParam.get('y');
+	            g.width = gParam.get('width');
+	            return g.height = gParam.get('height');
+	          } else {
+	            return _this.groups.push(gParam.toJSON());
+	          }
+	        }
+	      };
+	    })(this), this);
+	    param.nodes.map((function(_this) {
+	      return function(nParam) {
+	        var n;
+	        if (!_this.nodes.length) {
+	          return _this.nodes.push(nParam.toJSON());
+	        } else {
+	          n = _this.nodes.find(function(_n) {
+	            return _n.id === nParam.id;
+	          });
+	          if (n) {
+	            n.x = nParam.get('x');
+	            n.y = nParam.get('y');
+	            n.width = nParam.get('width');
+	            return n.height = nParam.get('height');
+	          } else {
+	            return _this.nodes.push(nParam.toJSON());
+	          }
+	        }
+	      };
+	    })(this), this);
+	    this.connections = [];
+	    return param.connections.map((function(_this) {
+	      return function(cParam) {
+	        return _this.connections.push(cParam.toJSON());
+	      };
+	    })(this), this);
+	  };
+	
+	  DB.prototype.calculatePos = function(nodes) {
+	    var dx, dy, i, len, max_x, max_y, min_x, min_y, node;
+	    min_x = 0;
+	    min_y = 0;
+	    max_x = 0;
+	    max_y = 0;
+	    for (i = 0, len = nodes.length; i < len; i++) {
+	      node = nodes[i];
+	      min_x = Math.min(min_x, node.get("x"));
+	      max_x = Math.max(max_x, node.get("x"));
+	      min_y = Math.min(min_y, node.get("y"));
+	      max_y = Math.max(max_y, node.get("y"));
+	    }
+	    dx = (min_x + max_x) / 2;
+	    dy = (min_y + max_y) / 2;
+	    return {
+	      x: dx,
+	      y: dy
+	    };
+	  };
+	
+	  DB.prototype.createGroup = function(nodes, index) {
+	    var nodesObj, pos;
+	    pos = this.calculatePos(nodes);
+	    nodesObj = nodes.map((function(_this) {
+	      return function(n) {
+	        return n.toJSON();
+	      };
+	    })(this));
+	    this.groups.push({
+	      id: index,
+	      x: pos.x,
+	      y: pos.y,
+	      width: 90,
+	      height: 26,
+	      nodes: nodesObj
+	    });
+	    return this.nodes = this.nodes.filter(function(n) {
+	      var nodeIds;
+	      nodeIds = nodes.map(function(_n) {
+	        return _n.id;
+	      });
+	      return !nodeIds.includes(n.id);
+	    }, this);
+	  };
+	
+	  return DB;
+	
+	})();
+	
+	module.exports = DB;
+	
+	window.db = new DB();
+
+
+/***/ }),
 /* 12 */,
 /* 13 */,
 /* 14 */
@@ -2763,23 +2890,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  Breadcrumb.prototype.set = function(items) {
-	    var gid, i, item, len, name, results;
+	    var i, id, item, len, name, results;
 	    this.items = items;
-	    this.$el.html("<a href='#' data-gid='global'>Global</a>");
+	    this.$el.html("<a href='#' data-id='global'>Global</a>");
 	    results = [];
 	    for (i = 0, len = items.length; i < len; i++) {
 	      item = items[i];
 	      name = item.get("name");
-	      gid = item.get("id");
-	      results.push(this.$el.append(" ▶ " + ("<a href='#' class='grp' data-gid='" + gid + "'>" + name + "</a>")));
+	      id = item.get("id");
+	      results.push(this.$el.append(" ▶ " + ("<a href='#' class='grp' data-id='" + id + "'>" + name + "</a>")));
 	    }
 	    return results;
 	  };
 	
 	  Breadcrumb.prototype.onClick = function(e) {
-	    var gid;
-	    gid = $(e.target).data("id");
-	    if (gid === "global") {
+	    var id;
+	    id = $(e.target).data("id");
+	    if (id === "global") {
 	      return this.trigger("click", "global");
 	    }
 	  };

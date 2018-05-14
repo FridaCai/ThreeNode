@@ -14,15 +14,15 @@ class Breadcrumb extends Backbone.View
   set: (items) =>
     # items is an ordered array of groups
     @items = items
-    @$el.html("<a href='#' data-gid='global'>Global</a>")
+    @$el.html("<a href='#' data-id='global'>Global</a>")
     for item in items
       name = item.get("name")
-      gid = item.get("id")
-      @$el.append(" ▶ " + "<a href='#' class='grp' data-gid='#{gid}'>#{name}</a>")
+      id = item.get("id")
+      @$el.append(" ▶ " + "<a href='#' class='grp' data-id='#{id}'>#{name}</a>")
 
   onClick: (e) =>
-    gid = $(e.target).data("id")
-    if gid == "global"
+    id = $(e.target).data("id")
+    if id == "global"
       @trigger("click", "global")
 
 module.exports = Breadcrumb
