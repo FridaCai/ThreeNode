@@ -99,7 +99,8 @@ class UI
       @ui.menubar.on("LoadJSON", @file_handler.loadFromJsonData)
       @ui.menubar.on("LoadFile", @file_handler.loadLocalFile)
       @ui.menubar.on("GroupSelectedNodes", @createGroup)
-
+      @ui.menubar.on("AutoLayout", @autoLayout)
+      
       # Special events
       @url_handler.on("SetDisplayModeCommand", @ui.setDisplayMode)
 
@@ -129,7 +130,58 @@ class UI
     nodes = @getSelectedNodes()
     @workspace.clearView()
     @core.createGroup(nodes)
-  
+
+  autoLayout:()=>
+    params = ['digraph {']
+
+    db.groups.map((g)=>
+      params.push('subgraph cluster' + g.id + '{')
+
+      g.nodes.map((n)=>
+        params.push(n.id + ';')
+      )
+      params.push('}');
+    )
+
+    if(db.groups.length !=0)
+      db.nodes.map((n)=>
+        params.push(n.id + ';')
+      )
+
+    db.connections.map((c)=>
+      params.push(c.from + '->' + c.to + ';')
+    )
+
+    params.push('}');
+
+
+    paramStr = params.join(' ')
+    
+    console.log('=========graphviz test params===========')
+    console.log(paramStr)
+
+
+    plain = Viz(paramStr, {format: 'plain'});
+    console.log('=========graphviz test plain===========')
+    console.log(plain)
+
+
+    factor = 100
+    plain.split('\n').map((line)->
+      cells = line.split(' ')
+      type = cells[0]
+      if(type == 'node')
+        id = parseInt(cells[1])
+        
+        x = parseFloat(cells[2]) * factor
+        y = parseFloat(cells[3]) * factor
+        node = db.findNodeInNodes(id) || db.findNodeInGroups(id)
+        node.x = x
+        node.y = y
+    )
+
+    core.refreshDatamodelAccordingToDB(db)
+
   getSelectedNodes: () ->
     selected_nodes = []
     $selected = $(".node.ui-selected").not(".node .node")

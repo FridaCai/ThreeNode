@@ -804,6 +804,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	DB = (function() {
 	  function DB() {
+	    this.findNodeInGroups = bind(this.findNodeInGroups, this);
+	    this.findNodeInNodes = bind(this.findNodeInNodes, this);
 	    this.createGroup = bind(this.createGroup, this);
 	    this.updateProperty = bind(this.updateProperty, this);
 	    this.loadFromJson = bind(this.loadFromJson, this);
@@ -920,6 +922,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	      });
 	      return !nodeIds.includes(n.id);
 	    }, this);
+	  };
+	
+	  DB.prototype.findNodeInNodes = function(id) {
+	    return this.nodes.find((function(_this) {
+	      return function(n) {
+	        return n.id === id;
+	      };
+	    })(this));
+	  };
+	
+	  DB.prototype.findNodeInGroups = function(id) {
+	    var node;
+	    node = null;
+	    this.groups.map((function(_this) {
+	      return function(g) {
+	        return g.nodes.map(function(n) {
+	          if (n.id === id) {
+	            return node = n;
+	          }
+	        });
+	      };
+	    })(this));
+	    return node;
 	  };
 	
 	  return DB;

@@ -98,6 +98,25 @@ class DB
             return !nodeIds.includes(n.id)
         ,@)
 
+    
+    
+    # findNode from group or node.
+    findNodeInNodes: (id)=>
+        return @nodes.find((n)=>
+            return n.id == id
+        )
+    
+    findNodeInGroups: (id)=>
+        node = null
+        @groups.map((g)=>
+            g.nodes.map((n)=>
+                if(n.id == id)
+                    node = n
+            )
+        )
+        return node
+
+
 module.exports = DB
 
 window.db = new DB()

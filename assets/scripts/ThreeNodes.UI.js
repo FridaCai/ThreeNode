@@ -110,6 +110,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.clearWorkspace = bind(this.clearWorkspace, this);
 	    this.initTimeline = bind(this.initTimeline, this);
 	    this.setDisplayMode = bind(this.setDisplayMode, this);
+	    this.autoLayout = bind(this.autoLayout, this);
 	    this.createGroup = bind(this.createGroup, this);
 	    this.initUI = bind(this.initUI, this);
 	    this.setWorkspaceFromDefinition = bind(this.setWorkspaceFromDefinition, this);
@@ -178,6 +179,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.ui.menubar.on("LoadJSON", this.file_handler.loadFromJsonData);
 	      this.ui.menubar.on("LoadFile", this.file_handler.loadLocalFile);
 	      this.ui.menubar.on("GroupSelectedNodes", this.createGroup);
+	      this.ui.menubar.on("AutoLayout", this.autoLayout);
 	      this.url_handler.on("SetDisplayModeCommand", this.ui.setDisplayMode);
 	      this.ui.breadcrumb.on("click", this.setWorkspaceFromDefinition.bind(this));
 	      self = this;
@@ -203,6 +205,56 @@ return /******/ (function(modules) { // webpackBootstrap
 	    nodes = this.getSelectedNodes();
 	    this.workspace.clearView();
 	    return this.core.createGroup(nodes);
+	  };
+	
+	  UI.prototype.autoLayout = function() {
+	    var factor, paramStr, params, plain;
+	    params = ['digraph {'];
+	    db.groups.map((function(_this) {
+	      return function(g) {
+	        params.push('subgraph cluster' + g.id + '{');
+	        g.nodes.map(function(n) {
+	          return params.push(n.id + ';');
+	        });
+	        return params.push('}');
+	      };
+	    })(this));
+	    if (db.groups.length !== 0) {
+	      db.nodes.map((function(_this) {
+	        return function(n) {
+	          return params.push(n.id + ';');
+	        };
+	      })(this));
+	    }
+	    db.connections.map((function(_this) {
+	      return function(c) {
+	        return params.push(c.from + '->' + c.to + ';');
+	      };
+	    })(this));
+	    params.push('}');
+	    paramStr = params.join(' ');
+	    console.log('=========graphviz test params===========');
+	    console.log(paramStr);
+	    plain = Viz(paramStr, {
+	      format: 'plain'
+	    });
+	    console.log('=========graphviz test plain===========');
+	    console.log(plain);
+	    factor = 100;
+	    plain.split('\n').map(function(line) {
+	      var cells, id, node, type, x, y;
+	      cells = line.split(' ');
+	      type = cells[0];
+	      if (type === 'node') {
+	        id = parseInt(cells[1]);
+	        x = parseFloat(cells[2]) * factor;
+	        y = parseFloat(cells[3]) * factor;
+	        node = db.findNodeInNodes(id) || db.findNodeInGroups(id);
+	        node.x = x;
+	        return node.y = y;
+	      }
+	    });
+	    return core.refreshDatamodelAccordingToDB(db);
 	  };
 	
 	  UI.prototype.getSelectedNodes = function() {
@@ -408,6 +460,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	DB = (function() {
 	  function DB() {
+	    this.findNodeInGroups = bind(this.findNodeInGroups, this);
+	    this.findNodeInNodes = bind(this.findNodeInNodes, this);
 	    this.createGroup = bind(this.createGroup, this);
 	    this.updateProperty = bind(this.updateProperty, this);
 	    this.loadFromJson = bind(this.loadFromJson, this);
@@ -524,6 +578,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	      });
 	      return !nodeIds.includes(n.id);
 	    }, this);
+	  };
+	
+	  DB.prototype.findNodeInNodes = function(id) {
+	    return this.nodes.find((function(_this) {
+	      return function(n) {
+	        return n.id === id;
+	      };
+	    })(this));
+	  };
+	
+	  DB.prototype.findNodeInGroups = function(id) {
+	    var node;
+	    node = null;
+	    this.groups.map((function(_this) {
+	      return function(g) {
+	        return g.nodes.map(function(n) {
+	          if (n.id === id) {
+	            return node = n;
+	          }
+	        });
+	      };
+	    })(this));
+	    return node;
 	  };
 	
 	  return DB;
@@ -2993,7 +3070,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 98 */
 /***/ (function(module, exports) {
 
-	module.exports = "<ul id=\"main-menu-bar\" class=\"menubar ui-layout-north\">\n  <li>\n    <a href=\"#File\">File</a>\n    <ul>\n      <li><a href=\"#NewFile\" data-event=\"ClearWorkspace\">New</a></li>\n      <li><a href=\"#OpenFile\" data-event=\"OpenFile\">Open</a></li>\n      <li><a href=\"#SaveFile\" data-event=\"SaveFile\">Save</a></li>\n    </ul>\n  </li>\n  <li>\n    <a href=\"#Edit\">Edit</a>\n    <ul>\n      <li><a href=\"#Rotate\" data-event=\"Rotate\">Rotate</a></li>\n      <li><a href=\"#GroupSelectedNodes\" data-event=\"GroupSelectedNodes\">Group selected nodes</a></li>\n    </ul>\n  </li>\n  <li>\n    <a href=\"#View\">View</a>\n    <ul>\n      <li><a href=\"#Library\" data-event=\"ToggleLibrary\">Library</a></li>\n      <li><a href=\"#Attributes\" data-event=\"ToggleAttributes\">Attributes</a></li>\n    </ul>\n  </li>\n  <li class=\"expanded\">\n    <a href=\"#examples\">Examples</a>\n    <ul>\n      <li><a href=\"#example/rotating_cube1.json\">Eagle Eye</a></li>\n      <li><a href=\"#example/geometry_and_material1.json\">VVR</a></li>\n    </ul>\n  </li>\n</ul>\n";
+	module.exports = "<ul id=\"main-menu-bar\" class=\"menubar ui-layout-north\">\n  <li>\n    <a href=\"#File\">File</a>\n    <ul>\n      <li><a href=\"#NewFile\" data-event=\"ClearWorkspace\">New</a></li>\n      <li><a href=\"#OpenFile\" data-event=\"OpenFile\">Open</a></li>\n      <li><a href=\"#SaveFile\" data-event=\"SaveFile\">Save</a></li>\n    </ul>\n  </li>\n  <li>\n    <a href=\"#Edit\">Edit</a>\n    <ul>\n      <li><a href=\"#AutoLayout\" data-event=\"AutoLayout\">AutoLayout</a></li>\n      <li><a href=\"#GroupSelectedNodes\" data-event=\"GroupSelectedNodes\">Group selected nodes</a></li>\n    </ul>\n  </li>\n  <li>\n    <a href=\"#View\">View</a>\n    <ul>\n      <li><a href=\"#Library\" data-event=\"ToggleLibrary\">Library</a></li>\n      <li><a href=\"#Attributes\" data-event=\"ToggleAttributes\">Attributes</a></li>\n    </ul>\n  </li>\n  <li class=\"expanded\">\n    <a href=\"#examples\">Examples</a>\n    <ul>\n      <li><a href=\"#example/rotating_cube1.json\">Eagle Eye</a></li>\n      <li><a href=\"#example/geometry_and_material1.json\">VVR</a></li>\n    </ul>\n  </li>\n</ul>\n";
 
 /***/ }),
 /* 99 */
