@@ -50,30 +50,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
-/******/ ((function(modules) {
-	// Check all modules for deduplicated modules
-	for(var i in modules) {
-		if(Object.prototype.hasOwnProperty.call(modules, i)) {
-			switch(typeof modules[i]) {
-			case "function": break;
-			case "object":
-				// Module can be created from a template
-				modules[i] = (function(_m) {
-					var args = _m.slice(1), fn = modules[_m[0]];
-					return function (a,b,c) {
-						fn.apply(this, [a,b,c].concat(args));
-					};
-				}(modules[i]));
-				break;
-			default:
-				// Module is a copy of another module
-				modules[i] = modules[modules[i]];
-				break;
-			}
-		}
-	}
-	return modules;
-}([
+/******/ ([
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -242,16 +219,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	    console.log(plain);
 	    factor = 100;
 	    plain.split('\n').map(function(line) {
-	      var cells, id, node, type, x, y;
+	      var cells, id, target, type, x, y;
 	      cells = line.split(' ');
 	      type = cells[0];
 	      if (type === 'node') {
 	        id = parseInt(cells[1]);
 	        x = parseFloat(cells[2]) * factor;
 	        y = parseFloat(cells[3]) * factor;
-	        node = db.findNodeInNodes(id) || db.findNodeInGroups(id);
-	        node.x = x;
-	        return node.y = y;
+	        target = db.findNodeInNodes(id) || db.findNodeInGroups(id) || db.findGroup(id);
+	        if (target) {
+	          target.x = x;
+	          return target.y = y;
+	        }
 	      }
 	    });
 	    return core.refreshDatamodelAccordingToDB(db);
@@ -460,6 +439,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	DB = (function() {
 	  function DB() {
+	    this.findGroup = bind(this.findGroup, this);
 	    this.findNodeInGroups = bind(this.findNodeInGroups, this);
 	    this.findNodeInNodes = bind(this.findNodeInNodes, this);
 	    this.createGroup = bind(this.createGroup, this);
@@ -603,6 +583,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return node;
 	  };
 	
+	  DB.prototype.findGroup = function(id) {
+	    return this.groups.find((function(_this) {
+	      return function(g) {
+	        return g.id === id;
+	      };
+	    })(this));
+	  };
+	
 	  return DB;
 	
 	})();
@@ -618,7 +606,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 14 */
 /***/ (function(module, exports) {
 
-	module.exports = "<div class='head'><span><%= get(\"name\") %></span></div>\n<div class='options'>\n  <div class='inputs'></div>\n  <div class='center'></div>\n  <div class='outputs'></div>\n</div>\n\n<div class=\"up handler\" data-attr='up'></div>\n<div class=\"down handler\" data-attr='down'></div>\n<div class=\"left handler\" data-attr='left'></div>\n<div class=\"right handler\" data-attr='right'></div>\n";
+	module.exports = "<div class='head'><span><%= get(\"name\") %></span></div>\n<div class='options'>\n  <div class='inputs'></div>\n  <div class='center'></div>\n  <div class='outputs'></div>\n</div>\n\n<!-- <div class=\"up handler\" data-attr='up'></div>\n<div class=\"down handler\" data-attr='down'></div>\n<div class=\"left handler\" data-attr='left'></div>\n<div class=\"right handler\" data-attr='right'></div> -->\n<div class=\"center handler\" data-attr='center'></div>\n";
 
 /***/ }),
 /* 15 */
@@ -4445,11 +4433,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.container = $("#graph");
 	    this.svg = ThreeNodes.UI.UIView.svg;
 	    this.curve = this.svg.path().attr({
-	      stroke: "#fff"
+	      stroke: "#555"
 	    });
 	    this.triangle = this.svg.path().attr({
-	      stroke: "#fff",
-	      fill: "#fff"
+	      stroke: "#555",
+	      fill: "#555"
 	    });
 	    this.el = this.svg.node;
 	    this.model.bind("render", (function(_this) {
@@ -4491,7 +4479,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  ConnectionView.prototype.getNodePosition = function(model, type) {
-	    var diff, height, o1, width, x, y;
+	    var height, o1, width, x, y;
 	    x = model.get('x');
 	    y = model.get('y');
 	    width = model.get('width');
@@ -4520,10 +4508,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	          left: x + width / 2,
 	          top: y + height
 	        };
+	        break;
+	      case 'center':
+	        o1 = {
+	          left: x + width / 2,
+	          top: y + height / 2
+	        };
 	    }
-	    diff = 3;
-	    o1.top += diff;
-	    o1.left += diff;
 	    return o1;
 	  };
 	
@@ -4556,7 +4547,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    x3 = x4 - diffx * 0.5;
 	    y3 = y4;
 	    return this.curve.attr({
-	      path: ["M", x1.toFixed(3), y1.toFixed(3), "C", x2, y2, x3, y3, x4.toFixed(3), y4.toFixed(3)].join(",")
+	      path: ["M", x1.toFixed(3), y1.toFixed(3), "L", x4.toFixed(3), y4.toFixed(3)].join(",")
 	    });
 	  };
 	
@@ -4877,7 +4868,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 107 */
-14,
+/***/ (function(module, exports) {
+
+	module.exports = "<div class='head'><span><%= get(\"name\") %></span></div>\n<div class='options'>\n  <div class='inputs'></div>\n  <div class='center'></div>\n  <div class='outputs'></div>\n</div>\n\n<div class=\"up handler\" data-attr='up'></div>\n<div class=\"down handler\" data-attr='down'></div>\n<div class=\"left handler\" data-attr='left'></div>\n<div class=\"right handler\" data-attr='right'></div>\n<div class=\"center handler\" data-attr='center'></div>\n";
+
+/***/ }),
 /* 108 */
 /***/ (function(module, exports) {
 
@@ -5467,7 +5462,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ })
-/******/ ])))
+/******/ ])
 });
 ;
 //# sourceMappingURL=ThreeNodes.UI.js.map

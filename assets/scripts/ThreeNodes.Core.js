@@ -132,6 +132,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  Core.prototype.createGroup = function(nodes) {
 	    var index;
 	    index = Indexer.getInstance().getUID();
+	    db.updateProperty({
+	      id: this.id,
+	      nodes: this.nodes,
+	      groups: this.groups,
+	      connections: this.connections
+	    });
 	    db.createGroup(nodes, index);
 	    return this.refreshDatamodelAccordingToDB(db);
 	  };
@@ -804,6 +810,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	DB = (function() {
 	  function DB() {
+	    this.findGroup = bind(this.findGroup, this);
 	    this.findNodeInGroups = bind(this.findNodeInGroups, this);
 	    this.findNodeInNodes = bind(this.findNodeInNodes, this);
 	    this.createGroup = bind(this.createGroup, this);
@@ -945,6 +952,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	      };
 	    })(this));
 	    return node;
+	  };
+	
+	  DB.prototype.findGroup = function(id) {
+	    return this.groups.find((function(_this) {
+	      return function(g) {
+	        return g.id === id;
+	      };
+	    })(this));
 	  };
 	
 	  return DB;

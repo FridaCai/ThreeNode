@@ -19,7 +19,7 @@ class DB
         @groups = json.groups
         @connections = json.connections
 
-    
+    # why so complicated? because datamodel is not consistent with db.
     updateProperty: (param)=>
         # no need to update connections
         @id = param.id
@@ -54,11 +54,28 @@ class DB
                 else
                     @nodes.push(nParam.toJSON())
         , @)
-        
+
         @connections = [];
         param.connections.map((cParam)=>
             @connections.push(cParam.toJSON())
         , @)
+        
+        # case dump, node deleted, group deleted.
+        # param.connections.map((cParam)=>
+        #     if(!@connections.length)
+        #         @connections.push(cParam.toJSON())
+        #     else               
+        #         g = @connections.find((_g)=>
+        #             return _g.id == gParam.get('id')
+        #         )
+        #         if(g)
+        #             g.x = gParam.get('x')
+        #             g.y = gParam.get('y')
+        #             g.width = gParam.get('width')
+        #             g.height = gParam.get('height')
+        #         else
+        #             @groups.push(gParam.toJSON())
+        # , @)
 
     calculatePos: (nodes) ->
         min_x = 0
@@ -115,7 +132,8 @@ class DB
             )
         )
         return node
-
+    findGroup:(id)=>
+        return @groups.find((g)=>return g.id==id)
 
 module.exports = DB
 

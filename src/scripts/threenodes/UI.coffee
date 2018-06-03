@@ -132,6 +132,15 @@ class UI
     @core.createGroup(nodes)
 
   autoLayout:()=>
+    # datamodel => db
+    # db.updateProperty({
+    #   nodes: core.nodes
+    #   groups: core.groups
+    #   connections: core.connections
+    #   id: core.id
+    # })
+
+
     params = ['digraph {']
 
     db.groups.map((g)=>
@@ -175,9 +184,10 @@ class UI
         
         x = parseFloat(cells[2]) * factor
         y = parseFloat(cells[3]) * factor
-        node = db.findNodeInNodes(id) || db.findNodeInGroups(id)
-        node.x = x
-        node.y = y
+        target = db.findNodeInNodes(id) || db.findNodeInGroups(id) || db.findGroup(id)
+        if(target)
+          target.x = x
+          target.y = y
     )
 
     core.refreshDatamodelAccordingToDB(db)

@@ -47,6 +47,12 @@ class Core
 
   createGroup: (nodes)->
     index = Indexer.getInstance().getUID()
+    db.updateProperty({
+      id: @id,
+      nodes: @nodes,
+      groups: @groups,
+      connections: @connections
+    })
     db.createGroup(nodes, index)    
     @refreshDatamodelAccordingToDB(db)
 
