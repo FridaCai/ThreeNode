@@ -400,11 +400,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, (function(_this) {
 	      return function(action, el, pos) {
 	        if (action === "remove_node") {
-	          return self.model.remove();
+	          self.model.remove();
+	        }
+	        if (action === "rename_node") {
+	          return _this.rename();
 	        }
 	      };
 	    })(this));
 	    return this;
+	  };
+	
+	  ShapeNodeView.prototype.rename = function() {
+	    var $input, $title_span, prev;
+	    $title_span = this.$el.find("> .head span");
+	    $input = this.$el.find("> .head input");
+	    prev = $title_span.html();
+	    $input.val(prev);
+	    $title_span.hide();
+	    return $input.show();
 	  };
 	
 	  ShapeNodeView.prototype.makeElement = function() {
@@ -542,38 +555,39 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return this;
 	  };
 	
-	  ShapeNodeView.prototype.initTitleClick = function() {
-	    var $input, $title_span, self;
-	    self = this;
+	  ShapeNodeView.prototype.apply_input_result = function() {
+	    var $input, $title_span, name;
 	    $title_span = this.$el.find("> .head span");
+	    $input = this.$el.find("> .head input");
+	    name = $input.val();
+	    name = name || $title_span.html();
+	    this.model.set('name', name);
+	    $input.hide();
+	    return $title_span.show();
+	  };
+	
+	  ShapeNodeView.prototype.initTitleClick = function() {
+	    var $input, self;
+	    self = this;
 	    $input = $("<input type='text' />");
 	    this.$el.find("> .head").append($input);
 	    $input.hide();
+	    $input.blur(function(e) {
+	      return self.apply_input_result();
+	    });
+	    $("#graph").click(function(e) {
+	      return self.apply_input_result();
+	    });
+	    $input.keydown(function(e) {
+	      if (e.keyCode === 13) {
+	        return self.apply_input_result();
+	      }
+	    });
 	    $input.on('mousedown', function(e) {
 	      return e.stopPropagation();
 	    });
-	    $title_span.dblclick(function(e) {
-	      var apply_input_result, prev;
-	      prev = $(this).html();
-	      $input.val(prev);
-	      $title_span.hide();
-	      $input.show();
-	      apply_input_result = function() {
-	        self.model.set('name', $input.val());
-	        $input.hide();
-	        return $title_span.show();
-	      };
-	      $input.blur(function(e) {
-	        return apply_input_result();
-	      });
-	      $("#graph").click(function(e) {
-	        return apply_input_result();
-	      });
-	      return $input.keydown(function(e) {
-	        if (e.keyCode === 13) {
-	          return apply_input_result();
-	        }
-	      });
+	    this.$el.find("> .head span").dblclick(function(e) {
+	      return self.rename();
 	    });
 	    return this;
 	  };
@@ -641,7 +655,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 15 */
 /***/ (function(module, exports) {
 
-	module.exports = "<ul id=\"node-context-menu\" class=\"context-menu\">\n  <li><a href=\"#remove_node\">Remove node</a></li>\n</ul>";
+	module.exports = "<ul id=\"node-context-menu\" class=\"context-menu\">\n  <li><a href=\"#remove_node\">Remove node</a></li>\n  <li><a href=\"#rename_node\">Rename node</a></li>\n</ul>";
 
 /***/ }),
 /* 16 */

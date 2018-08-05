@@ -51,7 +51,17 @@ class ShapeNodeView extends Backbone.View
       $("body").append(node_menu)
     @$el.find(".head").contextMenu {menu: "node-context-menu"}, (action, el, pos) =>
       if action == "remove_node" then self.model.remove()
+      if action == "rename_node" then @rename()
     return @
+  
+  rename: ()->
+    $title_span = @$el.find("> .head span");
+    $input = @$el.find("> .head input");
+
+    prev = $title_span.html()
+    $input.val(prev)
+    $title_span.hide();
+    $input.show()
 
   makeElement: () =>
     # Compile the template file
@@ -157,39 +167,38 @@ class ShapeNodeView extends Backbone.View
       # self.model.fields.renderSidebar()
     return @
 
-  initTitleClick: () ->
-    self = this
+  apply_input_result:() ->
+    $title_span = @$el.find("> .head span");
+    $input = @$el.find("> .head input");
 
-    $title_span = @$el.find("> .head span")
+    name = $input.val()
+    name = name || $title_span.html()
+
+    this.model.set('name', name)
+    $input.hide()
+    $title_span.show()
+
+  initTitleClick: () ->
+    self = @
     $input = $("<input type='text' />")
     @$el.find("> .head").append($input)
     $input.hide()
 
-    # Fix conflict with contextmenu.
+    $input.blur (e) ->
+      self.apply_input_result()
+
+    $("#graph").click (e) ->
+      self.apply_input_result()
+
+    $input.keydown (e) ->
+      if e.keyCode == 13
+        self.apply_input_result()
+
     $input.on 'mousedown', (e) ->
       e.stopPropagation()
 
-    $title_span.dblclick (e) ->
-      prev = $(this).html()
-      $input.val(prev)
-      $title_span.hide();
-      $input.show()
-
-      apply_input_result = () ->
-        self.model.set('name', $input.val())
-        $input.hide()
-        $title_span.show()
-
-      $input.blur (e) ->
-        apply_input_result()
-
-      $("#graph").click (e) ->
-        apply_input_result()
-
-      $input.keydown (e) ->
-        # on enter
-        if e.keyCode == 13
-          apply_input_result()
+    @$el.find("> .head span").dblclick (e) ->
+      self.rename()
     return @
 
   makeDraggable: () =>

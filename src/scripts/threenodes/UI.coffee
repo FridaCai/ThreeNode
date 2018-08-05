@@ -133,12 +133,12 @@ class UI
 
   autoLayout:()=>
     # datamodel => db
-    # db.updateProperty({
-    #   nodes: core.nodes
-    #   groups: core.groups
-    #   connections: core.connections
-    #   id: core.id
-    # })
+    db.updateProperty({
+      nodes: core.nodes
+      groups: core.groups
+      connections: core.connections
+      id: core.id
+    })
 
 
     params = ['digraph {']
@@ -232,6 +232,7 @@ class UI
     @core.connections.removeAll()
     @core.groups.removeAll()
     indexer.reset()
+    db.reset()
     if @ui then @ui.clearWorkspace()
 
 UI.nodes = {}

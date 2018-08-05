@@ -186,6 +186,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  UI.prototype.autoLayout = function() {
 	    var factor, paramStr, params, plain;
+	    db.updateProperty({
+	      nodes: core.nodes,
+	      groups: core.groups,
+	      connections: core.connections,
+	      id: core.id
+	    });
 	    params = ['digraph {'];
 	    db.groups.map((function(_this) {
 	      return function(g) {
@@ -282,6 +288,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.core.connections.removeAll();
 	    this.core.groups.removeAll();
 	    indexer.reset();
+	    db.reset();
 	    if (this.ui) {
 	      return this.ui.clearWorkspace();
 	    }
@@ -612,7 +619,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 15 */
 /***/ (function(module, exports) {
 
-	module.exports = "<ul id=\"node-context-menu\" class=\"context-menu\">\n  <li><a href=\"#remove_node\">Remove node</a></li>\n</ul>";
+	module.exports = "<ul id=\"node-context-menu\" class=\"context-menu\">\n  <li><a href=\"#remove_node\">Remove node</a></li>\n  <li><a href=\"#rename_node\">Rename node</a></li>\n</ul>";
 
 /***/ }),
 /* 16 */
