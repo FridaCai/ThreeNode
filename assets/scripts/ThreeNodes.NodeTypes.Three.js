@@ -142,7 +142,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      x: this.get('x'),
 	      y: this.get('y'),
 	      width: this.get('width'),
-	      height: this.get('height')
+	      height: this.get('height'),
+	      name: this.get('name')
 	    };
 	    return res;
 	  };

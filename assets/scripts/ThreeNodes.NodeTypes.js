@@ -144,7 +144,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      x: this.get('x'),
 	      y: this.get('y'),
 	      width: this.get('width'),
-	      height: this.get('height')
+	      height: this.get('height'),
+	      name: this.get('name')
 	    };
 	    return res;
 	  };
@@ -417,7 +418,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    prev = $title_span.html();
 	    $input.val(prev);
 	    $title_span.hide();
-	    return $input.show();
+	    $input.show();
+	    return $input.select();
 	  };
 	
 	  ShapeNodeView.prototype.makeElement = function() {

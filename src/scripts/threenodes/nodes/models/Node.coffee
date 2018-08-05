@@ -35,6 +35,7 @@ class Node extends Backbone.Model
       y: @get('y')
       width: @get('width')
       height: @get('height')
+      name: @get('name')
     res
 
 

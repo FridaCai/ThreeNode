@@ -440,7 +440,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      x: this.get('x'),
 	      y: this.get('y'),
 	      width: this.get('width'),
-	      height: this.get('height')
+	      height: this.get('height'),
+	      name: this.get('name')
 	    };
 	    return res;
 	  };
@@ -850,7 +851,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            g.x = gParam.get('x');
 	            g.y = gParam.get('y');
 	            g.width = gParam.get('width');
-	            return g.height = gParam.get('height');
+	            g.height = gParam.get('height');
+	            return g.name = gParam.get('name');
 	          } else {
 	            return _this.groups.push(gParam.toJSON());
 	          }
@@ -870,7 +872,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            n.x = nParam.get('x');
 	            n.y = nParam.get('y');
 	            n.width = nParam.get('width');
-	            return n.height = nParam.get('height');
+	            n.height = nParam.get('height');
+	            return n.name = nParam.get('name');
 	          } else {
 	            return _this.nodes.push(nParam.toJSON());
 	          }

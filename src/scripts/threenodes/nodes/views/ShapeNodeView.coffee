@@ -62,6 +62,9 @@ class ShapeNodeView extends Backbone.View
     $input.val(prev)
     $title_span.hide();
     $input.show()
+    $input.select();
+
+    
 
   makeElement: () =>
     # Compile the template file
@@ -175,6 +178,7 @@ class ShapeNodeView extends Backbone.View
     name = name || $title_span.html()
 
     this.model.set('name', name)
+    
     $input.hide()
     $title_span.show()
 

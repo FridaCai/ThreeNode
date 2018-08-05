@@ -35,6 +35,7 @@ class DB
                     g.y = gParam.get('y')
                     g.width = gParam.get('width')
                     g.height = gParam.get('height')
+                    g.name = gParam.get('name')
                 else
                     @groups.push(gParam.toJSON())
         , @)
@@ -51,6 +52,7 @@ class DB
                     n.y = nParam.get('y')
                     n.width = nParam.get('width')
                     n.height = nParam.get('height')
+                    n.name = nParam.get('name')
                 else
                     @nodes.push(nParam.toJSON())
         , @)
@@ -60,23 +62,6 @@ class DB
             @connections.push(cParam.toJSON())
         , @)
         
-        # case dump, node deleted, group deleted.
-        # param.connections.map((cParam)=>
-        #     if(!@connections.length)
-        #         @connections.push(cParam.toJSON())
-        #     else               
-        #         g = @connections.find((_g)=>
-        #             return _g.id == gParam.get('id')
-        #         )
-        #         if(g)
-        #             g.x = gParam.get('x')
-        #             g.y = gParam.get('y')
-        #             g.width = gParam.get('width')
-        #             g.height = gParam.get('height')
-        #         else
-        #             @groups.push(gParam.toJSON())
-        # , @)
-
     calculatePos: (nodes) ->
         min_x = 0
         min_y = 0
