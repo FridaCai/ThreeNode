@@ -434,9 +434,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  ShapeNodeView.prototype.addHandlerListener = function() {
-	    var linker, self;
+	    var from, linker, now, self;
 	    self = this;
 	    linker = null;
+	    from = null;
+	    now = null;
 	    $('.handler', this.$el).draggable({
 	      helper: function() {
 	        return $("<div class='ui-widget-drag-helper'></div>");
@@ -448,7 +450,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        top: 0
 	      },
 	      start: function(event, ui) {
-	        var _from, _now, angle, dir, from, now, offset, ofx, ofy;
+	        var _from, _now, angle, dir, offset, ofx, ofy;
 	        dir = $(this).data('attr');
 	        angle = 0;
 	        switch (dir) {
@@ -483,21 +485,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	          x: _now.left + offset.left + ofx,
 	          y: _now.top + offset.top + ofy
 	        };
-	        linker = new Linker({
+	        return linker = new Linker({
 	          from: from,
 	          to: now
 	        });
-	        return core.linkers.add(linker);
 	      },
 	      stop: function(event, ui) {
-	        if (ThreeNodes.UI.UIView.connecting_line) {
-	          return ThreeNodes.UI.UIView.connecting_line.attr({
-	            opacity: 0
-	          });
+	        if (Math.abs(now.x - from.x) > 20 || Math.abs(now.y - from.y) > 20) {
+	          return core.linkers.add(linker);
+	        } else {
+	          return Linker.removeLinker(linker);
 	        }
 	      },
 	      drag: function(event, ui) {
-	        var _now, now, offset, ofx, ofy;
+	        var _now, offset, ofx, ofy;
 	        _now = ui.position;
 	        ofx = $("#container-wrapper").scrollLeft();
 	        ofy = $("#container-wrapper").scrollTop();
@@ -1185,6 +1186,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      console.log(points);
 	      return points;
 	    }
+	  };
+	
+	  Linker.removeLinker = function(linker) {
+	    return $("#" + linker.id).remove();
 	  };
 	
 	  return Linker;

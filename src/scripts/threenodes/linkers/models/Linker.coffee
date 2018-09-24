@@ -215,5 +215,6 @@ class Linker extends Backbone.Model
 						points.push({x: active.x, y: fixed.y + half});
 			console.log(points)
 			return points;
-
+	@removeLinker: (linker)=>
+		$("#" + linker.id).remove();
 module.exports = Linker

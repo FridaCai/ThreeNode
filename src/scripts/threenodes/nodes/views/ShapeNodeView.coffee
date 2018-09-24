@@ -82,6 +82,8 @@ class ShapeNodeView extends Backbone.View
   addHandlerListener: ()->
     self = this
     linker = null
+    from = null
+    now = null
 
     $('.handler', @$el).draggable
       helper: () ->
@@ -126,10 +128,18 @@ class ShapeNodeView extends Backbone.View
           from, 
           to: now
         })
-        core.linkers.add(linker)
+        
 
       stop: (event, ui) ->
-        if ThreeNodes.UI.UIView.connecting_line then ThreeNodes.UI.UIView.connecting_line.attr({opacity: 0})
+        if(Math.abs(now.x - from.x) > 20 || Math.abs(now.y - from.y) > 20)
+          core.linkers.add(linker)
+        else
+          Linker.removeLinker(linker)
+          
+
+
+
+        
       drag: (event, ui) ->
         _now = ui.position
         ofx = $("#container-wrapper").scrollLeft()
