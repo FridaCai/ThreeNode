@@ -22,10 +22,13 @@ class Workspace extends Backbone.View
     @nodes = core.nodes
     @connections = core.connections
     @groups = core.groups
+    @linkers = core.linkers
 
     @nodes.bind("add", @renderNode)
     @connections.bind("add", @renderConnection)
     @groups.bind("add", @renderGroup)
+
+    @linkers.bind('add', @renderLinker)
 
   render: () =>
     

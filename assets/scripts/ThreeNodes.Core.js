@@ -54,7 +54,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var Connection, Connections, Core, DB, Group, Groups, Indexer, Node, Nodes,
+	var Connection, Connections, Core, DB, Group, Groups, Indexer, Linkers, Node, Nodes,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 	
 	Nodes = __webpack_require__(1);
@@ -69,9 +69,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Group = __webpack_require__(9);
 	
-	Indexer = __webpack_require__(10);
+	Linkers = __webpack_require__(10);
 	
-	DB = __webpack_require__(11);
+	Indexer = __webpack_require__(11);
+	
+	DB = __webpack_require__(12);
 	
 	Core = (function() {
 	  Core.fields = {
@@ -80,11 +82,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  Core.nodes = {
-	    models: {},
-	    views: {}
-	  };
-	
-	  Core.groups = {
 	    models: {},
 	    views: {}
 	  };
@@ -100,33 +97,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 	    this.settings = $.extend({}, settings, options);
 	    this.groups = new Groups([]);
+	    this.linkers = new Linkers([]);
 	    this.nodes = new Nodes([], {
 	      settings: this.settings
 	    });
 	    this.connections = new Connections();
 	    this.head = null;
-	    this.nodes.bind('node:renderConnections', this.renderConnectionsByNode.bind(this));
-	    this.groups.bind('node:renderConnections', this.renderConnectionsByGroup.bind(this));
-	    this.nodes.bind("connections:removed", (function(_this) {
-	      return function(n) {
-	        return _this.connections.removeByNode(n);
-	      };
-	    })(this));
-	    this.groups.bind("connections:removed", (function(_this) {
-	      return function(g) {
-	        return _this.connections.removeByGroup(g);
-	      };
-	    })(this));
-	    this.nodes.bind("connection:create", (function(_this) {
-	      return function(op) {
-	        return _this.connections.create(op);
-	      };
-	    })(this));
-	    this.groups.bind("connection:create", (function(_this) {
-	      return function(op) {
-	        return _this.connections.create(op);
-	      };
-	    })(this));
 	  }
 	
 	  Core.prototype.createGroup = function(nodes) {
@@ -761,6 +737,51 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbone, Linkers,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	Backbone = __webpack_require__(3);
+	
+	Linkers = (function(superClass) {
+	  extend(Linkers, superClass);
+	
+	  function Linkers() {
+	    this.initialize = bind(this.initialize, this);
+	    return Linkers.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Linkers.prototype.initialize = function(models, options) {
+	    return this.bind("model:removed", (function(_this) {
+	      return function(linker) {
+	        _this.remove(linker);
+	        return _this.trigger("linkers:removed", linker);
+	      };
+	    })(this));
+	  };
+	
+	  Linkers.prototype.getById = function(id) {
+	    return this.models.find(function(l) {
+	      return l.get('id') === id;
+	    });
+	  };
+	
+	  Linkers.prototype.removeAll = function() {
+	    return this.remove(this.models);
+	  };
+	
+	  return Linkers;
+	
+	})(Backbone.Collection);
+	
+	module.exports = Linkers;
+
+
+/***/ }),
+/* 11 */
 /***/ (function(module, exports) {
 
 	var Indexer, _instance;
@@ -801,7 +822,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports) {
 
 	var DB, db,

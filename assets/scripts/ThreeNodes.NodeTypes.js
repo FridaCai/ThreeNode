@@ -7,7 +7,7 @@
 		exports["NodeTypes"] = factory(require("_"), require("Backbone"), require("jQuery"), require("libs/jshint"));
 	else
 		root["ThreeNodes"] = root["ThreeNodes"] || {}, root["ThreeNodes"]["NodeTypes"] = factory(root["_"], root["Backbone"], root["jQuery"], root["libs/jshint"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_18__, __WEBPACK_EXTERNAL_MODULE_50__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_19__, __WEBPACK_EXTERNAL_MODULE_52__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -54,21 +54,21 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	__webpack_require__(12);
+	__webpack_require__(13);
 	
-	__webpack_require__(19);
+	__webpack_require__(21);
 	
-	__webpack_require__(36);
+	__webpack_require__(38);
 	
-	__webpack_require__(46);
+	__webpack_require__(48);
 	
-	__webpack_require__(47);
-	
-	__webpack_require__(54);
-	
-	__webpack_require__(55);
+	__webpack_require__(49);
 	
 	__webpack_require__(56);
+	
+	__webpack_require__(57);
+	
+	__webpack_require__(58);
 
 
 /***/ }),
@@ -198,7 +198,8 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 9 */,
 /* 10 */,
 /* 11 */,
-/* 12 */
+/* 12 */,
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Circle, Ellipse, Node, Rectangle, ShapeNodeView,
@@ -208,7 +209,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Node = __webpack_require__(4);
 	
-	ShapeNodeView = __webpack_require__(13);
+	ShapeNodeView = __webpack_require__(14);
 	
 	Rectangle = (function(superClass) {
 	  extend(Rectangle, superClass);
@@ -329,10 +330,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var Backbone, ShapeNodeView, _, _view_node_context_menu, _view_node_template, namespace,
+	var Backbone, Linker, ShapeNodeView, _, _view_node_context_menu, _view_node_template, namespace,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
@@ -341,15 +342,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	_view_node_template = __webpack_require__(14);
+	_view_node_template = __webpack_require__(15);
 	
-	_view_node_context_menu = __webpack_require__(15);
+	_view_node_context_menu = __webpack_require__(16);
 	
-	namespace = __webpack_require__(16).namespace;
-	
-	__webpack_require__(17);
+	namespace = __webpack_require__(17).namespace;
 	
 	__webpack_require__(18);
+	
+	__webpack_require__(19);
+	
+	Linker = __webpack_require__(20);
 	
 	
 	/* Node View */
@@ -431,16 +434,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  ShapeNodeView.prototype.addHandlerListener = function() {
-	    var getPath, self, start_offset_x, start_offset_y;
+	    var linker, self;
 	    self = this;
-	    start_offset_x = 0;
-	    start_offset_y = 0;
-	    getPath = function(start, end, offset) {
-	      var ofx, ofy;
-	      ofx = $("#container-wrapper").scrollLeft();
-	      ofy = $("#container-wrapper").scrollTop();
-	      return "M" + (start.left + offset.left + 2) + " " + (start.top + offset.top + 2) + " L" + (end.left + offset.left + ofx - start_offset_x) + " " + (end.top + offset.top + ofy - start_offset_y);
-	    };
+	    linker = null;
 	    $('.handler', this.$el).draggable({
 	      helper: function() {
 	        return $("<div class='ui-widget-drag-helper'></div>");
@@ -452,13 +448,46 @@ return /******/ (function(modules) { // webpackBootstrap
 	        top: 0
 	      },
 	      start: function(event, ui) {
-	        start_offset_x = $("#container-wrapper").scrollLeft();
-	        start_offset_y = $("#container-wrapper").scrollTop();
-	        if (ThreeNodes.UI.UIView.connecting_line) {
-	          return ThreeNodes.UI.UIView.connecting_line.attr({
-	            opacity: 1
-	          });
+	        var _from, _now, angle, dir, from, now, offset, ofx, ofy;
+	        dir = $(this).data('attr');
+	        angle = 0;
+	        switch (dir) {
+	          case "up":
+	            angle = 1 / 2;
+	            break;
+	          case "down":
+	            angle = 3 / 2;
+	            break;
+	          case "left":
+	            angle = 0;
+	            break;
+	          case "right":
+	            angle = 2;
 	        }
+	        angle *= Math.PI;
+	        _from = $(this).position();
+	        _now = ui.position;
+	        ofx = $("#container-wrapper").scrollLeft();
+	        ofy = $("#container-wrapper").scrollTop();
+	        offset = {
+	          left: self.model.get("x"),
+	          top: self.model.get("y")
+	        };
+	        from = {
+	          x: _from.left + offset.left + 2,
+	          y: _from.top + offset.top + 2,
+	          id: self.model.id,
+	          angle: angle
+	        };
+	        now = {
+	          x: _now.left + offset.left + ofx,
+	          y: _now.top + offset.top + ofy
+	        };
+	        linker = new Linker({
+	          from: from,
+	          to: now
+	        });
+	        return core.linkers.add(linker);
 	      },
 	      stop: function(event, ui) {
 	        if (ThreeNodes.UI.UIView.connecting_line) {
@@ -468,18 +497,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	      },
 	      drag: function(event, ui) {
-	        var node_pos, pos;
-	        if (ThreeNodes.UI.UIView.connecting_line) {
-	          pos = $(this).position();
-	          node_pos = {
-	            left: self.model.get("x"),
-	            top: self.model.get("y")
-	          };
-	          ThreeNodes.UI.UIView.connecting_line.attr({
-	            path: getPath(pos, ui.position, node_pos)
-	          });
-	          return true;
-	        }
+	        var _now, now, offset, ofx, ofy;
+	        _now = ui.position;
+	        ofx = $("#container-wrapper").scrollLeft();
+	        ofy = $("#container-wrapper").scrollTop();
+	        offset = {
+	          left: self.model.get("x"),
+	          top: self.model.get("y")
+	        };
+	        now = {
+	          x: _now.left + offset.left + ofx,
+	          y: _now.top + offset.top + ofy
+	        };
+	        return Linker.moveLinker(linker, 'to', now.x, now.y);
 	      }
 	    });
 	    return $(".handler", this.$el).droppable({
@@ -648,19 +678,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div class='head'><span><%= get(\"name\") %></span></div>\n<div class='options'>\n  <div class='inputs'></div>\n  <div class='center'></div>\n  <div class='outputs'></div>\n</div>\n\n<div class=\"up handler\" data-attr='up'></div>\n<div class=\"down handler\" data-attr='down'></div>\n<div class=\"left handler\" data-attr='left'></div>\n<div class=\"right handler\" data-attr='right'></div>\n<!-- <div class=\"center handler\" data-attr='center'></div> -->\n";
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports) {
 
 	module.exports = "<ul id=\"node-context-menu\" class=\"context-menu\">\n  <li><a href=\"#remove_node\">Remove node</a></li>\n  <li><a href=\"#rename_node\">Rename node</a></li>\n</ul>";
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports) {
 
 	/*
@@ -695,7 +725,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports) {
 
 	// jQuery Context Menu Plugin
@@ -912,20 +942,267 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_18__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_19__;
 
 /***/ }),
-/* 19 */
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var Backbond, Linker,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	Backbond = __webpack_require__(3);
+	
+	Linker = (function(superClass) {
+	  extend(Linker, superClass);
+	
+	  function Linker() {
+	    this.initialize = bind(this.initialize, this);
+	    return Linker.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Linker.prototype.defaults = {
+	    id: '',
+	    name: 'linker',
+	    text: '',
+	    points: [],
+	    from: {
+	      x: 0,
+	      y: 0,
+	      angle: 0,
+	      id: ''
+	    },
+	    to: {
+	      x: 0,
+	      y: 0,
+	      angle: 0,
+	      id: ''
+	    },
+	    lineStyle: {
+	      lineWidth: 2,
+	      lineColor: "255,0,0",
+	      lineStyle: "solid",
+	      beginArrowStyle: "none",
+	      endArrowStyle: "solidArrow"
+	    }
+	  };
+	
+	  Linker.prototype.initialize = function(model, param) {
+	    var id;
+	    Linker.__super__.initialize.apply(this, arguments);
+	    id = indexer.getUID();
+	    return this.set('id', id);
+	  };
+	
+	  Linker.moveLinker = function(linker, point, x, y) {
+	    var from, linkedShape, newPos, to;
+	    newPos = {
+	      x: x,
+	      y: y,
+	      angle: null
+	    };
+	    linkedShape = null;
+	    linker.set('to', {
+	      x: newPos.x,
+	      y: newPos.y,
+	      id: linkedShape,
+	      angle: newPos.angle
+	    });
+	    if (!linkedShape) {
+	      to = linker.get('to');
+	      from = linker.get('from');
+	      if ((newPos.x < from.x - 6) || (newPos.x > from.x + 6)) {
+	
+	      } else {
+	        to.x = from.x;
+	      }
+	      if (newPos.y < from.y - 6 || newPos.y > from.y + 6) {
+	
+	      } else {
+	        to.y = from.y;
+	      }
+	      linker.to = to;
+	    }
+	    return Linker.render(linker, true);
+	  };
+	
+	  Linker.render = function(linker, pointChanged) {
+	    var begin, box, ctx, end, from, i, len, linkerBox, linkerCanvas, point, points, style, superCanvas, to;
+	    if (pointChanged) {
+	      linker.set('points', Linker.getLinkerPoints(linker));
+	    }
+	    box = Linker.calcBox(linker);
+	    linkerBox = $("#" + linker.id);
+	    if (linkerBox.length === 0) {
+	      superCanvas = $("#graph");
+	      linkerBox = $("<div id='" + linker.id + "' class='shape_box linker_box'><canvas class='shape_canvas'></canvas></div>").appendTo(superCanvas);
+	    }
+	    linkerCanvas = linkerBox.find(".shape_canvas");
+	    linkerCanvas.attr({
+	      width: box.w + 20,
+	      height: box.h + 20
+	    });
+	    linkerBox.css({
+	      position: 'absolute',
+	      left: box.x - 10,
+	      top: box.y - 10,
+	      width: box.w + 20,
+	      height: box.h + 20
+	    });
+	    ctx = linkerCanvas[0].getContext("2d");
+	    ctx.translate(10, 10);
+	    style = linker.get('lineStyle');
+	    ctx.lineWidth = style.lineWidth;
+	    ctx.strokeStyle = "rgb(" + style.lineColor + ")";
+	    ctx.fillStyle = "rgb(" + style.lineColor + ")";
+	    ctx.save();
+	    from = linker.get('from');
+	    to = linker.get('to');
+	    begin = {
+	      x: from.x - box.x,
+	      y: from.y - box.y
+	    };
+	    end = {
+	      x: to.x - box.x,
+	      y: to.y - box.y
+	    };
+	    ctx.save();
+	    ctx.beginPath();
+	    ctx.moveTo(begin.x, begin.y);
+	    points = linker.get('points');
+	    console.log(points);
+	    for (i = 0, len = points.length; i < len; i++) {
+	      point = points[i];
+	      ctx.lineTo(point.x - box.x, point.y - box.y);
+	    }
+	    ctx.lineTo(end.x, end.y);
+	    ctx.stroke();
+	    ctx.restore();
+	    return ctx.restore();
+	  };
+	
+	  Linker.calcBox = function(linker) {
+	    var from, i, len, maxX, maxY, minX, minY, point, points, to;
+	    points = linker.get('points');
+	    from = linker.get('from');
+	    to = linker.get('to');
+	    minX = to.x;
+	    minY = to.y;
+	    maxX = from.x;
+	    maxY = from.y;
+	    if (to.x < from.x) {
+	      minX = to.x;
+	      maxX = from.x;
+	    } else {
+	      minX = from.x;
+	      maxX = to.x;
+	    }
+	    if (to.y < from.y) {
+	      minY = to.y;
+	      maxY = from.y;
+	    } else {
+	      minY = from.y;
+	      maxY = to.y;
+	    }
+	    for (i = 0, len = points.length; i < len; i++) {
+	      point = points[i];
+	      if (point.x < minX) {
+	        minX = point.x;
+	      } else if (point.x > maxX) {
+	        maxX = point.x;
+	      }
+	      if (point.y < minY) {
+	        minY = point.y;
+	      } else if (point.y > maxY) {
+	        maxY = point.y;
+	      }
+	    }
+	    return {
+	      x: minX,
+	      y: minY,
+	      w: maxX - minX,
+	      h: maxY - minY
+	    };
+	  };
+	
+	  Linker.getLinkerPoints = function(linker) {
+	    var active, angle, fixed, from, half, minDistance, pi, points, reverse, to, xDistance, yDistance;
+	    points = [];
+	    pi = Math.PI;
+	    from = linker.get('from');
+	    to = linker.get('to');
+	    xDistance = Math.abs(to.x - from.x);
+	    yDistance = Math.abs(to.y - from.y);
+	    minDistance = 30;
+	    if (from.id && to.id) {
+	
+	    } else if (from.id || to.id) {
+	      fixed = null;
+	      active = null;
+	      reverse = null;
+	      angle = null;
+	      if (from.id) {
+	        fixed = from;
+	        active = to;
+	        reverse = false;
+	        angle = from.angle;
+	      } else {
+	        fixed = to;
+	        active = from;
+	        reverse = true;
+	        angle = to.angle;
+	      }
+	      if (angle >= pi / 4 && angle < pi / 4 * 3) {
+	
+	      } else if (angle >= pi / 4 * 3 && angle < pi / 4 * 5) {
+	
+	      } else if (angle >= pi / 4 * 5 && angle < pi / 4 * 7) {
+	        if (active.y > fixed.y) {
+	          console.log('Frida Test 4');
+	          if (xDistance >= yDistance) {
+	            points.push({
+	              x: fixed.x,
+	              y: active.y
+	            });
+	          } else {
+	            half = yDistance / 2;
+	            points.push({
+	              x: fixed.x,
+	              y: fixed.y + half
+	            });
+	            points.push({
+	              x: active.x,
+	              y: fixed.y + half
+	            });
+	          }
+	        }
+	      }
+	      console.log(points);
+	      return points;
+	    }
+	  };
+	
+	  return Linker;
+	
+	})(Backbone.Model);
+	
+	module.exports = Linker;
+
+
+/***/ }),
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Direction, NoDirection, NodeNumberSimple,
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	NodeNumberSimple = __webpack_require__(20);
+	NodeNumberSimple = __webpack_require__(22);
 	
 	Direction = (function(superClass) {
 	  extend(Direction, superClass);
@@ -963,7 +1240,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 20 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Fields, Node, NodeNumberSimple, Utils, _,
@@ -977,7 +1254,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Utils = __webpack_require__(5);
 	
-	Fields = __webpack_require__(21);
+	Fields = __webpack_require__(23);
 	
 	Node = __webpack_require__(4);
 	
@@ -1066,7 +1343,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 21 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Fields, _,
@@ -1078,7 +1355,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	__webpack_require__(22);
+	__webpack_require__(24);
 	
 	
 	/* Fields Collection */
@@ -1354,7 +1631,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 22 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Any, Array, Backbone, Bool, BoolField, Camera, Color, Euler, EulerField, Float, FloatField, Fog, Geometry, Material, Mesh, NodeField, Object3D, Quaternion, QuaternionField, Scene, String, StringField, Texture, Vector2, Vector2Field, Vector3, Vector3Field, Vector4, Vector4Field, _, namespace,
@@ -1366,23 +1643,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	namespace = __webpack_require__(16).namespace;
+	namespace = __webpack_require__(17).namespace;
 	
-	BoolField = __webpack_require__(23);
+	BoolField = __webpack_require__(25);
 	
-	StringField = __webpack_require__(29);
+	StringField = __webpack_require__(31);
 	
-	FloatField = __webpack_require__(30);
+	FloatField = __webpack_require__(32);
 	
-	Vector2Field = __webpack_require__(31);
+	Vector2Field = __webpack_require__(33);
 	
-	Vector3Field = __webpack_require__(32);
+	Vector3Field = __webpack_require__(34);
 	
-	Vector4Field = __webpack_require__(33);
+	Vector4Field = __webpack_require__(35);
 	
-	QuaternionField = __webpack_require__(34);
+	QuaternionField = __webpack_require__(36);
 	
-	EulerField = __webpack_require__(35);
+	EulerField = __webpack_require__(37);
 	
 	
 	/* Field model */
@@ -2203,7 +2480,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 23 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, BaseField, BoolField, _, namespace,
@@ -2215,9 +2492,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	namespace = __webpack_require__(16).namespace;
+	namespace = __webpack_require__(17).namespace;
 	
-	BaseField = __webpack_require__(24);
+	BaseField = __webpack_require__(26);
 	
 	
 	/* SidebarField View */
@@ -2269,7 +2546,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 24 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, BaseField, SidebarTextfield, _, _view_field_sidebar_container,
@@ -2281,9 +2558,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	_view_field_sidebar_container = __webpack_require__(25);
+	_view_field_sidebar_container = __webpack_require__(27);
 	
-	SidebarTextfield = __webpack_require__(26);
+	SidebarTextfield = __webpack_require__(28);
 	
 	
 	/* BaseField View */
@@ -2374,13 +2651,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 25 */
+/* 27 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div data-fid=\"<%= fid %>\" class='field-wrapper'>\n  <h3><%= name %></h3>\n</div>\n";
 
 /***/ }),
-/* 26 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, DraggableNumber, SidebarTextfield, _, _view_field_textfield,
@@ -2392,9 +2669,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	_view_field_textfield = __webpack_require__(27);
+	_view_field_textfield = __webpack_require__(29);
 	
-	DraggableNumber = __webpack_require__(28);
+	DraggableNumber = __webpack_require__(30);
 	
 	
 	/* SidebarTextfield View */
@@ -2526,13 +2803,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 27 */
+/* 29 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div class='input-container'>\n  <input type='text' class='field-<%= type %>' />\n</div>\n";
 
 /***/ }),
-/* 28 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**!
@@ -2968,7 +3245,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 29 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, BaseField, StringField, _, namespace,
@@ -2980,9 +3257,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	namespace = __webpack_require__(16).namespace;
+	namespace = __webpack_require__(17).namespace;
 	
-	BaseField = __webpack_require__(24);
+	BaseField = __webpack_require__(26);
 	
 	
 	/* StringField View */
@@ -3043,7 +3320,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 30 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, BaseField, FloatField, _, namespace,
@@ -3055,9 +3332,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	namespace = __webpack_require__(16).namespace;
+	namespace = __webpack_require__(17).namespace;
 	
-	BaseField = __webpack_require__(24);
+	BaseField = __webpack_require__(26);
 	
 	
 	/* FloatField View */
@@ -3122,7 +3399,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 31 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, BaseField, Vector2Field, _, namespace,
@@ -3134,9 +3411,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	namespace = __webpack_require__(16).namespace;
+	namespace = __webpack_require__(17).namespace;
 	
-	BaseField = __webpack_require__(24);
+	BaseField = __webpack_require__(26);
 	
 	
 	/* Vector2Field View */
@@ -3164,7 +3441,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 32 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, BaseField, Vector3Field, _, namespace,
@@ -3176,9 +3453,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	namespace = __webpack_require__(16).namespace;
+	namespace = __webpack_require__(17).namespace;
 	
-	BaseField = __webpack_require__(24);
+	BaseField = __webpack_require__(26);
 	
 	
 	/* Vector3Field View */
@@ -3207,7 +3484,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 33 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, BaseField, Vector4Field, _, namespace,
@@ -3219,9 +3496,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	namespace = __webpack_require__(16).namespace;
+	namespace = __webpack_require__(17).namespace;
 	
-	BaseField = __webpack_require__(24);
+	BaseField = __webpack_require__(26);
 	
 	
 	/* Vector4Field View */
@@ -3251,7 +3528,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 34 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, BaseField, QuaternionField, _, namespace,
@@ -3263,9 +3540,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	namespace = __webpack_require__(16).namespace;
+	namespace = __webpack_require__(17).namespace;
 	
-	BaseField = __webpack_require__(24);
+	BaseField = __webpack_require__(26);
 	
 	
 	/* Vector3Field View */
@@ -3295,7 +3572,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 35 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, BaseField, EulerField, _, namespace,
@@ -3307,9 +3584,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	namespace = __webpack_require__(16).namespace;
+	namespace = __webpack_require__(17).namespace;
 	
-	BaseField = __webpack_require__(24);
+	BaseField = __webpack_require__(26);
 	
 	
 	/* Euler3Field View */
@@ -3339,7 +3616,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 36 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Boolean, Color, Euler, Node, NodeColorView, NodeNumberSimple, NodeWithCenterTextfield, Number, Quaternion, String, Vector2, Vector3, _,
@@ -3353,11 +3630,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Node = __webpack_require__(4);
 	
-	NodeNumberSimple = __webpack_require__(20);
+	NodeNumberSimple = __webpack_require__(22);
 	
-	NodeWithCenterTextfield = __webpack_require__(37);
+	NodeWithCenterTextfield = __webpack_require__(39);
 	
-	NodeColorView = __webpack_require__(44);
+	NodeColorView = __webpack_require__(46);
 	
 	Number = (function(superClass) {
 	  extend(Number, superClass);
@@ -3830,7 +4107,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 37 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, NodeView, NodeWithCenterTextfield, _,
@@ -3844,7 +4121,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	__webpack_require__(4);
 	
-	NodeView = __webpack_require__(38);
+	NodeView = __webpack_require__(40);
 	
 	NodeWithCenterTextfield = (function(superClass) {
 	  extend(NodeWithCenterTextfield, superClass);
@@ -3892,7 +4169,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 38 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, FieldsView, NodeView, _, _view_node_context_menu, _view_node_template, namespace,
@@ -3904,17 +4181,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	_view_node_template = __webpack_require__(14);
+	_view_node_template = __webpack_require__(15);
 	
-	_view_node_context_menu = __webpack_require__(15);
+	_view_node_context_menu = __webpack_require__(16);
 	
-	FieldsView = __webpack_require__(39);
+	FieldsView = __webpack_require__(41);
 	
-	namespace = __webpack_require__(16).namespace;
-	
-	__webpack_require__(17);
+	namespace = __webpack_require__(17).namespace;
 	
 	__webpack_require__(18);
+	
+	__webpack_require__(19);
 	
 	
 	/* Node View */
@@ -4163,7 +4440,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 39 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, FieldButton, FieldsView, _,
@@ -4175,9 +4452,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	FieldButton = __webpack_require__(40);
+	FieldButton = __webpack_require__(42);
 	
-	__webpack_require__(18);
+	__webpack_require__(19);
 	
 	
 	/* Fields View */
@@ -4247,7 +4524,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 40 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, FieldButton, _, _view_field_context_menu, _view_node_field_in, _view_node_field_out,
@@ -4259,15 +4536,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	_view_node_field_in = __webpack_require__(41);
+	_view_node_field_in = __webpack_require__(43);
 	
-	_view_node_field_out = __webpack_require__(42);
+	_view_node_field_out = __webpack_require__(44);
 	
-	_view_field_context_menu = __webpack_require__(43);
+	_view_field_context_menu = __webpack_require__(45);
 	
 	__webpack_require__(5);
 	
-	__webpack_require__(17);
+	__webpack_require__(18);
 	
 	
 	/* FieldButton View */
@@ -4435,25 +4712,25 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 41 */
+/* 43 */
 /***/ (function(module, exports) {
 
 	module.exports = "<span class=\"inner-field\"><span></span><%= name %></span>";
 
 /***/ }),
-/* 42 */
+/* 44 */
 /***/ (function(module, exports) {
 
 	module.exports = "<span class=\"inner-field\"><%= name %><span></span></span>";
 
 /***/ }),
-/* 43 */
+/* 45 */
 /***/ (function(module, exports) {
 
 	module.exports = "<ul id=\"field-context-menu\" class=\"context-menu\">\n  <li><a href=\"#removeConnection\">Remove connection(s)</a></li>\n</ul>";
 
 /***/ }),
-/* 44 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Color, NodeView, _, namespace,
@@ -4465,13 +4742,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	namespace = __webpack_require__(16).namespace;
+	namespace = __webpack_require__(17).namespace;
 	
 	__webpack_require__(4);
 	
-	NodeView = __webpack_require__(38);
+	NodeView = __webpack_require__(40);
 	
-	__webpack_require__(45);
+	__webpack_require__(47);
 	
 	Color = (function(superClass) {
 	  extend(Color, superClass);
@@ -4545,7 +4822,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 45 */
+/* 47 */
 /***/ (function(module, exports) {
 
 	/**
@@ -5035,7 +5312,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(jQuery)
 
 /***/ }),
-/* 46 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var And, Backbone, Equal, Greater, IfElse, Node, Or, Smaller, _, jQuery,
@@ -5043,7 +5320,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	jQuery = __webpack_require__(18);
+	jQuery = __webpack_require__(19);
 	
 	_ = __webpack_require__(2);
 	
@@ -5326,7 +5603,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 47 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Code, CodeView, Expression, ExpressionView, Node, NodeCodeView, _,
@@ -5340,7 +5617,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Node = __webpack_require__(4);
 	
-	NodeCodeView = __webpack_require__(48);
+	NodeCodeView = __webpack_require__(50);
 	
 	CodeView = (function(superClass) {
 	  extend(CodeView, superClass);
@@ -5524,7 +5801,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 48 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, CodeMirror, NodeCodeView, NodeView, _,
@@ -5536,19 +5813,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	CodeMirror = __webpack_require__(49);
-	
-	__webpack_require__(50);
-	
-	__webpack_require__(51);
+	CodeMirror = __webpack_require__(51);
 	
 	__webpack_require__(52);
 	
 	__webpack_require__(53);
 	
+	__webpack_require__(54);
+	
+	__webpack_require__(55);
+	
 	__webpack_require__(4);
 	
-	NodeView = __webpack_require__(38);
+	NodeView = __webpack_require__(40);
 	
 	NodeCodeView = (function(superClass) {
 	  extend(NodeCodeView, superClass);
@@ -5639,7 +5916,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 49 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -13246,13 +13523,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 50 */
+/* 52 */
 /***/ (function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_50__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_52__;
 
 /***/ }),
-/* 51 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -13262,7 +13539,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	(function(mod) {
 	  if (true) // CommonJS
-	    mod(__webpack_require__(49));
+	    mod(__webpack_require__(51));
 	  else if (typeof define == "function" && define.amd) // AMD
 	    define(["../../lib/codemirror"], mod);
 	  else // Plain browser env
@@ -13921,7 +14198,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 52 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -13929,7 +14206,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	(function(mod) {
 	  if (true) // CommonJS
-	    mod(__webpack_require__(49));
+	    mod(__webpack_require__(51));
 	  else if (typeof define == "function" && define.amd) // AMD
 	    define(["../../lib/codemirror"], mod);
 	  else // Plain browser env
@@ -14137,7 +14414,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 53 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -14145,7 +14422,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	(function(mod) {
 	  if (true) // CommonJS
-	    mod(__webpack_require__(49));
+	    mod(__webpack_require__(51));
 	  else if (typeof define == "function" && define.amd) // AMD
 	    define(["../../lib/codemirror"], mod);
 	  else // Plain browser env
@@ -14279,7 +14556,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 54 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, MathAdd, MathAttenuation, MathCeil, MathCos, MathDivide, MathFloor, MathMax, MathMin, MathMod, MathMult, MathRound, MathSin, MathSubtract, MathTan, Node, NodeNumberParam1, NodeNumberSimple, _,
@@ -14293,7 +14570,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Node = __webpack_require__(4);
 	
-	NodeNumberSimple = __webpack_require__(20);
+	NodeNumberSimple = __webpack_require__(22);
 	
 	MathSin = (function(superClass) {
 	  extend(MathSin, superClass);
@@ -14877,7 +15154,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 55 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Font, Get, LFO, Merge, Mouse, Mp3Input, Node, NodeWithCenterTextfield, Random, Screen, Timer, _,
@@ -14891,7 +15168,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Node = __webpack_require__(4);
 	
-	NodeWithCenterTextfield = __webpack_require__(37);
+	NodeWithCenterTextfield = __webpack_require__(39);
 	
 	Random = (function(superClass) {
 	  extend(Random, superClass);
@@ -15755,7 +16032,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 56 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, LinearSpread, Node, RandomSpread, Rc4Random, _,
@@ -15767,7 +16044,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	Rc4Random = __webpack_require__(57);
+	Rc4Random = __webpack_require__(59);
 	
 	Node = __webpack_require__(4);
 	
@@ -15925,7 +16202,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 57 */
+/* 59 */
 /***/ (function(module, exports) {
 
 	var Rc4Random,

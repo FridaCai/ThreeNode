@@ -7,6 +7,8 @@ Connection = require './connections/models/Connection'
 Groups = require './groups/collections/Groups'
 Group = require './groups/models/Group'
 
+Linkers = require './linkers/collections/Linkers'
+
 # Frida. please find better solution.
 Indexer = require 'threenodes/utils/Indexer'
 
@@ -18,7 +20,7 @@ DB = require './db'
 class Core
   @fields: {models:{}, views: {}}
   @nodes: {models:{}, views: {}}
-  @groups: {models: {}, views: {}}
+  # @groups: {models: {}, views: {}}
   
   
   constructor: (options) ->
@@ -32,17 +34,21 @@ class Core
     @settings = $.extend({}, settings, options)
 
     @groups = new Groups([])
+    @linkers = new Linkers([])
     @nodes = new Nodes([], {settings: @settings})
     @connections = new Connections()
+
+
+
     @head = null # null or groupid
 
-    @nodes.bind('node:renderConnections', @renderConnectionsByNode.bind(@))
-    @groups.bind('node:renderConnections', @renderConnectionsByGroup.bind(@))
+    # @nodes.bind('node:renderConnections', @renderConnectionsByNode.bind(@))
+    # @groups.bind('node:renderConnections', @renderConnectionsByGroup.bind(@))
 
-    @nodes.bind "connections:removed", (n)=>@connections.removeByNode(n)
-    @groups.bind "connections:removed", (g)=>@connections.removeByGroup(g)
-    @nodes.bind "connection:create", (op) =>@connections.create(op)
-    @groups.bind "connection:create", (op) =>@connections.create(op)
+    # @nodes.bind "connections:removed", (n)=>@connections.removeByNode(n)
+    # @groups.bind "connections:removed", (g)=>@connections.removeByGroup(g)
+    # @nodes.bind "connection:create", (op) =>@connections.create(op)
+    # @groups.bind "connection:create", (op) =>@connections.create(op)
 
 
   createGroup: (nodes)->

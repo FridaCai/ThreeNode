@@ -8,6 +8,7 @@ namespace = require('libs/namespace').namespace
 
 require 'libs/jquery.contextMenu'
 require 'jquery.ui'
+Linker = require('../../linkers/models/Linker')
 
 
 ### Node View ###
@@ -80,12 +81,7 @@ class ShapeNodeView extends Backbone.View
 
   addHandlerListener: ()->
     self = this
-    start_offset_x = 0
-    start_offset_y = 0
-    getPath = (start, end, offset) ->
-      ofx = $("#container-wrapper").scrollLeft()
-      ofy = $("#container-wrapper").scrollTop()
-      "M#{start.left + offset.left + 2} #{start.top + offset.top + 2} L#{end.left + offset.left + ofx - start_offset_x} #{end.top + offset.top + ofy - start_offset_y}"
+    linker = null
 
     $('.handler', @$el).draggable
       helper: () ->
@@ -96,22 +92,56 @@ class ShapeNodeView extends Backbone.View
         left: 0
         top: 0
       start: (event, ui) ->
-        start_offset_x = $("#container-wrapper").scrollLeft()
-        start_offset_y = $("#container-wrapper").scrollTop()
-        # highlight_possible_targets()
-        if ThreeNodes.UI.UIView.connecting_line then ThreeNodes.UI.UIView.connecting_line.attr({opacity: 1})
-      stop: (event, ui) ->
-        # $(".field").removeClass "field-possible-target"
-        if ThreeNodes.UI.UIView.connecting_line then ThreeNodes.UI.UIView.connecting_line.attr({opacity: 0})
-      drag: (event, ui) ->
-        if ThreeNodes.UI.UIView.connecting_line
-          pos = $(this).position()
-          node_pos =
+        dir = $(this).data('attr')
+        angle = 0
+
+        switch dir
+          when "up" then angle = 1 / 2
+          when "down" then angle = 3 / 2 
+          when "left" then angle = 0
+          when "right" then angle = 2
+        
+        angle *= Math.PI
+
+        _from = $(this).position()
+        _now = ui.position
+        ofx = $("#container-wrapper").scrollLeft()
+        ofy = $("#container-wrapper").scrollTop()
+        offset =
             left: self.model.get("x")
             top: self.model.get("y")
-          ThreeNodes.UI.UIView.connecting_line.attr
-            path: getPath(pos, ui.position, node_pos)
-          return true
+
+        from = {
+          x: _from.left + offset.left + 2
+          y: _from.top + offset.top + 2
+          id: self.model.id
+          angle
+        }
+        now = {
+          x: _now.left + offset.left + ofx
+          y: _now.top + offset.top + ofy
+        }
+        
+        linker = new Linker({
+          from, 
+          to: now
+        })
+        core.linkers.add(linker)
+
+      stop: (event, ui) ->
+        if ThreeNodes.UI.UIView.connecting_line then ThreeNodes.UI.UIView.connecting_line.attr({opacity: 0})
+      drag: (event, ui) ->
+        _now = ui.position
+        ofx = $("#container-wrapper").scrollLeft()
+        ofy = $("#container-wrapper").scrollTop()
+        offset =
+            left: self.model.get("x")
+            top: self.model.get("y")
+        now = {
+          x: _now.left + offset.left + ofx
+          y: _now.top + offset.top + ofy
+        }
+        Linker.moveLinker(linker, 'to', now.x, now.y)
 
     $(".handler", @$el).droppable
       accept: '.handler'
