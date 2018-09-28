@@ -1451,6 +1451,95 @@ return /******/ (function(modules) { // webpackBootstrap
 	              y: fixed.y + half
 	            });
 	          }
+	        } else {
+	          points.push({
+	            x: fixed.x,
+	            y: fixed.y + minDistance
+	          });
+	          if (xDistance >= yDistance) {
+	            if (active.x >= props.x - minDistance) {
+	              if (active.x <= props.x + props.w + minDistance) {
+	                shapeHalf = props.x + props.w / 2;
+	              }
+	              if (active.x < shapeHalf) {
+	                points.push({
+	                  x: props.x - minDistance,
+	                  y: fixed.y + minDistance
+	                });
+	                points.push({
+	                  x: props.x - minDistance,
+	                  y: active.y
+	                });
+	              } else {
+	                points.push({
+	                  x: props.x + props.w + minDistance,
+	                  y: fixed.y + minDistance
+	                });
+	                points.push({
+	                  x: props.x + props.w + minDistance,
+	                  y: active.y
+	                });
+	              }
+	            } else {
+	              if (active.x < props.x) {
+	                points.push({
+	                  x: active.x + minDistance,
+	                  y: fixed.y + minDistance
+	                });
+	                points.push({
+	                  x: active.x + minDistance,
+	                  y: active.y
+	                });
+	              } else {
+	                points.push({
+	                  x: active.x - minDistance,
+	                  y: fixed.y + minDistance
+	                });
+	                points.push({
+	                  x: active.x - minDistance,
+	                  y: active.y
+	                });
+	              }
+	            }
+	          } else {
+	            if (active.x >= props.x - minDistance) {
+	              if (active.x <= props.x + props.w + minDistance) {
+	                shapeHalf = props.x + props.w / 2;
+	              }
+	              if (active.x < shapeHalf) {
+	                points.push({
+	                  x: props.x - minDistance,
+	                  y: fixed.y + minDistance
+	                });
+	                points.push({
+	                  x: props.x - minDistance,
+	                  y: active.y + minDistance
+	                });
+	                points.push({
+	                  x: active.x,
+	                  y: active.y + minDistance
+	                });
+	              } else {
+	                points.push({
+	                  x: props.x + props.w + minDistance,
+	                  y: fixed.y + minDistance
+	                });
+	                points.push({
+	                  x: props.x + props.w + minDistance,
+	                  y: active.y + minDistance
+	                });
+	                points.push({
+	                  x: active.x,
+	                  y: active.y + minDistance
+	                });
+	              }
+	            } else {
+	              points.push({
+	                x: active.x,
+	                y: fixed.y + minDistance
+	              });
+	            }
+	          }
 	        }
 	      } else {
 	        if (active.x < fixed.x) {
