@@ -98,7 +98,7 @@ class ShapeNodeView extends Backbone.View
           when "up" then angle = 1 / 2
           when "down" then angle = 3 / 2 
           when "left" then angle = 0
-          when "right" then angle = 2
+          when "right" then angle = 1
         
         angle *= Math.PI
 

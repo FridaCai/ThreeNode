@@ -202,8 +202,125 @@ class Linker extends Backbone.Model
 				reverse = true; #如果固定点是终点，需要把得到的点逆序，因为绘制时是从起点开始的，而此处计算获得的点将是从终点开始
 				angle = to.angle
 			
-			if(angle >= pi / 4 && angle < pi / 4 * 3)
+
+
+			props = {
+				x: fixed.x
+				y: fixed.y
+				w: 90
+				h: 26
+			}
+
+			console.log('=======angle======')
+			console.log(angle)
+			if(angle >= pi / 4 and angle < pi / 4 * 3)
+					#起点角度为向上
+					if(active.y < fixed.y)
+						#终点在起点图形上方
+						if(xDistance >= yDistance)
+							#如果终点离起点的水平距离较远，最终方向为水平，此情况下只有一个折点
+							points.push({x: fixed.x, y: active.y});
+						else
+							#如果终点离起点的垂直距离较远，最终方向为向上，此情况下有两个折点
+							half = yDistance / 2;
+							points.push({x: fixed.x, y: fixed.y - half});
+							points.push({x: active.x, y: fixed.y - half});
+					else
+						#终点在起点水平平行或下方的位置
+						points.push({x: fixed.x, y: fixed.y - minDistance}); #先向上画一笔
+						if(xDistance >= yDistance)
+							#如果终点离起点的水平距离较远，最终方向为水平
+							if(active.x >= props.x - minDistance and active.x <= props.x + props.w + minDistance)
+								#如果终点在x轴上的坐标，在图形范围内，在判断终点与形状是偏左还是偏右
+								shapeHalf = props.x + props.w / 2;
+								if(active.x < shapeHalf)
+									#偏左，第二点在形状左上角
+									points.push({x: props.x - minDistance, y: fixed.y - minDistance});
+									points.push({x: props.x - minDistance, y: active.y});
+								else
+									points.push({x: props.x + props.w + minDistance, y: fixed.y - minDistance});
+									points.push({x: props.x + props.w + minDistance, y: active.y});
+							else
+								#如果终点在x轴上的坐标，在图形范围外，此时有三个点
+								if(active.x < props.x)
+									points.push({x: active.x + minDistance, y: fixed.y - minDistance})
+									points.push({x: active.x + minDistance, y: active.y})
+								else
+									points.push({x: active.x - minDistance, y: fixed.y - minDistance})
+									points.push({x: active.x - minDistance, y: active.y})
+						else
+							#如果终点离起点的垂直距离较远，最终方向为向下
+							if(active.x >= props.x - minDistance)
+								if (active.x <= props.x + props.w + minDistance)
+									#如果终点在x轴上的坐标，在图形范围内，此时有四个点
+									#在判断终点与形状是偏左还是偏右
+									shapeHalf = props.x + props.w / 2;
+									if(active.x < shapeHalf)
+										#偏左，第二点在形状左上角
+										points.push({x: props.x - minDistance, y: fixed.y - minDistance});
+										points.push({x: props.x - minDistance, y: active.y - minDistance});
+										points.push({x: active.x, y: active.y - minDistance});
+									else
+										points.push({x: props.x + props.w + minDistance, y: fixed.y - minDistance});
+										points.push({x: props.x + props.w + minDistance, y: active.y - minDistance});
+										points.push({x: active.x, y: active.y - minDistance});
+									
+							else
+								#如果终点在x轴上的坐标，在图形范围外，此时有两个点
+								points.push({x: active.x, y: fixed.y - minDistance});
 			else if(angle >= pi / 4 * 3 && angle < pi / 4 * 5)
+				console.log('hit')
+
+
+
+
+				#起点角度为向右
+				if(active.x > fixed.x)
+					#终点在起点图形右方
+					if(xDistance >= yDistance)
+						#如果终点离起点的水平距离较远，最终方向为水平，此情况下有两个折点
+						half = xDistance / 2;
+						points.push({x: fixed.x + half, y: fixed.y});
+						points.push({x: fixed.x + half, y: active.y});
+					else
+						#如果终点离起点的垂直距离较远，最终方向为垂直，此情况下只有一个折点
+						points.push({x: active.x, y: fixed.y});
+					
+				else
+					points.push({x: fixed.x + minDistance, y: fixed.y});
+					if(xDistance >= yDistance)
+						#如果终点离起点的水平距离较远，最终方向为水平
+						if(active.y >= props.y - minDistance && active.y <= props.y + props.h + minDistance)
+							#如果终点在y轴上的坐标，在图形范围内，在判断终点与形状是偏上还是偏下
+							shapeHalf = props.y + props.h / 2;
+							if(active.y < shapeHalf)
+								#偏上，第二点在形状右上角
+								points.push({x: fixed.x + minDistance, y: props.y - minDistance});
+								points.push({x: active.x + minDistance, y: props.y - minDistance});
+								points.push({x: active.x + minDistance, y: active.y});
+							else
+								points.push({x: fixed.x + minDistance, y: props.y + props.h + minDistance});
+								points.push({x: active.x + minDistance, y: props.y + props.h + minDistance});
+								points.push({x: active.x + minDistance, y: active.y});
+						else
+							points.push({x: fixed.x + minDistance, y: active.y});
+					else
+						#如果终点离起点的垂直距离较远，最终方向为向下
+						if(active.y >= props.y - minDistance && active.y <= props.y + props.h + minDistance)
+							shapeHalf = props.y + props.h / 2;
+							if(active.y < shapeHalf)
+								points.push({x: fixed.x + minDistance, y: props.y - minDistance});
+								points.push({x: active.x, y: props.y - minDistance});
+							else
+								points.push({x: fixed.x + minDistance, y: props.y + props.h + minDistance});
+								points.push({x: active.x, y: props.y + props.h + minDistance});
+						else
+							if(active.y < fixed.y)
+								points.push({x: fixed.x + minDistance, y: active.y + minDistance});
+								points.push({x: active.x, y: active.y + minDistance});
+							else
+								points.push({x: fixed.x + minDistance, y: active.y - minDistance});
+								points.push({x: active.x, y: active.y - minDistance});
 			else if(angle >= pi / 4 * 5 && angle < pi / 4 * 7)
 				#起点角度为向下
 				if(active.y > fixed.y)
@@ -213,6 +330,66 @@ class Linker extends Backbone.Model
 						half = yDistance / 2;
 						points.push({x: fixed.x, y: fixed.y + half});
 						points.push({x: active.x, y: fixed.y + half});
+			
+			
+			
+			
+			
+			
+			
+			else
+				#起点角度为向左
+				if(active.x < fixed.x)
+					if(xDistance >= yDistance)
+						half = xDistance / 2;
+						points.push({x: fixed.x - half, y: fixed.y});
+						points.push({x: fixed.x - half, y: active.y});
+					else
+						points.push({x: active.x, y: fixed.y});
+				else
+					points.push({x: fixed.x - minDistance, y: fixed.y});
+					if(xDistance >= yDistance)
+						if(active.y >= props.y - minDistance && active.y <= props.y + props.h + minDistance)
+							shapeHalf = props.y + props.h / 2;
+							if(active.y < shapeHalf)
+								points.push({x: fixed.x - minDistance, y: props.y - minDistance});
+								points.push({x: active.x - minDistance, y: props.y - minDistance});
+								points.push({x: active.x - minDistance, y: active.y});
+							else
+								points.push({x: fixed.x - minDistance, y: props.y + props.h + minDistance});
+								points.push({x: active.x - minDistance, y: props.y + props.h + minDistance});
+								points.push({x: active.x - minDistance, y: active.y});
+						else
+							points.push({x: fixed.x - minDistance, y: active.y});
+					else
+						#如果终点离起点的垂直距离较远，最终方向为向下
+						if(active.y >= props.y - minDistance && active.y <= props.y + props.h + minDistance)
+							shapeHalf = props.y + props.h / 2;
+							if(active.y < shapeHalf)
+								points.push({x: fixed.x - minDistance, y: props.y - minDistance});
+								points.push({x: active.x, y: props.y - minDistance});
+							else
+								points.push({x: fixed.x - minDistance, y: props.y + props.h + minDistance});
+								points.push({x: active.x, y: props.y + props.h + minDistance});
+						else
+							if(active.y < fixed.y)
+								points.push({x: fixed.x - minDistance, y: active.y + minDistance});
+								points.push({x: active.x, y: active.y + minDistance});
+							else
+								points.push({x: fixed.x - minDistance, y: active.y - minDistance});
+								points.push({x: active.x, y: active.y - minDistance});
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 			return points;
 	@removeLinker: (linker)=>
 		$("#" + linker.id).remove();

@@ -1188,7 +1188,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  Linker.getLinkerPoints = function(linker) {
-	    var active, angle, fixed, from, half, minDistance, pi, points, reverse, to, xDistance, yDistance;
+	    var active, angle, fixed, from, half, minDistance, pi, points, props, reverse, shapeHalf, to, xDistance, yDistance;
 	    points = [];
 	    pi = Math.PI;
 	    from = linker.get('from');
@@ -1214,10 +1214,225 @@ return /******/ (function(modules) { // webpackBootstrap
 	        reverse = true;
 	        angle = to.angle;
 	      }
+	      props = {
+	        x: fixed.x,
+	        y: fixed.y,
+	        w: 90,
+	        h: 26
+	      };
+	      console.log('=======angle======');
+	      console.log(angle);
 	      if (angle >= pi / 4 && angle < pi / 4 * 3) {
-	
+	        if (active.y < fixed.y) {
+	          if (xDistance >= yDistance) {
+	            points.push({
+	              x: fixed.x,
+	              y: active.y
+	            });
+	          } else {
+	            half = yDistance / 2;
+	            points.push({
+	              x: fixed.x,
+	              y: fixed.y - half
+	            });
+	            points.push({
+	              x: active.x,
+	              y: fixed.y - half
+	            });
+	          }
+	        } else {
+	          points.push({
+	            x: fixed.x,
+	            y: fixed.y - minDistance
+	          });
+	          if (xDistance >= yDistance) {
+	            if (active.x >= props.x - minDistance && active.x <= props.x + props.w + minDistance) {
+	              shapeHalf = props.x + props.w / 2;
+	              if (active.x < shapeHalf) {
+	                points.push({
+	                  x: props.x - minDistance,
+	                  y: fixed.y - minDistance
+	                });
+	                points.push({
+	                  x: props.x - minDistance,
+	                  y: active.y
+	                });
+	              } else {
+	                points.push({
+	                  x: props.x + props.w + minDistance,
+	                  y: fixed.y - minDistance
+	                });
+	                points.push({
+	                  x: props.x + props.w + minDistance,
+	                  y: active.y
+	                });
+	              }
+	            } else {
+	              if (active.x < props.x) {
+	                points.push({
+	                  x: active.x + minDistance,
+	                  y: fixed.y - minDistance
+	                });
+	                points.push({
+	                  x: active.x + minDistance,
+	                  y: active.y
+	                });
+	              } else {
+	                points.push({
+	                  x: active.x - minDistance,
+	                  y: fixed.y - minDistance
+	                });
+	                points.push({
+	                  x: active.x - minDistance,
+	                  y: active.y
+	                });
+	              }
+	            }
+	          } else {
+	            if (active.x >= props.x - minDistance) {
+	              if (active.x <= props.x + props.w + minDistance) {
+	                shapeHalf = props.x + props.w / 2;
+	                if (active.x < shapeHalf) {
+	                  points.push({
+	                    x: props.x - minDistance,
+	                    y: fixed.y - minDistance
+	                  });
+	                  points.push({
+	                    x: props.x - minDistance,
+	                    y: active.y - minDistance
+	                  });
+	                  points.push({
+	                    x: active.x,
+	                    y: active.y - minDistance
+	                  });
+	                } else {
+	                  points.push({
+	                    x: props.x + props.w + minDistance,
+	                    y: fixed.y - minDistance
+	                  });
+	                  points.push({
+	                    x: props.x + props.w + minDistance,
+	                    y: active.y - minDistance
+	                  });
+	                  points.push({
+	                    x: active.x,
+	                    y: active.y - minDistance
+	                  });
+	                }
+	              }
+	            } else {
+	              points.push({
+	                x: active.x,
+	                y: fixed.y - minDistance
+	              });
+	            }
+	          }
+	        }
 	      } else if (angle >= pi / 4 * 3 && angle < pi / 4 * 5) {
-	
+	        console.log('hit');
+	        if (active.x > fixed.x) {
+	          if (xDistance >= yDistance) {
+	            half = xDistance / 2;
+	            points.push({
+	              x: fixed.x + half,
+	              y: fixed.y
+	            });
+	            points.push({
+	              x: fixed.x + half,
+	              y: active.y
+	            });
+	          } else {
+	            points.push({
+	              x: active.x,
+	              y: fixed.y
+	            });
+	          }
+	        } else {
+	          points.push({
+	            x: fixed.x + minDistance,
+	            y: fixed.y
+	          });
+	          if (xDistance >= yDistance) {
+	            if (active.y >= props.y - minDistance && active.y <= props.y + props.h + minDistance) {
+	              shapeHalf = props.y + props.h / 2;
+	              if (active.y < shapeHalf) {
+	                points.push({
+	                  x: fixed.x + minDistance,
+	                  y: props.y - minDistance
+	                });
+	                points.push({
+	                  x: active.x + minDistance,
+	                  y: props.y - minDistance
+	                });
+	                points.push({
+	                  x: active.x + minDistance,
+	                  y: active.y
+	                });
+	              } else {
+	                points.push({
+	                  x: fixed.x + minDistance,
+	                  y: props.y + props.h + minDistance
+	                });
+	                points.push({
+	                  x: active.x + minDistance,
+	                  y: props.y + props.h + minDistance
+	                });
+	                points.push({
+	                  x: active.x + minDistance,
+	                  y: active.y
+	                });
+	              }
+	            } else {
+	              points.push({
+	                x: fixed.x + minDistance,
+	                y: active.y
+	              });
+	            }
+	          } else {
+	            if (active.y >= props.y - minDistance && active.y <= props.y + props.h + minDistance) {
+	              shapeHalf = props.y + props.h / 2;
+	              if (active.y < shapeHalf) {
+	                points.push({
+	                  x: fixed.x + minDistance,
+	                  y: props.y - minDistance
+	                });
+	                points.push({
+	                  x: active.x,
+	                  y: props.y - minDistance
+	                });
+	              } else {
+	                points.push({
+	                  x: fixed.x + minDistance,
+	                  y: props.y + props.h + minDistance
+	                });
+	                points.push({
+	                  x: active.x,
+	                  y: props.y + props.h + minDistance
+	                });
+	              }
+	            } else {
+	              if (active.y < fixed.y) {
+	                points.push({
+	                  x: fixed.x + minDistance,
+	                  y: active.y + minDistance
+	                });
+	                points.push({
+	                  x: active.x,
+	                  y: active.y + minDistance
+	                });
+	              } else {
+	                points.push({
+	                  x: fixed.x + minDistance,
+	                  y: active.y - minDistance
+	                });
+	                points.push({
+	                  x: active.x,
+	                  y: active.y - minDistance
+	                });
+	              }
+	            }
+	          }
+	        }
 	      } else if (angle >= pi / 4 * 5 && angle < pi / 4 * 7) {
 	        if (active.y > fixed.y) {
 	          if (xDistance >= yDistance) {
@@ -1235,6 +1450,110 @@ return /******/ (function(modules) { // webpackBootstrap
 	              x: active.x,
 	              y: fixed.y + half
 	            });
+	          }
+	        }
+	      } else {
+	        if (active.x < fixed.x) {
+	          if (xDistance >= yDistance) {
+	            half = xDistance / 2;
+	            points.push({
+	              x: fixed.x - half,
+	              y: fixed.y
+	            });
+	            points.push({
+	              x: fixed.x - half,
+	              y: active.y
+	            });
+	          } else {
+	            points.push({
+	              x: active.x,
+	              y: fixed.y
+	            });
+	          }
+	        } else {
+	          points.push({
+	            x: fixed.x - minDistance,
+	            y: fixed.y
+	          });
+	          if (xDistance >= yDistance) {
+	            if (active.y >= props.y - minDistance && active.y <= props.y + props.h + minDistance) {
+	              shapeHalf = props.y + props.h / 2;
+	              if (active.y < shapeHalf) {
+	                points.push({
+	                  x: fixed.x - minDistance,
+	                  y: props.y - minDistance
+	                });
+	                points.push({
+	                  x: active.x - minDistance,
+	                  y: props.y - minDistance
+	                });
+	                points.push({
+	                  x: active.x - minDistance,
+	                  y: active.y
+	                });
+	              } else {
+	                points.push({
+	                  x: fixed.x - minDistance,
+	                  y: props.y + props.h + minDistance
+	                });
+	                points.push({
+	                  x: active.x - minDistance,
+	                  y: props.y + props.h + minDistance
+	                });
+	                points.push({
+	                  x: active.x - minDistance,
+	                  y: active.y
+	                });
+	              }
+	            } else {
+	              points.push({
+	                x: fixed.x - minDistance,
+	                y: active.y
+	              });
+	            }
+	          } else {
+	            if (active.y >= props.y - minDistance && active.y <= props.y + props.h + minDistance) {
+	              shapeHalf = props.y + props.h / 2;
+	              if (active.y < shapeHalf) {
+	                points.push({
+	                  x: fixed.x - minDistance,
+	                  y: props.y - minDistance
+	                });
+	                points.push({
+	                  x: active.x,
+	                  y: props.y - minDistance
+	                });
+	              } else {
+	                points.push({
+	                  x: fixed.x - minDistance,
+	                  y: props.y + props.h + minDistance
+	                });
+	                points.push({
+	                  x: active.x,
+	                  y: props.y + props.h + minDistance
+	                });
+	              }
+	            } else {
+	              if (active.y < fixed.y) {
+	                points.push({
+	                  x: fixed.x - minDistance,
+	                  y: active.y + minDistance
+	                });
+	                points.push({
+	                  x: active.x,
+	                  y: active.y + minDistance
+	                });
+	              } else {
+	                points.push({
+	                  x: fixed.x - minDistance,
+	                  y: active.y - minDistance
+	                });
+	                points.push({
+	                  x: active.x,
+	                  y: active.y - minDistance
+	                });
+	              }
+	            }
 	          }
 	        }
 	      }
