@@ -7,7 +7,7 @@
 		exports["UI"] = factory(require("_"), require("Backbone"), require("jQuery"), require("Blob"), require("FileSaver"), require("Raphael"));
 	else
 		root["ThreeNodes"] = root["ThreeNodes"] || {}, root["ThreeNodes"]["UI"] = factory(root["_"], root["Backbone"], root["jQuery"], root["Blob"], root["FileSaver"], root["Raphael"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_19__, __WEBPACK_EXTERNAL_MODULE_83__, __WEBPACK_EXTERNAL_MODULE_84__, __WEBPACK_EXTERNAL_MODULE_103__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_20__, __WEBPACK_EXTERNAL_MODULE_83__, __WEBPACK_EXTERNAL_MODULE_84__, __WEBPACK_EXTERNAL_MODULE_103__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -57,7 +57,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var AppTimeline, Backbone, DB, FileHandler, NodeView, NodeViewColor, NodeViewWebgl, UI, UIView, UrlHandler, Workspace, _,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 	
-	__webpack_require__(19);
+	__webpack_require__(20);
 	
 	_ = __webpack_require__(2);
 	
@@ -614,19 +614,20 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ }),
 /* 13 */,
 /* 14 */,
-/* 15 */
+/* 15 */,
+/* 16 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div class='head'><span><%= get(\"name\") %></span></div>\n<div class='options'>\n  <div class='inputs'></div>\n  <div class='center'></div>\n  <div class='outputs'></div>\n</div>\n\n<div class=\"up handler\" data-attr='up'></div>\n<div class=\"down handler\" data-attr='down'></div>\n<div class=\"left handler\" data-attr='left'></div>\n<div class=\"right handler\" data-attr='right'></div>\n<!-- <div class=\"center handler\" data-attr='center'></div> -->\n";
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports) {
 
 	module.exports = "<ul id=\"node-context-menu\" class=\"context-menu\">\n  <li><a href=\"#remove_node\">Remove node</a></li>\n  <li><a href=\"#rename_node\">Rename node</a></li>\n</ul>";
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports) {
 
 	/*
@@ -661,7 +662,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports) {
 
 	// jQuery Context Menu Plugin
@@ -878,13 +879,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_19__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_20__;
 
 /***/ }),
-/* 20 */,
 /* 21 */,
 /* 22 */,
 /* 23 */,
@@ -916,17 +916,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	_view_node_template = __webpack_require__(15);
+	_view_node_template = __webpack_require__(16);
 	
-	_view_node_context_menu = __webpack_require__(16);
+	_view_node_context_menu = __webpack_require__(17);
 	
 	FieldsView = __webpack_require__(41);
 	
-	namespace = __webpack_require__(17).namespace;
-	
-	__webpack_require__(18);
+	namespace = __webpack_require__(18).namespace;
 	
 	__webpack_require__(19);
+	
+	__webpack_require__(20);
 	
 	
 	/* Node View */
@@ -1189,7 +1189,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	FieldButton = __webpack_require__(42);
 	
-	__webpack_require__(19);
+	__webpack_require__(20);
 	
 	
 	/* Fields View */
@@ -1279,7 +1279,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	__webpack_require__(5);
 	
-	__webpack_require__(18);
+	__webpack_require__(19);
 	
 	
 	/* FieldButton View */
@@ -1477,7 +1477,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	namespace = __webpack_require__(17).namespace;
+	namespace = __webpack_require__(18).namespace;
 	
 	__webpack_require__(4);
 	
@@ -2128,13 +2128,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	__webpack_require__(103);
 	
-	__webpack_require__(19);
+	__webpack_require__(20);
 	
 	__webpack_require__(104);
 	
 	__webpack_require__(105);
 	
-	__webpack_require__(19);
+	__webpack_require__(20);
 	
 	UIView = (function(superClass) {
 	  extend(UIView, superClass);
@@ -2505,7 +2505,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	TreeView = __webpack_require__(97);
 	
-	__webpack_require__(19);
+	__webpack_require__(20);
 	
 	
 	/* Sidebar View */
@@ -2856,7 +2856,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	__webpack_require__(19);
+	__webpack_require__(20);
 	
 	TreeView = (function(superClass) {
 	  extend(TreeView, superClass);
@@ -4280,7 +4280,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	GroupView = __webpack_require__(108);
 	
-	__webpack_require__(19);
+	__webpack_require__(20);
 	
 	
 	/* Workspace View */
@@ -4430,7 +4430,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	__webpack_require__(19);
+	__webpack_require__(20);
 	
 	
 	/* Connection View */
@@ -4585,15 +4585,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	namespace = __webpack_require__(17).namespace;
+	namespace = __webpack_require__(18).namespace;
 	
 	_view_group_template = __webpack_require__(109);
 	
 	_view_group_context_menu = __webpack_require__(110);
 	
-	__webpack_require__(18);
-	
 	__webpack_require__(19);
+	
+	__webpack_require__(20);
 	
 	
 	/* Node View */

@@ -11,6 +11,13 @@ class Linkers extends Backbone.Collection
     return @models.find (l)->
       l.get('id') == id
 
+  getLinkersByShapeId:(id) ->
+    return @models.filter (l) ->
+      if(l.get('from').id == id || l.get('to').id == id)
+        return true
+      return false
+      
+
   removeAll: () ->
     @remove(@models)
 

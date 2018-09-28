@@ -7,7 +7,7 @@
 		exports["NodeTypes.Three"] = factory(require("_"), require("Backbone"), require("jQuery"), require("Blob"), require("FileSaver"), require("Three"));
 	else
 		root["ThreeNodes"] = root["ThreeNodes"] || {}, root["ThreeNodes"]["NodeTypes.Three"] = factory(root["_"], root["Backbone"], root["jQuery"], root["Blob"], root["FileSaver"], root["Three"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_19__, __WEBPACK_EXTERNAL_MODULE_83__, __WEBPACK_EXTERNAL_MODULE_84__, __WEBPACK_EXTERNAL_MODULE_87__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_20__, __WEBPACK_EXTERNAL_MODULE_83__, __WEBPACK_EXTERNAL_MODULE_84__, __WEBPACK_EXTERNAL_MODULE_87__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -203,13 +203,13 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 16 */,
 /* 17 */,
 /* 18 */,
-/* 19 */
+/* 19 */,
+/* 20 */
 /***/ (function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_19__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_20__;
 
 /***/ }),
-/* 20 */,
 /* 21 */,
 /* 22 */,
 /* 23 */,
@@ -2728,7 +2728,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	jQuery = __webpack_require__(19);
+	jQuery = __webpack_require__(20);
 	
 	_ = __webpack_require__(2);
 	

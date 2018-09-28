@@ -32,7 +32,9 @@ class Linker extends Backbone.Model
 		id = indexer.getUID()
 		@set('id', id)
 
-
+	# linker: target to move
+	# point: to/from
+	# x, y: position to move
 	@moveLinker: (linker, point, x, y) => 
 		newPos = {
 		  x: x
@@ -110,7 +112,6 @@ class Linker extends Backbone.Model
 		
 		points = linker.get('points')
 
-		console.log(points)
 		for point in points
 			#如果是折线，会有折点
 			ctx.lineTo(point.x - box.x, point.y - box.y);
@@ -206,14 +207,12 @@ class Linker extends Backbone.Model
 			else if(angle >= pi / 4 * 5 && angle < pi / 4 * 7)
 				#起点角度为向下
 				if(active.y > fixed.y)
-					console.log('Frida Test 4');
 					if(xDistance >= yDistance)
 						points.push({x: fixed.x, y: active.y});
 					else
 						half = yDistance / 2;
 						points.push({x: fixed.x, y: fixed.y + half});
 						points.push({x: active.x, y: fixed.y + half});
-			console.log(points)
 			return points;
 	@removeLinker: (linker)=>
 		$("#" + linker.id).remove();

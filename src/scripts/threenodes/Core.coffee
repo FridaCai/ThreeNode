@@ -38,7 +38,8 @@ class Core
     @nodes = new Nodes([], {settings: @settings})
     @connections = new Connections()
 
-
+    # for testing
+    @Linker=require './linkers/models/Linker'
 
     @head = null # null or groupid
 

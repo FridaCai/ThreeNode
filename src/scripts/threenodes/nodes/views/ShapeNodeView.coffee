@@ -35,7 +35,7 @@ class ShapeNodeView extends Backbone.View
     @model.on('change', @render)
     #@model.on('postInit', @postInit)
     @model.on('remove', () => @remove())
-    @model.on("node:computePosition", @computeNodePosition)
+    @model.on("node:computePosition", @move)
     # @model.on("node:renderConnections", @renderConnections)
     @model.on("node:addSelectedClass", @addSelectedClass)
 
@@ -58,14 +58,11 @@ class ShapeNodeView extends Backbone.View
   rename: ()->
     $title_span = @$el.find("> .head span");
     $input = @$el.find("> .head input");
-
     prev = $title_span.html()
     $input.val(prev)
     $title_span.hide();
     $input.show()
     $input.select();
-
-    
 
   makeElement: () =>
     # Compile the template file
@@ -177,12 +174,28 @@ class ShapeNodeView extends Backbone.View
     @$el.addClass("ui-selected")
 
 
-  computeNodePosition: () =>
-    pos = $(@el).position()
-    offset = $("#container-wrapper").offset()
+  move: (offset) =>
     @model.set
-      x: pos.left + $("#container-wrapper").scrollLeft()
-      y: pos.top + $("#container-wrapper").scrollTop()
+      x: @model.get('x') + offset.x
+      y: @model.get('y') + offset.y
+
+    # get model linkers by go through linkers collection
+    linkers = core.linkers.getLinkersByShapeId(@model.id)
+    linkers.map((linker) =>
+      from = linker.get('from')
+      if(from.id == @model.id)
+        from.x += offset.x
+        from.y += offset.y
+        linker.set('from', from)
+
+      to = linker.get('to')
+      if(to.id == @model.id)
+        to.x += offset.x 
+        to.y += offset.y
+        linker.set('to', to)
+
+      Linker.render(linker, true)
+    )
 
   remove: () =>
     $(".field", this.el).destroyContextMenu()
@@ -248,42 +261,28 @@ class ShapeNodeView extends Backbone.View
   makeDraggable: () =>
     self = this
 
-    nodes_offset = {top: 0, left: 0}
     selected_nodes = $([])
+    start = null
 
     $(this.el).draggable
       start: (ev, ui) ->
-        if $(this).hasClass("ui-selected")
-          selected_nodes = $(".ui-selected").each () ->
-            $(this).data("offset", $(this).offset())
-        else
-          selected_nodes = $([])
-          $(".node").removeClass("ui-selected")
-        nodes_offset = $(this).offset()
+        start = {
+          x: ui.position.left
+          y: ui.position.top
+        }
       drag: (ev, ui) ->
-        dt = ui.position.top - nodes_offset.top
-        dl = ui.position.left - nodes_offset.left
-        selected_nodes.not(this).each () ->
-          el = $(this)
-          offset = el.data("offset")
-          dx = offset.top + dt
-          dy = offset.left + dl
-          el.css
-            top: dx
-            left: dy
-          el.data("object").trigger("node:computePosition")
-          # el.data("object").trigger("node:renderConnections")
-        self.computeNodePosition()
-        self.model.trigger('node:renderConnections', self.model)
-        # self.renderConnections()
+        offset = {
+          x: ui.position.left - start.x
+          y: ui.position.top - start.y
+        }
+
+        self.move(offset)
+
+        start.x = ui.position.left
+        start.y = ui.position.top
+
       stop: () ->
-        # selected_nodes.not(this).each () ->
-        #   el = $(this).data("object")
-          # el.trigger("node:renderConnections")
-        # self.computeNodePosition()
-        # self.renderConnections()
-        # self.model.trigger('node:renderConnections')
-        
+
     return @
 
 ThreeNodes.Core.addNodeView('ShapeNodeView', ShapeNodeView)

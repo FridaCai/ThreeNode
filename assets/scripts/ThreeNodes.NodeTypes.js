@@ -7,7 +7,7 @@
 		exports["NodeTypes"] = factory(require("_"), require("Backbone"), require("jQuery"), require("libs/jshint"));
 	else
 		root["ThreeNodes"] = root["ThreeNodes"] || {}, root["ThreeNodes"]["NodeTypes"] = factory(root["_"], root["Backbone"], root["jQuery"], root["libs/jshint"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_19__, __WEBPACK_EXTERNAL_MODULE_52__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_20__, __WEBPACK_EXTERNAL_MODULE_52__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -54,7 +54,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	__webpack_require__(13);
+	__webpack_require__(14);
 	
 	__webpack_require__(21);
 	
@@ -202,6 +202,254 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
+	var Backbond, Linker,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	Backbond = __webpack_require__(3);
+	
+	Linker = (function(superClass) {
+	  extend(Linker, superClass);
+	
+	  function Linker() {
+	    this.initialize = bind(this.initialize, this);
+	    return Linker.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Linker.prototype.defaults = {
+	    id: '',
+	    name: 'linker',
+	    text: '',
+	    points: [],
+	    from: {
+	      x: 0,
+	      y: 0,
+	      angle: 0,
+	      id: ''
+	    },
+	    to: {
+	      x: 0,
+	      y: 0,
+	      angle: 0,
+	      id: ''
+	    },
+	    lineStyle: {
+	      lineWidth: 2,
+	      lineColor: "255,0,0",
+	      lineStyle: "solid",
+	      beginArrowStyle: "none",
+	      endArrowStyle: "solidArrow"
+	    }
+	  };
+	
+	  Linker.prototype.initialize = function(model, param) {
+	    var id;
+	    Linker.__super__.initialize.apply(this, arguments);
+	    id = indexer.getUID();
+	    return this.set('id', id);
+	  };
+	
+	  Linker.moveLinker = function(linker, point, x, y) {
+	    var from, linkedShape, newPos, to;
+	    newPos = {
+	      x: x,
+	      y: y,
+	      angle: null
+	    };
+	    linkedShape = null;
+	    linker.set('to', {
+	      x: newPos.x,
+	      y: newPos.y,
+	      id: linkedShape,
+	      angle: newPos.angle
+	    });
+	    if (!linkedShape) {
+	      to = linker.get('to');
+	      from = linker.get('from');
+	      if ((newPos.x < from.x - 6) || (newPos.x > from.x + 6)) {
+	
+	      } else {
+	        to.x = from.x;
+	      }
+	      if (newPos.y < from.y - 6 || newPos.y > from.y + 6) {
+	
+	      } else {
+	        to.y = from.y;
+	      }
+	      linker.to = to;
+	    }
+	    return Linker.render(linker, true);
+	  };
+	
+	  Linker.render = function(linker, pointChanged) {
+	    var begin, box, ctx, end, from, i, len, linkerBox, linkerCanvas, point, points, style, superCanvas, to;
+	    if (pointChanged) {
+	      linker.set('points', Linker.getLinkerPoints(linker));
+	    }
+	    box = Linker.calcBox(linker);
+	    linkerBox = $("#" + linker.id);
+	    if (linkerBox.length === 0) {
+	      superCanvas = $("#graph");
+	      linkerBox = $("<div id='" + linker.id + "' class='shape_box linker_box'><canvas class='shape_canvas'></canvas></div>").appendTo(superCanvas);
+	    }
+	    linkerCanvas = linkerBox.find(".shape_canvas");
+	    linkerCanvas.attr({
+	      width: box.w + 20,
+	      height: box.h + 20
+	    });
+	    linkerBox.css({
+	      position: 'absolute',
+	      left: box.x - 10,
+	      top: box.y - 10,
+	      width: box.w + 20,
+	      height: box.h + 20
+	    });
+	    ctx = linkerCanvas[0].getContext("2d");
+	    ctx.translate(10, 10);
+	    style = linker.get('lineStyle');
+	    ctx.lineWidth = style.lineWidth;
+	    ctx.strokeStyle = "rgb(" + style.lineColor + ")";
+	    ctx.fillStyle = "rgb(" + style.lineColor + ")";
+	    ctx.save();
+	    from = linker.get('from');
+	    to = linker.get('to');
+	    begin = {
+	      x: from.x - box.x,
+	      y: from.y - box.y
+	    };
+	    end = {
+	      x: to.x - box.x,
+	      y: to.y - box.y
+	    };
+	    ctx.save();
+	    ctx.beginPath();
+	    ctx.moveTo(begin.x, begin.y);
+	    points = linker.get('points');
+	    for (i = 0, len = points.length; i < len; i++) {
+	      point = points[i];
+	      ctx.lineTo(point.x - box.x, point.y - box.y);
+	    }
+	    ctx.lineTo(end.x, end.y);
+	    ctx.stroke();
+	    ctx.restore();
+	    return ctx.restore();
+	  };
+	
+	  Linker.calcBox = function(linker) {
+	    var from, i, len, maxX, maxY, minX, minY, point, points, to;
+	    points = linker.get('points');
+	    from = linker.get('from');
+	    to = linker.get('to');
+	    minX = to.x;
+	    minY = to.y;
+	    maxX = from.x;
+	    maxY = from.y;
+	    if (to.x < from.x) {
+	      minX = to.x;
+	      maxX = from.x;
+	    } else {
+	      minX = from.x;
+	      maxX = to.x;
+	    }
+	    if (to.y < from.y) {
+	      minY = to.y;
+	      maxY = from.y;
+	    } else {
+	      minY = from.y;
+	      maxY = to.y;
+	    }
+	    for (i = 0, len = points.length; i < len; i++) {
+	      point = points[i];
+	      if (point.x < minX) {
+	        minX = point.x;
+	      } else if (point.x > maxX) {
+	        maxX = point.x;
+	      }
+	      if (point.y < minY) {
+	        minY = point.y;
+	      } else if (point.y > maxY) {
+	        maxY = point.y;
+	      }
+	    }
+	    return {
+	      x: minX,
+	      y: minY,
+	      w: maxX - minX,
+	      h: maxY - minY
+	    };
+	  };
+	
+	  Linker.getLinkerPoints = function(linker) {
+	    var active, angle, fixed, from, half, minDistance, pi, points, reverse, to, xDistance, yDistance;
+	    points = [];
+	    pi = Math.PI;
+	    from = linker.get('from');
+	    to = linker.get('to');
+	    xDistance = Math.abs(to.x - from.x);
+	    yDistance = Math.abs(to.y - from.y);
+	    minDistance = 30;
+	    if (from.id && to.id) {
+	
+	    } else if (from.id || to.id) {
+	      fixed = null;
+	      active = null;
+	      reverse = null;
+	      angle = null;
+	      if (from.id) {
+	        fixed = from;
+	        active = to;
+	        reverse = false;
+	        angle = from.angle;
+	      } else {
+	        fixed = to;
+	        active = from;
+	        reverse = true;
+	        angle = to.angle;
+	      }
+	      if (angle >= pi / 4 && angle < pi / 4 * 3) {
+	
+	      } else if (angle >= pi / 4 * 3 && angle < pi / 4 * 5) {
+	
+	      } else if (angle >= pi / 4 * 5 && angle < pi / 4 * 7) {
+	        if (active.y > fixed.y) {
+	          if (xDistance >= yDistance) {
+	            points.push({
+	              x: fixed.x,
+	              y: active.y
+	            });
+	          } else {
+	            half = yDistance / 2;
+	            points.push({
+	              x: fixed.x,
+	              y: fixed.y + half
+	            });
+	            points.push({
+	              x: active.x,
+	              y: fixed.y + half
+	            });
+	          }
+	        }
+	      }
+	      return points;
+	    }
+	  };
+	
+	  Linker.removeLinker = function(linker) {
+	    return $("#" + linker.id).remove();
+	  };
+	
+	  return Linker;
+	
+	})(Backbone.Model);
+	
+	module.exports = Linker;
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
 	var Circle, Ellipse, Node, Rectangle, ShapeNodeView,
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty,
@@ -209,7 +457,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Node = __webpack_require__(4);
 	
-	ShapeNodeView = __webpack_require__(14);
+	ShapeNodeView = __webpack_require__(15);
 	
 	Rectangle = (function(superClass) {
 	  extend(Rectangle, superClass);
@@ -330,7 +578,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, Linker, ShapeNodeView, _, _view_node_context_menu, _view_node_template, namespace,
@@ -342,17 +590,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	_view_node_template = __webpack_require__(15);
+	_view_node_template = __webpack_require__(16);
 	
-	_view_node_context_menu = __webpack_require__(16);
+	_view_node_context_menu = __webpack_require__(17);
 	
-	namespace = __webpack_require__(17).namespace;
-	
-	__webpack_require__(18);
+	namespace = __webpack_require__(18).namespace;
 	
 	__webpack_require__(19);
 	
-	Linker = __webpack_require__(20);
+	__webpack_require__(20);
+	
+	Linker = __webpack_require__(13);
 	
 	
 	/* Node View */
@@ -363,7 +611,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function ShapeNodeView() {
 	    this.makeDraggable = bind(this.makeDraggable, this);
 	    this.remove = bind(this.remove, this);
-	    this.computeNodePosition = bind(this.computeNodePosition, this);
+	    this.move = bind(this.move, this);
 	    this.addSelectedClass = bind(this.addSelectedClass, this);
 	    this.render = bind(this.render, this);
 	    this.makeElement = bind(this.makeElement, this);
@@ -386,7 +634,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return _this.remove();
 	      };
 	    })(this));
-	    this.model.on("node:computePosition", this.computeNodePosition);
+	    this.model.on("node:computePosition", this.move);
 	    this.model.on("node:addSelectedClass", this.addSelectedClass);
 	    this.render();
 	    return this.initContextMenus();
@@ -543,14 +791,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return this.$el.addClass("ui-selected");
 	  };
 	
-	  ShapeNodeView.prototype.computeNodePosition = function() {
-	    var offset, pos;
-	    pos = $(this.el).position();
-	    offset = $("#container-wrapper").offset();
-	    return this.model.set({
-	      x: pos.left + $("#container-wrapper").scrollLeft(),
-	      y: pos.top + $("#container-wrapper").scrollTop()
+	  ShapeNodeView.prototype.move = function(offset) {
+	    var linkers;
+	    this.model.set({
+	      x: this.model.get('x') + offset.x,
+	      y: this.model.get('y') + offset.y
 	    });
+	    linkers = core.linkers.getLinkersByShapeId(this.model.id);
+	    return linkers.map((function(_this) {
+	      return function(linker) {
+	        var from, to;
+	        from = linker.get('from');
+	        if (from.id === _this.model.id) {
+	          from.x += offset.x;
+	          from.y += offset.y;
+	          linker.set('from', from);
+	        }
+	        to = linker.get('to');
+	        if (to.id === _this.model.id) {
+	          to.x += offset.x;
+	          to.y += offset.y;
+	          linker.set('to', to);
+	        }
+	        return Linker.render(linker, true);
+	      };
+	    })(this));
 	  };
 	
 	  ShapeNodeView.prototype.remove = function() {
@@ -626,43 +891,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  ShapeNodeView.prototype.makeDraggable = function() {
-	    var nodes_offset, selected_nodes, self;
+	    var selected_nodes, self, start;
 	    self = this;
-	    nodes_offset = {
-	      top: 0,
-	      left: 0
-	    };
 	    selected_nodes = $([]);
+	    start = null;
 	    $(this.el).draggable({
 	      start: function(ev, ui) {
-	        if ($(this).hasClass("ui-selected")) {
-	          selected_nodes = $(".ui-selected").each(function() {
-	            return $(this).data("offset", $(this).offset());
-	          });
-	        } else {
-	          selected_nodes = $([]);
-	          $(".node").removeClass("ui-selected");
-	        }
-	        return nodes_offset = $(this).offset();
+	        return start = {
+	          x: ui.position.left,
+	          y: ui.position.top
+	        };
 	      },
 	      drag: function(ev, ui) {
-	        var dl, dt;
-	        dt = ui.position.top - nodes_offset.top;
-	        dl = ui.position.left - nodes_offset.left;
-	        selected_nodes.not(this).each(function() {
-	          var dx, dy, el, offset;
-	          el = $(this);
-	          offset = el.data("offset");
-	          dx = offset.top + dt;
-	          dy = offset.left + dl;
-	          el.css({
-	            top: dx,
-	            left: dy
-	          });
-	          return el.data("object").trigger("node:computePosition");
-	        });
-	        self.computeNodePosition();
-	        return self.model.trigger('node:renderConnections', self.model);
+	        var offset;
+	        offset = {
+	          x: ui.position.left - start.x,
+	          y: ui.position.top - start.y
+	        };
+	        self.move(offset);
+	        start.x = ui.position.left;
+	        return start.y = ui.position.top;
 	      },
 	      stop: function() {}
 	    });
@@ -679,19 +927,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div class='head'><span><%= get(\"name\") %></span></div>\n<div class='options'>\n  <div class='inputs'></div>\n  <div class='center'></div>\n  <div class='outputs'></div>\n</div>\n\n<div class=\"up handler\" data-attr='up'></div>\n<div class=\"down handler\" data-attr='down'></div>\n<div class=\"left handler\" data-attr='left'></div>\n<div class=\"right handler\" data-attr='right'></div>\n<!-- <div class=\"center handler\" data-attr='center'></div> -->\n";
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports) {
 
 	module.exports = "<ul id=\"node-context-menu\" class=\"context-menu\">\n  <li><a href=\"#remove_node\">Remove node</a></li>\n  <li><a href=\"#rename_node\">Rename node</a></li>\n</ul>";
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports) {
 
 	/*
@@ -726,7 +974,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports) {
 
 	// jQuery Context Menu Plugin
@@ -943,261 +1191,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_19__;
-
-/***/ }),
-/* 20 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	var Backbond, Linker,
-	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  hasProp = {}.hasOwnProperty;
-	
-	Backbond = __webpack_require__(3);
-	
-	Linker = (function(superClass) {
-	  extend(Linker, superClass);
-	
-	  function Linker() {
-	    this.initialize = bind(this.initialize, this);
-	    return Linker.__super__.constructor.apply(this, arguments);
-	  }
-	
-	  Linker.prototype.defaults = {
-	    id: '',
-	    name: 'linker',
-	    text: '',
-	    points: [],
-	    from: {
-	      x: 0,
-	      y: 0,
-	      angle: 0,
-	      id: ''
-	    },
-	    to: {
-	      x: 0,
-	      y: 0,
-	      angle: 0,
-	      id: ''
-	    },
-	    lineStyle: {
-	      lineWidth: 2,
-	      lineColor: "255,0,0",
-	      lineStyle: "solid",
-	      beginArrowStyle: "none",
-	      endArrowStyle: "solidArrow"
-	    }
-	  };
-	
-	  Linker.prototype.initialize = function(model, param) {
-	    var id;
-	    Linker.__super__.initialize.apply(this, arguments);
-	    id = indexer.getUID();
-	    return this.set('id', id);
-	  };
-	
-	  Linker.moveLinker = function(linker, point, x, y) {
-	    var from, linkedShape, newPos, to;
-	    newPos = {
-	      x: x,
-	      y: y,
-	      angle: null
-	    };
-	    linkedShape = null;
-	    linker.set('to', {
-	      x: newPos.x,
-	      y: newPos.y,
-	      id: linkedShape,
-	      angle: newPos.angle
-	    });
-	    if (!linkedShape) {
-	      to = linker.get('to');
-	      from = linker.get('from');
-	      if ((newPos.x < from.x - 6) || (newPos.x > from.x + 6)) {
-	
-	      } else {
-	        to.x = from.x;
-	      }
-	      if (newPos.y < from.y - 6 || newPos.y > from.y + 6) {
-	
-	      } else {
-	        to.y = from.y;
-	      }
-	      linker.to = to;
-	    }
-	    return Linker.render(linker, true);
-	  };
-	
-	  Linker.render = function(linker, pointChanged) {
-	    var begin, box, ctx, end, from, i, len, linkerBox, linkerCanvas, point, points, style, superCanvas, to;
-	    if (pointChanged) {
-	      linker.set('points', Linker.getLinkerPoints(linker));
-	    }
-	    box = Linker.calcBox(linker);
-	    linkerBox = $("#" + linker.id);
-	    if (linkerBox.length === 0) {
-	      superCanvas = $("#graph");
-	      linkerBox = $("<div id='" + linker.id + "' class='shape_box linker_box'><canvas class='shape_canvas'></canvas></div>").appendTo(superCanvas);
-	    }
-	    linkerCanvas = linkerBox.find(".shape_canvas");
-	    linkerCanvas.attr({
-	      width: box.w + 20,
-	      height: box.h + 20
-	    });
-	    linkerBox.css({
-	      position: 'absolute',
-	      left: box.x - 10,
-	      top: box.y - 10,
-	      width: box.w + 20,
-	      height: box.h + 20
-	    });
-	    ctx = linkerCanvas[0].getContext("2d");
-	    ctx.translate(10, 10);
-	    style = linker.get('lineStyle');
-	    ctx.lineWidth = style.lineWidth;
-	    ctx.strokeStyle = "rgb(" + style.lineColor + ")";
-	    ctx.fillStyle = "rgb(" + style.lineColor + ")";
-	    ctx.save();
-	    from = linker.get('from');
-	    to = linker.get('to');
-	    begin = {
-	      x: from.x - box.x,
-	      y: from.y - box.y
-	    };
-	    end = {
-	      x: to.x - box.x,
-	      y: to.y - box.y
-	    };
-	    ctx.save();
-	    ctx.beginPath();
-	    ctx.moveTo(begin.x, begin.y);
-	    points = linker.get('points');
-	    console.log(points);
-	    for (i = 0, len = points.length; i < len; i++) {
-	      point = points[i];
-	      ctx.lineTo(point.x - box.x, point.y - box.y);
-	    }
-	    ctx.lineTo(end.x, end.y);
-	    ctx.stroke();
-	    ctx.restore();
-	    return ctx.restore();
-	  };
-	
-	  Linker.calcBox = function(linker) {
-	    var from, i, len, maxX, maxY, minX, minY, point, points, to;
-	    points = linker.get('points');
-	    from = linker.get('from');
-	    to = linker.get('to');
-	    minX = to.x;
-	    minY = to.y;
-	    maxX = from.x;
-	    maxY = from.y;
-	    if (to.x < from.x) {
-	      minX = to.x;
-	      maxX = from.x;
-	    } else {
-	      minX = from.x;
-	      maxX = to.x;
-	    }
-	    if (to.y < from.y) {
-	      minY = to.y;
-	      maxY = from.y;
-	    } else {
-	      minY = from.y;
-	      maxY = to.y;
-	    }
-	    for (i = 0, len = points.length; i < len; i++) {
-	      point = points[i];
-	      if (point.x < minX) {
-	        minX = point.x;
-	      } else if (point.x > maxX) {
-	        maxX = point.x;
-	      }
-	      if (point.y < minY) {
-	        minY = point.y;
-	      } else if (point.y > maxY) {
-	        maxY = point.y;
-	      }
-	    }
-	    return {
-	      x: minX,
-	      y: minY,
-	      w: maxX - minX,
-	      h: maxY - minY
-	    };
-	  };
-	
-	  Linker.getLinkerPoints = function(linker) {
-	    var active, angle, fixed, from, half, minDistance, pi, points, reverse, to, xDistance, yDistance;
-	    points = [];
-	    pi = Math.PI;
-	    from = linker.get('from');
-	    to = linker.get('to');
-	    xDistance = Math.abs(to.x - from.x);
-	    yDistance = Math.abs(to.y - from.y);
-	    minDistance = 30;
-	    if (from.id && to.id) {
-	
-	    } else if (from.id || to.id) {
-	      fixed = null;
-	      active = null;
-	      reverse = null;
-	      angle = null;
-	      if (from.id) {
-	        fixed = from;
-	        active = to;
-	        reverse = false;
-	        angle = from.angle;
-	      } else {
-	        fixed = to;
-	        active = from;
-	        reverse = true;
-	        angle = to.angle;
-	      }
-	      if (angle >= pi / 4 && angle < pi / 4 * 3) {
-	
-	      } else if (angle >= pi / 4 * 3 && angle < pi / 4 * 5) {
-	
-	      } else if (angle >= pi / 4 * 5 && angle < pi / 4 * 7) {
-	        if (active.y > fixed.y) {
-	          console.log('Frida Test 4');
-	          if (xDistance >= yDistance) {
-	            points.push({
-	              x: fixed.x,
-	              y: active.y
-	            });
-	          } else {
-	            half = yDistance / 2;
-	            points.push({
-	              x: fixed.x,
-	              y: fixed.y + half
-	            });
-	            points.push({
-	              x: active.x,
-	              y: fixed.y + half
-	            });
-	          }
-	        }
-	      }
-	      console.log(points);
-	      return points;
-	    }
-	  };
-	
-	  Linker.removeLinker = function(linker) {
-	    return $("#" + linker.id).remove();
-	  };
-	
-	  return Linker;
-	
-	})(Backbone.Model);
-	
-	module.exports = Linker;
-
+	module.exports = __WEBPACK_EXTERNAL_MODULE_20__;
 
 /***/ }),
 /* 21 */
@@ -1648,7 +1645,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	namespace = __webpack_require__(17).namespace;
+	namespace = __webpack_require__(18).namespace;
 	
 	BoolField = __webpack_require__(25);
 	
@@ -2497,7 +2494,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	namespace = __webpack_require__(17).namespace;
+	namespace = __webpack_require__(18).namespace;
 	
 	BaseField = __webpack_require__(26);
 	
@@ -3262,7 +3259,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	namespace = __webpack_require__(17).namespace;
+	namespace = __webpack_require__(18).namespace;
 	
 	BaseField = __webpack_require__(26);
 	
@@ -3337,7 +3334,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	namespace = __webpack_require__(17).namespace;
+	namespace = __webpack_require__(18).namespace;
 	
 	BaseField = __webpack_require__(26);
 	
@@ -3416,7 +3413,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	namespace = __webpack_require__(17).namespace;
+	namespace = __webpack_require__(18).namespace;
 	
 	BaseField = __webpack_require__(26);
 	
@@ -3458,7 +3455,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	namespace = __webpack_require__(17).namespace;
+	namespace = __webpack_require__(18).namespace;
 	
 	BaseField = __webpack_require__(26);
 	
@@ -3501,7 +3498,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	namespace = __webpack_require__(17).namespace;
+	namespace = __webpack_require__(18).namespace;
 	
 	BaseField = __webpack_require__(26);
 	
@@ -3545,7 +3542,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	namespace = __webpack_require__(17).namespace;
+	namespace = __webpack_require__(18).namespace;
 	
 	BaseField = __webpack_require__(26);
 	
@@ -3589,7 +3586,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	namespace = __webpack_require__(17).namespace;
+	namespace = __webpack_require__(18).namespace;
 	
 	BaseField = __webpack_require__(26);
 	
@@ -4186,17 +4183,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	_view_node_template = __webpack_require__(15);
+	_view_node_template = __webpack_require__(16);
 	
-	_view_node_context_menu = __webpack_require__(16);
+	_view_node_context_menu = __webpack_require__(17);
 	
 	FieldsView = __webpack_require__(41);
 	
-	namespace = __webpack_require__(17).namespace;
-	
-	__webpack_require__(18);
+	namespace = __webpack_require__(18).namespace;
 	
 	__webpack_require__(19);
+	
+	__webpack_require__(20);
 	
 	
 	/* Node View */
@@ -4459,7 +4456,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	FieldButton = __webpack_require__(42);
 	
-	__webpack_require__(19);
+	__webpack_require__(20);
 	
 	
 	/* Fields View */
@@ -4549,7 +4546,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	__webpack_require__(5);
 	
-	__webpack_require__(18);
+	__webpack_require__(19);
 	
 	
 	/* FieldButton View */
@@ -4747,7 +4744,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Backbone = __webpack_require__(3);
 	
-	namespace = __webpack_require__(17).namespace;
+	namespace = __webpack_require__(18).namespace;
 	
 	__webpack_require__(4);
 	
@@ -5325,7 +5322,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
 	
-	jQuery = __webpack_require__(19);
+	jQuery = __webpack_require__(20);
 	
 	_ = __webpack_require__(2);
 	
