@@ -171,6 +171,18 @@ class Linker extends Backbone.Model
 			h: maxY - minY
 		}
 	
+
+	@getAngleDir: (angle)=>
+		pi = Math.PI;
+		if(angle >= pi / 4 && angle < pi / 4 * 3)
+			return 1;#上
+		else if(angle >= pi / 4 * 3 && angle < pi / 4 * 5)
+			return 2;#右
+		else if(angle >= pi / 4 * 5 && angle < pi / 4 * 7)
+			return 3;#下
+		else
+			return 4;#左
+
 	@getLinkerPoints: (linker)=>
 		points = [];
 
@@ -182,6 +194,570 @@ class Linker extends Backbone.Model
 		minDistance = 30; #最小距离，比如起点向上，终点在下方，则先要往上画minDistance的距离
 		
 		if(from.id && to.id)
+
+			#起点和终点都连接了形状
+			fromDir = Linker.getAngleDir(from.angle); #起点方向
+			toDir = Linker.getAngleDir(to.angle); #终点方向
+			
+
+
+			
+			fixed = null;
+			active = null;
+			reverse = null; #固定点、移动点、是否需要逆序
+
+			#以起点为判断依据，可以涵盖所有情况
+			if(fromDir == 1 && toDir == 1)
+				#情况1：两个点都向上
+				if(from.y < to.y)
+					fixed = from;
+					active = to;
+					reverse = false;
+
+					
+				else
+					fixed = to;
+					active = from;
+					reverse = true;
+				
+				fixedProps = {
+					x: fixed.x
+					y: fixed.y
+					w: 90
+					h: 26
+				}
+				activeProps = {
+					x: active.x
+					y: active.y
+					w: 90
+					h: 26
+				}
+				if(active.x >= fixedProps.x - minDistance && active.x <= fixedProps.x + fixedProps.w + minDistance)
+					x;
+					if(active.x < fixedProps.x + fixedProps.w / 2)
+						x = fixedProps.x - minDistance;
+					else
+						x = fixedProps.x + fixedProps.w + minDistance;
+					
+					y = fixed.y - minDistance;
+					points.push({x: fixed.x, y: y});
+					points.push({x: x, y: y});
+					y = active.y - minDistance;
+					points.push({x: x, y: y});
+					points.push({x: active.x, y: y});
+				else
+					y = fixed.y - minDistance;
+					points.push({x: fixed.x, y: y});
+					points.push({x: active.x, y: y});
+				
+			else if(fromDir == 3 && toDir == 3)
+				#情况2：两个点都向下
+				if(from.y > to.y)
+					fixed = from;
+					active = to;
+					reverse = false;
+				else
+					fixed = to;
+					active = from;
+					reverse = true;
+				
+				fixedProps = {
+					x: fixed.x
+					y: fixed.y
+					w: 90
+					h: 26
+				}
+				activeProps = {
+					x: active.x
+					y: active.y
+					w: 90
+					h: 26
+				}
+
+
+
+				if(active.x >= fixedProps.x - minDistance && active.x <= fixedProps.x + fixedProps.w + minDistance)
+					y = fixed.y + minDistance;
+					x;
+					if(active.x < fixedProps.x + fixedProps.w / 2)
+						x = fixedProps.x - minDistance;
+					else
+						x = fixedProps.x + fixedProps.w + minDistance;
+					
+					points.push({x: fixed.x, y: y});
+					points.push({x: x, y: y});
+					y = active.y + minDistance;
+					points.push({x: x, y: y});
+					points.push({x: active.x, y: y});
+				else
+					y = fixed.y + minDistance;
+					points.push({x: fixed.x, y: y});
+					points.push({x: active.x, y: y});
+				
+			else if(fromDir == 2 && toDir == 2)
+				#情况3：两点都向右
+				if(from.x > to.x)
+					fixed = from;
+					active = to;
+					reverse = false;
+				else
+					fixed = to;
+					active = from;
+					reverse = true;
+				
+
+				
+				if(active.y >= fixedProps.y - minDistance && active.y <= fixedProps.y + fixedProps.h + minDistance)
+					x = fixed.x + minDistance;
+					y;
+					if(active.y < fixedProps.y + fixedProps.h / 2)
+						y = fixedProps.y - minDistance;
+					else
+						y = fixedProps.y + fixedProps.h + minDistance;
+					
+					points.push({x: x, y: fixed.y});
+					points.push({x: x, y: y});
+					x = active.x + minDistance;
+					points.push({x: x, y: y});
+					points.push({x: x, y: active.y});
+				else
+					x = fixed.x + minDistance;
+					points.push({x: x, y: fixed.y});
+					points.push({x: x, y: active.y});
+				
+			else if(fromDir == 4 && toDir == 4)
+				#情况4：两点都向左
+				if(from.x < to.x)
+					fixed = from;
+					active = to;
+					reverse = false;
+				else
+					fixed = to;
+					active = from;
+					reverse = true;
+				
+				fixedProps = {
+					x: fixed.x
+					y: fixed.y
+					w: 90
+					h: 26
+				}
+				activeProps = {
+					x: active.x
+					y: active.y
+					w: 90
+					h: 26
+				}
+
+				if(active.y >= fixedProps.y - minDistance && active.y <= fixedProps.y + fixedProps.h + minDistance)
+					x = fixed.x - minDistance;
+					y;
+					if(active.y < fixedProps.y + fixedProps.h / 2)
+						y = fixedProps.y - minDistance;
+					else
+						y = fixedProps.y + fixedProps.h + minDistance;
+					
+					points.push({x: x, y: fixed.y});
+					points.push({x: x, y: y});
+					x = active.x - minDistance;
+					points.push({x: x, y: y});
+					points.push({x: x, y: active.y});
+				else
+					x = fixed.x - minDistance;
+					points.push({x: x, y: fixed.y});
+					points.push({x: x, y: active.y});
+				
+			else if((fromDir == 1 && toDir == 3) || (fromDir == 3 && toDir == 1))
+				#情况5：一个点向上，一个点向下
+				if(fromDir == 1)
+					fixed = from;
+					active = to;
+					reverse = false;
+				else
+					fixed = to;
+					active = from;
+					reverse = true;
+				
+				fixedProps = {
+					x: fixed.x
+					y: fixed.y
+					w: 90
+					h: 26
+				}
+				activeProps = {
+					x: active.x
+					y: active.y
+					w: 90
+					h: 26
+				}
+				if(active.y <= fixed.y)
+					y = fixed.y - yDistance / 2;
+					points.push({x: fixed.x, y: y});
+					points.push({x: active.x, y: y});
+				else
+					fixedRight = fixedProps.x + fixedProps.w;
+					activeRight = activeProps.x + activeProps.w;
+					y = fixed.y - minDistance;
+					x;
+					if(activeRight >= fixedProps.x && activeProps.x <= fixedRight)
+						#x轴重叠的情况
+						half = fixedProps.x + fixedProps.w / 2;
+						if(active.x < half)
+							#从左边绕
+							x = fixedProps.x < activeProps.x ? fixedProps.x - minDistance : activeProps.x - minDistance;
+						else
+							#从右边绕
+							x = fixedRight > activeRight ? fixedRight + minDistance : activeRight + minDistance;
+						
+						if(activeProps.y < fixed.y)
+							y = activeProps.y - minDistance;
+						
+					else
+						if(active.x < fixed.x)
+							x = activeRight + (fixedProps.x - activeRight) / 2;
+						else
+							x = fixedRight + (activeProps.x - fixedRight) / 2;
+						
+					
+					points.push({x: fixed.x, y: y});
+					points.push({x: x, y: y});
+					y = active.y + minDistance;
+					points.push({x: x, y: y});
+					points.push({x: active.x, y: y});
+				
+			else if((fromDir == 2 && toDir == 4) || (fromDir == 4 && toDir == 2))
+				#情况6：一个点向右，一个点向左
+				if(fromDir == 2)
+					fixed = from;
+					active = to;
+					reverse = false;
+				else
+					fixed = to;
+					active = from;
+					reverse = true;
+				
+				fixedProps = {
+					x: fixed.x
+					y: fixed.y
+					w: 90
+					h: 26
+				}
+				activeProps = {
+					x: active.x
+					y: active.y
+					w: 90
+					h: 26
+				}
+				if(active.x > fixed.x)
+					x = fixed.x + xDistance / 2;
+					points.push({x: x, y: fixed.y});
+					points.push({x: x, y: active.y});
+				else
+					fixedBottom = fixedProps.y + fixedProps.h;
+					activeBottom = activeProps.y + activeProps.h;
+					x = fixed.x + minDistance;
+					y;
+					if(activeBottom >= fixedProps.y && activeProps.y <= fixedBottom)
+						#y轴重叠的情况
+						half = fixedProps.y + fixedProps.h / 2;
+						if(active.y < half)
+							#从上边绕
+							y = fixedProps.y < activeProps.y ? fixedProps.y - minDistance : activeProps.y - minDistance;
+						else
+							#从下边绕
+							y = fixedBottom > activeBottom ? fixedBottom + minDistance : activeBottom + minDistance;
+						
+						if(activeProps.x + activeProps.w > fixed.x)
+							x = activeProps.x + activeProps.w + minDistance;
+						
+					else
+						if(active.y < fixed.y)
+							y = activeBottom + (fixedProps.y - activeBottom) / 2;
+						else
+							y = fixedBottom + (activeProps.y - fixedBottom) / 2;
+						
+					
+					points.push({x: x, y: fixed.y});
+					points.push({x: x, y: y});
+					x = active.x - minDistance;
+					points.push({x: x, y: y});
+					points.push({x: x, y: active.y});
+				
+			else if((fromDir == 1 && toDir == 2) || (fromDir == 2 && toDir == 1))
+				#情况7：一个点向上，一个点向右
+				if(fromDir == 2)
+					fixed = from;
+					active = to;
+					reverse = false;
+				else
+					fixed = to;
+					active = from;
+					reverse = true;
+				
+				fixedProps = {
+					x: fixed.x
+					y: fixed.y
+					w: 90
+					h: 26
+				}
+				activeProps = {
+					x: active.x
+					y: active.y
+					w: 90
+					h: 26
+				}
+				if(active.x > fixed.x && active.y > fixed.y)
+					points.push({x: active.x, y: fixed.y});
+				else if(active.x > fixed.x && activeProps.x > fixed.x)
+					x;
+					if(activeProps.x - fixed.x < minDistance * 2)
+						x = fixed.x + (activeProps.x - fixed.x) / 2;
+					else
+						x = fixed.x + minDistance;
+					
+					y = active.y - minDistance;
+					points.push({x: x, y: fixed.y});
+					points.push({x: x, y: y});
+					points.push({x: active.x, y: y});
+				else if(active.x <= fixed.x && active.y > fixedProps.y + fixedProps.h)
+					fixedBottom = fixedProps.y + fixedProps.h;
+					x = fixed.x + minDistance;
+					y
+					if(active.y - fixedBottom < minDistance * 2)
+						y = fixedBottom + (active.y - fixedBottom) / 2;
+					else
+						y = active.y - minDistance;
+					
+					points.push({x: x, y: fixed.y});
+					points.push({x: x, y: y});
+					points.push({x: active.x, y: y});
+				else
+					x;
+					activeRight = activeProps.x + activeProps.w;
+					if(activeRight > fixed.x)
+						x = activeRight + minDistance;
+					else
+						x = fixed.x + minDistance;
+					
+					y;
+					if(active.y < fixedProps.y)
+						y = active.y - minDistance;
+					else
+						y = fixedProps.y - minDistance;
+					
+					points.push({x: x, y: fixed.y});
+					points.push({x: x, y: y});
+					points.push({x: active.x, y: y});
+				
+			else if((fromDir == 1 && toDir == 4) || (fromDir == 4 && toDir == 1))
+				#情况8：一个点向上，一个点向左
+				if(fromDir == 4)
+					fixed = from;
+					active = to;
+					reverse = false;
+				else
+					fixed = to;
+					active = from;
+					reverse = true;
+				
+				fixedProps = {
+					x: fixed.x
+					y: fixed.y
+					w: 90
+					h: 26
+				}
+				activeProps = {
+					x: active.x
+					y: active.y
+					w: 90
+					h: 26
+				}
+				activeRight = activeProps.x + activeProps.w;
+				if(active.x < fixed.x && active.y > fixed.y)
+					points.push({x: active.x, y: fixed.y});
+				else if(active.x < fixed.x && activeRight < fixed.x)
+					x;
+					if(fixed.x - activeRight < minDistance * 2)
+						x = activeRight + (fixed.x - activeRight) / 2;
+					else
+						x = fixed.x - minDistance;
+					
+					y = active.y - minDistance;
+					points.push({x: x, y: fixed.y});
+					points.push({x: x, y: y});
+					points.push({x: active.x, y: y});
+				else if(active.x >= fixed.x && active.y > fixedProps.y + fixedProps.h)
+					fixedBottom = fixedProps.y + fixedProps.h;
+					x = fixed.x - minDistance;
+					y
+					if(active.y - fixedBottom < minDistance * 2)
+						y = fixedBottom + (active.y - fixedBottom) / 2;
+					else
+						y = active.y - minDistance;
+					
+					points.push({x: x, y: fixed.y});
+					points.push({x: x, y: y});
+					points.push({x: active.x, y: y});
+				else
+					x;
+					if(activeProps.x < fixed.x)
+						x = activeProps.x - minDistance;
+					else
+						x = fixed.x - minDistance;
+					
+					y;
+					if(active.y < fixedProps.y)
+						y = active.y - minDistance;
+					else
+						y = fixedProps.y - minDistance;
+					
+					points.push({x: x, y: fixed.y});
+					points.push({x: x, y: y});
+					points.push({x: active.x, y: y});
+				
+			else if((fromDir == 2 && toDir == 3) || (fromDir == 3 && toDir == 2))
+				#情况9：一个点向右，一个点向下
+				if(fromDir == 2)
+					fixed = from;
+					active = to;
+					reverse = false;
+				else
+					fixed = to;
+					active = from;
+					reverse = true;
+				
+				fixedProps = {
+					x: fixed.x
+					y: fixed.y
+					w: 90
+					h: 26
+				}
+				activeProps = {
+					x: active.x
+					y: active.y
+					w: 90
+					h: 26
+				}
+				if(active.x > fixed.x && active.y < fixed.y)
+					points.push({x: active.x, y: fixed.y});
+				else if(active.x > fixed.x && activeProps.x > fixed.x)
+					x;
+					if(activeProps.x - fixed.x < minDistance * 2)
+						x = fixed.x + (activeProps.x - fixed.x) / 2;
+					else
+						x = fixed.x + minDistance;
+					
+					y = active.y + minDistance;
+					points.push({x: x, y: fixed.y});
+					points.push({x: x, y: y});
+					points.push({x: active.x, y: y});
+				else if(active.x <= fixed.x && active.y < fixedProps.y)
+					x = fixed.x + minDistance;
+					y
+					if(fixedProps.y - active.y < minDistance * 2)
+						y = active.y + (fixedProps.y - active.y) / 2;
+					else
+						y = active.y + minDistance;
+					
+					points.push({x: x, y: fixed.y});
+					points.push({x: x, y: y});
+					points.push({x: active.x, y: y});
+				else
+					x;
+					activeRight = activeProps.x + activeProps.w;
+					if(activeRight > fixed.x)
+						x = activeRight + minDistance;
+					else
+						x = fixed.x + minDistance;
+					
+					y;
+					if(active.y > fixedProps.y + fixedProps.h)
+						y = active.y + minDistance;
+					else
+						y = fixedProps.y + fixedProps.h + minDistance;
+					
+					points.push({x: x, y: fixed.y});
+					points.push({x: x, y: y});
+					points.push({x: active.x, y: y});
+				
+			else if((fromDir == 3 && toDir == 4) || (fromDir == 4 && toDir == 3))
+				#情况10：一个点向下，一个点向左
+				if(fromDir == 4)
+					fixed = from;
+					active = to;
+					reverse = false;
+				else
+					fixed = to;
+					active = from;
+					reverse = true;
+				
+				fixedProps = {
+					x: fixed.x
+					y: fixed.y
+					w: 90
+					h: 26
+				}
+				activeProps = {
+					x: active.x
+					y: active.y
+					w: 90
+					h: 26
+				}
+				activeRight = activeProps.x + activeProps.w;
+				if(active.x < fixed.x && active.y < fixed.y)
+					points.push({x: active.x, y: fixed.y});
+				else if(active.x < fixed.x && activeRight < fixed.x)
+					x;
+					if(fixed.x - activeRight < minDistance * 2)
+						x = activeRight + (fixed.x - activeRight) / 2;
+					else
+						x = fixed.x - minDistance;
+					
+					y = active.y + minDistance;
+					points.push({x: x, y: fixed.y});
+					points.push({x: x, y: y});
+					points.push({x: active.x, y: y});
+				else if(active.x >= fixed.x && active.y < fixedProps.y)
+					x = fixed.x - minDistance;
+					y
+					if(fixedProps.y - active.y < minDistance * 2)
+						y = active.y + (fixedProps.y - active.y) / 2;
+					else
+						y = active.y + minDistance;
+					
+					points.push({x: x, y: fixed.y});
+					points.push({x: x, y: y});
+					points.push({x: active.x, y: y});
+				else
+					x;
+					if(activeProps.x < fixed.x)
+						x = activeProps.x - minDistance;
+					else
+						x = fixed.x - minDistance;
+					
+					y;
+					if(active.y > fixedProps.y + fixedProps.h)
+						y = active.y + minDistance;
+					else
+						y = fixedProps.y + fixedProps.h + minDistance;
+					
+					points.push({x: x, y: fixed.y});
+					points.push({x: x, y: y});
+					points.push({x: active.x, y: y});
+				
+			
+			if(reverse)
+				points.reverse();
+			
+
+
+
+
+
+
+
+
+
 		else if(from.id || to.id)
 			#只有起点或终点连接了形状
 			#连接了形状的端点被认为是固定点，另一点被认为是活动的点

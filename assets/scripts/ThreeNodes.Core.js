@@ -1187,8 +1187,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 	  };
 	
+	  Linker.getAngleDir = function(angle) {
+	    var pi;
+	    pi = Math.PI;
+	    if (angle >= pi / 4 && angle < pi / 4 * 3) {
+	      return 1;
+	    } else if (angle >= pi / 4 * 3 && angle < pi / 4 * 5) {
+	      return 2;
+	    } else if (angle >= pi / 4 * 5 && angle < pi / 4 * 7) {
+	      return 3;
+	    } else {
+	      return 4;
+	    }
+	  };
+	
 	  Linker.getLinkerPoints = function(linker) {
-	    var active, angle, fixed, from, half, minDistance, pi, points, props, reverse, shapeHalf, to, xDistance, yDistance;
+	    var active, activeBottom, activeProps, activeRight, angle, fixed, fixedBottom, fixedProps, fixedRight, from, fromDir, half, minDistance, pi, points, props, ref, ref1, ref2, ref3, reverse, shapeHalf, to, toDir, x, xDistance, y, yDistance;
 	    points = [];
 	    pi = Math.PI;
 	    from = linker.get('from');
@@ -1197,7 +1211,765 @@ return /******/ (function(modules) { // webpackBootstrap
 	    yDistance = Math.abs(to.y - from.y);
 	    minDistance = 30;
 	    if (from.id && to.id) {
-	
+	      fromDir = Linker.getAngleDir(from.angle);
+	      toDir = Linker.getAngleDir(to.angle);
+	      fixed = null;
+	      active = null;
+	      reverse = null;
+	      if (fromDir === 1 && toDir === 1) {
+	        if (from.y < to.y) {
+	          fixed = from;
+	          active = to;
+	          reverse = false;
+	        } else {
+	          fixed = to;
+	          active = from;
+	          reverse = true;
+	        }
+	        fixedProps = {
+	          x: fixed.x,
+	          y: fixed.y,
+	          w: 90,
+	          h: 26
+	        };
+	        activeProps = {
+	          x: active.x,
+	          y: active.y,
+	          w: 90,
+	          h: 26
+	        };
+	        if (active.x >= fixedProps.x - minDistance && active.x <= fixedProps.x + fixedProps.w + minDistance) {
+	          x;
+	          if (active.x < fixedProps.x + fixedProps.w / 2) {
+	            x = fixedProps.x - minDistance;
+	          } else {
+	            x = fixedProps.x + fixedProps.w + minDistance;
+	          }
+	          y = fixed.y - minDistance;
+	          points.push({
+	            x: fixed.x,
+	            y: y
+	          });
+	          points.push({
+	            x: x,
+	            y: y
+	          });
+	          y = active.y - minDistance;
+	          points.push({
+	            x: x,
+	            y: y
+	          });
+	          points.push({
+	            x: active.x,
+	            y: y
+	          });
+	        } else {
+	          y = fixed.y - minDistance;
+	          points.push({
+	            x: fixed.x,
+	            y: y
+	          });
+	          points.push({
+	            x: active.x,
+	            y: y
+	          });
+	        }
+	      } else if (fromDir === 3 && toDir === 3) {
+	        if (from.y > to.y) {
+	          fixed = from;
+	          active = to;
+	          reverse = false;
+	        } else {
+	          fixed = to;
+	          active = from;
+	          reverse = true;
+	        }
+	        fixedProps = {
+	          x: fixed.x,
+	          y: fixed.y,
+	          w: 90,
+	          h: 26
+	        };
+	        activeProps = {
+	          x: active.x,
+	          y: active.y,
+	          w: 90,
+	          h: 26
+	        };
+	        if (active.x >= fixedProps.x - minDistance && active.x <= fixedProps.x + fixedProps.w + minDistance) {
+	          y = fixed.y + minDistance;
+	          x;
+	          if (active.x < fixedProps.x + fixedProps.w / 2) {
+	            x = fixedProps.x - minDistance;
+	          } else {
+	            x = fixedProps.x + fixedProps.w + minDistance;
+	          }
+	          points.push({
+	            x: fixed.x,
+	            y: y
+	          });
+	          points.push({
+	            x: x,
+	            y: y
+	          });
+	          y = active.y + minDistance;
+	          points.push({
+	            x: x,
+	            y: y
+	          });
+	          points.push({
+	            x: active.x,
+	            y: y
+	          });
+	        } else {
+	          y = fixed.y + minDistance;
+	          points.push({
+	            x: fixed.x,
+	            y: y
+	          });
+	          points.push({
+	            x: active.x,
+	            y: y
+	          });
+	        }
+	      } else if (fromDir === 2 && toDir === 2) {
+	        if (from.x > to.x) {
+	          fixed = from;
+	          active = to;
+	          reverse = false;
+	        } else {
+	          fixed = to;
+	          active = from;
+	          reverse = true;
+	        }
+	        if (active.y >= fixedProps.y - minDistance && active.y <= fixedProps.y + fixedProps.h + minDistance) {
+	          x = fixed.x + minDistance;
+	          y;
+	          if (active.y < fixedProps.y + fixedProps.h / 2) {
+	            y = fixedProps.y - minDistance;
+	          } else {
+	            y = fixedProps.y + fixedProps.h + minDistance;
+	          }
+	          points.push({
+	            x: x,
+	            y: fixed.y
+	          });
+	          points.push({
+	            x: x,
+	            y: y
+	          });
+	          x = active.x + minDistance;
+	          points.push({
+	            x: x,
+	            y: y
+	          });
+	          points.push({
+	            x: x,
+	            y: active.y
+	          });
+	        } else {
+	          x = fixed.x + minDistance;
+	          points.push({
+	            x: x,
+	            y: fixed.y
+	          });
+	          points.push({
+	            x: x,
+	            y: active.y
+	          });
+	        }
+	      } else if (fromDir === 4 && toDir === 4) {
+	        if (from.x < to.x) {
+	          fixed = from;
+	          active = to;
+	          reverse = false;
+	        } else {
+	          fixed = to;
+	          active = from;
+	          reverse = true;
+	        }
+	        fixedProps = {
+	          x: fixed.x,
+	          y: fixed.y,
+	          w: 90,
+	          h: 26
+	        };
+	        activeProps = {
+	          x: active.x,
+	          y: active.y,
+	          w: 90,
+	          h: 26
+	        };
+	        if (active.y >= fixedProps.y - minDistance && active.y <= fixedProps.y + fixedProps.h + minDistance) {
+	          x = fixed.x - minDistance;
+	          y;
+	          if (active.y < fixedProps.y + fixedProps.h / 2) {
+	            y = fixedProps.y - minDistance;
+	          } else {
+	            y = fixedProps.y + fixedProps.h + minDistance;
+	          }
+	          points.push({
+	            x: x,
+	            y: fixed.y
+	          });
+	          points.push({
+	            x: x,
+	            y: y
+	          });
+	          x = active.x - minDistance;
+	          points.push({
+	            x: x,
+	            y: y
+	          });
+	          points.push({
+	            x: x,
+	            y: active.y
+	          });
+	        } else {
+	          x = fixed.x - minDistance;
+	          points.push({
+	            x: x,
+	            y: fixed.y
+	          });
+	          points.push({
+	            x: x,
+	            y: active.y
+	          });
+	        }
+	      } else if ((fromDir === 1 && toDir === 3) || (fromDir === 3 && toDir === 1)) {
+	        if (fromDir === 1) {
+	          fixed = from;
+	          active = to;
+	          reverse = false;
+	        } else {
+	          fixed = to;
+	          active = from;
+	          reverse = true;
+	        }
+	        fixedProps = {
+	          x: fixed.x,
+	          y: fixed.y,
+	          w: 90,
+	          h: 26
+	        };
+	        activeProps = {
+	          x: active.x,
+	          y: active.y,
+	          w: 90,
+	          h: 26
+	        };
+	        if (active.y <= fixed.y) {
+	          y = fixed.y - yDistance / 2;
+	          points.push({
+	            x: fixed.x,
+	            y: y
+	          });
+	          points.push({
+	            x: active.x,
+	            y: y
+	          });
+	        } else {
+	          fixedRight = fixedProps.x + fixedProps.w;
+	          activeRight = activeProps.x + activeProps.w;
+	          y = fixed.y - minDistance;
+	          x;
+	          if (activeRight >= fixedProps.x && activeProps.x <= fixedRight) {
+	            half = fixedProps.x + fixedProps.w / 2;
+	            if (active.x < half) {
+	              x = (ref = fixedProps.x < activeProps.x) != null ? ref : fixedProps.x - {
+	                minDistance: activeProps.x - minDistance
+	              };
+	            } else {
+	              x = (ref1 = fixedRight > activeRight) != null ? ref1 : fixedRight + {
+	                minDistance: activeRight + minDistance
+	              };
+	            }
+	            if (activeProps.y < fixed.y) {
+	              y = activeProps.y - minDistance;
+	            }
+	          } else {
+	            if (active.x < fixed.x) {
+	              x = activeRight + (fixedProps.x - activeRight) / 2;
+	            } else {
+	              x = fixedRight + (activeProps.x - fixedRight) / 2;
+	            }
+	          }
+	          points.push({
+	            x: fixed.x,
+	            y: y
+	          });
+	          points.push({
+	            x: x,
+	            y: y
+	          });
+	          y = active.y + minDistance;
+	          points.push({
+	            x: x,
+	            y: y
+	          });
+	          points.push({
+	            x: active.x,
+	            y: y
+	          });
+	        }
+	      } else if ((fromDir === 2 && toDir === 4) || (fromDir === 4 && toDir === 2)) {
+	        if (fromDir === 2) {
+	          fixed = from;
+	          active = to;
+	          reverse = false;
+	        } else {
+	          fixed = to;
+	          active = from;
+	          reverse = true;
+	        }
+	        fixedProps = {
+	          x: fixed.x,
+	          y: fixed.y,
+	          w: 90,
+	          h: 26
+	        };
+	        activeProps = {
+	          x: active.x,
+	          y: active.y,
+	          w: 90,
+	          h: 26
+	        };
+	        if (active.x > fixed.x) {
+	          x = fixed.x + xDistance / 2;
+	          points.push({
+	            x: x,
+	            y: fixed.y
+	          });
+	          points.push({
+	            x: x,
+	            y: active.y
+	          });
+	        } else {
+	          fixedBottom = fixedProps.y + fixedProps.h;
+	          activeBottom = activeProps.y + activeProps.h;
+	          x = fixed.x + minDistance;
+	          y;
+	          if (activeBottom >= fixedProps.y && activeProps.y <= fixedBottom) {
+	            half = fixedProps.y + fixedProps.h / 2;
+	            if (active.y < half) {
+	              y = (ref2 = fixedProps.y < activeProps.y) != null ? ref2 : fixedProps.y - {
+	                minDistance: activeProps.y - minDistance
+	              };
+	            } else {
+	              y = (ref3 = fixedBottom > activeBottom) != null ? ref3 : fixedBottom + {
+	                minDistance: activeBottom + minDistance
+	              };
+	            }
+	            if (activeProps.x + activeProps.w > fixed.x) {
+	              x = activeProps.x + activeProps.w + minDistance;
+	            }
+	          } else {
+	            if (active.y < fixed.y) {
+	              y = activeBottom + (fixedProps.y - activeBottom) / 2;
+	            } else {
+	              y = fixedBottom + (activeProps.y - fixedBottom) / 2;
+	            }
+	          }
+	          points.push({
+	            x: x,
+	            y: fixed.y
+	          });
+	          points.push({
+	            x: x,
+	            y: y
+	          });
+	          x = active.x - minDistance;
+	          points.push({
+	            x: x,
+	            y: y
+	          });
+	          points.push({
+	            x: x,
+	            y: active.y
+	          });
+	        }
+	      } else if ((fromDir === 1 && toDir === 2) || (fromDir === 2 && toDir === 1)) {
+	        if (fromDir === 2) {
+	          fixed = from;
+	          active = to;
+	          reverse = false;
+	        } else {
+	          fixed = to;
+	          active = from;
+	          reverse = true;
+	        }
+	        fixedProps = {
+	          x: fixed.x,
+	          y: fixed.y,
+	          w: 90,
+	          h: 26
+	        };
+	        activeProps = {
+	          x: active.x,
+	          y: active.y,
+	          w: 90,
+	          h: 26
+	        };
+	        if (active.x > fixed.x && active.y > fixed.y) {
+	          points.push({
+	            x: active.x,
+	            y: fixed.y
+	          });
+	        } else if (active.x > fixed.x && activeProps.x > fixed.x) {
+	          x;
+	          if (activeProps.x - fixed.x < minDistance * 2) {
+	            x = fixed.x + (activeProps.x - fixed.x) / 2;
+	          } else {
+	            x = fixed.x + minDistance;
+	          }
+	          y = active.y - minDistance;
+	          points.push({
+	            x: x,
+	            y: fixed.y
+	          });
+	          points.push({
+	            x: x,
+	            y: y
+	          });
+	          points.push({
+	            x: active.x,
+	            y: y
+	          });
+	        } else if (active.x <= fixed.x && active.y > fixedProps.y + fixedProps.h) {
+	          fixedBottom = fixedProps.y + fixedProps.h;
+	          x = fixed.x + minDistance;
+	          y;
+	          if (active.y - fixedBottom < minDistance * 2) {
+	            y = fixedBottom + (active.y - fixedBottom) / 2;
+	          } else {
+	            y = active.y - minDistance;
+	          }
+	          points.push({
+	            x: x,
+	            y: fixed.y
+	          });
+	          points.push({
+	            x: x,
+	            y: y
+	          });
+	          points.push({
+	            x: active.x,
+	            y: y
+	          });
+	        } else {
+	          x;
+	          activeRight = activeProps.x + activeProps.w;
+	          if (activeRight > fixed.x) {
+	            x = activeRight + minDistance;
+	          } else {
+	            x = fixed.x + minDistance;
+	          }
+	          y;
+	          if (active.y < fixedProps.y) {
+	            y = active.y - minDistance;
+	          } else {
+	            y = fixedProps.y - minDistance;
+	          }
+	          points.push({
+	            x: x,
+	            y: fixed.y
+	          });
+	          points.push({
+	            x: x,
+	            y: y
+	          });
+	          points.push({
+	            x: active.x,
+	            y: y
+	          });
+	        }
+	      } else if ((fromDir === 1 && toDir === 4) || (fromDir === 4 && toDir === 1)) {
+	        if (fromDir === 4) {
+	          fixed = from;
+	          active = to;
+	          reverse = false;
+	        } else {
+	          fixed = to;
+	          active = from;
+	          reverse = true;
+	        }
+	        fixedProps = {
+	          x: fixed.x,
+	          y: fixed.y,
+	          w: 90,
+	          h: 26
+	        };
+	        activeProps = {
+	          x: active.x,
+	          y: active.y,
+	          w: 90,
+	          h: 26
+	        };
+	        activeRight = activeProps.x + activeProps.w;
+	        if (active.x < fixed.x && active.y > fixed.y) {
+	          points.push({
+	            x: active.x,
+	            y: fixed.y
+	          });
+	        } else if (active.x < fixed.x && activeRight < fixed.x) {
+	          x;
+	          if (fixed.x - activeRight < minDistance * 2) {
+	            x = activeRight + (fixed.x - activeRight) / 2;
+	          } else {
+	            x = fixed.x - minDistance;
+	          }
+	          y = active.y - minDistance;
+	          points.push({
+	            x: x,
+	            y: fixed.y
+	          });
+	          points.push({
+	            x: x,
+	            y: y
+	          });
+	          points.push({
+	            x: active.x,
+	            y: y
+	          });
+	        } else if (active.x >= fixed.x && active.y > fixedProps.y + fixedProps.h) {
+	          fixedBottom = fixedProps.y + fixedProps.h;
+	          x = fixed.x - minDistance;
+	          y;
+	          if (active.y - fixedBottom < minDistance * 2) {
+	            y = fixedBottom + (active.y - fixedBottom) / 2;
+	          } else {
+	            y = active.y - minDistance;
+	          }
+	          points.push({
+	            x: x,
+	            y: fixed.y
+	          });
+	          points.push({
+	            x: x,
+	            y: y
+	          });
+	          points.push({
+	            x: active.x,
+	            y: y
+	          });
+	        } else {
+	          x;
+	          if (activeProps.x < fixed.x) {
+	            x = activeProps.x - minDistance;
+	          } else {
+	            x = fixed.x - minDistance;
+	          }
+	          y;
+	          if (active.y < fixedProps.y) {
+	            y = active.y - minDistance;
+	          } else {
+	            y = fixedProps.y - minDistance;
+	          }
+	          points.push({
+	            x: x,
+	            y: fixed.y
+	          });
+	          points.push({
+	            x: x,
+	            y: y
+	          });
+	          points.push({
+	            x: active.x,
+	            y: y
+	          });
+	        }
+	      } else if ((fromDir === 2 && toDir === 3) || (fromDir === 3 && toDir === 2)) {
+	        if (fromDir === 2) {
+	          fixed = from;
+	          active = to;
+	          reverse = false;
+	        } else {
+	          fixed = to;
+	          active = from;
+	          reverse = true;
+	        }
+	        fixedProps = {
+	          x: fixed.x,
+	          y: fixed.y,
+	          w: 90,
+	          h: 26
+	        };
+	        activeProps = {
+	          x: active.x,
+	          y: active.y,
+	          w: 90,
+	          h: 26
+	        };
+	        if (active.x > fixed.x && active.y < fixed.y) {
+	          points.push({
+	            x: active.x,
+	            y: fixed.y
+	          });
+	        } else if (active.x > fixed.x && activeProps.x > fixed.x) {
+	          x;
+	          if (activeProps.x - fixed.x < minDistance * 2) {
+	            x = fixed.x + (activeProps.x - fixed.x) / 2;
+	          } else {
+	            x = fixed.x + minDistance;
+	          }
+	          y = active.y + minDistance;
+	          points.push({
+	            x: x,
+	            y: fixed.y
+	          });
+	          points.push({
+	            x: x,
+	            y: y
+	          });
+	          points.push({
+	            x: active.x,
+	            y: y
+	          });
+	        } else if (active.x <= fixed.x && active.y < fixedProps.y) {
+	          x = fixed.x + minDistance;
+	          y;
+	          if (fixedProps.y - active.y < minDistance * 2) {
+	            y = active.y + (fixedProps.y - active.y) / 2;
+	          } else {
+	            y = active.y + minDistance;
+	          }
+	          points.push({
+	            x: x,
+	            y: fixed.y
+	          });
+	          points.push({
+	            x: x,
+	            y: y
+	          });
+	          points.push({
+	            x: active.x,
+	            y: y
+	          });
+	        } else {
+	          x;
+	          activeRight = activeProps.x + activeProps.w;
+	          if (activeRight > fixed.x) {
+	            x = activeRight + minDistance;
+	          } else {
+	            x = fixed.x + minDistance;
+	          }
+	          y;
+	          if (active.y > fixedProps.y + fixedProps.h) {
+	            y = active.y + minDistance;
+	          } else {
+	            y = fixedProps.y + fixedProps.h + minDistance;
+	          }
+	          points.push({
+	            x: x,
+	            y: fixed.y
+	          });
+	          points.push({
+	            x: x,
+	            y: y
+	          });
+	          points.push({
+	            x: active.x,
+	            y: y
+	          });
+	        }
+	      } else if ((fromDir === 3 && toDir === 4) || (fromDir === 4 && toDir === 3)) {
+	        if (fromDir === 4) {
+	          fixed = from;
+	          active = to;
+	          reverse = false;
+	        } else {
+	          fixed = to;
+	          active = from;
+	          reverse = true;
+	        }
+	        fixedProps = {
+	          x: fixed.x,
+	          y: fixed.y,
+	          w: 90,
+	          h: 26
+	        };
+	        activeProps = {
+	          x: active.x,
+	          y: active.y,
+	          w: 90,
+	          h: 26
+	        };
+	        activeRight = activeProps.x + activeProps.w;
+	        if (active.x < fixed.x && active.y < fixed.y) {
+	          points.push({
+	            x: active.x,
+	            y: fixed.y
+	          });
+	        } else if (active.x < fixed.x && activeRight < fixed.x) {
+	          x;
+	          if (fixed.x - activeRight < minDistance * 2) {
+	            x = activeRight + (fixed.x - activeRight) / 2;
+	          } else {
+	            x = fixed.x - minDistance;
+	          }
+	          y = active.y + minDistance;
+	          points.push({
+	            x: x,
+	            y: fixed.y
+	          });
+	          points.push({
+	            x: x,
+	            y: y
+	          });
+	          points.push({
+	            x: active.x,
+	            y: y
+	          });
+	        } else if (active.x >= fixed.x && active.y < fixedProps.y) {
+	          x = fixed.x - minDistance;
+	          y;
+	          if (fixedProps.y - active.y < minDistance * 2) {
+	            y = active.y + (fixedProps.y - active.y) / 2;
+	          } else {
+	            y = active.y + minDistance;
+	          }
+	          points.push({
+	            x: x,
+	            y: fixed.y
+	          });
+	          points.push({
+	            x: x,
+	            y: y
+	          });
+	          points.push({
+	            x: active.x,
+	            y: y
+	          });
+	        } else {
+	          x;
+	          if (activeProps.x < fixed.x) {
+	            x = activeProps.x - minDistance;
+	          } else {
+	            x = fixed.x - minDistance;
+	          }
+	          y;
+	          if (active.y > fixedProps.y + fixedProps.h) {
+	            y = active.y + minDistance;
+	          } else {
+	            y = fixedProps.y + fixedProps.h + minDistance;
+	          }
+	          points.push({
+	            x: x,
+	            y: fixed.y
+	          });
+	          points.push({
+	            x: x,
+	            y: y
+	          });
+	          points.push({
+	            x: active.x,
+	            y: y
+	          });
+	        }
+	      }
+	      if (reverse) {
+	        return points.reverse();
+	      }
 	    } else if (from.id || to.id) {
 	      fixed = null;
 	      active = null;

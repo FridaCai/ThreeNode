@@ -74,13 +74,30 @@ class ShapeNodeView extends Backbone.View
 
     # Add other dynamic classes
     @$el.addClass("node-" + @model.typename())
+    @$el.data('nodeId', @model.get('id'))
     @addHandlerListener()
+
+  getAngleByDir: (dir)->
+    angle = 0
+    switch dir
+      when "up" then angle = 1 / 2
+      when "down" then angle = 3 / 2 
+      when "left" then angle = 0
+      when "right" then angle = 1
+    angle *= Math.PI
+    return angle
 
   addHandlerListener: ()->
     self = this
     linker = null
     from = null
     now = null
+
+    ofx = $("#container-wrapper").scrollLeft()
+    ofy = $("#container-wrapper").scrollTop()
+    offset =
+      left: self.model.get("x")
+      top: self.model.get("y")
 
     $('.handler', @$el).draggable
       helper: () ->
@@ -92,23 +109,9 @@ class ShapeNodeView extends Backbone.View
         top: 0
       start: (event, ui) ->
         dir = $(this).data('attr')
-        angle = 0
-
-        switch dir
-          when "up" then angle = 1 / 2
-          when "down" then angle = 3 / 2 
-          when "left" then angle = 0
-          when "right" then angle = 1
-        
-        angle *= Math.PI
-
+        angle = self.getAngleByDir(dir)
         _from = $(this).position()
         _now = ui.position
-        ofx = $("#container-wrapper").scrollLeft()
-        ofy = $("#container-wrapper").scrollTop()
-        offset =
-            left: self.model.get("x")
-            top: self.model.get("y")
 
         from = {
           x: _from.left + offset.left + 2
@@ -120,41 +123,50 @@ class ShapeNodeView extends Backbone.View
           x: _now.left + offset.left + ofx
           y: _now.top + offset.top + ofy
         }
-        
         linker = new Linker({
           from, 
           to: now
-        })
-        
-
-      stop: (event, ui) ->
-        if(Math.abs(now.x - from.x) > 20 || Math.abs(now.y - from.y) > 20)
-          core.linkers.add(linker)
-        else
-          Linker.removeLinker(linker)
-          
-
-
-
-        
+        })  
       drag: (event, ui) ->
         _now = ui.position
-        ofx = $("#container-wrapper").scrollLeft()
-        ofy = $("#container-wrapper").scrollTop()
-        offset =
-            left: self.model.get("x")
-            top: self.model.get("y")
         now = {
           x: _now.left + offset.left + ofx
           y: _now.top + offset.top + ofy
         }
         Linker.moveLinker(linker, 'to', now.x, now.y)
+      stop: (event, ui) ->
+        if($(event.toElement).hasClass('handler'))
+          handler = event.toElement
+          dir = $(handler).data('attr')
+          nodeId = $(handler).parent().data('nodeId') # add nodeId to ui element
+
+          _now = ui.position
+          now = {
+            x: _now.left + offset.left + ofx
+            y: _now.top + offset.top + ofy
+          }
+          # to: x, y, id, angle
+          linker.set('to', {
+            x: now.x
+            y: now.y
+            id: nodeId
+            angle: self.getAngleByDir(dir)
+          })
+          Linker.render(linker, true)
+          core.linkers.add(linker)
+        else
+          if(Math.abs(now.x - from.x) > 20 || Math.abs(now.y - from.y) > 20)
+            core.linkers.add(linker)
+          else
+            Linker.removeLinker(linker)
 
     $(".handler", @$el).droppable
       accept: '.handler'
       activeClass: "ui-state-active"
       hoverClass: "ui-state-hover"
       tolerance: "pointer"
+
+
       drop: (event, ui) ->
         self.model.trigger("connection:create", {
           from: $(ui.draggable).parent().data('object')
