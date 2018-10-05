@@ -1161,7 +1161,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	      }
 	      if (reverse) {
-	        return points.reverse();
+	        points.reverse();
 	      }
 	    } else if (from.id || to.id) {
 	      fixed = null;
@@ -1611,8 +1611,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	          }
 	        }
 	      }
-	      return points;
 	    }
+	    return points;
 	  };
 	
 	  Linker.removeLinker = function(linker) {
@@ -1888,12 +1888,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    linker = null;
 	    from = null;
 	    now = null;
-	    ofx = $("#container-wrapper").scrollLeft();
-	    ofy = $("#container-wrapper").scrollTop();
-	    offset = {
-	      left: self.model.get("x"),
-	      top: self.model.get("y")
-	    };
+	    offset = null;
+	    ofx = 0;
+	    ofy = 0;
 	    $('.handler', this.$el).draggable({
 	      helper: function() {
 	        return $("<div class='ui-widget-drag-helper'></div>");
@@ -1906,6 +1903,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      },
 	      start: function(event, ui) {
 	        var _from, _now, angle, dir;
+	        ofx = $("#container-wrapper").scrollLeft();
+	        ofy = $("#container-wrapper").scrollTop();
+	        offset = {
+	          left: self.model.get("x"),
+	          top: self.model.get("y")
+	        };
 	        dir = $(this).data('attr');
 	        angle = self.getAngleByDir(dir);
 	        _from = $(this).position();

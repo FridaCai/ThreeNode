@@ -1968,7 +1968,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	      }
 	      if (reverse) {
-	        return points.reverse();
+	        points.reverse();
 	      }
 	    } else if (from.id || to.id) {
 	      fixed = null;
@@ -2418,8 +2418,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	          }
 	        }
 	      }
-	      return points;
 	    }
+	    return points;
 	  };
 	
 	  Linker.removeLinker = function(linker) {

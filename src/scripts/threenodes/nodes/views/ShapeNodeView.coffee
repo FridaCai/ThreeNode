@@ -92,12 +92,10 @@ class ShapeNodeView extends Backbone.View
     linker = null
     from = null
     now = null
-
-    ofx = $("#container-wrapper").scrollLeft()
-    ofy = $("#container-wrapper").scrollTop()
-    offset =
-      left: self.model.get("x")
-      top: self.model.get("y")
+    offset = null
+    ofx = 0
+    ofy = 0
+    
 
     $('.handler', @$el).draggable
       helper: () ->
@@ -108,6 +106,12 @@ class ShapeNodeView extends Backbone.View
         left: 0
         top: 0
       start: (event, ui) ->
+        ofx = $("#container-wrapper").scrollLeft()
+        ofy = $("#container-wrapper").scrollTop()
+        offset =
+          left: self.model.get("x")
+          top: self.model.get("y")
+
         dir = $(this).data('attr')
         angle = self.getAngleByDir(dir)
         _from = $(this).position()

@@ -199,8 +199,6 @@ class Linker extends Backbone.Model
 			fromDir = Linker.getAngleDir(from.angle); #起点方向
 			toDir = Linker.getAngleDir(to.angle); #终点方向
 			
-
-
 			
 			fixed = null;
 			active = null;
@@ -213,8 +211,6 @@ class Linker extends Backbone.Model
 					fixed = from;
 					active = to;
 					reverse = false;
-
-					
 				else
 					fixed = to;
 					active = from;
@@ -274,8 +270,6 @@ class Linker extends Backbone.Model
 					h: 26
 				}
 
-
-
 				if(active.x >= fixedProps.x - minDistance && active.x <= fixedProps.x + fixedProps.w + minDistance)
 					y = fixed.y + minDistance;
 					x;
@@ -304,8 +298,6 @@ class Linker extends Backbone.Model
 					fixed = to;
 					active = from;
 					reverse = true;
-				
-
 				
 				if(active.y >= fixedProps.y - minDistance && active.y <= fixedProps.y + fixedProps.h + minDistance)
 					x = fixed.x + minDistance;
@@ -750,14 +742,6 @@ class Linker extends Backbone.Model
 				points.reverse();
 			
 
-
-
-
-
-
-
-
-
 		else if(from.id || to.id)
 			#只有起点或终点连接了形状
 			#连接了形状的端点被认为是固定点，另一点被认为是活动的点
@@ -939,8 +923,6 @@ class Linker extends Backbone.Model
 									points.push({x: active.x, y: active.y + minDistance});
 						else
 							points.push({x: active.x, y: fixed.y + minDistance});
-			
-			
 			else
 				#起点角度为向左
 				if(active.x < fixed.x)
@@ -983,18 +965,7 @@ class Linker extends Backbone.Model
 								points.push({x: fixed.x - minDistance, y: active.y - minDistance});
 								points.push({x: active.x, y: active.y - minDistance});
 			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			return points;
+		return points;
 	@removeLinker: (linker)=>
 		$("#" + linker.id).remove();
 module.exports = Linker
