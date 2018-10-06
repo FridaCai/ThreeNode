@@ -133,11 +133,29 @@ class ShapeNodeView extends Backbone.View
         })  
       drag: (event, ui) ->
         _now = ui.position
-        now = {
+        linkerTo = {
           x: _now.left + offset.left + ofx
           y: _now.top + offset.top + ofy
         }
-        Linker.moveLinker(linker, 'to', now.x, now.y)
+        
+        if($(event.toElement).hasClass('handler'))
+          handler = event.toElement
+          dir = $(handler).data('attr')
+          nodeId = $(handler).parent().data('nodeId')
+          linkerTo.id = nodeId;
+          linkerTo.angle = self.getAngleByDir(dir)
+
+        linker.set('to', linkerTo)
+        Linker.moveLinker(linker, 'to', linkerTo.x, linkerTo.y)
+
+
+
+
+
+
+
+
+
       stop: (event, ui) ->
         if($(event.toElement).hasClass('handler'))
           handler = event.toElement
@@ -164,21 +182,6 @@ class ShapeNodeView extends Backbone.View
           else
             Linker.removeLinker(linker)
 
-    $(".handler", @$el).droppable
-      accept: '.handler'
-      activeClass: "ui-state-active"
-      hoverClass: "ui-state-hover"
-      tolerance: "pointer"
-
-
-      drop: (event, ui) ->
-        self.model.trigger("connection:create", {
-          from: $(ui.draggable).parent().data('object')
-          fromType: $(ui.draggable).attr('data-attr')
-          to: self.model
-          toType: $(@).attr('data-attr')
-        })
-        return this
   render: () =>
     @$el.css
       left: parseInt @model.get("x")

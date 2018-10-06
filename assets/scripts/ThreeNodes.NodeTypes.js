@@ -251,20 +251,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  Linker.moveLinker = function(linker, point, x, y) {
-	    var from, linkedShape, newPos, to;
+	    var from, linkedTo, newPos, to;
 	    newPos = {
 	      x: x,
 	      y: y,
 	      angle: null
 	    };
-	    linkedShape = null;
-	    linker.set('to', {
-	      x: newPos.x,
-	      y: newPos.y,
-	      id: linkedShape,
-	      angle: newPos.angle
-	    });
-	    if (!linkedShape) {
+	    linkedTo = linker.get('to');
+	    if (!linkedTo) {
 	      to = linker.get('to');
 	      from = linker.get('from');
 	      if ((newPos.x < from.x - 6) || (newPos.x > from.x + 6)) {
@@ -535,6 +529,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	          active = from;
 	          reverse = true;
 	        }
+	        fixedProps = {
+	          x: fixed.x,
+	          y: fixed.y,
+	          w: 90,
+	          h: 26
+	        };
+	        activeProps = {
+	          x: active.x,
+	          y: active.y,
+	          w: 90,
+	          h: 26
+	        };
 	        if (active.y >= fixedProps.y - minDistance && active.y <= fixedProps.y + fixedProps.h + minDistance) {
 	          x = fixed.x + minDistance;
 	          y;
@@ -1891,7 +1897,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    offset = null;
 	    ofx = 0;
 	    ofy = 0;
-	    $('.handler', this.$el).draggable({
+	    return $('.handler', this.$el).draggable({
 	      helper: function() {
 	        return $("<div class='ui-widget-drag-helper'></div>");
 	      },
@@ -1929,13 +1935,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	        });
 	      },
 	      drag: function(event, ui) {
-	        var _now;
+	        var _now, dir, handler, linkerTo, nodeId;
 	        _now = ui.position;
-	        now = {
+	        linkerTo = {
 	          x: _now.left + offset.left + ofx,
 	          y: _now.top + offset.top + ofy
 	        };
-	        return Linker.moveLinker(linker, 'to', now.x, now.y);
+	        if ($(event.toElement).hasClass('handler')) {
+	          handler = event.toElement;
+	          dir = $(handler).data('attr');
+	          nodeId = $(handler).parent().data('nodeId');
+	          linkerTo.id = nodeId;
+	          linkerTo.angle = self.getAngleByDir(dir);
+	        }
+	        linker.set('to', linkerTo);
+	        return Linker.moveLinker(linker, 'to', linkerTo.x, linkerTo.y);
 	      },
 	      stop: function(event, ui) {
 	        var _now, dir, handler, nodeId;
@@ -1963,21 +1977,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return Linker.removeLinker(linker);
 	          }
 	        }
-	      }
-	    });
-	    return $(".handler", this.$el).droppable({
-	      accept: '.handler',
-	      activeClass: "ui-state-active",
-	      hoverClass: "ui-state-hover",
-	      tolerance: "pointer",
-	      drop: function(event, ui) {
-	        self.model.trigger("connection:create", {
-	          from: $(ui.draggable).parent().data('object'),
-	          fromType: $(ui.draggable).attr('data-attr'),
-	          to: self.model,
-	          toType: $(this).attr('data-attr')
-	        });
-	        return this;
 	      }
 	    });
 	  };

@@ -1058,20 +1058,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  Linker.moveLinker = function(linker, point, x, y) {
-	    var from, linkedShape, newPos, to;
+	    var from, linkedTo, newPos, to;
 	    newPos = {
 	      x: x,
 	      y: y,
 	      angle: null
 	    };
-	    linkedShape = null;
-	    linker.set('to', {
-	      x: newPos.x,
-	      y: newPos.y,
-	      id: linkedShape,
-	      angle: newPos.angle
-	    });
-	    if (!linkedShape) {
+	    linkedTo = linker.get('to');
+	    if (!linkedTo) {
 	      to = linker.get('to');
 	      from = linker.get('from');
 	      if ((newPos.x < from.x - 6) || (newPos.x > from.x + 6)) {
@@ -1342,6 +1336,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	          active = from;
 	          reverse = true;
 	        }
+	        fixedProps = {
+	          x: fixed.x,
+	          y: fixed.y,
+	          w: 90,
+	          h: 26
+	        };
+	        activeProps = {
+	          x: active.x,
+	          y: active.y,
+	          w: 90,
+	          h: 26
+	        };
 	        if (active.y >= fixedProps.y - minDistance && active.y <= fixedProps.y + fixedProps.h + minDistance) {
 	          x = fixed.x + minDistance;
 	          y;

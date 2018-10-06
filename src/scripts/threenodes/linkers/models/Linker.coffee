@@ -41,15 +41,9 @@ class Linker extends Backbone.Model
 		  y: y 
 		  angle: null
 		}
-		linkedShape = null
-		linker.set('to', {
-			x: newPos.x
-			y: newPos.y
-			id: linkedShape
-			angle: newPos.angle
-		})
-
-		if(!linkedShape)
+		linkedTo = linker.get('to')
+	
+		if(!linkedTo)
 			to = linker.get('to')
 			from = linker.get('from')
 
@@ -298,6 +292,19 @@ class Linker extends Backbone.Model
 					fixed = to;
 					active = from;
 					reverse = true;
+
+				fixedProps = {
+					x: fixed.x
+					y: fixed.y
+					w: 90
+					h: 26
+				}
+				activeProps = {
+					x: active.x
+					y: active.y
+					w: 90
+					h: 26
+				}
 				
 				if(active.y >= fixedProps.y - minDistance && active.y <= fixedProps.y + fixedProps.h + minDistance)
 					x = fixed.x + minDistance;
