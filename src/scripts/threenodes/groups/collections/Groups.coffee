@@ -1,6 +1,5 @@
 _ = require 'Underscore'
 Backbone = require 'Backbone'
-Group = require '../models/Group'
 
 class Groups extends Backbone.Collection
 
