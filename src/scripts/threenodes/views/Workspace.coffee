@@ -3,6 +3,7 @@ _ = require 'Underscore'
 Backbone = require 'Backbone'
 ConnectionView = require 'threenodes/connections/views/ConnectionView'
 GroupView = require 'threenodes/groups/views/Group'
+LinkerView = require 'threenodes/linkers/views/Linker'
 require 'jquery.ui'
 
 
@@ -65,6 +66,13 @@ class Workspace extends Backbone.View
     # Save the id and model in the data attribute
     view.$el.data("id", node.get("id"))
     view.$el.data("object", node)
+    @views.push(view)
+
+  renderLinker: (linker) =>
+    $linkerEl = $("<div class='linker'></div>").appendTo(@$el)
+    view = new LinkerView
+      model: linker
+      el: $linkerEl
     @views.push(view)
 
   renderConnection: (connection) =>

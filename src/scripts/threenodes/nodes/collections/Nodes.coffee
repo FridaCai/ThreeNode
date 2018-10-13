@@ -7,7 +7,7 @@ class Nodes extends Backbone.Collection
     self = this
 
     @bind "node:removed", (node)=>
-      @.remove(node)
+      @remove(node)
       @trigger "connections:removed", node
 
       

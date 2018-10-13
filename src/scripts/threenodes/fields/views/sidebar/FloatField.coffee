@@ -12,7 +12,6 @@ class FloatField extends BaseField
 
   render: () =>
     $target = @createSidebarContainer()
-    #console.log @model
     if @model.attributes.possibilities
       @create_sidebar_select($target)
     else

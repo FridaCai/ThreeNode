@@ -14,7 +14,6 @@ class BoolField extends BaseField
       @$checkbox.removeAttr('checked')
 
   render: () =>
-    console.log "check.."
     $target = @createSidebarContainer()
     id = "side-field-checkbox-#{@model.get('fid')}"
     $container = $("<div><input type='checkbox' id='#{id}'/></div>").appendTo($target)

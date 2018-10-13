@@ -28,145 +28,30 @@ class Linker extends Backbone.Model
 
 	initialize: (model, param)=>
 		super
+		self = @
+
 		# id = obj.id || indexer.getUID() 
 		id = indexer.getUID()
 		@set('id', id)
 
-	# linker: target to move
-	# point: to/from
-	# x, y: position to move
-	@moveLinker: (linker, point, x, y) => 
-		newPos = {
-		  x: x
-		  y: y 
-		  angle: null
-		}
-		linkedTo = linker.get('to')
-	
-		if(!linkedTo)
-			to = linker.get('to')
-			from = linker.get('from')
-
-			if((newPos.x < from.x - 6) || (newPos.x > from.x + 6))
-			else
-				to.x = from.x
+		@on("change:from change:to", (model, from, to)=>
+			@set('points', @getLinkerPoints())
 			
-			if(newPos.y < from.y - 6 || newPos.y > from.y + 6)
-			else
-				to.y = from.y;
-			
-			linker.to= to
-		
-		Linker.render(linker, true)
-	
+			# if(!@get('to').id)
+			# 	to = @get('to')
+			# 	from = @get('from')
 
+			# 	if(to.x < from.x - 6 || to.x > from.x + 6)
+			# 	else
+			# 		to.x = from.x
 
-	@render: (linker, pointChanged) => 
-		if(pointChanged)
-			linker.set('points', Linker.getLinkerPoints(linker))
+			# 	if(to.y < from.y - 6 || to.y > from.y + 6)
+			# 	else
+			# 		to.y = from.y;
+			# 	@set('to', to) # will cause endless loop?
+		)
 
-		box = Linker.calcBox(linker)
-
-		linkerBox = $("#" + linker.id);
-		if(linkerBox.length == 0)
-			superCanvas = $("#graph");
-			linkerBox = $("<div id='"+linker.id+"' class='shape_box linker_box'><canvas class='shape_canvas'></canvas></div>").appendTo(superCanvas);
-		
-
-
-		linkerCanvas = linkerBox.find(".shape_canvas");
-		linkerCanvas.attr({
-			width: (box.w + 20)
-			height: (box.h + 20)
-		});
-		linkerBox.css({
-			position: 'absolute'
-			left: (box.x - 10),
-			top: (box.y - 10),
-			width: (box.w + 20),
-			height: (box.h + 20)
-		});
-		ctx = linkerCanvas[0].getContext("2d");
-		# ctx.scale(Designer.config.scale, Designer.config.scale);
-		ctx.translate(10, 10);
-		style = linker.get('lineStyle');
-		ctx.lineWidth = style.lineWidth;
-		ctx.strokeStyle = "rgb("+style.lineColor+")";
-		ctx.fillStyle = "rgb("+style.lineColor+")";
-		ctx.save();
-
-		from = linker.get('from');
-		to = linker.get('to')
-		begin = {x: from.x - box.x, y: from.y - box.y};
-		end = {x: to.x - box.x, y: to.y - box.y};
-		ctx.save();
-		
-		ctx.beginPath();
-		ctx.moveTo(begin.x, begin.y);
-		
-		points = linker.get('points')
-
-		for point in points
-			#如果是折线，会有折点
-			ctx.lineTo(point.x - box.x, point.y - box.y);
-		
-		ctx.lineTo(end.x, end.y);
-
-		# selected = Utils.isSelected(linker.id);
-		# if(selected)
-		# 	#如果是选中了，绘制阴影
-		# 	ctx.shadowBlur = 4;
-		# 	ctx.shadowColor = "#833";
-			
-			
-		
-		ctx.stroke();
-		ctx.restore(); #还原虚线样式和阴影
-		ctx.restore();
-	
-
-	@calcBox: (linker) => 
-		points = linker.get('points');
-		from = linker.get('from');
-		to = linker.get('to');
-		minX = to.x;
-		minY = to.y;
-		maxX = from.x;
-		maxY = from.y;
-		if(to.x < from.x)
-			minX = to.x;
-			maxX = from.x;
-		else
-			minX = from.x;
-			maxX = to.x;
-		
-		if(to.y < from.y)
-			minY = to.y;
-			maxY = from.y;
-		else
-			minY = from.y;;
-			maxY = to.y;
-
-		for point in points
-			if(point.x < minX)
-				minX = point.x;
-			else if(point.x > maxX)
-				maxX = point.x;
-			
-			if(point.y < minY)
-				minY = point.y;
-			else if(point.y > maxY)
-				maxY = point.y;
-		
-		return {
-			x: minX,
-			y: minY,
-			w: maxX - minX,
-			h: maxY - minY
-		}
-	
-
-	@getAngleDir: (angle)=>
+	getAngleDir: (angle)=>
 		pi = Math.PI;
 		if(angle >= pi / 4 && angle < pi / 4 * 3)
 			return 1;#上
@@ -177,12 +62,12 @@ class Linker extends Backbone.Model
 		else
 			return 4;#左
 
-	@getLinkerPoints: (linker)=>
+	getLinkerPoints: ()=>
 		points = [];
 
 		pi = Math.PI;
-		from = linker.get('from');
-		to = linker.get('to');
+		from = @get('from');
+		to = @get('to');
 		xDistance = Math.abs(to.x - from.x);
 		yDistance = Math.abs(to.y - from.y);
 		minDistance = 30; #最小距离，比如起点向上，终点在下方，则先要往上画minDistance的距离
@@ -190,8 +75,8 @@ class Linker extends Backbone.Model
 		if(from.id && to.id)
 
 			#起点和终点都连接了形状
-			fromDir = Linker.getAngleDir(from.angle); #起点方向
-			toDir = Linker.getAngleDir(to.angle); #终点方向
+			fromDir = @getAngleDir(from.angle); #起点方向
+			toDir = @getAngleDir(to.angle); #终点方向
 			
 			
 			fixed = null;
@@ -743,8 +628,7 @@ class Linker extends Backbone.Model
 					points.push({x: x, y: fixed.y});
 					points.push({x: x, y: y});
 					points.push({x: active.x, y: y});
-				
-			
+
 			if(reverse)
 				points.reverse();
 			
@@ -778,8 +662,6 @@ class Linker extends Backbone.Model
 				h: 26
 			}
 
-			console.log('=======angle======')
-			console.log(angle)
 			if(angle >= pi / 4 and angle < pi / 4 * 3)
 					#起点角度为向上
 					if(active.y < fixed.y)
@@ -836,11 +718,6 @@ class Linker extends Backbone.Model
 								#如果终点在x轴上的坐标，在图形范围外，此时有两个点
 								points.push({x: active.x, y: fixed.y - minDistance});
 			else if(angle >= pi / 4 * 3 && angle < pi / 4 * 5)
-				console.log('hit')
-
-
-
-
 				#起点角度为向右
 				if(active.x > fixed.x)
 					#终点在起点图形右方
@@ -973,6 +850,5 @@ class Linker extends Backbone.Model
 								points.push({x: active.x, y: active.y - minDistance});
 			
 		return points;
-	@removeLinker: (linker)=>
-		$("#" + linker.id).remove();
+
 module.exports = Linker

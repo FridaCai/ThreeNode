@@ -213,6 +213,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  extend(Linker, superClass);
 	
 	  function Linker() {
+	    this.getLinkerPoints = bind(this.getLinkerPoints, this);
+	    this.getAngleDir = bind(this.getAngleDir, this);
 	    this.initialize = bind(this.initialize, this);
 	    return Linker.__super__.constructor.apply(this, arguments);
 	  }
@@ -244,137 +246,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  Linker.prototype.initialize = function(model, param) {
-	    var id;
+	    var id, self;
 	    Linker.__super__.initialize.apply(this, arguments);
+	    self = this;
 	    id = indexer.getUID();
-	    return this.set('id', id);
+	    this.set('id', id);
+	    return this.on("change:from change:to", (function(_this) {
+	      return function(model, from, to) {
+	        return _this.set('points', _this.getLinkerPoints());
+	      };
+	    })(this));
 	  };
 	
-	  Linker.moveLinker = function(linker, point, x, y) {
-	    var from, linkedTo, newPos, to;
-	    newPos = {
-	      x: x,
-	      y: y,
-	      angle: null
-	    };
-	    linkedTo = linker.get('to');
-	    if (!linkedTo) {
-	      to = linker.get('to');
-	      from = linker.get('from');
-	      if ((newPos.x < from.x - 6) || (newPos.x > from.x + 6)) {
-	
-	      } else {
-	        to.x = from.x;
-	      }
-	      if (newPos.y < from.y - 6 || newPos.y > from.y + 6) {
-	
-	      } else {
-	        to.y = from.y;
-	      }
-	      linker.to = to;
-	    }
-	    return Linker.render(linker, true);
-	  };
-	
-	  Linker.render = function(linker, pointChanged) {
-	    var begin, box, ctx, end, from, i, len, linkerBox, linkerCanvas, point, points, style, superCanvas, to;
-	    if (pointChanged) {
-	      linker.set('points', Linker.getLinkerPoints(linker));
-	    }
-	    box = Linker.calcBox(linker);
-	    linkerBox = $("#" + linker.id);
-	    if (linkerBox.length === 0) {
-	      superCanvas = $("#graph");
-	      linkerBox = $("<div id='" + linker.id + "' class='shape_box linker_box'><canvas class='shape_canvas'></canvas></div>").appendTo(superCanvas);
-	    }
-	    linkerCanvas = linkerBox.find(".shape_canvas");
-	    linkerCanvas.attr({
-	      width: box.w + 20,
-	      height: box.h + 20
-	    });
-	    linkerBox.css({
-	      position: 'absolute',
-	      left: box.x - 10,
-	      top: box.y - 10,
-	      width: box.w + 20,
-	      height: box.h + 20
-	    });
-	    ctx = linkerCanvas[0].getContext("2d");
-	    ctx.translate(10, 10);
-	    style = linker.get('lineStyle');
-	    ctx.lineWidth = style.lineWidth;
-	    ctx.strokeStyle = "rgb(" + style.lineColor + ")";
-	    ctx.fillStyle = "rgb(" + style.lineColor + ")";
-	    ctx.save();
-	    from = linker.get('from');
-	    to = linker.get('to');
-	    begin = {
-	      x: from.x - box.x,
-	      y: from.y - box.y
-	    };
-	    end = {
-	      x: to.x - box.x,
-	      y: to.y - box.y
-	    };
-	    ctx.save();
-	    ctx.beginPath();
-	    ctx.moveTo(begin.x, begin.y);
-	    points = linker.get('points');
-	    for (i = 0, len = points.length; i < len; i++) {
-	      point = points[i];
-	      ctx.lineTo(point.x - box.x, point.y - box.y);
-	    }
-	    ctx.lineTo(end.x, end.y);
-	    ctx.stroke();
-	    ctx.restore();
-	    return ctx.restore();
-	  };
-	
-	  Linker.calcBox = function(linker) {
-	    var from, i, len, maxX, maxY, minX, minY, point, points, to;
-	    points = linker.get('points');
-	    from = linker.get('from');
-	    to = linker.get('to');
-	    minX = to.x;
-	    minY = to.y;
-	    maxX = from.x;
-	    maxY = from.y;
-	    if (to.x < from.x) {
-	      minX = to.x;
-	      maxX = from.x;
-	    } else {
-	      minX = from.x;
-	      maxX = to.x;
-	    }
-	    if (to.y < from.y) {
-	      minY = to.y;
-	      maxY = from.y;
-	    } else {
-	      minY = from.y;
-	      maxY = to.y;
-	    }
-	    for (i = 0, len = points.length; i < len; i++) {
-	      point = points[i];
-	      if (point.x < minX) {
-	        minX = point.x;
-	      } else if (point.x > maxX) {
-	        maxX = point.x;
-	      }
-	      if (point.y < minY) {
-	        minY = point.y;
-	      } else if (point.y > maxY) {
-	        maxY = point.y;
-	      }
-	    }
-	    return {
-	      x: minX,
-	      y: minY,
-	      w: maxX - minX,
-	      h: maxY - minY
-	    };
-	  };
-	
-	  Linker.getAngleDir = function(angle) {
+	  Linker.prototype.getAngleDir = function(angle) {
 	    var pi;
 	    pi = Math.PI;
 	    if (angle >= pi / 4 && angle < pi / 4 * 3) {
@@ -388,18 +272,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  };
 	
-	  Linker.getLinkerPoints = function(linker) {
+	  Linker.prototype.getLinkerPoints = function() {
 	    var active, activeBottom, activeProps, activeRight, angle, fixed, fixedBottom, fixedProps, fixedRight, from, fromDir, half, minDistance, pi, points, props, ref, ref1, ref2, ref3, reverse, shapeHalf, to, toDir, x, xDistance, y, yDistance;
 	    points = [];
 	    pi = Math.PI;
-	    from = linker.get('from');
-	    to = linker.get('to');
+	    from = this.get('from');
+	    to = this.get('to');
 	    xDistance = Math.abs(to.x - from.x);
 	    yDistance = Math.abs(to.y - from.y);
 	    minDistance = 30;
 	    if (from.id && to.id) {
-	      fromDir = Linker.getAngleDir(from.angle);
-	      toDir = Linker.getAngleDir(to.angle);
+	      fromDir = this.getAngleDir(from.angle);
+	      toDir = this.getAngleDir(to.angle);
 	      fixed = null;
 	      active = null;
 	      reverse = null;
@@ -1191,8 +1075,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        w: 90,
 	        h: 26
 	      };
-	      console.log('=======angle======');
-	      console.log(angle);
 	      if (angle >= pi / 4 && angle < pi / 4 * 3) {
 	        if (active.y < fixed.y) {
 	          if (xDistance >= yDistance) {
@@ -1300,7 +1182,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	          }
 	        }
 	      } else if (angle >= pi / 4 * 3 && angle < pi / 4 * 5) {
-	        console.log('hit');
 	        if (active.x > fixed.x) {
 	          if (xDistance >= yDistance) {
 	            half = xDistance / 2;
@@ -1621,10 +1502,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return points;
 	  };
 	
-	  Linker.removeLinker = function(linker) {
-	    return $("#" + linker.id).remove();
-	  };
-	
 	  return Linker;
 	
 	})(Backbone.Model);
@@ -1929,10 +1806,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	          x: _now.left + offset.left + ofx,
 	          y: _now.top + offset.top + ofy
 	        };
-	        return linker = new Linker({
+	        linker = new Linker({
 	          from: from,
 	          to: now
 	        });
+	        return core.linkers.add(linker);
 	      },
 	      drag: function(event, ui) {
 	        var _now, dir, handler, linkerTo, nodeId;
@@ -1948,33 +1826,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	          linkerTo.id = nodeId;
 	          linkerTo.angle = self.getAngleByDir(dir);
 	        }
-	        linker.set('to', linkerTo);
-	        return Linker.moveLinker(linker, 'to', linkerTo.x, linkerTo.y);
+	        return linker.set('to', linkerTo);
 	      },
 	      stop: function(event, ui) {
 	        var _now, dir, handler, nodeId;
+	        _now = ui.position;
+	        now = {
+	          x: _now.left + offset.left + ofx,
+	          y: _now.top + offset.top + ofy
+	        };
 	        if ($(event.toElement).hasClass('handler')) {
 	          handler = event.toElement;
 	          dir = $(handler).data('attr');
 	          nodeId = $(handler).parent().data('nodeId');
-	          _now = ui.position;
-	          now = {
-	            x: _now.left + offset.left + ofx,
-	            y: _now.top + offset.top + ofy
-	          };
-	          linker.set('to', {
+	          return linker.set('to', {
 	            x: now.x,
 	            y: now.y,
 	            id: nodeId,
 	            angle: self.getAngleByDir(dir)
 	          });
-	          Linker.render(linker, true);
-	          return core.linkers.add(linker);
 	        } else {
 	          if (Math.abs(now.x - from.x) > 20 || Math.abs(now.y - from.y) > 20) {
-	            return core.linkers.add(linker);
+	
 	          } else {
-	            return Linker.removeLinker(linker);
+	            return core.linkers.remove(linker);
 	          }
 	        }
 	      }
@@ -2003,20 +1878,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	    linkers = core.linkers.getLinkersByShapeId(this.model.id);
 	    return linkers.map((function(_this) {
 	      return function(linker) {
-	        var from, to;
+	        var from, newFrom, newTo, to;
 	        from = linker.get('from');
+	        newFrom = {
+	          x: from.x,
+	          y: from.y,
+	          id: from.id,
+	          angle: from.angle
+	        };
 	        if (from.id === _this.model.id) {
-	          from.x += offset.x;
-	          from.y += offset.y;
-	          linker.set('from', from);
+	          newFrom.x += offset.x;
+	          newFrom.y += offset.y;
+	          linker.set('from', newFrom);
 	        }
 	        to = linker.get('to');
+	        newTo = {
+	          x: to.x,
+	          y: to.y,
+	          id: to.id,
+	          angle: to.angle
+	        };
 	        if (to.id === _this.model.id) {
-	          to.x += offset.x;
-	          to.y += offset.y;
-	          linker.set('to', to);
+	          newTo.x += offset.x;
+	          newTo.y += offset.y;
+	          return linker.set('to', newTo);
 	        }
-	        return Linker.render(linker, true);
 	      };
 	    })(this));
 	  };
@@ -3723,7 +3609,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  BoolField.prototype.render = function() {
 	    var $container, $target, id;
-	    console.log("check..");
 	    $target = this.createSidebarContainer();
 	    id = "side-field-checkbox-" + (this.model.get('fid'));
 	    $container = $("<div><input type='checkbox' id='" + id + "'/></div>").appendTo($target);

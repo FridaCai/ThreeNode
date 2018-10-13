@@ -67,17 +67,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Workspace = __webpack_require__(106);
 	
-	AppTimeline = __webpack_require__(111);
+	AppTimeline = __webpack_require__(112);
 	
-	UrlHandler = __webpack_require__(112);
+	UrlHandler = __webpack_require__(113);
 	
-	FileHandler = __webpack_require__(113);
+	FileHandler = __webpack_require__(114);
 	
 	NodeView = __webpack_require__(40);
 	
 	NodeViewColor = __webpack_require__(46);
 	
-	NodeViewWebgl = __webpack_require__(115);
+	NodeViewWebgl = __webpack_require__(116);
 	
 	DB = __webpack_require__(12);
 	
@@ -4267,7 +4267,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var Backbone, ConnectionView, GroupView, Workspace, _,
+	var Backbone, ConnectionView, GroupView, LinkerView, Workspace, _,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	  hasProp = {}.hasOwnProperty;
@@ -4279,6 +4279,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	ConnectionView = __webpack_require__(107);
 	
 	GroupView = __webpack_require__(108);
+	
+	LinkerView = __webpack_require__(111);
 	
 	__webpack_require__(20);
 	
@@ -4292,6 +4294,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.initDrop = bind(this.initDrop, this);
 	    this.renderGroup = bind(this.renderGroup, this);
 	    this.renderConnection = bind(this.renderConnection, this);
+	    this.renderLinker = bind(this.renderLinker, this);
 	    this.renderNode = bind(this.renderNode, this);
 	    this.destroy = bind(this.destroy, this);
 	    this.render = bind(this.render, this);
@@ -4349,6 +4352,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 	    view.$el.data("id", node.get("id"));
 	    view.$el.data("object", node);
+	    return this.views.push(view);
+	  };
+	
+	  Workspace.prototype.renderLinker = function(linker) {
+	    var $linkerEl, view;
+	    $linkerEl = $("<div class='linker'></div>").appendTo(this.$el);
+	    view = new LinkerView({
+	      model: linker,
+	      el: $linkerEl
+	    });
 	    return this.views.push(view);
 	  };
 	
@@ -4896,6 +4909,299 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
+	var Backbond, Linker,
+	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	  hasProp = {}.hasOwnProperty;
+	
+	Backbond = __webpack_require__(3);
+	
+	Linker = (function(superClass) {
+	  extend(Linker, superClass);
+	
+	  function Linker() {
+	    this.addEventListener = bind(this.addEventListener, this);
+	    return Linker.__super__.constructor.apply(this, arguments);
+	  }
+	
+	  Linker.prototype.initialize = function(options) {
+	    this.render();
+	    this.addEventListener();
+	    this.model.on('change', this.render);
+	    return this.model.on('remove', (function(_this) {
+	      return function() {
+	        return _this.remove();
+	      };
+	    })(this));
+	  };
+	
+	  Linker.prototype.addEventListener = function() {
+	    var self;
+	    self = this;
+	    $(this.el).find('canvas').click(function(e) {});
+	    $(this.el).find('canvas').mousedown(function(e) {
+	      var isHit, x, y;
+	      console.log(e);
+	      x = e.offsetX;
+	      y = e.offsetY;
+	      isHit = self.isHit(x, y);
+	      return console.log(isHit);
+	    });
+	    $(this.el).find('canvas').mouseup(function(e) {});
+	    return $(this.el).find('canvas').mousemove(function(e) {
+	      return console.log('canvas mousemove');
+	    });
+	  };
+	
+	  return Linker;
+	
+	})(Backbone.View);
+	
+	({
+	  getLinkerLinePoints: function() {
+	    var points;
+	    points = [];
+	    points.push(linker.get('from'));
+	    points = points.concat(this.model.get('points'));
+	    points.push(linker.get('to'));
+	    return points;
+	  },
+	  pointInLinker: function(point, linker, radius) {
+	    var cross, i, len, linex1, linex2, liney1, liney2, p, p1, p2, points;
+	    points = this.getLinkerLinePoints();
+	    linex1 = {
+	      x: point.x - radius,
+	      y: point.y
+	    };
+	    linex2 = {
+	      x: point.x + radius,
+	      y: point.y
+	    };
+	    liney1 = {
+	      x: point.x,
+	      y: point.y - radius
+	    };
+	    liney2 = {
+	      x: point.x,
+	      y: point.y + radius
+	    };
+	    for (i = 0, len = points.length; i < len; i++) {
+	      p = points[i];
+	      if (_i === 0) {
+	        continue;
+	      }
+	      p1 = points[_i - 1];
+	      p2 = points[_i];
+	      cross = this.checkCross(linex1, linex2, p1, p2);
+	      if (cross) {
+	        return _i;
+	      }
+	      cross = this.checkCross(liney1, liney2, p1, p2);
+	      if (cross) {
+	        return _i;
+	      }
+	    }
+	    return -1;
+	  },
+	  pointInRect: function(px, py, rect) {
+	    if (px >= rect.x && px <= rect.x + rect.w) {
+	      if (py >= rect.y && py <= rect.y + rect.h) {
+	        return true;
+	      }
+	    }
+	    return false;
+	  },
+	  checkCross: function(p1, p2, p3, p4) {
+	    var d, r, s;
+	    d = (p2.x - p1.x) * (p4.y - p3.y) - (p2.y - p1.y) * (p4.x - p3.x);
+	    if (d !== 0) {
+	      r = ((p1.y - p3.y) * (p4.x - p3.x) - (p1.x - p3.x) * (p4.y - p3.y)) / d;
+	      s = ((p1.y - p3.y) * (p2.x - p1.x) - (p1.x - p3.x) * (p2.y - p1.y)) / d;
+	      if ((r >= 0) && (r <= 1) && (s >= 0) && (s <= 1)) {
+	        return true;
+	      }
+	    }
+	    return false;
+	  },
+	  isHit: (function(_this) {
+	    return function(x, y) {
+	      var canvasRect, focusShapes, inCanvas, inLinker, radius, rect, relativeX, relativeY, result, shape, shapeBox, shapeBoxPos, shapeCanvas, shapeCtx, shapeId;
+	      focusShapes = [];
+	      shapeId = _this.model.get('id');
+	      shapeBox = $("#" + shapeId);
+	      shape = _this.model;
+	      shapeBoxPos = shapeBox.position();
+	      relativeX = x - shapeBoxPos.left;
+	      relativeY = y - shapeBoxPos.top;
+	      canvasRect = {
+	        x: shapeBoxPos.left,
+	        y: shapeBoxPos.top,
+	        w: shapeBox.width(),
+	        h: shapeBox.height()
+	      };
+	      shapeCanvas = shapeBox.find(".shape_canvas")[0];
+	      shapeCtx = shapeCanvas.getContext("2d");
+	      inCanvas = _this.pointInRect(x, y, canvasRect);
+	      if (!inCanvas) {
+	        return null;
+	      }
+	      radius = 10;
+	      rect = {
+	        x: x - radius,
+	        y: y - radius,
+	        w: radius * 2,
+	        h: radius * 2
+	      };
+	      if (_this.pointInRect(shape.get('to').x, shape.get('to').y, rect)) {
+	        result = {
+	          type: "linker_point",
+	          point: "end",
+	          shape: shape
+	        };
+	        return result;
+	      } else if (_this.pointInRect(shape.get('from').x, shape.get('from').y, rect)) {
+	        result = {
+	          type: "linker_point",
+	          point: "from",
+	          shape: shape
+	        };
+	        return result;
+	      } else {
+	        radius = 7;
+	        inLinker = _this.pointInLinker({
+	          x: x.restoreScale(),
+	          y: y.restoreScale()
+	        }, shape, radius);
+	        if (inLinker > -1) {
+	          result = {
+	            type: "linker",
+	            shape: shape,
+	            pointIndex: inLinker
+	          };
+	          return result;
+	        }
+	      }
+	    };
+	  })(this),
+	  initContextMenus: (function(_this) {
+	    return function() {};
+	  })(this),
+	  render: (function(_this) {
+	    return function() {
+	      var begin, box, ctx, end, from, i, len, linkerBox, linkerCanvas, linkerId, point, points, style, to;
+	      linkerId = _this.model.get('id');
+	      linkerBox = $("#" + linkerId);
+	      if (linkerBox.length === 0) {
+	        linkerBox = $("<div id='" + linkerId + "' class='shape_box linker_box'><canvas class='shape_canvas'></canvas></div>").appendTo(_this.$el);
+	      }
+	      box = _this.calcBox();
+	      linkerCanvas = linkerBox.find(".shape_canvas");
+	      linkerCanvas.attr({
+	        width: box.w + 20,
+	        height: box.h + 20
+	      });
+	      linkerBox.css({
+	        position: 'absolute',
+	        left: box.x - 10,
+	        top: box.y - 10,
+	        width: box.w + 20,
+	        height: box.h + 20
+	      });
+	      ctx = linkerCanvas[0].getContext("2d");
+	      ctx.translate(10, 10);
+	      style = _this.model.get('lineStyle');
+	      ctx.lineWidth = style.lineWidth;
+	      ctx.strokeStyle = "rgb(" + style.lineColor + ")";
+	      ctx.fillStyle = "rgb(" + style.lineColor + ")";
+	      ctx.save();
+	      from = _this.model.get('from');
+	      to = _this.model.get('to');
+	      begin = {
+	        x: from.x - box.x,
+	        y: from.y - box.y
+	      };
+	      end = {
+	        x: to.x - box.x,
+	        y: to.y - box.y
+	      };
+	      ctx.save();
+	      ctx.beginPath();
+	      ctx.moveTo(begin.x, begin.y);
+	      points = _this.model.get('points');
+	      for (i = 0, len = points.length; i < len; i++) {
+	        point = points[i];
+	        ctx.lineTo(point.x - box.x, point.y - box.y);
+	      }
+	      ctx.lineTo(end.x, end.y);
+	      if (_this.$el.hasClass('ui-selected')) {
+	        ctx.shadowBlur = 10;
+	        ctx.shadowColor = "yellow";
+	      }
+	      ctx.stroke();
+	      ctx.restore();
+	      return ctx.restore();
+	    };
+	  })(this),
+	  calcBox: (function(_this) {
+	    return function() {
+	      var from, i, len, maxX, maxY, minX, minY, point, points, to;
+	      points = _this.model.get('points');
+	      from = _this.model.get('from');
+	      to = _this.model.get('to');
+	      minX = to.x;
+	      minY = to.y;
+	      maxX = from.x;
+	      maxY = from.y;
+	      if (to.x < from.x) {
+	        minX = to.x;
+	        maxX = from.x;
+	      } else {
+	        minX = from.x;
+	        maxX = to.x;
+	      }
+	      if (to.y < from.y) {
+	        minY = to.y;
+	        maxY = from.y;
+	      } else {
+	        minY = from.y;
+	        maxY = to.y;
+	      }
+	      for (i = 0, len = points.length; i < len; i++) {
+	        point = points[i];
+	        if (point.x < minX) {
+	          minX = point.x;
+	        } else if (point.x > maxX) {
+	          maxX = point.x;
+	        }
+	        if (point.y < minY) {
+	          minY = point.y;
+	        } else if (point.y > maxY) {
+	          maxY = point.y;
+	        }
+	      }
+	      return {
+	        x: minX,
+	        y: minY,
+	        w: maxX - minX,
+	        h: maxY - minY
+	      };
+	    };
+	  })(this),
+	  remove: (function(_this) {
+	    return function() {
+	      console.log('remove');
+	      return $("#" + _this.model.get('id')).remove();
+	    };
+	  })(this)
+	});
+	
+	module.exports = Linker;
+
+
+/***/ }),
+/* 112 */
+/***/ (function(module, exports, __webpack_require__) {
+
 	var AppTimeline, Backbone, _,
 	  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
 	  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -5040,7 +5346,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 112 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, UrlHandler,
@@ -5105,7 +5411,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 113 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, CodeExporter, FileHandler, Utils, _,
@@ -5119,7 +5425,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Utils = __webpack_require__(5);
 	
-	CodeExporter = __webpack_require__(114);
+	CodeExporter = __webpack_require__(115);
 	
 	__webpack_require__(83);
 	
@@ -5173,7 +5479,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 114 */
+/* 115 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, CodeExporter, _,
@@ -5289,7 +5595,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 115 */
+/* 116 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var Backbone, NodeView, WebGLRenderer, _,

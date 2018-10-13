@@ -130,7 +130,9 @@ class ShapeNodeView extends Backbone.View
         linker = new Linker({
           from, 
           to: now
-        })  
+        })
+        core.linkers.add(linker)
+
       drag: (event, ui) ->
         _now = ui.position
         linkerTo = {
@@ -146,27 +148,18 @@ class ShapeNodeView extends Backbone.View
           linkerTo.angle = self.getAngleByDir(dir)
 
         linker.set('to', linkerTo)
-        Linker.moveLinker(linker, 'to', linkerTo.x, linkerTo.y)
-
-
-
-
-
-
-
-
 
       stop: (event, ui) ->
+        _now = ui.position
+        now = {
+          x: _now.left + offset.left + ofx
+          y: _now.top + offset.top + ofy
+        }
+
         if($(event.toElement).hasClass('handler'))
           handler = event.toElement
           dir = $(handler).data('attr')
           nodeId = $(handler).parent().data('nodeId') # add nodeId to ui element
-
-          _now = ui.position
-          now = {
-            x: _now.left + offset.left + ofx
-            y: _now.top + offset.top + ofy
-          }
           # to: x, y, id, angle
           linker.set('to', {
             x: now.x
@@ -174,13 +167,10 @@ class ShapeNodeView extends Backbone.View
             id: nodeId
             angle: self.getAngleByDir(dir)
           })
-          Linker.render(linker, true)
-          core.linkers.add(linker)
         else
           if(Math.abs(now.x - from.x) > 20 || Math.abs(now.y - from.y) > 20)
-            core.linkers.add(linker)
           else
-            Linker.removeLinker(linker)
+            core.linkers.remove(linker)
 
   render: () =>
     @$el.css
@@ -202,18 +192,31 @@ class ShapeNodeView extends Backbone.View
     linkers = core.linkers.getLinkersByShapeId(@model.id)
     linkers.map((linker) =>
       from = linker.get('from')
+      newFrom = {
+        x: from.x
+        y: from.y
+        id: from.id
+        angle: from.angle
+      }
       if(from.id == @model.id)
-        from.x += offset.x
-        from.y += offset.y
-        linker.set('from', from)
+        newFrom.x += offset.x
+        newFrom.y += offset.y
+        linker.set('from', newFrom)
+
+
 
       to = linker.get('to')
-      if(to.id == @model.id)
-        to.x += offset.x 
-        to.y += offset.y
-        linker.set('to', to)
+      newTo = {
+        x: to.x
+        y: to.y
+        id: to.id
+        angle: to.angle
+      }
 
-      Linker.render(linker, true)
+      if(to.id == @model.id)
+        newTo.x += offset.x 
+        newTo.y += offset.y
+        linker.set('to', newTo)
     )
 
   remove: () =>
@@ -227,7 +230,7 @@ class ShapeNodeView extends Backbone.View
     self = this
     $(@el).click (e) ->
       if e.metaKey == false
-        $( ".node" ).removeClass("ui-selected")
+        $( ".node" ).removeClass("ui-selected") # Frida todo: better solution for selection.
         $( ".group" ).removeClass("ui-selected")
         $(this).addClass("ui-selecting")
       else
