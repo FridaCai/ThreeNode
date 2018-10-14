@@ -42,8 +42,38 @@ class Linker extends Backbone.View
             # only work once
 
         $(@el).find('canvas').mousemove (e) ->
-            console.log('canvas mousemove')
+            x = e.offsetX
+            y = e.offsetY
 
+            
+            isHit = self.isHit(x,y)
+            
+            container = $(@el);
+            container.css("cursor", "pointer");
+            if(isHit)
+                index = isHit.pointIndex; #鼠标在第几个拐点之间，由此来判断是否可重置折线
+                if(index > 1 && index <= self.model.get('points').length)
+                    self.brokenLinkerChangable(index - 1)
+
+
+    brokenLinkerChangable: (index)=>
+        container = $(@el);
+        canvas = $("#designer_canvas");
+        
+        p1 = @model.get('points')[index - 1];
+        p2 = @model.get('points')[index];
+        
+        
+        if(p1.x == p2.x)
+            container.css("cursor", "e-resize");
+        else
+            container.css("cursor", "n-resize");
+
+        #todo: how to control event mousedown.brokenLinker and mousemove.brokenLinker?
+        canvas.bind("mousedown.brokenLinker", (downE)=>
+            # begin = Utils.getRelativePos(downE.pageX, downE.pageY, canvas);
+        );
+    
     isHit: (x, y)=>
         focusShapes = [];
 
