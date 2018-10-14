@@ -4,11 +4,160 @@ class Linker extends Backbone.View
 
     initialize: (options) ->
         @render()
-        # @addEventListener()
+        @addEventListener()
         # @initContextMenus()
 
         @model.on('change', @render)
         @model.on('remove', () => @remove())
+
+    addEventListener: ()=>
+        self = @
+
+        $(@el).find('canvas').click (e) ->
+            # never work
+
+        $(@el).find('canvas').mousedown (e) ->
+            x = e.offsetX
+            y = e.offsetY
+            console.log(x)
+            console.log(y)
+
+            isHit = self.isHit(x,y)
+            console.log('isHit', isHit)
+
+        $(@el).find('canvas').mouseup (e) ->
+            # only work once
+
+        $(@el).find('canvas').mousemove (e) ->
+            console.log('canvas mousemove')
+
+
+    isHit: (x, y)=>
+        focusShapes = [];
+
+        shapeId = @model.get('id')
+        shapeBox = $("#" + shapeId);
+
+        shape = @model
+        #计算出相对于图形画布的x,y坐标
+        shapeBoxPos = shapeBox.position();
+        
+
+        # relativeX = x - shapeBoxPos.left;
+        # relativeY = y - shapeBoxPos.top;
+        x = x + shapeBoxPos.left;
+        y = y + shapeBoxPos.top;
+
+        canvasRect = {
+            x: shapeBoxPos.left, 
+            y: shapeBoxPos.top, 
+            w: shapeBox.width(), 
+            h: shapeBox.height()
+        };
+
+        console.log('canvasRec: '+ JSON.stringify(canvasRect, '', 2))
+
+        shapeCanvas = shapeBox.find(".shape_canvas")[0];
+        shapeCtx = shapeCanvas.getContext("2d");
+        # inCanvas = @pointInRect(x, y, canvasRect);
+
+
+        # if(!inCanvas)
+        #     return null
+        
+        
+        #如果图形是连接线
+        #先判断是否在连线的端点上
+        radius = 10;
+        rect = {
+            x: x - radius, 
+            y: y - radius, 
+            w: radius * 2, 
+            h: radius * 2
+        }
+
+        if(@pointInRect(shape.get('to').x, shape.get('to').y, rect))
+            result = {type: "linker_point", point: "end", shape: shape};
+            return result
+        else if(this.pointInRect(shape.get('from').x, shape.get('from').y, rect))
+            result = {type: "linker_point", point: "from", shape: shape};
+            return result
+        else
+            # 判断是否在连接线的文本上
+            # textCanvas = shapeBox.find(".text_canvas");
+            # textCanvasPos = textCanvas.position();
+            # rect = {x: textCanvasPos.left, y: textCanvasPos.top, w: textCanvas.width(), h: textCanvas.height()};
+            # if(this.pointInRect(relativeX, relativeY, rect)){
+            #     result = {type: "linker_text", shape: shape};
+            #     focusShapes.push(result);
+            #     continue;
+            # }
+            
+            #判断是否在连接线上，判断坐标点放射出的两条直线是否与线相交
+            radius = 7;
+            inLinker = @pointInLinker({
+                x: x,
+                y: y
+            }, shape, radius);
+
+            if(inLinker > -1)
+                result = {type: "linker", shape: shape, pointIndex: inLinker};
+                return result
+
+    getLinkerLinePoints: () ->
+        points = [];
+        points.push(@model.get('from'));
+        points = points.concat(@model.get('points'));
+        points.push(@model.get('to'));
+        return points;
+
+    pointInLinker: (point, linker, radius) ->
+        points = @getLinkerLinePoints();
+        linex1 = {
+            x: point.x - radius, 
+            y: point.y
+        };
+        linex2 = {
+            x: point.x + radius, 
+            y: point.y
+        };
+        liney1 = {
+            x: point.x, 
+            y: point.y - radius
+        };
+        liney2 = {
+            x: point.x, 
+            y: point.y + radius
+        };
+        
+        
+        for p, i in points
+            if(i==0)
+                continue
+            p1 = points[i-1]
+            p2 = points[i]
+            cross = @checkCross(linex1, linex2, p1, p2);
+            if(cross)
+                return i;
+            cross = @checkCross(liney1, liney2, p1, p2);
+            if(cross)
+                return i;  
+        return -1;
+
+    checkCross: (p1, p2, p3, p4) ->
+        d = (p2.x-p1.x)*(p4.y-p3.y) - (p2.y-p1.y)*(p4.x-p3.x);
+        if(d!=0)
+            r = ((p1.y-p3.y)*(p4.x-p3.x)-(p1.x-p3.x)*(p4.y-p3.y))/d;
+            s = ((p1.y-p3.y)*(p2.x-p1.x)-(p1.x-p3.x)*(p2.y-p1.y))/d;
+            if((r>=0) && (r <= 1) && (s >=0) && (s<=1))
+                return true;
+    	    return false
+
+    pointInRect: (px, py, rect) ->
+        if(px >= rect.x && px <= rect.x + rect.w)
+            if(py >= rect.y && py <= rect.y + rect.h)
+                return true
+        return false
 
     render: () =>
         linkerId = @model.get('id') 
