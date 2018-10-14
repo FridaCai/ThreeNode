@@ -17,6 +17,8 @@ class Workspace extends Backbone.View
   initialize: (options) =>
     super
     @settings = options.settings
+    @linkerEl = options.linkerEl
+
     @initDrop()
 
     @views = []
@@ -69,10 +71,10 @@ class Workspace extends Backbone.View
     @views.push(view)
 
   renderLinker: (linker) =>
-    $linkerEl = $("<div class='linker'></div>").appendTo(@$el)
+    el = $("<div class='linker'></div>").appendTo(@linkerEl)
     view = new LinkerView
       model: linker
-      el: $linkerEl
+      el: el
     @views.push(view)
 
   renderConnection: (connection) =>

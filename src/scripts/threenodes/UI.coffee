@@ -47,6 +47,7 @@ class UI
   createWorkspace: () =>
     if @workspace then @workspace.destroy()
     @workspace = new Workspace
+      linkerEl: jQuery("<div class='linkers-container'></div>").appendTo("#container")
       el: jQuery("<div class='nodes-container'></div>").appendTo("#container")
       settings: @core.settings
 
