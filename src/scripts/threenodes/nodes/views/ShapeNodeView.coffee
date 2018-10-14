@@ -157,7 +157,9 @@ class ShapeNodeView extends Backbone.View
         }
 
         if($(event.toElement).hasClass('handler'))
+        # if($(event.target).hasClass('handler'))
           handler = event.toElement
+          # handler = event.target
           dir = $(handler).data('attr')
           nodeId = $(handler).parent().data('nodeId') # add nodeId to ui element
           # to: x, y, id, angle
