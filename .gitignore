@@ -13,5 +13,5 @@ dist/**
 Gemfile.lock
 assets/*
 assets/
-/assets/**
-/assets/scripts/*.map
+assets/**
+assets/scripts/*
