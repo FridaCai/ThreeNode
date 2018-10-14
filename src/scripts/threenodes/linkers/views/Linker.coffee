@@ -5,7 +5,7 @@ class Linker extends Backbone.View
     initialize: (options) ->
         @render()
         @addEventListener()
-        # @initContextMenus()
+        @initContextMenus()
 
         @model.on('change', @render)
         @model.on('remove', () => @remove())
@@ -16,14 +16,17 @@ class Linker extends Backbone.View
         $(@el).find('canvas').click (e) ->
             # never work
 
-        $(@el).find('canvas').mousedown (e) ->
-            x = e.offsetX
-            y = e.offsetY
-            console.log(x)
-            console.log(y)
+        @el.addEventListener('mousedown', (e) ->
+                x = e.offsetX
+                y = e.offsetY
 
-            isHit = self.isHit(x,y)
-            console.log('isHit', isHit)
+                isHit = self.isHit(x,y)
+                
+                if(isHit)
+                    core.linkers.unselectAll()
+                    self.model.set('status', 1)
+        )
+        
 
         $(@el).find('canvas').mouseup (e) ->
             # only work once
@@ -31,6 +34,8 @@ class Linker extends Backbone.View
         $(@el).find('canvas').mousemove (e) ->
             console.log('canvas mousemove')
 
+    initContextMenus: ()=>
+        
 
     isHit: (x, y)=>
         focusShapes = [];
@@ -205,7 +210,7 @@ class Linker extends Backbone.View
         
         ctx.lineTo(end.x, end.y);
 
-        if(@$el.hasClass('ui-selected'))
+        if(@model.get('status')==1)
             #如果是选中了，绘制阴影
             # ctx.shadowBlur = 4;
             # ctx.shadowColor = "#833";

@@ -51,27 +51,6 @@ class UI
       el: jQuery("<div class='nodes-container'></div>").appendTo("#container")
       settings: @core.settings
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   setWorkspaceFromDefinition: (clickNode) =>
     if clickNode == "global"
       @ui.breadcrumb.reset()

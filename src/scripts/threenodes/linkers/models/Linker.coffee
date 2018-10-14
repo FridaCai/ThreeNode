@@ -25,6 +25,7 @@ class Linker extends Backbone.Model
 			beginArrowStyle: "none",
 			endArrowStyle: "solidArrow"
 		}
+		status: 0 #0:normal, 1:selected
 
 	initialize: (model, param)=>
 		super

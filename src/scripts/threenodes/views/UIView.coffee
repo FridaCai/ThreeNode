@@ -132,6 +132,10 @@ class UIView extends Backbone.View
 
   # Handle the nodes selection
   makeSelectable: () ->
+    $('#container')[0].addEventListener('mousedown', ()->
+      core.linkers.unselectAll()
+    ,true)
+
     $("#container").selectable
       filter: ".nodes-container >div"
       # filter: ".nodes-container"

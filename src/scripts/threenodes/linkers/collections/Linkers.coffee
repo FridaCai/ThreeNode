@@ -17,9 +17,13 @@ class Linkers extends Backbone.Collection
         return true
       return false
       
-
   removeAll: () ->
     @remove(@models)
+  
+  unselectAll:()->
+    @models.map((linker)->
+      linker.set('status', 0)
+    )
 
 
 module.exports = Linkers
