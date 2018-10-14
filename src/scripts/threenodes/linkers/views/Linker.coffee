@@ -1,4 +1,5 @@
 Backbond = require 'Backbone'
+_view_linker_context_menu = require '../templates/linker_context_menu.tmpl.html'
 
 class Linker extends Backbone.View
 
@@ -9,6 +10,15 @@ class Linker extends Backbone.View
 
         @model.on('change', @render)
         @model.on('remove', () => @remove())
+    
+    initContextMenus:()=>
+        self = @
+        if $("#linker-context-menu").length < 1
+            linker_menu = _.template(_view_linker_context_menu, {})
+            $("body").append(linker_menu)
+
+        @$el.find('>div').contextMenu {menu: "linker-context-menu"}, (action, el, pos) =>
+            if action == "remove_linker" then core.linkers.remove(self.model)
 
     addEventListener: ()=>
         self = @
@@ -33,9 +43,6 @@ class Linker extends Backbone.View
 
         $(@el).find('canvas').mousemove (e) ->
             console.log('canvas mousemove')
-
-    initContextMenus: ()=>
-        
 
     isHit: (x, y)=>
         focusShapes = [];
