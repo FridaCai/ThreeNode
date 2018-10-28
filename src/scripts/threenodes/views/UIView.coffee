@@ -136,33 +136,33 @@ class UIView extends Backbone.View
       core.linkers.unselectAll()
     ,true)
 
-    $("#container").selectable
-      filter: ".nodes-container >div"
-      # filter: ".nodes-container"
-      stop: (event, ui) =>
-        $selected = $(".node.ui-selected")
-        nodes = []
-        # anims = []
-        # Add the nodes and their anims container to some arrays
-        $selected.each () ->
-          ob = $(this).data("object")
-          if !ob.get("parent")
-            # ob.anim.objectTrack.name = ob.get("name")
-            # anims.push(ob.anim)
-            nodes.push(ob)
-          else
-            # if this is a subnode we only select the group
-            obgrp = ob.get("parent")
-            # obgrp.anim.objectTrack.name = ob.get("name")
-            # add the object only once
-            if !_.find(nodes, (n) -> n.id == obgrp.id)
-              # anims.push(obgrp.anim)
-              nodes.push(obgrp)
-        # Display the selected nodes attributes in the sidebar
-        @sidebar.clearNodesAttributes()
-        @sidebar.renderNodesAttributes(nodes)
-        # Display the selected nodes in the timeline
-        # @trigger("selectAnims", anims)
+    # $("#container").selectable
+    #   filter: ".nodes-container >div"
+    #   # filter: ".nodes-container"
+    #   stop: (event, ui) =>
+    #     $selected = $(".node.ui-selected")
+    #     nodes = []
+    #     # anims = []
+    #     # Add the nodes and their anims container to some arrays
+    #     $selected.each () ->
+    #       ob = $(this).data("object")
+    #       if !ob.get("parent")
+    #         # ob.anim.objectTrack.name = ob.get("name")
+    #         # anims.push(ob.anim)
+    #         nodes.push(ob)
+    #       else
+    #         # if this is a subnode we only select the group
+    #         obgrp = ob.get("parent")
+    #         # obgrp.anim.objectTrack.name = ob.get("name")
+    #         # add the object only once
+    #         if !_.find(nodes, (n) -> n.id == obgrp.id)
+    #           # anims.push(obgrp.anim)
+    #           nodes.push(obgrp)
+    #     # Display the selected nodes attributes in the sidebar
+    #     @sidebar.clearNodesAttributes()
+    #     @sidebar.renderNodesAttributes(nodes)
+    #     # Display the selected nodes in the timeline
+    #     # @trigger("selectAnims", anims)
 
     # Quick fix for input blur.
     # Without this, after focusing an input in a node it was difficult
@@ -220,9 +220,9 @@ class UIView extends Backbone.View
 
     # Handle stop drag
     @scroll_target.mouseout => @is_grabbing = false
-    @scroll_target.mouseup (e) =>
-      if is_from_target(e) && (e.which == 2 || e.which == 3)
-        @is_grabbing = false
+    # @scroll_target.mouseup (e) =>
+    #   if is_from_target(e) && (e.which == 2 || e.which == 3)
+    #     @is_grabbing = false
 
     return true
 

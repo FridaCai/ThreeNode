@@ -2,6 +2,8 @@ Backbond = require 'Backbone'
 _view_linker_context_menu = require '../templates/linker_context_menu.tmpl.html'
 
 class Linker extends Backbone.View
+    begin: null
+    now: null
 
     initialize: (options) ->
         @render()
@@ -23,57 +25,65 @@ class Linker extends Backbone.View
     addEventListener: ()=>
         self = @
 
-        $(@el).find('canvas').click (e) ->
-            # never work
-
+        
         @el.addEventListener('mousedown', (e) ->
-                x = e.offsetX
-                y = e.offsetY
-
-                isHit = self.isHit(x,y)
-                
-                if(isHit)
-                    core.linkers.unselectAll()
-                    self.model.set('status', 1)
+            self.begin = {
+                x: e.offsetX
+                y: e.offsetY
+            } 
+            isHit = self.isHit(self.begin.x, self.begin.y)
+            if(isHit)
+                core.linkers.unselectAll()
+                self.model.set('status', 1)
         )
         
+        @el.addEventListener('mousemove', (e) ->
+            self.now = {
+                x: e.offsetX
+                y: e.offsetY
+            }
 
-        $(@el).find('canvas').mouseup (e) ->
-            # only work once
-
-        $(@el).find('canvas').mousemove (e) ->
-            x = e.offsetX
-            y = e.offsetY
-
-            
-            isHit = self.isHit(x,y)
-            
-            container = $(@el);
-            container.css("cursor", "pointer");
+            isHit = self.isHit(self.now.x, self.now.y)
+            $(this).css("cursor", "pointer");
             if(isHit)
                 index = isHit.pointIndex; #鼠标在第几个拐点之间，由此来判断是否可重置折线
                 if(index > 1 && index <= self.model.get('points').length)
                     self.brokenLinkerChangable(index - 1)
+        )
 
-
+        @el.addEventListener('mouseup', (e)=>
+            self.begin = null
+            self.now = null
+        , true)
+    
     brokenLinkerChangable: (index)=>
-        container = $(@el);
-        canvas = $("#designer_canvas");
-        
         p1 = @model.get('points')[index - 1];
         p2 = @model.get('points')[index];
-        
-        
         if(p1.x == p2.x)
-            container.css("cursor", "e-resize");
+            $(@el).css("cursor", "e-resize");
         else
-            container.css("cursor", "n-resize");
+            $(@el).css("cursor", "n-resize");
 
-        #todo: how to control event mousedown.brokenLinker and mousemove.brokenLinker?
-        canvas.bind("mousedown.brokenLinker", (downE)=>
-            # begin = Utils.getRelativePos(downE.pageX, downE.pageY, canvas);
-        );
-    
+        if(@begin)
+            offset = {
+                x: @now.x - @begin.x, 
+                y: @now.y - @begin.y
+            };
+            
+            if(p1.x == p2.x)
+                p1.x += offset.x;
+                p2.x += offset.x;
+            else
+                p1.y += offset.y;
+                p2.y += offset.y;
+
+            @render()
+            @begin = {
+                x: @now.x
+                y: @now.y
+            };
+
+
     isHit: (x, y)=>
         focusShapes = [];
 
@@ -96,8 +106,6 @@ class Linker extends Backbone.View
             w: shapeBox.width(), 
             h: shapeBox.height()
         };
-
-        console.log('canvasRec: '+ JSON.stringify(canvasRect, '', 2))
 
         shapeCanvas = shapeBox.find(".shape_canvas")[0];
         shapeCtx = shapeCanvas.getContext("2d");
