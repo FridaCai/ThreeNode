@@ -57,9 +57,9 @@ class DB
                     @nodes.push(nParam.toJSON())
         , @)
 
-        @connections = [];
-        param.connections.map((cParam)=>
-            @connections.push(cParam.toJSON())
+        @linkers = [];
+        param.linkers.map((linkerParam)=>
+            @linkers.push(linkerParam.toJSON())
         , @)
         
     calculatePos: (nodes) ->

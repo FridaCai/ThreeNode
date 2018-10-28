@@ -26,7 +26,7 @@ class Linker extends Backbone.Model
 			endArrowStyle: "solidArrow"
 		}
 		status: 0 #0:normal, 1:selected
-
+	
 	initialize: (model, param)=>
 		super
 		self = @
@@ -37,20 +37,18 @@ class Linker extends Backbone.Model
 
 		@on("change:from change:to", (model, from, to)=>
 			@set('points', @getLinkerPoints())
-			
-			# if(!@get('to').id)
-			# 	to = @get('to')
-			# 	from = @get('from')
-
-			# 	if(to.x < from.x - 6 || to.x > from.x + 6)
-			# 	else
-			# 		to.x = from.x
-
-			# 	if(to.y < from.y - 6 || to.y > from.y + 6)
-			# 	else
-			# 		to.y = from.y;
-			# 	@set('to', to) # will cause endless loop?
 		)
+
+	toJSON: ()=>
+		points = []
+		res=
+			id: @get('id')
+			name: @get('name')
+			text: @get('text')
+			points: @get('points')
+			from:@get('from')
+			to:@get('to')
+		res
 
 	getAngleDir: (angle)=>
 		pi = Math.PI;

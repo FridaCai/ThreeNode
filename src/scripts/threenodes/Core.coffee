@@ -100,12 +100,12 @@ class Core
     db.updateProperty({
       nodes: @nodes
       groups: @groups
-      connections: @connections
+      linkers: @linkers
       id: @id
     })
     res = {
       id: db.id,
-      connections: db.connections,
+      linkers: db.linkers,
       nodes: db.nodes,
       groups: db.groups
     }
