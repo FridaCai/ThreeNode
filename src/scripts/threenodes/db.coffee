@@ -17,7 +17,7 @@ class DB
         @id = json.id
         @nodes = json.nodes
         @groups = json.groups
-        @connections = json.connections
+        @linkers = json.linkers
 
     # why so complicated? because datamodel is not consistent with db.
     updateProperty: (param)=>

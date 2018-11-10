@@ -2,9 +2,7 @@ Backbond = require 'Backbone'
 _view_linker_context_menu = require '../templates/linker_context_menu.tmpl.html'
 
 class Linker extends Backbone.View
-    begin: null
-    now: null
-
+   
     initialize: (options) ->
         @render()
         @addEventListener()
@@ -21,67 +19,151 @@ class Linker extends Backbone.View
 
         @$el.find('>div').contextMenu {menu: "linker-context-menu"}, (action, el, pos) =>
             if action == "remove_linker" then core.linkers.remove(self.model)
+            if action == "edit_text" then self.editText()
+    
+    editText:()=>
+        midpoint = @getLinkerMidpoint();
+        ruler = $("#" + @model.get('id')).find(".text_canvas");
+        textarea = $("#linker_text_edit");
+        if(textarea.length == 0)
+            textarea = $("<textarea id='linker_text_edit'></textarea>").appendTo(".linkers-container");
 
+        #隐藏原有文本，全透明
+        $("#" + @model.get('id')).find(".text_canvas").hide();
+        fontStyle = @model.get('fontStyle');
+        scale = "scale(1)";
+        lineH = Math.round(fontStyle.size * 1.25);
+        #先给输入框设置一些基本样式
+        textarea.css({
+            # "z-index": Model.orderList.length,
+            "line-height": lineH + "px",
+            "font-size": fontStyle.size + "px",
+            "font-family": fontStyle.fontFamily,
+            "font-weight": fontStyle.bold ? "bold" : "normal",
+            "font-style": fontStyle.italic ? "italic" : "normal",
+            "text-align": fontStyle.textAlign,
+            "color": "rgb(" + fontStyle.color + ")",
+            "text-decoration": fontStyle.underline ? "underline" : "none",
+            "-webkit-transform": scale,
+            "-ms-transform": scale,
+            "-o-transform": scale,
+            "-moz-transform": scale,
+            "transform": scale,
+        });
+        #修改坐标
+        textarea.val(@model.get('text')).show().select();
+        textarea.unbind().bind("keyup", (e)=>
+            newText = $(e.currentTarget).val();
+            text = newText.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br/>");
+            ruler.html(text + "<br/>");
+            textW = ruler.width();
+            if(textW < 50)
+                textW = 50;
+
+            textH = ruler.height();
+            if(textH < lineH)
+                textH = lineH;
+            textarea.css({
+                left: midpoint.x - textW/2 - 2,
+                top: midpoint.y - textH/2 - 2,
+                width: textW,
+                height: textH
+                position:'absolute'
+            });
+        ).bind("mousedown", (e)=>
+            e.stopPropagation();
+        ).bind("blur", ()=>
+            return
+            textarea = $("#linker_text_edit");
+            if(textarea.length && textarea.is(":visible"))
+                newText = textarea.val();
+                if(newText != @model.get('text'))
+                    @model.set('text', newText);
+
+                @render();
+                textarea.remove();
+
+        )
+        textarea.trigger("keyup");
+        
+        
     addEventListener: ()=>
         self = @
 
+        begin = null
+        now = null
+        hit = null
         
         @el.addEventListener('mousedown', (e) ->
-            self.begin = {
-                x: e.offsetX
-                y: e.offsetY
-            } 
-            isHit = self.isHit(self.begin.x, self.begin.y)
-            if(isHit)
-                core.linkers.unselectAll()
-                self.model.set('status', 1)
+            isHit = self.isHit(e.offsetX, e.offsetY)
+            if(!isHit)
+                return
+            
+            core.linkers.unselectAll()
+            self.model.set('status', 1)
+
+            _index = isHit.pointIndex; #鼠标在第几个拐点之间，由此来判断是否可重置折线
+            if(_index > 1 && _index <= self.model.get('points').length)
+                hit = isHit
+                begin = {
+                    x: e.offsetX
+                    y: e.offsetY
+                } 
         )
         
         @el.addEventListener('mousemove', (e) ->
-            self.now = {
+            now = {
                 x: e.offsetX
                 y: e.offsetY
             }
+            console.log('frida test, mousemove', now, e)
 
-            isHit = self.isHit(self.now.x, self.now.y)
-            $(this).css("cursor", "pointer");
-            if(isHit)
-                index = isHit.pointIndex; #鼠标在第几个拐点之间，由此来判断是否可重置折线
-                if(index > 1 && index <= self.model.get('points').length)
-                    self.brokenLinkerChangable(index - 1)
+            if(hit)
+                _index = hit.pointIndex;
+                index = _index - 1
+                p1 = self.model.get('points')[index - 1];
+                p2 = self.model.get('points')[index];
+
+                offset = {
+                    x: now.x - begin.x, 
+                    y: now.y - begin.y
+                };
+                  
+                if(p1.x == p2.x)
+                    p1.x += offset.x;
+                    p2.x += offset.x;
+                else
+                    p1.y += offset.y;
+                    p2.y += offset.y;
+
+                self.render()
+                begin = {
+                    x: now.x
+                    y: now.y
+                };
+            else
+                $(this).css("cursor", "default")
+                isHit = self.isHit(now.x, now.y)
+                
+                if(isHit)
+                    $(this).css("cursor", "pointer");
+                    _index = isHit.pointIndex; #鼠标在第几个拐点之间，由此来判断是否可重置折线
+                    if(_index > 1 && _index <= self.model.get('points').length)
+                        index = _index - 1
+                        p1 = self.model.get('points')[index - 1];
+                        p2 = self.model.get('points')[index];
+                        if(p1.x == p2.x)
+                            $(self.el).css("cursor", "e-resize");
+                        else
+                            $(self.el).css("cursor", "n-resize");
         )
 
         @el.addEventListener('mouseup', (e)=>
-            self.begin = null
-            self.now = null
+            begin = null
+            now = null
+            hit = null
         , true)
     
-    brokenLinkerChangable: (index)=>
-        p1 = @model.get('points')[index - 1];
-        p2 = @model.get('points')[index];
-        if(p1.x == p2.x)
-            $(@el).css("cursor", "e-resize");
-        else
-            $(@el).css("cursor", "n-resize");
-
-        if(@begin)
-            offset = {
-                x: @now.x - @begin.x, 
-                y: @now.y - @begin.y
-            };
-            
-            if(p1.x == p2.x)
-                p1.x += offset.x;
-                p2.x += offset.x;
-            else
-                p1.y += offset.y;
-                p2.y += offset.y;
-
-            @render()
-            @begin = {
-                x: @now.x
-                y: @now.y
-            };
 
 
     isHit: (x, y)=>
@@ -269,6 +351,96 @@ class Linker extends Backbone.View
         ctx.restore(); #还原虚线样式和阴影
         ctx.restore();
 
+        @renderText()
+
+    renderText: () =>
+        linkerContainer = $("#" + @id);
+        canvas = linkerContainer.find(".text_canvas");
+        if(canvas.length == 0)
+            canvas = $("<div class='text_canvas linker_text'></div>").appendTo(linkerContainer);
+
+        fontStyle = @model.get('fontStyle');
+        scale = "scale(1)";
+        style = {
+            "line-height": Math.round(fontStyle.size * 1.25) + "px",
+            "font-size": fontStyle.size + "px",
+            "font-family": fontStyle.fontFamily,
+            "font-weight": fontStyle.bold ? "bold" : "normal",
+            "font-style": fontStyle.italic ? "italic" : "normal",
+            "text-align": fontStyle.textAlign,
+            "color": "rgb(" + fontStyle.color + ")",
+            "text-decoration": fontStyle.underline ? "underline" : "none",
+            "-webkit-transform": scale,
+            "-ms-transform": scale,
+            "-o-transform": scale,
+            "-moz-transform": scale,
+            "transform": scale,
+        };
+        canvas.css(style);
+        if(@model.get('text') == null || @model.get('text') == "")
+            canvas.hide();
+            return;
+        
+        #设置位置
+        canvas.show();
+        text = @model.get('text').replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br/>");
+        canvas.html(text + "<br/>");
+        midpoint = @getLinkerMidpoint();
+        containerPos = linkerContainer.position();
+        canvas.css({
+            left: midpoint.x - containerPos.left - canvas.width()/2,
+            top: midpoint.y - containerPos.top - canvas.height()/2
+        });
+    
+    measureDistance: (p1, p2) =>
+        h = p2.y - p1.y;
+        w = p2.x - p1.x;
+        return Math.sqrt(Math.pow(h, 2) + Math.pow(w, 2));
+
+    getLinkerMidpoint: ()=>
+        point = {};
+        
+        #折线时，计算每一笔的长度，找中点
+        points = [];
+        points.push(@model.get('from'));
+        points = points.concat(@model.get('points'));
+        points.push(@model.get('to'));
+
+        #先求连接线的全长
+        totalLength = 0;
+
+        for p,pi in points
+            if(pi==0)
+                continue
+
+            p1 = points[pi - 1];
+            p2 = points[pi];
+            #计算一段的长
+            d = @measureDistance(p1, p2);
+            totalLength += d;
+
+        halfLength = totalLength / 2; #连接线长度的一半
+        growLength = 0;
+
+        for p,pi in points
+            if(pi ==0)
+                continue
+            p1 = points[pi - 1];
+            p2 = points[pi];
+            #计算一段的长
+            d = @measureDistance(p1, p2);
+            temp = growLength + d;
+            if(temp > halfLength)
+                #如果某一段的长度大于一半了，则中点在此段上
+                t = (halfLength - growLength) / d;
+                point = {
+                    x: (1-t)*p1.x + t*p2.x,
+                    y: (1-t)*p1.y + t*p2.y
+                }
+                break;
+            growLength = temp;
+        return point;
+    
     calcBox: () =>
         points = @model.get('points');
         from = @model.get('from');

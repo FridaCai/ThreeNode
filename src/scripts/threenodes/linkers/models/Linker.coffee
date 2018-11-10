@@ -25,6 +25,15 @@ class Linker extends Backbone.Model
 			beginArrowStyle: "none",
 			endArrowStyle: "solidArrow"
 		}
+		fontStyle:{
+			fontFamily: "微软雅黑",
+			size: 13,
+			color: "50,50,50",
+			bold: false,
+			italic: false,
+			underline: false,
+			textAlign: "center"
+		}
 		status: 0 #0:normal, 1:selected
 	
 	initialize: (model, param)=>

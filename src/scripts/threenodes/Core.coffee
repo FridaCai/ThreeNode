@@ -8,6 +8,7 @@ Groups = require './groups/collections/Groups'
 Group = require './groups/models/Group'
 
 Linkers = require './linkers/collections/Linkers'
+Linker = require './linkers/models/Linker'
 
 # Frida. please find better solution.
 Indexer = require 'threenodes/utils/Indexer'
@@ -112,9 +113,9 @@ class Core
     return JSON.stringify(res, null, 2)
 
   setNodes: (json) ->
-    # @nodes.removeAll()
     db.loadFromJson(json)
-    tmparr = db.nodes.concat(db.connections)
+    tmparr = db.nodes.concat(db.linkers)
+    
     db.groups.map (obj) ->
       obj.nodes.map (nodeObj) ->
         tmparr.push(nodeObj)
@@ -126,13 +127,9 @@ class Core
 
 
   refreshDatamodelAccordingToDB:(db)->
-   # @groups = new Groups([])
-    # @nodes = new Nodes([], {settings: @settings})
-    # @connections = new Connections()
     @groups.removeAll()
     @nodes.removeAll()
-    @connections.removeAll()
-
+    @linkers.removeAll()
 
     self = @
     db.nodes.map (obj) ->
@@ -157,6 +154,18 @@ class Core
       group = new Group(groupObj)
       self.groups.push(group)
 
+    db.linkers.map (obj)->
+      linker = new Linker(
+        id: obj.id
+        name:'linker'
+        text:obj.text
+        points:obj.points
+        from:obj.from
+        to:obj.to
+      )
+      self.linkers.push(linker)
+
+    return
 
     #connections
     #                 node  group nodeInsideGroup
@@ -164,20 +173,20 @@ class Core
     # group           g->n  g->g  g->g
     # nodeInsideGroup g->n  g->g  sameGroup ? not render: g->g
     
-    db.connections.map (c) ->
+    db.linkers.map (c) ->
       from = {
-        node: self.nodes.getById(c.from)
-        group: self.groups.getById(c.from)
-        nodeInGroup: self.groups.getByNodeId(c.from)
+        node: self.nodes.getById(c.from.id)
+        group: self.groups.getById(c.from.id)
+        nodeInGroup: self.groups.getByNodeId(c.from.id)
       }
       # when view group detial, external connection might be the case.
       if(!from.node && !from.group && !from.nodeInGroup)
         return
 
       to = {
-        node: self.nodes.getById(c.to)
-        group: self.groups.getById(c.to)
-        nodeInGroup: self.groups.getByNodeId(c.to)
+        node: self.nodes.getById(c.to.id)
+        group: self.groups.getById(c.to.id)
+        nodeInGroup: self.groups.getByNodeId(c.to.id)
       }
 
       if(!to.node && !to.group && !to.nodeInGroup)
@@ -186,13 +195,20 @@ class Core
       if(from.nodeInGroup && to.nodeInGroup && from.nodeInGroup == to.nodeInGroup)
         # do nothing
       else
-        connection = new Connection({
+      #frida. problem here.
+        _from = from.node || from.group || from.nodeInGroup
+        linker = new Linker({
           id: c.id
-          from: from.node || from.group || from.nodeInGroup
+          name:'linker'
+          text:''
+          points: c.points
+          from: 
+            x: _from.x
+            y:_from.y
           to: to.node || to.group || to.nodeInGroup
           fromType: c.fromType
           toType: c.toType
         })
-        self.connections.push(connection)
+        self.linkers.push(linker)
 
 module.exports = Core
