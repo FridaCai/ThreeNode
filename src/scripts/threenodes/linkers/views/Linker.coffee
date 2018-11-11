@@ -8,7 +8,11 @@ class Linker extends Backbone.View
         @addEventListener()
         @initContextMenus()
 
-        @model.on('change', @render)
+        @model.on('change', (linker, param)=>
+            if(param.changes.text)
+                return
+            @render()
+        )
         @model.on('remove', () => @remove())
     
     initContextMenus:()=>
@@ -22,71 +26,12 @@ class Linker extends Backbone.View
             if action == "edit_text" then self.editText()
     
     editText:()=>
-        midpoint = @getLinkerMidpoint();
-        ruler = $("#" + @model.get('id')).find(".text_canvas");
-        textarea = $("#linker_text_edit");
-        if(textarea.length == 0)
-            textarea = $("<textarea id='linker_text_edit'></textarea>").appendTo(".linkers-container");
-
-        #隐藏原有文本，全透明
-        $("#" + @model.get('id')).find(".text_canvas").hide();
-        fontStyle = @model.get('fontStyle');
-        scale = "scale(1)";
-        lineH = Math.round(fontStyle.size * 1.25);
-        #先给输入框设置一些基本样式
-        textarea.css({
-            # "z-index": Model.orderList.length,
-            "line-height": lineH + "px",
-            "font-size": fontStyle.size + "px",
-            "font-family": fontStyle.fontFamily,
-            "font-weight": fontStyle.bold ? "bold" : "normal",
-            "font-style": fontStyle.italic ? "italic" : "normal",
-            "text-align": fontStyle.textAlign,
-            "color": "rgb(" + fontStyle.color + ")",
-            "text-decoration": fontStyle.underline ? "underline" : "none",
-            "-webkit-transform": scale,
-            "-ms-transform": scale,
-            "-o-transform": scale,
-            "-moz-transform": scale,
-            "transform": scale,
-        });
-        #修改坐标
-        textarea.val(@model.get('text')).show().select();
-        textarea.unbind().bind("keyup", (e)=>
-            newText = $(e.currentTarget).val();
-            text = newText.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br/>");
-            ruler.html(text + "<br/>");
-            textW = ruler.width();
-            if(textW < 50)
-                textW = 50;
-
-            textH = ruler.height();
-            if(textH < lineH)
-                textH = lineH;
-            textarea.css({
-                left: midpoint.x - textW/2 - 2,
-                top: midpoint.y - textH/2 - 2,
-                width: textW,
-                height: textH
-                position:'absolute'
-            });
-        ).bind("mousedown", (e)=>
-            e.stopPropagation();
-        ).bind("blur", ()=>
-            return
-            textarea = $("#linker_text_edit");
-            if(textarea.length && textarea.is(":visible"))
-                newText = textarea.val();
-                if(newText != @model.get('text'))
-                    @model.set('text', newText);
-
-                @render();
-                textarea.remove();
-
+        linkerContainer = $("#" + @model.get('id'));
+        canvas = linkerContainer.find(".text_canvas");
+        canvas.focus();
+        canvas.unbind().bind('keyup', ()=>
+            @model.set('text', canvas.text())
         )
-        textarea.trigger("keyup");
-        
-        
     addEventListener: ()=>
         self = @
 
@@ -116,7 +61,6 @@ class Linker extends Backbone.View
                 x: e.offsetX
                 y: e.offsetY
             }
-            console.log('frida test, mousemove', now, e)
 
             if(hit)
                 _index = hit.pointIndex;
@@ -354,14 +298,18 @@ class Linker extends Backbone.View
         @renderText()
 
     renderText: () =>
-        linkerContainer = $("#" + @id);
+        linkerContainer = $("#" + @model.get('id'));
         canvas = linkerContainer.find(".text_canvas");
         if(canvas.length == 0)
-            canvas = $("<div class='text_canvas linker_text'></div>").appendTo(linkerContainer);
+            canvas = $("<div class='text_canvas linker_text' contenteditable></div>")
+                .appendTo(linkerContainer);
 
         fontStyle = @model.get('fontStyle');
         scale = "scale(1)";
         style = {
+            "position":"absolute",
+            "text-align":"center",
+            "background":'#313638',
             "line-height": Math.round(fontStyle.size * 1.25) + "px",
             "font-size": fontStyle.size + "px",
             "font-family": fontStyle.fontFamily,
@@ -377,9 +325,6 @@ class Linker extends Backbone.View
             "transform": scale,
         };
         canvas.css(style);
-        if(@model.get('text') == null || @model.get('text') == "")
-            canvas.hide();
-            return;
         
         #设置位置
         canvas.show();
@@ -482,7 +427,6 @@ class Linker extends Backbone.View
         }
 
     remove: ()=>
-        console.log('remove')
         $("#" + @model.get('id')).remove();
 
 module.exports = Linker
