@@ -33,12 +33,12 @@ class Fields extends Backbone.Collection
       return false
 
     for f in data.in
-      if !f.nid
+      if !f.id
         # Simple node field
         node_field = @inputs[f.name]
       else
         # Group node field
-        node_field = @inputs[f.name + "-" + f.nid]
+        node_field = @inputs[f.name + "-" + f.id]
       if node_field then node_field.load(f.val)
     true
 
@@ -131,7 +131,7 @@ class Fields extends Backbone.Collection
     field_index = field.get("name")
     if field.subfield
       # In group nodes we want to have a unique field index
-      field_index += "-" + field.subfield.node.get("nid")
+      field_index += "-" + field.subfield.node.get("id")
     @[target][field_index] = field
     @add(field)
     field

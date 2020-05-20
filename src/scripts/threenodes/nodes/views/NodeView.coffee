@@ -13,20 +13,16 @@ class NodeView extends Backbone.View
   className: "node"
 
   initialize: (options) ->
-    # Setup the view DOM element
     @makeElement()
-
-    # Initialize mouse events
-    if !options.isSubNode
-      @makeDraggable()
+    @makeDraggable()
     @initNodeClick()
     @initTitleClick()
 
     # Initialize the fields view
-    @fields_view = new FieldsView
-      node: @model
-      collection: @model.fields
-      el: $("> .options", @$el)
+    # @fields_view = new FieldsView
+    #   node: @model
+    #   collection: @model.fields
+    #   el: $("> .options", @$el)
 
     # Bind events
     @model.on('change', @render)
@@ -39,7 +35,7 @@ class NodeView extends Backbone.View
     # Render the node and "post init" the model
     @render()
     @initContextMenus()
-    @highlighAnimations()
+    # @highlighAnimations()
     #@model.postInit()
 
   initContextMenus: () =>
@@ -85,10 +81,11 @@ class NodeView extends Backbone.View
     @$el.addClass("ui-selected")
 
   renderConnections: () =>
-    @model.fields.renderConnections()
-    if @model.nodes
-      _.each @model.nodes.models, (n) ->
-        n.fields.renderConnections()
+    @model.renderConnections()
+    # @model.fields.renderConnections()
+    # if @model.nodes
+    #   _.each @model.nodes.models, (n) ->
+    #     n.fields.renderConnections()
 
   computeNodePosition: () =>
     pos = $(@el).position()

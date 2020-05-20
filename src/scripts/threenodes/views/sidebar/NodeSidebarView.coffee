@@ -31,6 +31,7 @@ class NodeSidebarView extends Backbone.View
         @$el.append(view.el)
 
   render: () =>
+    return
     # Compile the template file
     @$el.html("<h2>#{@model.get('name')}</h2>")
     @displayFields(@model.fields.inputs)

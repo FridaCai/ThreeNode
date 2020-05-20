@@ -156,8 +156,6 @@ class Merge extends Node
       subval = field.get("value")
       if subval != null && field.connections.length > 0 && field.changed == true
         changed = true
-        #console.log("change")
-
         # if subvalue is an array append it to the result
         if jQuery.type(subval) == "array"
           result = result.concat(subval)

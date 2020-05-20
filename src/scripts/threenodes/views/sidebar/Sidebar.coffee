@@ -8,15 +8,15 @@ require 'jquery.ui'
 
 ### Sidebar View ###
 class Sidebar extends Backbone.View
-  initialize: () ->
+  initialize: (options) ->
     super
+    @settings = options.settings
     # Keep references of node attributes subviews
     @node_views = []
-
     @initNewNode()
     @initSearch()
     @initTabs()
-    @initTreeView()
+    # @initTreeView()
     @layout = @$el.layout
       scrollToBookmarkOnLoad: false
       north:
@@ -39,7 +39,7 @@ class Sidebar extends Backbone.View
     if @treeview then @treeview.render(nodes)
 
   clearWorkspace: () =>
-    @treeview.render(false)
+    # @treeview.render(false)
 
   initTabs: () =>
     @$el.tabs
@@ -113,6 +113,17 @@ class Sidebar extends Backbone.View
         $("#tab-new ul").each () -> self.filterList($(this), v)
     return this
 
+  nodeClick: (e) =>
+    dir = true;
+    rel = $(e.currentTarget).attr('rel')
+    if rel == 'Direction' 
+      dir = true
+    else if rel == 'NoDirection'
+      dir = false
+    @settings.direction = dir
+    @renderArrow()
+
+
   initNewNode: () =>
     self = this
     $container = $("#tab-new")
@@ -120,6 +131,8 @@ class Sidebar extends Backbone.View
     # nodes_by_group could be an empty object but we define
     # inital groups to have a coherent ordering in sidebar
     nodes_by_group =
+      Shape:[]
+      Arrow: []
       Base: []
       Conditional: []
       Math: []
@@ -161,7 +174,28 @@ class Sidebar extends Backbone.View
       revertDuration: 0
       scroll: false
       containment: "document"
-
+    @renderArrow()  
+    $("#nodetype-Arrow li a").bind('click', @nodeClick)
     return this
+
+  renderArrow: ()=>
+    rel = '';
+    if @settings.direction
+      rel = 'Direction'
+    else
+      rel = 'NoDirection'
+    
+    $("#nodetype-Arrow a.button").css
+      background: "#313638"
+      
+    $("#nodetype-Arrow a.button[rel='" + rel + "']").css
+      background: '#191c1d'
+    
+
+
+
+    
+
+    
 
 module.exports = Sidebar

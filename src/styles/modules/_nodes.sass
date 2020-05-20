@@ -58,6 +58,17 @@ $c: 100
   min-width: 80px
   background: $node_color
 
+  color: #aaa
+  font-size: 10px
+
+  .head
+    font-weight: normal
+    letter-spacing: 1px
+    text-align: center
+
+  .outputs > div
+    text-align: right
+
   &.ui-selecting
     background: ($node_color - #050505)
     border: 1px solid ($node_color + #222)
@@ -71,6 +82,38 @@ $c: 100
     width: 100%
     .warning
       padding-top: 7px
+
+
+  .handler
+    position: absolute
+    width: 5px;
+    height: 5px;
+    cursor: crosshair
+    background: red
+    margin-left: -2.5px
+    margin-top: -2.5px
+
+    &.up
+      left: 50%
+      top: 0
+
+
+    &.down
+      left: 50%
+      top: 100%
+
+    &.left
+      top: 50%
+      left: 0
+
+    &.right
+      left: 100%
+      top: 50%
+      
+    &.center
+      left: 50%
+      top: 50%
+
 
   .inner-field
     cursor: pointer
@@ -142,10 +185,10 @@ $animation_color: #f00
 
 
 .node-Group
-  @extend .width-200
+  //@extend .width-200
   @extend .ratio-50-50
   > .head span
-    color: #fff
+    // color: #fff
   h3
     margin-bottom: 0
     font-size: 10px
@@ -159,6 +202,14 @@ $animation_color: #f00
 // base
 .type-Base
   @extend .width-80
+
+.node-Ellipse
+  height: 40px;
+  border-radius: 45px;
+  
+.node-Circle
+  height: 80px;
+  border-radius: 45px;
 
 .node-Number
   @extend .width-150

@@ -5,21 +5,48 @@ class Connections extends Backbone.Collection
   model: Connection
 
   initialize: (models, options) =>
-    @indexer = options.indexer
-    @bind "connection:removed", (c) => @remove(c)
+    @bind "connection:removed", (c) => 
+      @remove(c)
     super
+
+  create: (op) =>
+    @add(new Connection(
+      from: op.from
+      to: op.to
+      fromType: op.fromType
+      toType: op.toType
+    ))
+
+  removeByGroup: (g)=>
+    ids = [g.id]
+    
+    g.get('nodes').map((n)->
+      ids.push n.id
+    )
+    
+    todelete = @models.filter((c)=>
+      if(ids.includes(c.rawFromId) || ids.includes(c.rawToId))
+        return true
+      return false)
+
+    todelete.map((g)->
+      @.remove(g)
+    ,@)
+
+
+  removeByNode: (n)=>
+    @models.map((c)->
+      if(c.from.id == n.id || c.to.id == n.id)
+        @remove(c)
+    , @)
 
   render: () =>
     @each (c) -> c.render()
 
-  create: (model, options) =>
-    if !options then options = {}
-    model.indexer = @indexer
-    model = @_prepareModel(model, options)
-    if !model
-      return false
-    @add(model, options)
-    return model
+  renderConnections: (node) =>
+    @each (c) ->
+      if(c.to == node or c.from == node)
+        c.render()
 
   removeAll: () =>
     @remove(@models)

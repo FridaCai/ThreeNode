@@ -20,7 +20,7 @@ class TreeView extends Backbone.View
     terminalNodes = {}
     for node in nodelist.models
       if node.hasOutConnection() == false
-        terminalNodes[node.attributes["nid"]] = node
+        terminalNodes[node.attributes["id"]] = node
 
     renderNode = (node) =>
       result = {}
@@ -33,8 +33,8 @@ class TreeView extends Backbone.View
 
       return result
 
-    for nid of terminalNodes
-      data.push(renderNode(terminalNodes[nid]))
+    for id of terminalNodes
+      data.push(renderNode(terminalNodes[id]))
 
     @$el.tree
       data: data

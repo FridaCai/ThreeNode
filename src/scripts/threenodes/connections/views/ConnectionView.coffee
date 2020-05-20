@@ -5,65 +5,90 @@ require 'jquery.ui'
 
 ### Connection View ###
 class ConnectionView extends Backbone.View
-  initialize: (options) ->
+  initialize: () ->
     super
     @container = $("#graph")
-    @line = ThreeNodes.UI.UIView.svg.path().attr
+    
+    @svg = ThreeNodes.UI.UIView.svg;
+    @curve = @svg.path().attr
       stroke: "#555"
-      fill: "none"
-    # set the dom element
-    @el = @line.node
+    @triangle = @svg.path().attr
+      stroke: "#555"
+      fill: "#555"
+
+    @el = @svg.node
     @model.bind("render", () => @render())
     @model.bind("destroy", () => @remove())
+    @model.bind("remove", () => @remove())
     @render()
 
   remove: ->
-    if ThreeNodes.UI.UIView.svg && @line
-      @line.remove()
-      delete @line
+    if(@curve)
+      @curve.remove()
+      delete @curve
+    
+    if(@triangle)
+      @triangle.remove()
+      delete @triangle
+
     return true
 
   render: () ->
-    if ThreeNodes.UI.UIView.svg && @line && @line.attrs
-      @line.attr
-        path: @getPath()
+    if @svg 
+      @renderCurve(@model);
+      @renderTriangle();
     @
 
-  getFieldPosition: (field) ->
-    if !field.button
-      console.log "no button"
-      console.log field
-      return {left: 0, top: 0}
-    o1 = $(".inner-field span", field.button).offset()
-    #console.log field.button
-    if !o1
-      console.log "no o1"
-      return {left: 0, top: 0}
-    diff = 3
-    o1.top += diff
-    o1.left += diff
+  getNodePosition: (model, type) ->
+    x = model.get('x')
+    y = model.get('y')
+
+    width = model.get('width')
+    height = model.get('height')
+
+    switch type
+      when 'left' then o1 = {left: x, top: y + height/2}
+      when 'right' then o1 = {left: x + width, top: y + height/2}
+      when 'up' then o1 = {left: x + width/2, top: y}
+      when 'down' then o1 = {left: x + width/2, top: y + height}
+      when 'center' then o1 = {left: x + width/2, top: y + height/2}
+    # diff = 3
+    # o1.top += diff
+    # o1.left += diff
     return o1
 
-  getPath: () ->
-    f1 = @getFieldPosition(@model.from_field)
-    f2 = @getFieldPosition(@model.to_field)
+  renderTriangle: ()->
+    return;
+    len = @curve.getTotalLength()
+    obj = @curve.getPointAtLength(len-13)
+    @triangle.attr
+      path: ["M", 0, 0, "L", 1.732, -1, "L", 1.732, 1].join(',')
+    .transform('t' + obj.x + ',' + obj.y + 's5, 5' + 'r' + obj.alpha)
+
+  renderCurve: (drawModel) ->
+    f1 = @getNodePosition(drawModel.from, drawModel.fromType)
+    f2 = @getNodePosition(drawModel.to, drawModel.toType)
 
     offset = $("#container-wrapper").offset()
     ofx = $("#container-wrapper").scrollLeft() - offset.left
     ofy = $("#container-wrapper").scrollTop() - offset.top
-    x1 = f1.left + ofx
-    y1 = f1.top + ofy
-    x4 = f2.left + ofx
-    y4 = f2.top + ofy
+
+    x1 = f1.left
+    y1 = f1.top
+    x4 = f2.left
+    y4 = f2.top
+
     min_diff = 42
     diffx = Math.max(min_diff, x4 - x1)
     diffy = Math.max(min_diff, y4 - y1)
-
     x2 = x1 + diffx * 0.5
     y2 = y1
     x3 = x4 - diffx * 0.5
     y3 = y4
+    # @curve.attr
+    #   path: ["M", x1.toFixed(3), y1.toFixed(3), "C", x2, y2, x3, y3, x4.toFixed(3), y4.toFixed(3)].join(",")
 
-    ["M", x1.toFixed(3), y1.toFixed(3), "C", x2, y2, x3, y3, x4.toFixed(3), y4.toFixed(3)].join(",")
+    @curve.attr
+      path: ["M", x1.toFixed(3), y1.toFixed(3), "L", x4.toFixed(3), y4.toFixed(3)].join(",")
 
 module.exports = ConnectionView

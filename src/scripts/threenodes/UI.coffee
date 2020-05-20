@@ -4,15 +4,13 @@ Backbone = require 'Backbone'
 UIView = require './views/UIView'
 Workspace = require './views/Workspace'
 AppTimeline = require './views/AppTimeline'
-GroupDefinitionView = require './views/GroupDefinitionView'
-#WebglBase = require 'threenodes/utils/WebglBase'
 UrlHandler = require 'threenodes/utils/UrlHandler'
 FileHandler = require 'threenodes/utils/FileHandler'
 
 NodeView = require 'threenodes/nodes/views/NodeView'
 NodeViewColor = require 'threenodes/nodes/views/Color'
 NodeViewWebgl = require 'threenodes/nodes/views/WebGLRenderer'
-NodeViewGroup = require 'threenodes/nodes/views/Group'
+DB = require 'threenodes/db'
 
 class UI
   constructor: (@core) ->
@@ -40,14 +38,7 @@ class UI
 
     # Initialize the workspace view
     @createWorkspace()
-    # Make the workspace display the global nodes and connections
-    @workspace.render(@core.nodes)
 
-    # Start the url handling
-    #
-    # Enabling the pushState method would require to redirect path
-    # for the node.js server and github page (if possible)
-    # for simplicity we disable it
     Backbone.history.start
       pushState: false
 
@@ -56,30 +47,18 @@ class UI
   createWorkspace: () =>
     if @workspace then @workspace.destroy()
     @workspace = new Workspace
+      linkerEl: jQuery("<div class='linkers-container'></div>").appendTo("#container")
       el: jQuery("<div class='nodes-container'></div>").appendTo("#container")
       settings: @core.settings
 
-  setWorkspaceFromDefinition: (definition) =>
-    @createWorkspace()
-
-    # always remove current edit node if it exists
-    if @edit_node
-      console.log "remove edit node"
-      @edit_node.remove()
-      delete @edit_node
-      # maybe sync new modifications...
-
-    if definition == "global"
-      @workspace.render(@core.nodes)
+  setWorkspaceFromDefinition: (clickNode) =>
+    if clickNode == "global"
       @ui.breadcrumb.reset()
-    else
-      # create a hidden temporary group node from this definition
-      @edit_node = @core.nodes.createGroup
-        type: "Group"
-        definition: definition
-        x: -9999
-      @workspace.render(@edit_node.nodes)
-      @ui.breadcrumb.set([definition])
+      core.refreshDatamodelAccordingToDB({
+        nodes: db.nodes,
+        connections: db.connections,
+        groups: db.groups
+      })
 
   initUI: () =>
     if @core.settings.test == false
@@ -99,19 +78,108 @@ class UI
       @ui.menubar.on("ExportCode", @file_handler.exportCode)
       @ui.menubar.on("LoadJSON", @file_handler.loadFromJsonData)
       @ui.menubar.on("LoadFile", @file_handler.loadLocalFile)
-      #@ui.menubar.on("ExportImage", @webgl.exportImage)
-      @ui.menubar.on("GroupSelectedNodes", @core.group_definitions.groupSelectedNodes)
-
+      @ui.menubar.on("GroupSelectedNodes", @createGroup)
+      @ui.menubar.on("AutoLayout", @autoLayout)
+      
       # Special events
-      @core.nodes.on("nodeslist:rebuild", @ui.onNodeListRebuild)
       @url_handler.on("SetDisplayModeCommand", @ui.setDisplayMode)
 
       #breadcrumb
-      @ui.breadcrumb.on("click", @setWorkspaceFromDefinition)
+      @ui.breadcrumb.on("click", @setWorkspaceFromDefinition.bind(@))
+
+      self= @
+      $(document).on('view_group_detail', (e, group)->
+        # self.createWorkspace() # accually, reset workspace.
+        self.ui.breadcrumb.set([group])
+
+        group = db.groups.find((g)->
+          return g.id == group.get('id')
+        )
+        core.refreshDatamodelAccordingToDB({
+          nodes: group.nodes,
+          connections: db.connections,
+          groups: []
+        })
+      )
     else
       # If the application is in test mode add a css class to the body
       $("body").addClass "test-mode"
     return this
+
+  createGroup:()=>
+    nodes = @getSelectedNodes()
+    @workspace.clearView()
+    @core.createGroup(nodes)
+
+  autoLayout:()=>
+    # datamodel => db
+    db.updateProperty({
+      nodes: core.nodes
+      groups: core.groups
+      connections: core.connections
+      id: core.id
+    })
+
+
+    params = ['digraph {']
+
+    db.groups.map((g)=>
+      params.push('subgraph cluster' + g.id + '{')
+
+      g.nodes.map((n)=>
+        params.push(n.id + ';')
+      )
+      params.push('}');
+    )
+
+    if(db.groups.length !=0)
+      db.nodes.map((n)=>
+        params.push(n.id + ';')
+      )
+
+    db.connections.map((c)=>
+      params.push(c.from + '->' + c.to + ';')
+    )
+
+    params.push('}');
+
+
+    paramStr = params.join(' ')
+    
+    console.log('=========graphviz test params===========')
+    console.log(paramStr)
+
+
+    plain = Viz(paramStr, {format: 'plain'});
+    console.log('=========graphviz test plain===========')
+    console.log(plain)
+
+
+    factor = 100
+    plain.split('\n').map((line)->
+      cells = line.split(' ')
+      type = cells[0]
+      if(type == 'node')
+        id = parseInt(cells[1])
+        
+        x = parseFloat(cells[2]) * factor
+        y = parseFloat(cells[3]) * factor
+        target = db.findNodeInNodes(id) || db.findNodeInGroups(id) || db.findGroup(id)
+        if(target)
+          target.x = x
+          target.y = y
+    )
+
+    core.refreshDatamodelAccordingToDB(db)
+
+  getSelectedNodes: () ->
+    selected_nodes = []
+    $selected = $(".node.ui-selected").not(".node .node")
+    $selected.each () ->
+      node = $(this).data("object")
+      selected_nodes.push(node)
+    return selected_nodes
+
 
   setDisplayMode: (is_player = false) =>
     if @ui then @ui.setDisplayMode(is_player)
@@ -133,23 +201,25 @@ class UI
       ui: @ui
 
     # Bind events to it
-    @core.nodes.bindTimelineEvents(@timelineView)
+    # @core.nodes.bindTimelineEvents(@timelineView)
     @core.nodes.on("remove", @timelineView.onNodeRemove)
     if @ui then @ui.onUiWindowResize()
 
     return this
 
   clearWorkspace: () =>
-    @core.nodes.clearWorkspace()
-    @core.group_definitions.removeAll()
+    @core.nodes.removeAll()
+    @core.connections.removeAll()
+    @core.groups.removeAll()
+    indexer.reset()
+    db.reset()
     if @ui then @ui.clearWorkspace()
-    #@initTimeline()
 
 UI.nodes = {}
 UI.UIView = UIView
 UI.nodes.NodeView = NodeView
 UI.nodes.Color = NodeViewColor
 UI.nodes.WebGLRenderer = NodeViewWebgl
-UI.nodes.Group = NodeViewGroup
+# UI.nodes.Group = NodeViewGroup
 
 module.exports = UI

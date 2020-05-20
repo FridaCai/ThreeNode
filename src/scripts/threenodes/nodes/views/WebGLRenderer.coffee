@@ -63,7 +63,7 @@ class WebGLRenderer extends NodeView
     w = @model.fields.getField('width').getValue()
     h = @model.fields.getField('height').getValue()
 
-    @win = window.open('', 'win' + @model.nid, "width=#{w},height=#{h},scrollbars=false,location=false,status=false,menubar=false")
+    @win = window.open('', 'win' + @model.id, "width=#{w},height=#{h},scrollbars=false,location=false,status=false,menubar=false")
     $("body", $(@win.document)).append( @model.ob.domElement )
     $("*", $(@win.document)).css
       padding: 0

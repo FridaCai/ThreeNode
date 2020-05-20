@@ -2,7 +2,8 @@
 _ = require 'Underscore'
 Backbone = require 'Backbone'
 ConnectionView = require 'threenodes/connections/views/ConnectionView'
-
+GroupView = require 'threenodes/groups/views/Group'
+LinkerView = require 'threenodes/linkers/views/Linker'
 require 'jquery.ui'
 
 
@@ -16,30 +17,33 @@ class Workspace extends Backbone.View
   initialize: (options) =>
     super
     @settings = options.settings
+    @linkerEl = options.linkerEl
+
     @initDrop()
 
-  render: (nodes) =>
-    # Keep a reference of the current nodes
-    @nodes = nodes
-
-    console.log "Workspace.render " + nodes.length
     @views = []
+    @nodes = core.nodes
+    @connections = core.connections
+    @groups = core.groups
+    @linkers = core.linkers
 
-    # Create the views for already created nodes and connections
-    _.each(@nodes.models, @renderNode)
-    _.each(@nodes.connections.models, @renderConnection)
-
-    # Create views when a new node is created
     @nodes.bind("add", @renderNode)
+    @connections.bind("add", @renderConnection)
+    @groups.bind("add", @renderGroup)
 
-    # Create a connection view when a connection is created
-    @nodes.connections.bind("add", @renderConnection)
+    @linkers.bind('add', @renderLinker)
+
+  render: () =>
+    
+  clearView:()->
+    _.each(@views, (view) -> view.remove())
+    @views=[]
 
   destroy: () =>
     # Remove all existing views before displaying new ones
     _.each(@views, (view) -> view.remove())
     @nodes.unbind("add", @renderNode)
-    @nodes.connections.unbind("add", @renderConnection)
+    @connections.unbind("add", @renderConnection)
     delete @views
     delete @settings
     @remove()
@@ -61,9 +65,16 @@ class Workspace extends Backbone.View
       model: node
       el: $nodeEl
 
-    # Save the nid and model in the data attribute
-    view.$el.data("nid", node.get("nid"))
+    # Save the id and model in the data attribute
+    view.$el.data("id", node.get("id"))
     view.$el.data("object", node)
+    @views.push(view)
+
+  renderLinker: (linker) =>
+    el = $("<div class='linker'></div>").appendTo(@linkerEl)
+    view = new LinkerView
+      model: linker
+      el: el
     @views.push(view)
 
   renderConnection: (connection) =>
@@ -71,7 +82,21 @@ class Workspace extends Backbone.View
       return false
     view = new ConnectionView
       model: connection
+      settings: @settings
     @views.push(view)
+
+  renderGroup: (group) =>
+    $groupEl = $("<div class='group'></div>").appendTo(@$el)
+    view  = new GroupView
+      model: group
+      el: $groupEl
+
+    @views.push(view)
+    view.$el.data("object", group)
+
+
+
+
 
   initDrop: () =>
     self = this

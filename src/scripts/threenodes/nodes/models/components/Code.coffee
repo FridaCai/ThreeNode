@@ -33,7 +33,6 @@ class Expression extends Node
     @custom_fields = $.extend(true, @custom_fields, options.custom_fields)
 
   onCodeUpdate: (code = "") =>
-    #console.log code
     try
       @function = new Function(code)
     catch error

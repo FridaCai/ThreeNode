@@ -55,8 +55,8 @@ class CodeExporter
       res
 
     res = "\n// node: #{node.name}\n"
-    res += "var node_#{node.nid}_data = {\n"
-    res += "\t" + "nid: #{node.nid},\n"
+    res += "var node_#{node.id}_data = {\n"
+    res += "\t" + "id: #{node.id},\n"
     res += "\t" + "name: '#{node.name}',\n"
     res += "\t" + "type: '#{node.type}',\n"
     res += "\t" + "x: #{node.x},\n"
@@ -64,7 +64,7 @@ class CodeExporter
     res += "\t" + "fields: #{fields_to_code(node.fields)},\n"
     res += "\t" + "anim: #{anim_to_code(node.anim)}\n"
     res += "};\n"
-    res += "var node_#{node.nid} = nodes.createNode(node_#{node.nid}_data);\n"
+    res += "var node_#{node.id} = nodes.createNode(node_#{node.id}_data);\n"
     return res
 
   connectionToCode: (connection) ->
